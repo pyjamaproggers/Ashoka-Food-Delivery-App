@@ -1,0 +1,18 @@
+Categories need to be cuisines and not restaurants
+
+Search Bar input should give all restaurants that have the input item in their menu. 
+    -   For example, if user searches "paratha", Roti Boti and Dhaba Restaurant Cards should pop up.
+
+Delivery Location will be a dropdown with only 5 options: 
+    -   RH1, RH2, RH3, RH4, RH5 (w small images of each rh next to each, we can try design out)
+
+Landing Page requires google login
+    -   Only ashoka email id allowed so we will have to create google credentials using an ashoka email id 
+    -   Need to figure if to create them from one of our email IDs or approach ashoka admin to make us an email ID for it,
+        which can later be used for techsupport also - "write to us at {foodappname}@ashoka.edu.in 
+        if a problem, feedback or anything at all"
+
+Zomato Landing Page (when app boots up)
+
+Zomato Landing Page (after login)
+
