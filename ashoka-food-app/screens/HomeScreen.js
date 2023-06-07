@@ -23,6 +23,7 @@ useLayoutEffect(()=>{
 }, [])
   return (
     <SafeAreaView className="bg-white pt-5">
+
       <View className="flex-row pb-3 items-center mx-4 space-x-2 ">
         <Image
           source={AshokaLogo}
@@ -37,6 +38,7 @@ useLayoutEffect(()=>{
         </View>
         <UserIcon size={35} color="#00CCBB" />
       </View>
+
       {/* search */}
       <View className="flex-row item-center space-x-2 pb-2 mx-4">
         <View className="flex-row space-x-2 flex-1 bg-gray-200 p-3">
@@ -58,6 +60,7 @@ useLayoutEffect(()=>{
       
       <Categories/>
       <Restaurants/>
+      
       </ScrollView>
   </SafeAreaView>
   )

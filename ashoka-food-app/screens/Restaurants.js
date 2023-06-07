@@ -57,8 +57,6 @@ const Restaurants = () => {
         },
     ]
 
-
-
   return (
     <ScrollView>
       <Text className="font-bold text-2xl text-black p-2 pb-3 px-2">Restaurants</Text>
@@ -67,6 +65,7 @@ const Restaurants = () => {
       <RestaurantCards name="Subway" image={SubwayIcon}/>
       <RestaurantCards name="Dosai" image={Dosai}/>
       <RestaurantCards name="Dhaba" image={Dhaba}/> */}
+      
       {
         Restaurants.map((restaurant)=>
         (
