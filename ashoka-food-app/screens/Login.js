@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useLayoutEffect, useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
@@ -18,6 +18,12 @@ export default function Login() {
     webClientId: WEB,
     expoClientId: EXPO
   });
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerShown: false,
+    });
+  }, []);
 
   useEffect(() => {
     if (response?.type === "success") {
