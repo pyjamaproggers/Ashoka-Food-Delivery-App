@@ -84,7 +84,10 @@ const HomeScreen = () => {
         </View>
 
         <View className='flex-end'>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={()=>{
+            console.log(user);
+            navigation.navigate('UserScreen', { user })
+          }}>
             {user.picture.length!==0?
               <Image style={styles.userPic} source={{uri:user.picture}} />
             :

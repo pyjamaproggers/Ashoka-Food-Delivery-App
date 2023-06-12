@@ -8,6 +8,7 @@ import RestaurantScreen from './screens/RestaurantScreen';
 import Login from './screens/Login';
 import { Provider } from 'react-redux';
 import { store } from './store';
+import UserScreen from './screens/UserScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -19,6 +20,7 @@ export default function App() {
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="Restaurant" component={RestaurantScreen} />
+      <Stack.Screen name="UserScreen" component={UserScreen} />
       </Stack.Navigator>
       </Provider>
     </NavigationContainer>
