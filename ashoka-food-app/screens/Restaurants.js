@@ -6,60 +6,124 @@ import SubwayIcon from '../assets/subwayicon.png'
 import ChicagoPizzaIcon from '../assets/chicagopizzaicon.jpg'
 import Dosai from '../assets/dosai.jpg'
 import Dhaba from '../assets/dhaba.png'
+import Grey from '../assets/greysquare.jpeg'
 
 const Restaurants = () => {
 
-    const Restaurants = [
+    const DRestaurants = [
+        {
+            id:7,
+            title:"Roti Boti",
+            image: Grey,
+            timing: "6am To 12am",
+            genre: "North Indian & Chinese",
+            description: "Best Mix Of North Indian & Chinese",
+            location: "Opposite Tennis Court"
+        },
         {
             id:1,
             title:"The Hunger Cycle",
             image: THC,
-            rating: "5/5",
+            timing: "6am To 12am",
             genre: "Fast Food",
             description: "EPIC MUNCHIES 24 X 7",
-            location: "Ground Floor Mess"
+            location: "Mess - G Floor"
         },
         {
             id:2,
             title:"Chicago Pizza",
             image: ChicagoPizzaIcon,
-            rating: "5/5",
+            timing: "6am To 12am",
             genre: "Fast Food",
             description: "Big Slices, Really Fast",
-            location: "Outside Mess"
+            location: "Next To Mess"
         },
         {
             id:3,
             title:"Subway",
             image: SubwayIcon,
-            rating: "5/5",
+            timing: "6am To 12am",
             genre: "Fast Food",
             description: "Eat Fresh",
-            location: "First Floor Mess"
+            location: "Mess - 1st Floor"
         },
         {
             id:4,
             title:"Dhaba",
             image: Dhaba,
-            rating: "5/5",
+            timing: "6am To 12am",
             genre: "Indian",
-            description: "Dhaba",
-            location: "Near Tennis Court"
+            description: "Classic Indian Dhaba",
+            location: "Next To Frisbee Field"
         },
         {
-            id:5,
-            title:"Dosai",
-            image: Dosai,
-            rating: "5/5",
-            genre: "South Indian",
-            description: "Authentic South Indian Dosa joint",
-            location: "Near Tennis Court"
-        },
+          id:5,
+          title:"Chaat Stall",
+          image: Grey,
+          timing: "6am To 12am",
+          genre: "Chaat",
+          description: "From Gol Gappe To Rolls!",
+          location: "Next To Tennis Court"
+      },
+      {
+        id:6,
+        title:"Rasananda",
+        image: Grey,
+        timing: "6am To 12am",
+        genre: "Snacks",
+        description: "Late Night Snacks Joint",
+        location: "Next To Tennis Court"
+      },
     ]
+
+    const NDRestaurants = [
+    {
+      id:7,
+      title:"Dosai",
+      image: Dosai,
+      timing: "6am To 12am",
+      genre: "South Indian",
+      description: "Authentic South Indian Dosa Joint",
+      location: "Next To Frisbee Field"
+    },
+    {
+      id:8,
+      title:"Chai Shai",
+      image: Grey,
+      timing: "6am To 12am",
+      genre: "Breakfast",
+      description: "Bread, Eggs & Cakes!",
+      location: "Mess Ground Floor"
+    },
+    {
+      id:9,
+      title:"Fuelzone",
+      image: Grey,
+      timing: "6am To 12am",
+      genre: "Fast Food",
+      description: "Coffee, Shakes, Snadwiches & More!",
+      location: "Mess Ground Floor"
+    },
+    {
+      id:10,
+      title:"Nescafe",
+      image: Grey,
+      timing: "6am To 12am",
+      genre: "Coffee & Snacks",
+      description: "From Coffee To Maggi To Sandwiches!",
+      location: "Next To AC02"
+    },
+    ]
+
 
   return (
     <ScrollView>
-      <Text className="font-bold text-2xl text-black p-2 pb-3 px-2">Restaurants</Text>
+      <View className='mt-5 border-t border-gray-300' >
+        <Text className="text-center font-normal text-xs text-gray-400 mx-32 mt-3 -top-5 bg-white">
+          WHAT'S ON YOUR MIND?
+        </Text>
+      </View>
+
       {/* <RestaurantCards name="The Hunger Cycle" image={THC}/>
       <RestaurantCards name="Chicago Pizza" image={ChicagoPizzaIcon}/>
       <RestaurantCards name="Subway" image={SubwayIcon}/>
@@ -67,13 +131,33 @@ const Restaurants = () => {
       <RestaurantCards name="Dhaba" image={Dhaba}/> */}
       
       {
-        Restaurants.map((restaurant)=>
+        DRestaurants.map((restaurant)=>
         (
             <RestaurantCards 
             id={restaurant.id}
             image={restaurant.image}
             title={restaurant.title}
-            rating={restaurant.rating}
+            timing={restaurant.timing}
+            genre={restaurant.genre}
+            location={restaurant.location}
+            description={restaurant.description}/>
+        ))
+      }
+
+      <View className='mt-5 border-t border-gray-300' >
+        <Text className="text-center font-normal text-xs text-gray-400 mx-28 mt-3 -top-5 bg-white">
+          TAKE A LOOK AT THESE MENUS!
+        </Text>
+      </View>
+
+      {
+        NDRestaurants.map((restaurant)=>
+        (
+            <RestaurantCards 
+            id={restaurant.id}
+            image={restaurant.image}
+            title={restaurant.title}
+            timing={restaurant.timing}
             genre={restaurant.genre}
             location={restaurant.location}
             description={restaurant.description}/>

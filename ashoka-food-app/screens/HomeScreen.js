@@ -30,25 +30,25 @@ useLayoutEffect(()=>{
           className="h-7 w-7 bg-gray-300 p-4 rounded-full"
         />
         <View className="flex-1">
-          <Text className="font-bold text-gray-400 text-xs">Deliver Now!</Text>
-          <Text className="font-bold text-xl">
+          <Text className="font-normal text-gray-400 text-xs pl-0.5">Deliver to</Text>
+          <Text className="font-semibold text-lg">
             Current Location
-            <ChevronDownIcon size={20} color="#00CCBB" />
+            <ChevronDownIcon size={20} color="#f87c7c" />
           </Text>
         </View>
-        <UserIcon size={35} color="#00CCBB" />
+        <UserIcon size={35} color="#f87c7c" />
       </View>
 
       {/* search */}
       <View className="flex-row item-center space-x-2 pb-2 mx-4">
-        <View className="flex-row space-x-2 flex-1 bg-gray-200 p-3">
-          <MagnifyingGlassIcon color="gray" size={20} />
+        <View className="flex-row space-x-2 flex-1 bg-white p-3 border border-gray-200 shadow-sm rounded-xl">
+          <MagnifyingGlassIcon color="#f87c7c" size={20} />
           <TextInput
-            placeholder="Where would you like to order from?"
+            placeholder="Search for a dish or place"
             keyboardType="default"
           />
         </View>
-        <AdjustmentsVerticalIcon color="#00CCBB" />
+
       </View>
 
       {/* Body */}
@@ -57,11 +57,10 @@ useLayoutEffect(()=>{
       contentContainerStyle={{
         paddingBottom:100,
       }}>
-      
-      <Categories/>
-      <Restaurants/>
-      
+        <Restaurants/>
+
       </ScrollView>
+
   </SafeAreaView>
   )
 }

@@ -1,41 +1,50 @@
 import { View, Text, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
-import { StarIcon } from "react-native-heroicons/solid";
-import { MapPinIcon } from "react-native-heroicons/outline";
+import { StarIcon, ClockIcon, MapPinIcon, BoltIcon } from "react-native-heroicons/solid";
+import {  } from "react-native-heroicons/outline";
 import {useNavigation} from "@react-navigation/native";
 
-const RestaurantCards = ({id, image, title, genre, rating, location, description}) => {
+const RestaurantCards = ({id, image, title, genre, timing, location, description}) => {
 
   const navigation = useNavigation();
   return (
-    <TouchableOpacity onPress={()=>{
-        navigation.navigate('Restaurant', {
-          id, image, title, genre, rating, location, description
-        })
-    }} className="border-4 border-gray-300 mb-3 rounded-xl mx-4 items-center">
-        <Image 
-        // style={{
-        //     alignSelf: 'center',
-        //     height: 150,
-        //     width: 150,
-        //     marginTop: 10
-        // }} 
-        source= {image} className="h-36 w-48 mt-2" resizeMode='stretch'/>
-        <View className ="px-3 pb-4">
-          <Text className="font-bold text-lg p-2">{title}</Text>
-          <View className="flex-row items-center space-x-1">
-            <StarIcon color="green"/>
-            <Text className="text-green-500">{rating} </Text>
-            <Text className="italic">{genre}</Text>
+    <View className='shadow'>
+      <TouchableOpacity onPress={()=>{
+          navigation.navigate('Restaurant', {
+            id, image, title, genre, timing, location, description
+          })
+      }} className="bg-white mb-3 rounded-xl mx-4 ">
+
+        <View className='flex-row place-items-start'>
+
+          <Image source= {image} className="h-20 w-20 ml-2 rounded-full my-2" resizeMode='stretch'/>
+
+          <View className ="px-3 ">
+            <Text className="font-semibold text-md pt-2 pb-1 pl-4">
+              {title}
+            </Text>
+
+            <View className="flex-row items-center space-x-1">
+              <ClockIcon size={14} color="black" opacity={1}/>
+              <Text className="text-xs text-gray-600">{timing}, </Text>
+              <Text className="text-xs text-gray-600">{genre}</Text>
+            </View>
+
+            <View className="flex-row items-center space-x-1">
+              <MapPinIcon size={14} color="black" opacity={1}/>
+              <Text className="text-xs text-gray-600">{location}</Text>
+            </View>
+
+            <View className="flex-row items-center space-x-1">
+              <BoltIcon size={14} color="black" opacity={1}/>
+              <Text className="text-xs text-gray-600">{description}</Text>
+            </View>
           </View>
-          <View className="flex-row items-center space-x-1">
-            <MapPinIcon color="gray"/>
-            <Text className="text-xs">{location}</Text>
-          </View>
-          <Text className="italic mt-1">"{description}"</Text>
-          </View>
-      
-    </TouchableOpacity>
+
+        </View>
+        
+      </TouchableOpacity>
+    </View>
   )
 }
 
