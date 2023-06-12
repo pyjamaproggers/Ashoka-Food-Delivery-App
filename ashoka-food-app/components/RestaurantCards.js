@@ -20,19 +20,19 @@ const RestaurantCards = ({id, image, title, genre, timing, location, description
           <Image source= {image} className="h-20 w-20 ml-2 rounded-full my-2" resizeMode='stretch'/>
 
           <View className ="px-3 ">
-            <Text className="font-semibold text-md pt-2 pb-1 pl-4">
+            <Text className="font-semibold text-md pt-2 pb-2 pl-0.5">
               {title}
             </Text>
 
             <View className="flex-row items-center space-x-1">
               <ClockIcon size={14} color="black" opacity={1}/>
-              <Text className="text-xs text-gray-600">{timing}, </Text>
-              <Text className="text-xs text-gray-600">{genre}</Text>
+              <Text className="text-xs pb-1 text-gray-600">{timing}, </Text>
+              <Text className="text-xs pb-1 text-gray-600">{genre}</Text>
             </View>
 
             <View className="flex-row items-center space-x-1">
               <MapPinIcon size={14} color="black" opacity={1}/>
-              <Text className="text-xs text-gray-600">{location}</Text>
+              <Text className="text-xs pb-1 text-gray-600">{location}</Text>
             </View>
 
             <View className="flex-row items-center space-x-1">

@@ -86,7 +86,6 @@ const HomeScreen = () => {
         <View className='flex-end'>
           <Text className="text-xs mb-3"> Welcome, </Text>
           <Text className='text-md  h-7'> {user.name}! </Text>
-          <Image sourch={{uri: user.picture}} style={{width: 20, height: 20}}/>
 
         </View>
 
@@ -126,6 +125,6 @@ export default HomeScreen;
 
 const styles = StyleSheet.create({
   dropdownArea:{
-    top: '80%',
+    top: '100%',
   }
 })
