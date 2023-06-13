@@ -3,7 +3,7 @@ import { View, Text, Image, TextInput, ScrollView, TouchableOpacity, StyleSheet,
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import AshokaLogo from '../assets/ASHOKAWHITELOGO.png';
-import Categories from './Categories';
+import userPic from '../assets/userAvatar.png'
 import {
   UserIcon,
   ChevronDownIcon,
@@ -44,7 +44,7 @@ const HomeScreen = () => {
 
         <Image source={AshokaLogo} className="h-7 w-7 bg-gray-300 p-4 rounded-full" />
         <View className="flex-1">
-          <Text className="font-normal text-gray-400 text-xs pl-0.5">Deliver to</Text>
+          <Text className="font-normal text-gray-400 text-xs pl-2">Deliver to</Text>
 
           {/* Dropdown Menu */}
 
@@ -84,17 +84,15 @@ const HomeScreen = () => {
         </View>
 
         <View className='flex-end'>
-          <Text className="text-xs mb-3"> Welcome, </Text>
-          <Text className='text-md  h-7'> {user.name}! </Text>
-
+          <TouchableOpacity>
+            {user.picture.length!==0?
+              <Image style={styles.userPic} source={{uri:user.picture}} />
+            :
+              <Image style={styles.userPic} source={userPic}/>
+            }
+          </TouchableOpacity>
         </View>
 
-        {/* {user.picture.length>=0? (
-          <Image uri={user.picture} />
-        ) : (
-          <UserIcon size={25} color="#f87c7c" />
-          )
-        } */}
       </View>
 
       {/* search */}
@@ -126,5 +124,11 @@ export default HomeScreen;
 const styles = StyleSheet.create({
   dropdownArea:{
     top: '100%',
+  },
+  userPic:{
+    width: 50,
+    height: 50,
+    borderRadius: 100,
+    justifyContent: 'center'
   }
 })

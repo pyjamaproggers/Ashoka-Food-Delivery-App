@@ -16,8 +16,8 @@ const Restaurants = () => {
             title:"Roti Boti",
             image: Grey,
             timing: "6am To 12am",
-            genre: "North Indian & Chinese",
-            description: "Best Mix Of North Indian & Chinese",
+            genre: "Indian & Chinese",
+            description: "Best Mix Of Indian & Chinese",
             location: "Opposite Tennis Court"
         },
         {
@@ -35,7 +35,7 @@ const Restaurants = () => {
             image: ChicagoPizzaIcon,
             timing: "6am To 12am",
             genre: "Fast Food",
-            description: "Big Slices, Really Fast",
+            description: "Big Slices, Really Fast!",
             location: "Next To Mess"
         },
         {
@@ -83,7 +83,7 @@ const Restaurants = () => {
       image: Dosai,
       timing: "6am To 12am",
       genre: "South Indian",
-      description: "Authentic South Indian Dosa Joint",
+      description: "Authentic South Indian Food Joint",
       location: "Next To Frisbee Field"
     },
     {
@@ -101,7 +101,7 @@ const Restaurants = () => {
       image: Grey,
       timing: "6am To 12am",
       genre: "Fast Food",
-      description: "Coffee, Shakes, Snadwiches & More!",
+      description: "Coffee, Shakes & More!",
       location: "Mess Ground Floor"
     },
     {
@@ -110,7 +110,7 @@ const Restaurants = () => {
       image: Grey,
       timing: "6am To 12am",
       genre: "Coffee & Snacks",
-      description: "From Coffee To Maggi To Sandwiches!",
+      description: "Classic Nescafe Joint",
       location: "Next To AC02"
     },
     {
@@ -119,7 +119,7 @@ const Restaurants = () => {
       image: Grey,
       timing: "6am To 12am",
       genre: "Dairy",
-      description: "From Ice Cream To Waffles & More!",
+      description: "Classic Amul Joint",
       location: "Next To AC02"
     },
     ]
