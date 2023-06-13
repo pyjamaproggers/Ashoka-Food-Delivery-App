@@ -1,5 +1,5 @@
-import React, { useLayoutEffect } from 'react';
-import { View, Text, Image, TextInput, ScrollView } from 'react-native';
+import React, { useLayoutEffect, useState } from 'react';
+import { View, Text, Image, TextInput, ScrollView, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import AshokaLogo from '../assets/ASHOKAWHITELOGO.png';
@@ -9,11 +9,24 @@ import {
   ChevronDownIcon,
   MagnifyingGlassIcon,
   AdjustmentsVerticalIcon,
+  ChevronUpIcon
 } from 'react-native-heroicons/outline';
 import Restaurants from './Restaurants';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
+
+  const [DeliveryLocation, setDeliveryLocation] = useState('RH1')
+  const [isOpen, setIsOpen] = useState(false)
+
+  const Locations=[
+    {location: 'RH1'},
+    {location: 'RH2'},
+    {location: 'RH3'},
+    {location: 'RH4'},
+    {location: 'RH5'},
+    {location: 'Library AC04'},
+  ]
 
   const {
     params: { user },
@@ -27,44 +40,92 @@ const HomeScreen = () => {
 
   return (
     <SafeAreaView className="bg-white pt-5">
-      <View className="flex-row pb-3 items-center mx-4 space-x-2 ">
+      <View className="flex-row pb-3 items-center mx-4 space-x-2 z-50">
+
         <Image source={AshokaLogo} className="h-7 w-7 bg-gray-300 p-4 rounded-full" />
         <View className="flex-1">
           <Text className="font-normal text-gray-400 text-xs pl-0.5">Deliver to</Text>
-          <Text className="font-semibold text-lg">
-            Current Location
-            <ChevronDownIcon size={20} color="#f87c7c" />
-          </Text>
-        </View>
-        <Text className="text-xs">{user.name}</Text>
-        {/* {user.picture!==null? (
-          <Image uri={user.picture} />
 
+          {/* Dropdown Menu */}
+
+          <TouchableOpacity 
+            className=' h-10 rounded-lg border border-gray-200 shadow-sm mt-1 flex-row justify-between items-center px-2'
+            onPress={()=>{
+              setIsOpen(!isOpen)
+            }}
+          >
+            <Text className='text-md'>{DeliveryLocation}</Text>
+            {isOpen? 
+              <ChevronUpIcon size={20} color="#f87c7c" />
+            :
+              <ChevronDownIcon size={20} color="#f87c7c" />
+            }
+          </TouchableOpacity>
+          {isOpen===true && 
+            <View className='w-full h-36 border border-gray-200 shadow-sm rounded-md bg-white absolute ' style={styles.dropdownArea}>
+                <FlatList data={Locations} renderItem={({item,index})=>{
+                  return(
+                      <TouchableOpacity 
+                        onPress={()=>{
+                          setDeliveryLocation(item.location)
+                          setIsOpen(false)
+                        }}
+                        className='border-b border-gray-200 pl-2 py-3'
+                      >
+                        <Text>
+                          {item.location}
+                        </Text>
+                      </TouchableOpacity>
+                  )
+                }}/>
+            </View>
+          }
+
+        </View>
+
+        <View className='flex-end'>
+          <Text className="text-xs mb-3"> Welcome, </Text>
+          <Text className='text-md  h-7'> {user.name}! </Text>
+          <Image sourch={{uri: user.picture}} style={{width: 20, height: 20}}/>
+
+        </View>
+
+        {/* {user.picture.length>=0? (
+          <Image uri={user.picture} />
         ) : (
-          <UserIcon size={35} color="#f87c7c" />
-        )} */}
+          <UserIcon size={25} color="#f87c7c" />
+          )
+        } */}
       </View>
 
       {/* search */}
-      <View className="flex-row item-center space-x-2 pb-2 mx-4">
+      <View className="flex-row item-center space-x-2 pb-2 mx-4 ">
         <View className="flex-row space-x-2 flex-1 bg-white p-3 border border-gray-200 shadow-sm rounded-xl">
           <MagnifyingGlassIcon color="#f87c7c" size={20} />
           <TextInput placeholder="Search for a dish or place" keyboardType="default" />
         </View>
       </View>
 
-      {/* Body */}
 
       <ScrollView
-        className="bg-white"
+        className='bg-white'
         contentContainerStyle={{
-          paddingBottom: 100,
+          paddingBottom: 150
         }}
       >
-        <Restaurants />
+      {/* Body */}
+      <Restaurants />
+
       </ScrollView>
+
     </SafeAreaView>
   );
 };
 
 export default HomeScreen;
+
+const styles = StyleSheet.create({
+  dropdownArea:{
+    top: '80%',
+  }
+})

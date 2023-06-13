@@ -1,4 +1,4 @@
-import { View, Text, ScrollView } from 'react-native'
+import { View, Text, ScrollView, Image } from 'react-native'
 import React from 'react'
 import RestaurantCards from '../components/RestaurantCards'
 import THC from '../assets/THC.jpg'
@@ -113,13 +113,25 @@ const Restaurants = () => {
       description: "From Coffee To Maggi To Sandwiches!",
       location: "Next To AC02"
     },
+    {
+      id:11,
+      title:"Amul",
+      image: Grey,
+      timing: "6am To 12am",
+      genre: "Dairy",
+      description: "From Ice Cream To Waffles & More!",
+      location: "Next To AC02"
+    },
     ]
 
-
   return (
-    <ScrollView>
+    <ScrollView >
+      <View className=' w-11/12 h-48 self-center mt-4 mb-2 rounded-full shadow-md'>
+        <Image source={Grey} style={{width: '100%', height: '100%', borderRadius: 15,}} />
+      </View>
+
       <View className='mt-5 border-t border-gray-300' >
-        <Text className="text-center font-normal text-xs text-gray-400 mx-32 mt-3 -top-5 bg-white">
+        <Text className="text-center font-normal text-xs text-gray-400 mx-28 mt-3 -top-5 bg-white">
           WHAT'S ON YOUR MIND?
         </Text>
       </View>
@@ -144,9 +156,13 @@ const Restaurants = () => {
         ))
       }
 
+      <View className=' w-11/12 h-48 self-center mt-4 mb-2 rounded-full shadow-md'>
+        <Image source={Grey} style={{width: '100%', height: '100%', borderRadius: 15,}} />
+      </View>
+      
       <View className='mt-5 border-t border-gray-300' >
-        <Text className="text-center font-normal text-xs text-gray-400 mx-28 mt-3 -top-5 bg-white">
-          TAKE A LOOK AT THESE MENUS!
+        <Text className="text-center font-normal text-xs text-gray-400 mx-24 mt-3 -top-5 bg-white">
+          TAKE A LOOK AT THESE MENUS
         </Text>
       </View>
 
