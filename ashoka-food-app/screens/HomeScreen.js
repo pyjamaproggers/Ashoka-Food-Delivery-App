@@ -125,6 +125,6 @@ export default HomeScreen;
 
 const styles = StyleSheet.create({
   dropdownArea:{
-    top: '80%',
+    top: '100%',
   }
 })
