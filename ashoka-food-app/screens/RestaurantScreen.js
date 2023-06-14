@@ -28,12 +28,12 @@ const RestaurantScreen = () =>
                     <ArrowLeftIcon size={20} color="black"/>
                 </TouchableOpacity>
             </View>
-            <View className="bg-white">
+            <View className="bg-white flex-1">
                 <View className="px-4 pt-4 items-center">
                     <Text className="font-semibold text-3xl pb-2">
                     {title}
                     </Text>
-                    <Text className='items-center justify-center pb-1 italic text-lg'>{genre}</Text>
+                    <Text className='items-center justify-center pb-2 italic text-lg'>{genre}</Text>
                     <View className="flex-1 space-x-2 space-y-2 my-1">
                         <View className='flex-row items-center'>
                             <ClockIcon opacity={1} color='#F04C0F' size={20} />
@@ -46,7 +46,7 @@ const RestaurantScreen = () =>
                             <Text className="text-md pl-1 text-gray-1000 items-center">{location} </Text>
                         </View>
                     </View>
-                    <View className="flex-1 space-x-2 space-y-2 my-1">
+                    <View className="flex-1 space-x-2 space-y-2 my-1 pb-1">
                         <View className='flex-row items-center'>
                             <BoltIcon opacity={1} color='#FDD023' size={20} />
                             <Text className="text-md pl-1 text-gray-1000 items-center">{description} </Text>
