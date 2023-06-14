@@ -35,6 +35,7 @@ const HomeScreen = () => {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,
+      gestureEnabled: false,
     });
   }, []);
 
@@ -88,7 +89,7 @@ const HomeScreen = () => {
             console.log(user);
             navigation.navigate('UserScreen', { user })
           }}>
-            {user.picture.length!==0?
+            {user.hasOwnProperty('picture')?
               <Image style={styles.userPic} source={{uri:user.picture}} />
             :
               <Image style={styles.userPic} source={userPic}/>
@@ -113,8 +114,8 @@ const HomeScreen = () => {
           paddingBottom: 150
         }}
       >
-      {/* Body */}
-      <Restaurants />
+        {/* Body */}
+        <Restaurants />
 
       </ScrollView>
 

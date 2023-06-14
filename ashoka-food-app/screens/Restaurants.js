@@ -23,7 +23,7 @@ const Restaurants = () => {
         {
             id:1,
             title:"The Hunger Cycle",
-            image: THC,
+            image: Grey,
             timing: "6am To 12am",
             genre: "Fast Food",
             description: "EPIC MUNCHIES 24 X 7",
@@ -32,7 +32,7 @@ const Restaurants = () => {
         {
             id:2,
             title:"Chicago Pizza",
-            image: ChicagoPizzaIcon,
+            image: Grey,
             timing: "6am To 12am",
             genre: "Fast Food",
             description: "Big Slices, Really Fast!",
@@ -41,7 +41,7 @@ const Restaurants = () => {
         {
             id:3,
             title:"Subway",
-            image: SubwayIcon,
+            image: Grey,
             timing: "6am To 12am",
             genre: "Fast Food",
             description: "Eat Fresh",
@@ -50,7 +50,7 @@ const Restaurants = () => {
         {
             id:4,
             title:"Dhaba",
-            image: Dhaba,
+            image: Grey,
             timing: "6am To 12am",
             genre: "Indian",
             description: "Classic Indian Dhaba",
@@ -80,7 +80,7 @@ const Restaurants = () => {
     {
       id:7,
       title:"Dosai",
-      image: Dosai,
+      image: Grey,
       timing: "6am To 12am",
       genre: "South Indian",
       description: "Authentic South Indian Food Joint",
@@ -126,7 +126,7 @@ const Restaurants = () => {
 
   return (
     <ScrollView >
-      <View className=' w-11/12 h-48 self-center mt-4 mb-2 rounded-full shadow-md'>
+      <View className=' w-11/12 h-48 self-center mt-1 mb-2 rounded-full shadow-md'>
         <Image source={Grey} style={{width: '100%', height: '100%', borderRadius: 15,}} />
       </View>
 
