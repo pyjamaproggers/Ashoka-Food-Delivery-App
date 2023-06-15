@@ -18,7 +18,7 @@ export default function App() {
     <NavigationContainer> 
       <Provider store={store}>
       <Stack.Navigator>
-      <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen name="Login" component={Login} initialParams={{logout: null}} />
       <Stack.Screen name="PhoneAuth" component={PhoneAuthScreen} />
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="Restaurant" component={RestaurantScreen} />

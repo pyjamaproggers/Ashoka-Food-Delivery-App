@@ -1,10 +1,10 @@
 import React, { useLayoutEffect, useState } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { View, Text, Image, TouchableOpacity, StyleSheet, } from 'react-native';
+import { View, Text, Image, TouchableOpacity, StyleSheet, Touchable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ArrowLeftIcon, ChartBarIcon, DocumentTextIcon, PowerIcon, PhoneIcon } from 'react-native-heroicons/solid';
 import Verified from '../assets/verified.png';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 export default function UserScreen() {
   const { params: { user } } = useRoute();
 
@@ -41,7 +41,7 @@ export default function UserScreen() {
       paddingBottom: 2
     },
     emailText: {
-      fontSize: 12,
+      fontSize: '12%',
     },
     backButton: {
       width: "10%",
@@ -49,7 +49,7 @@ export default function UserScreen() {
       backgroundColor: 'white'
     },
     phoneText: {
-      fontSize: 12,
+      fontSize: '12%',
     },
     userDetailsContainer: {
       width: '95%',
@@ -97,7 +97,7 @@ export default function UserScreen() {
             )}
           </View>
 
-          <View className='flex-col self-center justify-center space-y-1 mx-2 w-9/12'>
+          <View className='flex-col self-center justify-center space-y-1 mx-2'>
             <Text style={styles.nameText}>Hi, {user.given_name}</Text>
 
             {/* user.phone */}
@@ -154,7 +154,7 @@ export default function UserScreen() {
         <View style={styles.logoutContainer}>
 
           <View className="py-3 mt-1 pb-3 border-b-2 border-white">
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate("Login", { logout: 1 })}>
               <View className="flex-row gap-1 items-center justify-center">
                 <PowerIcon color="red" className="m-5" size={15} />
                 <Text className='text-red-600'>Logout</Text>

@@ -2,17 +2,31 @@ import React, { useLayoutEffect, useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { IOS, WEB, EXPO } from '@dotenv'
 import AshokaLogo from '../assets/ashokauniversity.png';
 import { ArrowRightIcon } from 'react-native-heroicons/outline';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 WebBrowser.maybeCompleteAuthSession();
 
 export default function Login() {
   const navigation = useNavigation();
-  const [token, setToken] = useState("");
   const [user, setUser] = useState(null);
+  const [loggedOut, setLoggedOut] = useState(0);
+
+  const {
+    params: { logout:logoutParam },
+  } = useRoute();
+
+  if(logoutParam==1 && loggedOut==0)
+  {
+    (async () => {
+      await AsyncStorage.removeItem("@user");
+      setUser(null);
+      setLoggedOut(1);
+    })();
+  }
 
   const [request, response, promptAsync] = Google.useAuthRequest({
     iosClientId: IOS,
@@ -20,20 +34,29 @@ export default function Login() {
     expoClientId: EXPO
   });
 
+  async function handleSigninWithGoogle()
+  {
+    const user = await AsyncStorage.getItem("@user");
+    if(!user)
+    {
+      if(response?.type === "success")
+      {
+        await getUserInfo(response.authentication.accessToken);
+      }
+      
+    }
+    else{
+      setUser(JSON.parse(user));
+    }
+  }
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,
     });
   }, []);
 
-  useEffect(() => {
-    if (response?.type === "success") {
-      setToken(response.authentication.accessToken);
-      getUserInfo();
-    }
-  }, [response, token]);
-
-  const getUserInfo = async () => {
+  const getUserInfo = async (token) => {
+    if(!token) return;
     try {
       const response = await fetch(
         "https://www.googleapis.com/userinfo/v2/me",
@@ -43,11 +66,16 @@ export default function Login() {
       );
 
       const user = await response.json();
+      AsyncStorage.setItem("@user", JSON.stringify(user));
       setUser(user);
     } catch (error) {
       console.log(error)
     }
   };
+
+  useEffect(()=>{
+    handleSigninWithGoogle();
+  }, [response])
 
   return (
     <View style={styles.container}>
@@ -64,6 +92,7 @@ export default function Login() {
         <TouchableOpacity style={styles.button} className="flex-row" 
           onPress={()=>{
             console.log(user);
+            setLoggedOut(0);
             navigation.navigate('PhoneAuth', { user })
           }}
         >
