@@ -6,7 +6,7 @@ import { ArrowLeftIcon, ChartBarIcon, DocumentTextIcon, PowerIcon, PhoneIcon } f
 import Verified from '../assets/verified.png';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 export default function UserScreen() {
-  const { params: { user } } = useRoute();
+  const { params: { actualUser } } = useRoute();
 
   const styles = StyleSheet.create({
     container: {
@@ -74,7 +74,7 @@ export default function UserScreen() {
     navigation.setOptions({
       headerShown: false,
     });
-    console.log(user)
+    console.log(actualUser)
   }, []);
 
   const navigation = useNavigation();
@@ -91,26 +91,26 @@ export default function UserScreen() {
         <View style={styles.nameEmailPhotoContainer}>
 
           <View>
-            {user.hasOwnProperty('picture') ? (
-              <Image style={styles.userPic} source={{ uri: user.picture }} />
+            {actualUser.hasOwnProperty('picture') ? (
+              <Image style={styles.userPic} source={{ uri: actualUser.picture }} />
             ) : (
-              <Image style={styles.userPic} source={{ uri: user.picture }} />
+              <Image style={styles.userPic} source={userPic} />
             )}
           </View>
 
           <View className='flex-col self-center justify-center space-y-1 mx-2'>
-            <Text style={styles.nameText}>Hi, {user.given_name}</Text>
+            <Text style={styles.nameText}>Hi, {actualUser.given_name}</Text>
 
             {/* user.phone */}
             <View className='flex-row items-center space-x-1 '>
-              <Text style={styles.phoneText}>{user.phone}</Text>
-              {user.verified_email == true &&
+              <Text style={styles.phoneText}>{actualUser.phone}</Text>
+              {actualUser.verified_email == true &&
                 <Image source={Verified} style={{ width: 20, height: 20 }} />
               }
             </View>
 
             <View className='flex-row items-center space-x-1 '>
-              <Text style={styles.emailText}>{user.email}</Text>
+              <Text style={styles.emailText}>{actualUser.email}</Text>
               <Image source={Verified} style={{ width: 20, height: 20 }} />
             </View>
           </View>

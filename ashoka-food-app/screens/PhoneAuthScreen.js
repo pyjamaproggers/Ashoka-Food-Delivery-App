@@ -22,7 +22,7 @@ const PhoneAuthScreen = () => {
     const navigation = useNavigation();
 
     const {
-        params: { user },
+        params: { actualUser },
     } = useRoute();
 
     const styles = StyleSheet.create({
@@ -71,8 +71,8 @@ const PhoneAuthScreen = () => {
         if (validity === true) {
             const phoneProvider = new firebase.auth.PhoneAuthProvider();
             phoneProvider.verifyPhoneNumber(phoneNumberFormatted, recaptchaVerifier.current).then(setVerificationID)
-            console.log(user)
-            user['phone'] = phoneNumberFormatted
+            console.log(actualUser)
+            actualUser['phone'] = phoneNumberFormatted
             setPhoneNumber('')
         }
         else if (validity === false) {
@@ -87,7 +87,7 @@ const PhoneAuthScreen = () => {
         )
         firebase.auth().signInWithCredential(credential)
             .then(() => {
-                navigation.navigate('Home', { user })
+                navigation.navigate('Login', {phone:phoneNumberFormatted})
                 setCode('');
                 Alert.alert(
                     'Welcome to AshokaEats'
@@ -120,7 +120,7 @@ const PhoneAuthScreen = () => {
                     <ArrowLeftIcon size={20} color="black" />
                 </TouchableOpacity>
 
-                <Text className='text-center text-lg font-normal'>Hi, {user.given_name}</Text>
+                <Text className='text-center text-lg font-normal'>Hi, {actualUser.given_name}</Text>
                 <Text className='text-center text-lg font-normal'>Enter your phone number</Text>
                 <View className='py-5 self-center'>
                     <PhoneInput

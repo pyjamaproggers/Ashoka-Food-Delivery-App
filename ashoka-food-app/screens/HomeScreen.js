@@ -15,7 +15,7 @@ import Restaurants from './Restaurants';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
-
+  
   const [DeliveryLocation, setDeliveryLocation] = useState('RH1')
   const [isOpen, setIsOpen] = useState(false)
 
@@ -29,15 +29,16 @@ const HomeScreen = () => {
   ]
 
   const {
-    params: { user },
+    params: { actualUser },
   } = useRoute();
+  console.log(actualUser)
   
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,
       gestureEnabled: false,
     });
-    console.log(user)
+    console.log(actualUser);
   }, []);
 
   return (
@@ -87,13 +88,13 @@ const HomeScreen = () => {
 
         <View className='flex-end'>
           <TouchableOpacity onPress={()=>{
-            console.log(user);
-            navigation.navigate('UserScreen', { user })
+            console.log(actualUser);
+            navigation.navigate('UserScreen', { actualUser })
           }}>
-            {user.hasOwnProperty('picture')? 
-              <Image style={styles.userPic} source={{uri:user.picture}} />
+            {actualUser.hasOwnProperty('picture')? 
+              <Image style={styles.userPic} source={{uri:actualUser.picture}} />
             :
-              <Image style={styles.userPic} source={userPic}/>
+              <Image style={styles.userPic} source={userPic}/> 
             }
           </TouchableOpacity>
         </View>

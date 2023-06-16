@@ -14,31 +14,53 @@ export default function Login() {
   const navigation = useNavigation();
   const [user, setUser] = useState(null);
   const [loggedOut, setLoggedOut] = useState(0);
-
-  const {
-    params: { logout:logoutParam },
-  } = useRoute();
-
-  if(logoutParam==1 && loggedOut==0)
-  {
-    (async () => {
-      await AsyncStorage.removeItem("@user");
-      setUser(null);
-      setLoggedOut(1);
-    })();
-  }
-
   const [request, response, promptAsync] = Google.useAuthRequest({
     iosClientId: IOS,
     webClientId: WEB,
     expoClientId: EXPO
   });
 
+  const {
+    params: { logout:logoutParam, phone:phone},
+  } = useRoute();
+  console.log(phone)
+  console.log("LOGOUT = "+logoutParam)
+  if (logoutParam === 1 && loggedOut === 0) {
+    console.log("LOGOUT TIME");
+    (async () => {
+      try {
+        await AsyncStorage.removeItem("@user");
+        setUser(null);
+        setLoggedOut(1);
+        navigation.navigate("Login", { logout: 0 });
+      } catch (error) {
+        console.log("Logout error:", error);
+      }
+    })();
+  }
+
+  if (phone) {
+    console.log(phone + " received at top level!");
+  
+    const updateUserPhone = async () => {
+      let actualUser = await AsyncStorage.getItem("@user");
+      actualUser = JSON.parse(actualUser); // Parse the JSON string into an object
+      actualUser.phone = phone;
+      console.log(actualUser);
+      AsyncStorage.setItem("@user", JSON.stringify(actualUser));
+      console.log("Phone number added now: " + JSON.stringify(actualUser));
+      navigation.navigate('Home', { actualUser });
+    };
+  
+    updateUserPhone(); // Call the async function to update user phone number
+  }
+
   async function handleSigninWithGoogle()
   {
-    const user = await AsyncStorage.getItem("@user");
-    if(!user)
+    const userCheck = await AsyncStorage.getItem("@user");
+    if(!userCheck)
     {
+      console.log("No User...")
       if(response?.type === "success")
       {
         await getUserInfo(response.authentication.accessToken);
@@ -46,10 +68,33 @@ export default function Login() {
       
     }
     else{
-      setUser(JSON.parse(user));
+      const actualUser = JSON.parse(userCheck);
+      console.log("There is user... and it is= " +typeof(actualUser))
+      setUser(actualUser);
+      setLoggedOut(0);
+      if(actualUser.phone)
+      {
+        console.log("There is user and PHONE")
+        navigation.navigate('Home', { actualUser })
+      }
+      else if(!actualUser.phone && phone)
+      {
+        console.log(phone+" received!");
+        console.log("Before adding phone"+typeof(actualUser))
+        actualUser['phone']=phone;
+        console.log("AFTER adding phone"+typeof(actualUser))
+        AsyncStorage.setItem("@user",JSON.stringify(actualUser))
+        console.log("Phone number added noww: "+actualUser)
+        navigation.navigate('Home', { actualUser })
+      }
+      else if(!actualUser.phone && !phone)
+      {
+        console.log("Time to get Phone")
+        navigation.navigate('PhoneAuth', { actualUser })
+      }
+      
     }
   }
-
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,
@@ -66,9 +111,13 @@ export default function Login() {
         }
       );
 
-      const user = await response.json();
-      AsyncStorage.setItem("@user", JSON.stringify(user));
-      setUser(user);
+      const actualUser = await response.json();
+      setUser(actualUser);
+      setLoggedOut(0);
+      const storageUser = JSON.stringify(actualUser)
+      AsyncStorage.setItem("@user", storageUser);
+      console.log("User set to "+ actualUser);
+      navigation.navigate('PhoneAuth', { actualUser })
     } catch (error) {
       console.log(error)
     }
