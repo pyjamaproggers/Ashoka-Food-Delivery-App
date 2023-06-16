@@ -89,7 +89,7 @@ const HomeScreen = () => {
             console.log(user);
             navigation.navigate('UserScreen', { user })
           }}>
-            {user.hasOwnProperty('picture')?
+            {user.hasOwnProperty('picture')? 
               <Image style={styles.userPic} source={{uri:user.picture}} />
             :
               <Image style={styles.userPic} source={userPic}/>

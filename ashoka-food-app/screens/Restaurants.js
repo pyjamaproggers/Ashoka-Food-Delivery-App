@@ -146,6 +146,7 @@ const Restaurants = () => {
         DRestaurants.map((restaurant)=>
         (
             <RestaurantCards 
+            key={restaurant.id}
             id={restaurant.id}
             image={restaurant.image}
             title={restaurant.title}
@@ -170,6 +171,7 @@ const Restaurants = () => {
         NDRestaurants.map((restaurant)=>
         (
             <RestaurantCards 
+            key={restaurant.id}
             id={restaurant.id}
             image={restaurant.image}
             title={restaurant.title}

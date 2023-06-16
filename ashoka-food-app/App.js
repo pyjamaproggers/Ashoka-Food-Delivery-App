@@ -9,6 +9,7 @@ import Login from './screens/Login';
 import { Provider } from 'react-redux';
 import { store } from './store';
 import UserScreen from './screens/UserScreen';
+import PhoneAuthScreen from './screens/PhoneAuthScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -18,6 +19,7 @@ export default function App() {
       <Provider store={store}>
       <Stack.Navigator>
       <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen name="PhoneAuth" component={PhoneAuthScreen} />
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="Restaurant" component={RestaurantScreen} />
       <Stack.Screen name="UserScreen" component={UserScreen} />

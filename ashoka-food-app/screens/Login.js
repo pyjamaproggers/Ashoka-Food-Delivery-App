@@ -64,7 +64,7 @@ export default function Login() {
         <TouchableOpacity style={styles.button} className="flex-row" 
           onPress={()=>{
             console.log(user);
-            navigation.navigate('Home', { user })
+            navigation.navigate('PhoneAuth', { user })
           }}
         >
           <Text style={styles.buttonText} className='pr-2 '>
