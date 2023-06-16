@@ -49,6 +49,7 @@ export default function Login() {
       setUser(JSON.parse(user));
     }
   }
+
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,
@@ -84,20 +85,20 @@ export default function Login() {
       </View>
       {user === null ? 
       <TouchableOpacity style={styles.button} onPress={() => promptAsync()}>
-        <Text style={styles.buttonText}>Sign in with your Ashoka Email ID</Text>
+        <Text style={styles.buttonText}>Sign in with Ashoka email</Text>
       </TouchableOpacity>
       :
       <View className='items-center' style={styles.welcomeContainer} >
-        <Text style={styles.welcomeText} className='pb-12'>Welcome, {user.name}!</Text>
+        <Image source={{uri: user.picture}}/>
+        <Text style={styles.welcomeText} className='pb-12'>Succesfully signed in as {user.name}!</Text>
         <TouchableOpacity style={styles.button} className="flex-row" 
-          onPress={()=>{
-            console.log(user);
-            setLoggedOut(0);
-            navigation.navigate('PhoneAuth', { user })
-          }}
+        onPress={()=>{
+          setLoggedOut(0);
+          navigation.navigate('PhoneAuth', { user })
+        }}
         >
           <Text style={styles.buttonText} className='pr-2 '>
-            Take me to the food
+            Verify Phone Number
           </Text>
           <ArrowRightIcon size={20} color='white' />
         </TouchableOpacity>

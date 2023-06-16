@@ -37,6 +37,7 @@ const HomeScreen = () => {
       headerShown: false,
       gestureEnabled: false,
     });
+    console.log(user)
   }, []);
 
   return (

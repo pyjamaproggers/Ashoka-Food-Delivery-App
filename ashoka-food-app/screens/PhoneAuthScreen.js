@@ -7,6 +7,8 @@ import { firebaseConfig } from '../firebaseConfig';
 import firebase from 'firebase/compat/app';
 import PhoneInput from 'react-native-phone-number-input';
 import OTPTextInput from 'react-native-otp-textinput'
+import { ArrowLeftIcon } from 'react-native-heroicons/solid';
+import OTPInputView from '@twotalltotems/react-native-otp-input'
 
 const PhoneAuthScreen = () => {
     const [phoneNumber, setPhoneNumber] = useState('')
@@ -23,14 +25,58 @@ const PhoneAuthScreen = () => {
         params: { user },
     } = useRoute();
 
+    const styles = StyleSheet.create({
+        backButton: {
+            width: "10%",
+            marginLeft: 20,
+            backgroundColor: 'white'
+        },
+        OTPButton: {
+            backgroundColor: "#3E5896", // Ashoka University primary color
+            padding: 10,
+            borderRadius: 5,
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '50%',
+            marginBottom: 12
+        },
+        OTPButtonText: {
+            color: "#fff",
+            fontSize: 16,
+            textAlign: "center",
+        },
+        borderStyleBase: {
+            width: 30,
+            height: 45
+        },
+
+        borderStyleHighLighted: {
+            borderColor: "#3E5896",
+        },
+
+        underlineStyleBase: {
+            width: 30,
+            height: 45,
+            borderWidth: 0,
+            borderBottomWidth: 1,
+            color: 'black'
+        },
+
+        underlineStyleHighLighted: {
+            borderColor: "#3E5896",
+        },
+    })
+
     const sendVerification = (validity) => {
-        if(validity===true){
+        if (validity === true) {
             const phoneProvider = new firebase.auth.PhoneAuthProvider();
             phoneProvider.verifyPhoneNumber(phoneNumberFormatted, recaptchaVerifier.current).then(setVerificationID)
+            console.log(user)
+            user['phone'] = phoneNumberFormatted
             setPhoneNumber('')
         }
-        else if(validity===false){
-            alert('Please input a correct phone number')
+        else if (validity === false) {
+            alert('This phone number seems to be incorrect! Please check again, thank you.')
         }
     }
 
@@ -41,70 +87,80 @@ const PhoneAuthScreen = () => {
         )
         firebase.auth().signInWithCredential(credential)
             .then(() => {
+                navigation.navigate('Home', { user })
                 setCode('');
+                Alert.alert(
+                    'Welcome to AshokaEats'
+                )
             })
             .catch((error) => {
                 console.log(error)
-                alert(error)
+                Alert.alert('Incorrect OTP! Please check again, thank you.')
             })
-        Alert.alert(
-            'Login Successful. Welcome to AshokaEats.'
-        )
-        navigation.navigate('Home', {user})
-    }
 
+    }
 
     useLayoutEffect(() => {
         navigation.setOptions({
             headerShown: false,
-            gestureEnabled: false,
         });
-        console.log(user)
     }, []);
 
     return (
-        <SafeAreaView>
-            
-            <View>
-                <FirebaseRecaptchaVerifierModal 
+        <SafeAreaView className='bg-white h-screen'>
+
+            <View className='justify-center'>
+                <FirebaseRecaptchaVerifierModal
                     ref={recaptchaVerifier}
                     firebaseConfig={firebaseConfig}
                 />
-                <Text>Hi, {user.given_name}</Text>
-                <Text>Enter your phone number</Text>
-                <PhoneInput
-                    ref={phoneInput}
-                    defaultValue={phoneNumber}
-                    defaultCode="IN"
-                    onChangeText={(text) => {
-                        setPhoneNumber(text);
-                        console.log(text);
-                        console.log(phoneNumber);
-                    }}
-                    onChangeFormattedText={(text) => {
-                        setPhoneNumberFormatted(text);
-                    }}
-                    autoFocus
-                />
+
+                {/* Go back Button */}
+                <TouchableOpacity onPress={navigation.goBack} className="p-2 bg-gray-100 rounded-full items-center" style={styles.backButton}>
+                    <ArrowLeftIcon size={20} color="black" />
+                </TouchableOpacity>
+
+                <Text className='text-center text-lg font-normal'>Hi, {user.given_name}</Text>
+                <Text className='text-center text-lg font-normal'>Enter your phone number</Text>
+                <View className='py-5 self-center'>
+                    <PhoneInput
+                        ref={phoneInput}
+                        defaultValue={phoneNumber}
+                        defaultCode="IN"
+                        onChangeText={(text) => {
+                            setPhoneNumber(text);
+                        }}
+                        onChangeFormattedText={(text) => {
+                            setPhoneNumberFormatted(text);
+                        }}
+                    />
+                </View>
+
                 <TouchableOpacity
-                onPress={()=>{
-                    const checkValid = phoneInput.current?.isValidNumber(phoneNumber);
-                    setValidity(checkValid ? checkValid : false);
-                    console.log('button number' + phoneNumber);
-                    sendVerification(checkValid)
-                }}
+                    onPress={() => {
+                        const checkValid = phoneInput.current?.isValidNumber(phoneNumber);
+                        setValidity(checkValid ? checkValid : false);
+                        sendVerification(checkValid)
+                    }}
+                    style={styles.OTPButton}
+                    className='self-center'
                 >
-                    <Text>
+                    <Text className='self-center ' style={styles.OTPButtonText}>
                         Verify & Send OTP
                     </Text>
                 </TouchableOpacity>
-                {validity===true &&
-                    <View>
-                        <OTPTextInput autoFocus inputCount={6} handleTextChange={(code)=>{
-                            if(code.length==6){
-                                confirmCode(code)
-                            }
-                        }}/>
+                {validity === true &&
+                    <View className='self-center'>
+                        <OTPInputView
+                            style={{ width: '60%', height: 200 }}
+                            pinCount={6}
+                            autoFocusOnLoad
+                            codeInputFieldStyle={styles.underlineStyleBase}
+                            codeInputHighlightStyle={styles.underlineStyleHighLighted}
+                            onCodeFilled={(code => {
+                                    confirmCode(code)
+                            })}
+                        />
                     </View>
                 }
             </View>

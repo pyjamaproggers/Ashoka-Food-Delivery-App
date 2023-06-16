@@ -74,6 +74,7 @@ export default function UserScreen() {
     navigation.setOptions({
       headerShown: false,
     });
+    console.log(user)
   }, []);
 
   const navigation = useNavigation();
@@ -102,7 +103,7 @@ export default function UserScreen() {
 
             {/* user.phone */}
             <View className='flex-row items-center space-x-1 '>
-              <Text style={styles.phoneText}>+91 6969696969</Text>
+              <Text style={styles.phoneText}>{user.phone}</Text>
               {user.verified_email == true &&
                 <Image source={Verified} style={{ width: 20, height: 20 }} />
               }
