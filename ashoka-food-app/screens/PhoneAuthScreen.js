@@ -24,17 +24,17 @@ const PhoneAuthScreen = () => {
     } = useRoute();
 
     const sendVerification = (validity) => {
-        if(validity==true){
+        if(validity===true){
             const phoneProvider = new firebase.auth.PhoneAuthProvider();
-            phoneProvider.verifyPhoneNumber(phoneNumber, recaptchaVerifier.current).then(setVerificationID)
+            phoneProvider.verifyPhoneNumber(phoneNumberFormatted, recaptchaVerifier.current).then(setVerificationID)
             setPhoneNumber('')
         }
-        else if(validity==false){
+        else if(validity===false){
             alert('Please input a correct phone number')
         }
     }
 
-    const confirmCode = () => {
+    const confirmCode = (code) => {
         const credential = new firebase.auth.PhoneAuthProvider.credential(
             verificationID,
             code
@@ -50,6 +50,7 @@ const PhoneAuthScreen = () => {
         Alert.alert(
             'Login Successful. Welcome to AshokaEats.'
         )
+        navigation.navigate('Home', {user})
     }
 
 
@@ -63,7 +64,12 @@ const PhoneAuthScreen = () => {
 
     return (
         <SafeAreaView>
+            
             <View>
+                <FirebaseRecaptchaVerifierModal 
+                    ref={recaptchaVerifier}
+                    firebaseConfig={firebaseConfig}
+                />
                 <Text>Hi, {user.given_name}</Text>
                 <Text>Enter your phone number</Text>
                 <PhoneInput
@@ -72,18 +78,21 @@ const PhoneAuthScreen = () => {
                     defaultCode="IN"
                     onChangeText={(text) => {
                         setPhoneNumber(text);
+                        console.log(text);
+                        console.log(phoneNumber);
                     }}
                     onChangeFormattedText={(text) => {
                         setPhoneNumberFormatted(text);
                     }}
-                    withShadow
                     autoFocus
                 />
                 <TouchableOpacity
                 onPress={()=>{
-                    const checkValid = phoneInput.current?.isValidNumber(phoneNumber);
-                    setValidity(checkValid ? checkValid : false);
-                    sendVerification(checkValid)
+                    // const checkValid = phoneInput.current?.isValidNumber(phoneNumber);
+                    // setValidity(checkValid ? checkValid : false);
+                    console.log('button number' + phoneNumber);
+                    const test=true
+                    sendVerification(test)
                 }}
                 >
                     <Text>
