@@ -88,18 +88,17 @@ const PhoneAuthScreen = () => {
                 />
                 <TouchableOpacity
                 onPress={()=>{
-                    // const checkValid = phoneInput.current?.isValidNumber(phoneNumber);
-                    // setValidity(checkValid ? checkValid : false);
+                    const checkValid = phoneInput.current?.isValidNumber(phoneNumber);
+                    setValidity(checkValid ? checkValid : false);
                     console.log('button number' + phoneNumber);
-                    const test=true
-                    sendVerification(test)
+                    sendVerification(checkValid)
                 }}
                 >
                     <Text>
                         Verify & Send OTP
                     </Text>
                 </TouchableOpacity>
-                {validity==true &&
+                {validity===true &&
                     <View>
                         <OTPTextInput autoFocus inputCount={6} handleTextChange={(code)=>{
                             if(code.length==6){
