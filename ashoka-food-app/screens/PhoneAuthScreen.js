@@ -6,7 +6,6 @@ import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha'
 import { firebaseConfig } from '../firebaseConfig';
 import firebase from 'firebase/compat/app';
 import PhoneInput from 'react-native-phone-number-input';
-import OTPTextInput from 'react-native-otp-textinput'
 import { ArrowLeftIcon } from 'react-native-heroicons/solid';
 import OTPInputView from '@twotalltotems/react-native-otp-input'
 

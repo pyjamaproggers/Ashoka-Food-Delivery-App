@@ -126,12 +126,12 @@ const Restaurants = () => {
 
   return (
     <ScrollView >
-      <View className=' w-11/12 h-48 self-center mt-1 mb-2 rounded-full shadow-md'>
+      <View className=' w-11/12 h-48 self-center mt-2 mb-2 rounded-full shadow-md'>
         <Image source={Grey} style={{width: '100%', height: '100%', borderRadius: 15,}} />
       </View>
 
       <View className='mt-5 border-t border-gray-300' >
-        <Text className="text-center font-normal text-xs text-gray-400 mx-28 mt-3 -top-5 bg-white">
+        <Text className="text-center font-normal text-xs text-gray-500 mx-28 mt-3 -top-5" style={{backgroundColor: '#F2F2F2'}}>
           WHAT'S ON YOUR MIND?
         </Text>
       </View>
@@ -162,7 +162,7 @@ const Restaurants = () => {
       </View>
       
       <View className='mt-5 border-t border-gray-300' >
-        <Text className="text-center font-normal text-xs text-gray-400 mx-24 mt-3 -top-5 bg-white">
+        <Text className="text-center font-normal text-xs text-gray-500 mx-24 mt-3 -top-5" style={{backgroundColor: '#F2F2F2'}}>
           TAKE A LOOK AT THESE MENUS
         </Text>
       </View>

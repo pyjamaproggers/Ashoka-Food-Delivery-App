@@ -13,7 +13,7 @@ const RestaurantCards = ({id, image, title, genre, timing, location, description
           navigation.navigate('Restaurant', {
             id, image, title, genre, timing, location, description
           })
-      }} className="bg-white mb-3 rounded-xl mx-4 ">
+      }} className="mb-3 rounded-xl mx-4 " style={{backgroundColor: 'white'}}>
 
         <View className='flex-row place-items-start w-24 h-24'>
 

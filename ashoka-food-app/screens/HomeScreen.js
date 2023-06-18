@@ -1,5 +1,5 @@
 import React, { useLayoutEffect, useState } from 'react';
-import { View, Text, Image, TextInput, ScrollView, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
+import { View, Text, Image, TextInput, ScrollView, TouchableOpacity, StyleSheet, FlatList, useColorScheme } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import AshokaLogo from '../assets/ASHOKAWHITELOGO.png';
@@ -18,6 +18,9 @@ const HomeScreen = () => {
   
   const [DeliveryLocation, setDeliveryLocation] = useState('RH1')
   const [isOpen, setIsOpen] = useState(false)
+
+  const theme = useColorScheme();
+  const isDarkTheme = theme === 'dark';
 
   const Locations=[
     {location: 'RH1'},
@@ -39,10 +42,11 @@ const HomeScreen = () => {
       gestureEnabled: false,
     });
     console.log(actualUser);
+    console.log('Theme: ' + isDarkTheme)
   }, []);
 
   return (
-    <SafeAreaView className="bg-white pt-5">
+    <SafeAreaView className=" pt-5" style={{backgroundColor: '#F2F2F2'}}>
       <View className="flex-row pb-3 items-center mx-4 space-x-2 z-50">
 
         <Image source={AshokaLogo} className="h-7 w-7 bg-gray-300 p-4 rounded-full" />
@@ -52,7 +56,7 @@ const HomeScreen = () => {
           {/* Dropdown Menu */}
 
           <TouchableOpacity 
-            className=' h-10 rounded-lg border border-gray-200 shadow-sm mt-1 flex-row justify-between items-center px-2'
+            className='bg-white h-10 rounded-lg border border-gray-200 shadow-sm mt-1 flex-row justify-between items-center px-2'
             onPress={()=>{
               setIsOpen(!isOpen)
             }}
@@ -111,7 +115,7 @@ const HomeScreen = () => {
 
 
       <ScrollView
-        className='bg-white'
+        style={{backgroundColor: '#F2F2F2'}}
         contentContainerStyle={{
           paddingBottom: 150
         }}
