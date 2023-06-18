@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, Image } from 'react-native'
+import { View, Text, ScrollView, Image, useColorScheme } from 'react-native'
 import React from 'react'
 import RestaurantCards from '../components/RestaurantCards'
 import THC from '../assets/THC.jpg'
@@ -7,6 +7,7 @@ import ChicagoPizzaIcon from '../assets/chicagopizzaicon.jpg'
 import Dosai from '../assets/dosai.jpg'
 import Dhaba from '../assets/dhaba.png'
 import Grey from '../assets/greysquare.jpeg'
+import { useLayoutEffect } from 'react'
 
 const Restaurants = () => {
 
@@ -124,6 +125,11 @@ const Restaurants = () => {
     },
     ]
 
+    const colorScheme = useColorScheme();
+
+    useLayoutEffect(()=>{
+    }, [colorScheme])
+
   return (
     <ScrollView >
       <View className=' w-11/12 h-48 self-center mt-2 mb-2 rounded-full shadow-md'>
@@ -131,7 +137,7 @@ const Restaurants = () => {
       </View>
 
       <View className='mt-5 border-t border-gray-300' >
-        <Text className="text-center font-normal text-xs text-gray-500 mx-28 mt-3 -top-5" style={{backgroundColor: '#F2F2F2'}}>
+        <Text className="text-center font-normal text-xs text-gray-500 mx-28 mt-3 -top-5" style={[colorScheme=='light'? {backgroundColor: '#F2F2F2'} : {backgroundColor: '#0c0c0f'}]}>
           WHAT'S ON YOUR MIND?
         </Text>
       </View>
@@ -161,8 +167,8 @@ const Restaurants = () => {
         <Image source={Grey} style={{width: '100%', height: '100%', borderRadius: 15,}} />
       </View>
       
-      <View className='mt-5 border-t border-gray-300' >
-        <Text className="text-center font-normal text-xs text-gray-500 mx-24 mt-3 -top-5" style={{backgroundColor: '#F2F2F2'}}>
+      <View className='mt-5 border-t' style={[colorScheme=='light'? {borderColor: '#D1D5DB'} : {borderColor: '#555555'}]}>
+        <Text className="text-center font-normal text-xs mx-24 mt-3 -top-5" style={[colorScheme=='light'? {backgroundColor: '#F2F2F2', color: '#6B7280'} : {backgroundColor: '#0c0c0f', color: '#d1d5db'}]}>
           TAKE A LOOK AT THESE MENUS
         </Text>
       </View>

@@ -1,5 +1,5 @@
 import React, { useLayoutEffect, useState } from 'react';
-import { View, Text, Image, TextInput, ScrollView, TouchableOpacity, StyleSheet, FlatList, useColorScheme } from 'react-native';
+import { View, Text, Image, TextInput, ScrollView, TouchableOpacity, StyleSheet, FlatList, Appearance, useColorScheme} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import AshokaLogo from '../assets/ASHOKAWHITELOGO.png';
@@ -12,6 +12,7 @@ import {
   ChevronUpIcon
 } from 'react-native-heroicons/outline';
 import Restaurants from './Restaurants';
+import { useEffect } from 'react';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -19,8 +20,7 @@ const HomeScreen = () => {
   const [DeliveryLocation, setDeliveryLocation] = useState('RH1')
   const [isOpen, setIsOpen] = useState(false)
 
-  const theme = useColorScheme();
-  const isDarkTheme = theme === 'dark';
+  const colorScheme = useColorScheme();
 
   const Locations=[
     {location: 'RH1'},
@@ -41,12 +41,11 @@ const HomeScreen = () => {
       headerShown: false,
       gestureEnabled: false,
     });
-    console.log(actualUser);
-    console.log('Theme: ' + isDarkTheme)
-  }, []);
+  }, [colorScheme]);
+
 
   return (
-    <SafeAreaView className=" pt-5" style={{backgroundColor: '#F2F2F2'}}>
+    <SafeAreaView className=" pt-5" style={[colorScheme=='light'? {backgroundColor: '#F2F2F2'} : {backgroundColor: '#0c0c0f'}]}>
       <View className="flex-row pb-3 items-center mx-4 space-x-2 z-50">
 
         <Image source={AshokaLogo} className="h-7 w-7 bg-gray-300 p-4 rounded-full" />
@@ -56,10 +55,11 @@ const HomeScreen = () => {
           {/* Dropdown Menu */}
 
           <TouchableOpacity 
-            className='bg-white h-10 rounded-lg border border-gray-200 shadow-sm mt-1 flex-row justify-between items-center px-2'
+            className=' h-10 rounded-lg border border-gray-200 shadow-sm mt-1 flex-row justify-between items-center px-2'
             onPress={()=>{
               setIsOpen(!isOpen)
             }}
+            style={[colorScheme=='light'? {backgroundColor: '#F2F2F2'} : {backgroundColor: '#262626'}]}
           >
             <Text className='text-md'>{DeliveryLocation}</Text>
             {isOpen? 
@@ -115,7 +115,7 @@ const HomeScreen = () => {
 
 
       <ScrollView
-        style={{backgroundColor: '#F2F2F2'}}
+        style={[colorScheme=='light'? {backgroundColor: '#F2F2F2'} : {backgroundColor: '#0c0c0f'}]}
         contentContainerStyle={{
           paddingBottom: 150
         }}
