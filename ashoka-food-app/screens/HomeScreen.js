@@ -6,6 +6,7 @@ import AshokaLogo from '../assets/ASHOKAWHITELOGO.png';
 import userPic from '../assets/userAvatar.png'
 import { ChevronDownIcon, MagnifyingGlassIcon, ChevronUpIcon} from 'react-native-heroicons/outline';
 import Restaurants from './Restaurants';
+import Styles from '../components/Styles';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -43,18 +44,23 @@ const HomeScreen = () => {
 
         <Image source={AshokaLogo} className="h-7 w-7 bg-gray-300 p-4 rounded-full" />
         <View className="flex-1">
-          <Text className="font-normal text-gray-400 text-xs pl-2">Deliver to</Text>
+          <Text className="font-normal text-xs pl-2"
+          style={[colorScheme=='light'? Styles.LightTextSecondary : Styles.DarkTextSecondary]}
+          >
+            Deliver to
+          </Text>
 
           {/* Dropdown Menu */}
 
           <TouchableOpacity 
-            className=' h-10 rounded-lg border border-gray-200 shadow-sm mt-1 flex-row justify-between items-center px-2'
             onPress={()=>{
               setIsOpen(!isOpen)
             }}
-            style={[colorScheme=='light'? {backgroundColor: '#FFFFFF'} : {backgroundColor: '#262626'}]}
+            style={[colorScheme=='light'? Styles.LightDropdownButton : Styles.DarkDropdownButton]}
           >
-            <Text className='text-md'>{DeliveryLocation}</Text>
+            <Text className='text-sm' style={[colorScheme=='light'? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
+              {DeliveryLocation}
+            </Text>
             {isOpen? 
               <ChevronUpIcon size={20} color="#f87c7c" />
             :
@@ -62,7 +68,7 @@ const HomeScreen = () => {
             }
           </TouchableOpacity>
           {isOpen===true && 
-            <View className='w-full h-36 border border-gray-200 shadow-sm rounded-md bg-white absolute ' style={styles.dropdownArea}>
+            <View style={[colorScheme=='light'? Styles.LightDropdownMenu : Styles.DarkDropdownMenu]}>
                 <FlatList data={Locations} renderItem={({item,index})=>{
                   return(
                       <TouchableOpacity 
@@ -70,9 +76,9 @@ const HomeScreen = () => {
                           setDeliveryLocation(item.location)
                           setIsOpen(false)
                         }}
-                        className='border-b border-gray-200 pl-2 py-3'
+                        style={[colorScheme=='light'? Styles.LightDropdownItem : Styles.DarkDropdownItem]}   
                       >
-                        <Text>
+                        <Text style={[colorScheme=='light'? Styles.LightDropdownText : Styles.DarkDropdownText]}>
                           {item.location}
                         </Text>
                       </TouchableOpacity>
@@ -100,9 +106,9 @@ const HomeScreen = () => {
 
       {/* search */}
       <View className="flex-row item-center space-x-2 pb-2 mx-4 ">
-        <View className="flex-row space-x-2 flex-1 bg-white p-3 border border-gray-200 shadow-sm rounded-xl">
+        <View className="flex-row space-x-2 flex-1 p-3 shadow-sm" style={[colorScheme=='light'? Styles.LightSearchBar : Styles.DarkSearchBar]} >
           <MagnifyingGlassIcon color="#f87c7c" size={20} />
-          <TextInput placeholder="Search for a dish or place" keyboardType="default" />
+          <TextInput placeholder="Search for a dish or place" keyboardType="default" className='w-full'/>
         </View>
       </View>
 

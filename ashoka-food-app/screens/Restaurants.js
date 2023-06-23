@@ -1,14 +1,10 @@
 import { View, Text, ScrollView, Image, useColorScheme } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import RestaurantCards from '../components/RestaurantCards'
-import THC from '../assets/THC.jpg'
-import SubwayIcon from '../assets/subwayicon.png'
-import ChicagoPizzaIcon from '../assets/chicagopizzaicon.jpg'
-import Dosai from '../assets/dosai.jpg'
-import Dhaba from '../assets/dhaba.png'
 import Grey from '../assets/greysquare.jpeg'
 import client from '../sanity'
 import { useLayoutEffect } from 'react'
+import Styles from '../components/Styles'
 const Restaurants = () => {
 
     // const DRestaurants = [
@@ -156,8 +152,11 @@ console.log(DRestaurants);
         <Image source={Grey} style={{width: '100%', height: '100%', borderRadius: 15,}} />
       </View>
 
-      <View className='mt-5 border-t border-gray-300' >
-        <Text className="text-center font-normal text-xs text-gray-500 mx-28 mt-3 -top-5" style={[colorScheme=='light'? {backgroundColor: '#F2F2F2'} : {backgroundColor: '#0c0c0f'}]}>
+      <View className='mt-5 border-t' style={[colorScheme=='light'? Styles.LightHomeAdlibBorder : Styles.DarkHomeAdlibBorder]}  >
+        <Text 
+        className="text-center font-normal text-xs mx-28 mt-3 -top-5" 
+        style={[colorScheme=='light'? Styles.LightHomeAdlib : Styles.DarkHomeAdlib]} 
+        >
           WHAT'S ON YOUR MIND?
         </Text>
       </View>
@@ -188,13 +187,16 @@ console.log(DRestaurants);
         <Image source={Grey} style={{width: '100%', height: '100%', borderRadius: 15,}} />
       </View>
       
-      <View className='mt-5 border-t' style={[colorScheme=='light'? {borderColor: '#D1D5DB'} : {borderColor: '#555555'}]}>
-        <Text className="text-center font-normal text-xs mx-24 mt-3 -top-5" style={[colorScheme=='light'? {backgroundColor: '#F2F2F2', color: '#6B7280'} : {backgroundColor: '#0c0c0f', color: '#d1d5db'}]}>
-          TAKE A LOOK AT THESE MENUS
+      <View className='mt-5 border-t' style={[colorScheme=='light'? Styles.LightHomeAdlibBorder : Styles.DarkHomeAdlibBorder]}  >
+        <Text 
+        className="text-center font-normal text-xs mx-24 mt-3 -top-5" 
+        style={[colorScheme=='light'? Styles.LightHomeAdlib : Styles.DarkHomeAdlib]} 
+        >
+          TAKE A LOOK AT THESE MENUS!
         </Text>
       </View>
 
-      {
+      {/* {
         NDRestaurants.map((restaurant)=>
         (
             <RestaurantCards 
@@ -207,7 +209,7 @@ console.log(DRestaurants);
             location={restaurant.location}
             description={restaurant.description}/>
         ))
-      }
+      } */}
     </ScrollView>
   )
 }
