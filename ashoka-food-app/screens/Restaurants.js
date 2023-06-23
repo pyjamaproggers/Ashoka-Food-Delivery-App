@@ -2,6 +2,7 @@ import { View, Text, ScrollView, Image, useColorScheme } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import RestaurantCards from '../components/RestaurantCards'
 import Grey from '../assets/greysquare.jpeg'
+import HomeImage1 from '../assets/HomeImage1.jpeg';
 import client from '../sanity'
 import { useLayoutEffect } from 'react'
 import Styles from '../components/Styles'
@@ -148,8 +149,8 @@ const Restaurants = () => {
 console.log(DRestaurants);
   return (
     <ScrollView >
-      <View className=' w-11/12 h-48 self-center mt-2 mb-2 rounded-full shadow-md'>
-        <Image source={Grey} style={{width: '100%', height: '100%', borderRadius: 15,}} />
+      <View className=' w-11/12 h-52 self-center mt-2 mb-2 rounded-full shadow-md'>
+        <Image source={HomeImage1} style={{width: '100%', height: '100%', borderRadius: 15,}} />
       </View>
 
       <View className='mt-5 border-t' style={[colorScheme=='light'? Styles.LightHomeAdlibBorder : Styles.DarkHomeAdlibBorder]}  >
