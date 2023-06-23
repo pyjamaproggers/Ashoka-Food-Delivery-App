@@ -3,6 +3,7 @@ import { useRoute, useNavigation} from '@react-navigation/native';
 import { View, Text, Image, TextInput, ScrollView } from 'react-native'
 import { TouchableOpacity } from 'react-native';
 import { ArrowLeftIcon, ClockIcon, MapPinIcon, BoltIcon} from 'react-native-heroicons/solid';
+import DishRow from './DishRow';
 
 const RestaurantScreen = () =>
 {
@@ -10,7 +11,7 @@ const RestaurantScreen = () =>
 
     const {
         params: {
-            id, image, title, genre, timing, location, description
+            id, image, title, genre, timing, location, description, dishes
         },
     } = useRoute();
 
@@ -53,8 +54,21 @@ const RestaurantScreen = () =>
                         </View>
                     </View>
                 </View>
-                
             </View>
+            {/* Menu */}
+            <View>
+                    <Text className="px-4 pt-6 mb-3 font-bold text-xl">
+                        Menu
+                    </Text>
+
+                    {/* Dishrows */}
+                    {dishes.map((dish)=>{
+                        console.log(dish)
+                        return(
+                            <DishRow name = {dish.name} price = {dish["Price"]}/>
+                        )
+                        })}
+                </View>
         </ScrollView>
     );
 }

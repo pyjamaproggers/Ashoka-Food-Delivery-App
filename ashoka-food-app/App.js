@@ -10,7 +10,9 @@ import { Provider } from 'react-redux';
 import { store } from './store';
 import UserScreen from './screens/UserScreen';
 import PhoneAuthScreen from './screens/PhoneAuthScreen';
+import { setupURLPolyfill } from "react-native-url-polyfill"
 
+setupURLPolyfill()
 const Stack = createNativeStackNavigator();
 
 export default function App() {

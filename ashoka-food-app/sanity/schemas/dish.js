@@ -12,7 +12,7 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     },
     {
-      name: "Menu category",
+      name: "Menu_category",
       type: 'string',
       title: 'Cuisine or category the dish is a part of. Example, Starters or Main Course or Chinese or Indian etc',
       validation: (Rule) => Rule.max(200),
@@ -24,7 +24,7 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     },
     {
-      name: "Veg/Non-veg",
+      name: "Veg_NonVeg",
       type: 'string',
       title: 'Is the Dish Veg or Non Veg',
       validation: (Rule) => Rule.required(),

@@ -1,5 +1,5 @@
 import { View, Text, ScrollView, Image, useColorScheme } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import RestaurantCards from '../components/RestaurantCards'
 import THC from '../assets/THC.jpg'
 import SubwayIcon from '../assets/subwayicon.png'
@@ -7,75 +7,77 @@ import ChicagoPizzaIcon from '../assets/chicagopizzaicon.jpg'
 import Dosai from '../assets/dosai.jpg'
 import Dhaba from '../assets/dhaba.png'
 import Grey from '../assets/greysquare.jpeg'
+import client from '../sanity'
 import { useLayoutEffect } from 'react'
-
 const Restaurants = () => {
 
-    const DRestaurants = [
-        {
-            id:7,
-            title:"Roti Boti",
-            image: Grey,
-            timing: "6am To 12am",
-            genre: "Indian & Chinese",
-            description: "Best Mix Of Indian & Chinese",
-            location: "Opposite Tennis Court"
-        },
-        {
-            id:1,
-            title:"The Hunger Cycle",
-            image: Grey,
-            timing: "6am To 12am",
-            genre: "Fast Food",
-            description: "EPIC MUNCHIES 24 X 7",
-            location: "Mess - G Floor"
-        },
-        {
-            id:2,
-            title:"Chicago Pizza",
-            image: Grey,
-            timing: "6am To 12am",
-            genre: "Fast Food",
-            description: "Big Slices, Really Fast!",
-            location: "Next To Mess"
-        },
-        {
-            id:3,
-            title:"Subway",
-            image: Grey,
-            timing: "6am To 12am",
-            genre: "Fast Food",
-            description: "Eat Fresh",
-            location: "Mess - 1st Floor"
-        },
-        {
-            id:4,
-            title:"Dhaba",
-            image: Grey,
-            timing: "6am To 12am",
-            genre: "Indian",
-            description: "Classic Indian Dhaba",
-            location: "Next To Frisbee Field"
-        },
-        {
-          id:5,
-          title:"Chaat Stall",
-          image: Grey,
-          timing: "6am To 12am",
-          genre: "Chaat",
-          description: "From Gol Gappe To Rolls!",
-          location: "Next To Tennis Court"
-      },
-      {
-        id:6,
-        title:"Rasananda",
-        image: Grey,
-        timing: "6am To 12am",
-        genre: "Snacks",
-        description: "Late Night Snacks Joint",
-        location: "Next To Tennis Court"
-      },
-    ]
+    // const DRestaurants = [
+    //     {
+    //         id:7,
+    //         title:"Roti Boti",
+    //         image: Grey,
+    //         timing: "6am To 12am",
+    //         genre: "Indian & Chinese",
+    //         description: "Best Mix Of Indian & Chinese",
+    //         location: "Opposite Tennis Court"
+    //     },
+    //     {
+    //         id:1,
+    //         title:"The Hunger Cycle",
+    //         image: Grey,
+    //         timing: "6am To 12am",
+    //         genre: "Fast Food",
+    //         description: "EPIC MUNCHIES 24 X 7",
+    //         location: "Mess - G Floor"
+    //     },
+    //     {
+    //         id:2,
+    //         title:"Chicago Pizza",
+    //         image: Grey,
+    //         timing: "6am To 12am",
+    //         genre: "Fast Food",
+    //         description: "Big Slices, Really Fast!",
+    //         location: "Next To Mess"
+    //     },
+    //     {
+    //         id:3,
+    //         title:"Subway",
+    //         image: Grey,
+    //         timing: "6am To 12am",
+    //         genre: "Fast Food",
+    //         description: "Eat Fresh",
+    //         location: "Mess - 1st Floor"
+    //     },
+    //     {
+    //         id:4,
+    //         title:"Dhaba",
+    //         image: Grey,
+    //         timing: "6am To 12am",
+    //         genre: "Indian",
+    //         description: "Classic Indian Dhaba",
+    //         location: "Next To Frisbee Field"
+    //     },
+    //     {
+    //       id:5,
+    //       title:"Chaat Stall",
+    //       image: Grey,
+    //       timing: "6am To 12am",
+    //       genre: "Chaat",
+    //       description: "From Gol Gappe To Rolls!",
+    //       location: "Next To Tennis Court"
+    //   },
+    //   {
+    //     id:6,
+    //     title:"Rasananda",
+    //     image: Grey,
+    //     timing: "6am To 12am",
+    //     genre: "Snacks",
+    //     description: "Late Night Snacks Joint",
+    //     location: "Next To Tennis Court"
+    //   },
+    // ]
+    
+    const [DRestaurants, setDRestaurants] = useState([]);
 
     const NDRestaurants = [
     {
@@ -130,6 +132,24 @@ const Restaurants = () => {
     useLayoutEffect(()=>{
     }, [colorScheme])
 
+    useEffect(() => {
+      const query = `*[_type == "restaurant"]
+      {description, location,
+        name, image, genre, timing, 
+        dishes[]->{name, description, price, image}}`;
+    
+      client
+        .fetch(query)
+        .then((data) => {
+          console.log('Data:', data); // Log the received data for inspection
+          setDRestaurants(data);
+        })
+        .catch((error) => {
+          console.log('Error:', error); // Log any errors that occur
+        });
+    }, []);
+    
+console.log(DRestaurants);
   return (
     <ScrollView >
       <View className=' w-11/12 h-48 self-center mt-2 mb-2 rounded-full shadow-md'>
@@ -152,14 +172,15 @@ const Restaurants = () => {
         DRestaurants.map((restaurant)=>
         (
             <RestaurantCards 
-            key={restaurant.id}
-            id={restaurant.id}
-            image={restaurant.image}
-            title={restaurant.title}
-            timing={restaurant.timing}
-            genre={restaurant.genre}
-            location={restaurant.location}
-            description={restaurant.description}/>
+            // key={restaurant.id}
+            // id={restaurant.id}
+            image={restaurant["image"]}
+            title={restaurant["name"]}
+            timing={restaurant["timing"]}
+            genre={restaurant["genre"]}
+            location={restaurant["location"]}
+            description={restaurant["description"]}
+            dishes={restaurant["dishes"]}/>
         ))
       }
 

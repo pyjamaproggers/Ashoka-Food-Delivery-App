@@ -4,14 +4,14 @@ import { StarIcon, ClockIcon, MapPinIcon, BoltIcon } from "react-native-heroicon
 import {  } from "react-native-heroicons/outline";
 import {useNavigation} from "@react-navigation/native";
 
-const RestaurantCards = ({id, image, title, genre, timing, location, description}) => {
+const RestaurantCards = ({id, image, title, genre, timing, location, description, dishes}) => {
 
   const navigation = useNavigation();
   return (
     <View className='shadow'>
       <TouchableOpacity onPress={()=>{
           navigation.navigate('Restaurant', {
-            id, image, title, genre, timing, location, description
+            id, image, title, genre, timing, location, description, dishes
           })
       }} className="mb-3 rounded-xl mx-4 " style={{backgroundColor: 'white'}}>
 
