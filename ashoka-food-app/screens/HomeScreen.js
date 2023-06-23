@@ -1,18 +1,11 @@
 import React, { useLayoutEffect, useState } from 'react';
-import { View, Text, Image, TextInput, ScrollView, TouchableOpacity, StyleSheet, FlatList, Appearance, useColorScheme} from 'react-native';
+import { View, Text, Image, TextInput, ScrollView, TouchableOpacity, StyleSheet, FlatList, useColorScheme} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import AshokaLogo from '../assets/ASHOKAWHITELOGO.png';
 import userPic from '../assets/userAvatar.png'
-import {
-  UserIcon,
-  ChevronDownIcon,
-  MagnifyingGlassIcon,
-  AdjustmentsVerticalIcon,
-  ChevronUpIcon
-} from 'react-native-heroicons/outline';
+import { ChevronDownIcon, MagnifyingGlassIcon, ChevronUpIcon} from 'react-native-heroicons/outline';
 import Restaurants from './Restaurants';
-import { useEffect } from 'react';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -59,7 +52,7 @@ const HomeScreen = () => {
             onPress={()=>{
               setIsOpen(!isOpen)
             }}
-            style={[colorScheme=='light'? {backgroundColor: '#F2F2F2'} : {backgroundColor: '#262626'}]}
+            style={[colorScheme=='light'? {backgroundColor: '#FFFFFF'} : {backgroundColor: '#262626'}]}
           >
             <Text className='text-md'>{DeliveryLocation}</Text>
             {isOpen? 
