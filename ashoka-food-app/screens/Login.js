@@ -1,5 +1,5 @@
 import React, { useLayoutEffect, useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, Image, useColorScheme } from "react-native";
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -7,6 +7,7 @@ import { IOS, WEB, EXPO } from '@dotenv'
 import AshokaLogo from '../assets/ashokauniversity.png';
 import { ArrowRightIcon } from 'react-native-heroicons/outline';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Styles from '../components/Styles';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -19,6 +20,8 @@ export default function Login() {
     webClientId: WEB,
     expoClientId: EXPO
   });
+
+  const colorScheme = useColorScheme();
 
   const {
     params: { logout:logoutParam, phone:phone},
@@ -128,7 +131,7 @@ export default function Login() {
   }, [response])
 
   return (
-    <View style={styles.container}>
+    <View style={[colorScheme=='light' ? styles.Lightcontainer: styles.Darkcontainer]}>
       <View style={styles.imageContainer}>
         <Image source={AshokaLogo} style={styles.image} />
       </View>
@@ -140,14 +143,20 @@ export default function Login() {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  Lightcontainer: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#F2F2F2",
+    alignItems: "center",
+    paddingTop: '60%'
+  },
+  Darkcontainer:{
+    flex: 1,
+    backgroundColor: '#0c0c0f',
     alignItems: "center",
     paddingTop: '60%'
   },
   imageContainer: {
-    width: "70%",
+    width: "80%",
     alignItems: "center",
     justifyContent: "center",
   },

@@ -1,5 +1,5 @@
 import React, { useLayoutEffect, useState, useRef } from 'react';
-import { View, Text, Image, TextInput, ScrollView, TouchableOpacity, StyleSheet, FlatList, Alert } from 'react-native';
+import { View, Text, Image, TextInput, ScrollView, TouchableOpacity, StyleSheet, FlatList, Alert, useColorScheme } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha'
@@ -7,7 +7,8 @@ import { firebaseConfig } from '../firebaseConfig';
 import firebase from 'firebase/compat/app';
 import PhoneInput from 'react-native-phone-number-input';
 import { ArrowLeftIcon } from 'react-native-heroicons/solid';
-import OTPInputView from '@twotalltotems/react-native-otp-input'
+import OTPInputView from '@twotalltotems/react-native-otp-input';
+import Styles from '../components/Styles';
 
 const PhoneAuthScreen = () => {
     const [phoneNumber, setPhoneNumber] = useState('')
@@ -19,6 +20,7 @@ const PhoneAuthScreen = () => {
     const phoneInput = useRef(null);
 
     const navigation = useNavigation();
+    const colorScheme=useColorScheme();
 
     const {
         params: { actualUser },
@@ -53,12 +55,19 @@ const PhoneAuthScreen = () => {
             borderColor: "#3E5896",
         },
 
-        underlineStyleBase: {
+        LightunderlineStyleBase: {
             width: 30,
             height: 45,
             borderWidth: 0,
             borderBottomWidth: 1,
             color: 'black'
+        },
+        DarkunderlineStyleBase: {
+            width: 30,
+            height: 45,
+            borderWidth: 0,
+            borderBottomWidth: 1,
+            color: 'white'
         },
 
         underlineStyleHighLighted: {
@@ -106,7 +115,7 @@ const PhoneAuthScreen = () => {
     }, []);
 
     return (
-        <SafeAreaView className='bg-white h-screen'>
+        <SafeAreaView className='h-screen' style={[colorScheme=='light'? {backgroundColor: '#F2F2F2'} : {backgroundColor: '#0c0c0f'}]}>
 
             <View className='justify-center'>
                 <FirebaseRecaptchaVerifierModal
@@ -119,8 +128,8 @@ const PhoneAuthScreen = () => {
                     <ArrowLeftIcon size={20} color="black" />
                 </TouchableOpacity>
 
-                <Text className='text-center text-lg font-normal'>Hi, {actualUser.given_name}</Text>
-                <Text className='text-center text-lg font-normal'>Enter your phone number</Text>
+                <Text className='text-center text-lg font-normal' style={[colorScheme=='light'? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>Hi, {actualUser.given_name}</Text>
+                <Text className='text-center text-lg font-normal' style={[colorScheme=='light'? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>Enter your phone number</Text>
                 <View className='py-5 self-center'>
                     <PhoneInput
                         ref={phoneInput}
@@ -132,6 +141,7 @@ const PhoneAuthScreen = () => {
                         onChangeFormattedText={(text) => {
                             setPhoneNumberFormatted(text);
                         }}
+                        
                     />
                 </View>
 
@@ -154,7 +164,7 @@ const PhoneAuthScreen = () => {
                             style={{ width: '60%', height: 200 }}
                             pinCount={6}
                             autoFocusOnLoad
-                            codeInputFieldStyle={styles.underlineStyleBase}
+                            codeInputFieldStyle={[colorScheme=='light'?styles.LightunderlineStyleBase:styles.DarkunderlineStyleBase]}
                             codeInputHighlightStyle={styles.underlineStyleHighLighted}
                             onCodeFilled={(code => {
                                     confirmCode(code)

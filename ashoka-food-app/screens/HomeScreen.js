@@ -93,6 +93,7 @@ const HomeScreen = () => {
           <TouchableOpacity onPress={()=>{
             console.log(actualUser);
             navigation.navigate('UserScreen', { actualUser })
+            setIsOpen(false)
           }}>
             {actualUser.hasOwnProperty('picture')? 
               <Image style={styles.userPic} source={{uri:actualUser.picture}} />
@@ -108,7 +109,10 @@ const HomeScreen = () => {
       <View className="flex-row item-center space-x-2 pb-2 mx-4 ">
         <View className="flex-row space-x-2 flex-1 p-3 shadow-sm" style={[colorScheme=='light'? Styles.LightSearchBar : Styles.DarkSearchBar]} >
           <MagnifyingGlassIcon color="#f87c7c" size={20} />
-          <TextInput placeholder="Search for a dish or place" keyboardType="default" className='w-full'/>
+          <TextInput placeholder="Search for a dish or place" keyboardType="default" className='w-full'
+          onPressIn={()=>{
+            setIsOpen(false)
+          }}/>
         </View>
       </View>
 

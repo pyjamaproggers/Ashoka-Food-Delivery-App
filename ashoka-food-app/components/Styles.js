@@ -80,7 +80,7 @@ const Styles = StyleSheet.create({
         width: '100%',
         height: 200,
         borderRadius: '6px',
-        borderWidth: '1px',
+        borderTopWidth: '1px',
         borderColor: 'rgb(0,0,0)',
         shadowColor: '#000',
         shadowOffset: {width: 0, height: 0},
@@ -102,13 +102,13 @@ const Styles = StyleSheet.create({
     },
     LightDropdownText:{
         color: 'black',
-        paddingTop: 10,
-        paddingBottom: 10
+        paddingTop: '5%',
+        paddingBottom: '5%'
     },
     DarkDropdownText:{
         color: 'white',
-        paddingTop: 10,
-        paddingBottom: 10
+        paddingTop: '5%',
+        paddingBottom: '5%'
     },
     LightSearchBar:{
         backgroundColor: 'white',
@@ -136,7 +136,23 @@ const Styles = StyleSheet.create({
     DarkHomeAdlibBorder:{
         borderColor: 'rgb(75, 85, 99)'
     },
+    LightUserDetailsBorder:{
+        borderBottomWidth: 1,
+        borderColor: 'rgb(229, 231, 235)'
+    },
+    DarkUserDetailsBorder:{
+        borderBottomWidth: 1,
+        borderColor: 'rgb(75, 85, 99)'
+    },
 
+    LightUserDetailsBorderLast:{
+        borderBottomWidth: 1,
+        borderColor: 'white'
+    },
+    DarkUserDetailsBorderLast:{
+        borderBottomWidth: 1,
+        borderColor: '#262626'
+    }
 });
 
 export default Styles;
