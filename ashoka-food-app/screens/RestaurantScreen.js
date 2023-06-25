@@ -1,14 +1,18 @@
 import React, {useLayoutEffect} from 'react'
+import { useEffect } from 'react';
 import { useRoute, useNavigation} from '@react-navigation/native';
 import { View, Text, Image, TextInput, ScrollView } from 'react-native'
 import { TouchableOpacity } from 'react-native';
 import { ArrowLeftIcon, ClockIcon, MapPinIcon, BoltIcon} from 'react-native-heroicons/solid';
+import { selectRestaurant, setRestaurant } from '../reduxslices/restaurantSlice'
+import { useDispatch } from 'react-redux'
+import CartIcon from '../components/CartIcon';
 import DishRow from './DishRow';
 
 const RestaurantScreen = () =>
 {
     const navigation = useNavigation();
-
+    const dispatch = useDispatch()
     const {
         params: {
             id, image, title, genre, timing, location, description, dishes
@@ -21,7 +25,19 @@ const RestaurantScreen = () =>
         })
     }, [])
 
+    useEffect(() => {
+        dispatch(
+          setRestaurant({
+            description: description, location : location,
+        name : title, image : image, genre : null, timing : timing, 
+        dishes : dishes
+          })
+        )
+        console.log("RESTAURANT SET!")
+      }, [dispatch])
     return(
+        <>
+        <CartIcon/>
         <ScrollView>
             <View className="relative">
                 <Image source={image} className="w-full h-56 bg-gray-300 p-4"/>
@@ -65,11 +81,12 @@ const RestaurantScreen = () =>
                     {dishes.map((dish)=>{
                         console.log(dish)
                         return(
-                            <DishRow name = {dish.name} price = {dish["Price"]}/>
+                            <DishRow name = {dish.name} Price = {dish.Price} Veg_NonVeg={dish.Veg_NonVeg}/>
                         )
                         })}
                 </View>
         </ScrollView>
+        </>
     );
 }
 

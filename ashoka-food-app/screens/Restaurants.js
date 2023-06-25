@@ -133,7 +133,7 @@ const Restaurants = () => {
       const query = `*[_type == "restaurant"]
       {description, location,
         name, image, genre, timing, 
-        dishes[]->{name, description, price, image}}`;
+        dishes[]->{name, Veg_NonVeg, Price, image, Menu_category}}`;
     
       client
         .fetch(query)

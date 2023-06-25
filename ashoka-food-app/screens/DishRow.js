@@ -2,64 +2,89 @@ import { View, Text, TouchableOpacity, Image } from "react-native";
 import React from "react";
 import { urlFor } from "../sanity";
 import { MinusCircleIcon, PlusCircleIcon } from "react-native-heroicons/solid";
-import { addToCart, removeFromCart } from "../reduxslices/cartslice";
+import { addToCart, removeFromCart, selectCartItems } from "../reduxslices/cartslice";
 import { useDispatch, useSelector } from "react-redux";
+import VegIcon from '../assets/vegicon.png';
+import NonVegIcon from '../assets/nonvegicon.png';
 
-const DishRow = ({ id, name, description, price, image }) => {
+const DishRow = ({ id, name, Veg_NonVeg, Price, image, Menu_category }) => {
   const [isPressed, setIsPressed] = React.useState(false);
 
   const dispatch = useDispatch();
-  const items = useSelector((state) => state.cart.items);
+  const items = useSelector(selectCartItems);
+  const itemQuantity = items.filter(item => item.name === name).length;
+
   const addItem = () => {
-    dispatch(addToCart({ id, name, description, price, image }));
+    dispatch(addToCart({ id, name, Price, image }));
   };
+
   const removeItem = () => {
-    dispatch(removeFromCart());
+    dispatch(removeFromCart({ id, name, Price, image }));
   };
+
   return (
     <>
       <TouchableOpacity
-        onPress={() => setIsPressed(!isPressed)}
-        style={`bg-white border p-4 border-gray-200 ${
-          isPressed ? "border-b-0" : ""
-        }`}
+        onPress={() => {
+          setIsPressed(!isPressed);
+        }}
+        style={{
+          backgroundColor: "white",
+          borderWidth: 1,
+          borderColor: "gray",
+          padding: 4,
+          borderBottomWidth: isPressed ? 0 : 1,
+        }}
       >
-        <View style="flex-row">
-          <View style="flex-1 pr-2">
-            <Text style="text-l mb-1">{name}</Text>
-            <View></View>
-            <Text style="text-gray-400">{description}</Text>
-            <Text style="text-gray-400 mt-2">{price}</Text>
+        <View style={{ flexDirection: "row" }}>
+          <View style={{ flex: 1, paddingRight: 2 }}>
+            {Veg_NonVeg === "Veg" ? (
+              <Image
+                style={{ width: 20, height: 20, resizeMode: "contain" }}
+                source={VegIcon}
+              />
+            ) : (
+              <Image
+                style={{ width: 20, height: 20, resizeMode: "contain" }}
+                source={NonVegIcon}
+              />
+            )}
+            <Text style={{ fontSize: "lg", marginBottom: 1 }}>{name}</Text>
+            <Text>₹{Price}</Text>
           </View>
           <View>
-            <Image
-              style={{ borderWidth: 1, borderColor: "#f3f3f4" }}
-              className="h-20 w-20 bg-gray-300"
-              source={{
-                // uri: urlFor(image.asset._ref).url(),
-              }}
-            />
+            {/* {
+              image!==null?(<Image
+                style={{ borderWidth: 1, borderColor: '#F3F3F4' }}
+                source={{ uri: urlFor(image).url() }}
+                className="h-20 w-20 bg-gray-300 p-4"
+              />):(<></>)
+            } */}
           </View>
-        </View>
-      </TouchableOpacity>
-      {isPressed && (
-        <View style="bg-white px-4">
-          <View style="flex-row items-center space-x-2 pb-3">
-            <TouchableOpacity disabled={!items.length} onPress={removeItem}>
+          
+        <View style={{ backgroundColor: "white", padding: 4 }}>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+              paddingBottom: 3,
+            }}
+          >
+            <TouchableOpacity disabled={!itemQuantity} onPress={removeItem}>
               <MinusCircleIcon
-                color={items.length > 0 ? "#00ccbb" : "grey"}
-                size={40}
+                color={itemQuantity > 0 ? "#00CCBB" : "gray"}
+                size={25}
               />
             </TouchableOpacity>
-
-            <Text>{items.length}</Text>
-
+            <Text>{itemQuantity}</Text>
             <TouchableOpacity onPress={addItem}>
-              <PlusCircleIcon color="#00ccbb" size={40} />
+              <PlusCircleIcon color="#cb202d" size={25} />
             </TouchableOpacity>
           </View>
         </View>
-      )}
+        </View>
+      </TouchableOpacity>
     </>
   );
 };
