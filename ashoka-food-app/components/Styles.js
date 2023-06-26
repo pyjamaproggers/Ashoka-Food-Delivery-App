@@ -152,7 +152,25 @@ const Styles = StyleSheet.create({
     DarkUserDetailsBorderLast:{
         borderBottomWidth: 1,
         borderColor: '#262626'
-    }
+    },
+    RestaurantImage: scrollA => ({
+        width: '100%',
+        height: 200,
+        transform: [
+            {
+                translateY: scrollA.interpolate({
+                    inputRange: [-200, 0, 200, 201],
+                    outputRange: [-200/2, 0, 200 * 0.75, 200 * 0.75]
+                }),
+            },
+            {
+                scale: scrollA.interpolate({
+                    inputRange: [-200, 0, 200, 201],
+                    outputRange: [2, 1, 0.5, 0.5]
+                })
+            }
+        ]
+    })
 });
 
 export default Styles;

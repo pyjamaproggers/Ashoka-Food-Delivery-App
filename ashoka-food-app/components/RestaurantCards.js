@@ -1,4 +1,4 @@
-import { View, Text, Image, TouchableOpacity, StyleSheet, useColorScheme } from 'react-native'
+import { View, Text, Image, TouchableOpacity, StyleSheet, useColorScheme, } from 'react-native'
 import React from 'react'
 import { StarIcon, ClockIcon, MapPinIcon, BoltIcon } from "react-native-heroicons/solid";
 import {  } from "react-native-heroicons/outline";
@@ -29,7 +29,7 @@ const RestaurantCards = ({id, image, title, genre, timing, location, description
             </Text>
 
             <View className="flex-row items-center space-x-1 mb-1 w-60">
-              <ClockIcon size={14} color="#F04C0F" opacity={1}/>
+              <ClockIcon size={14} style={[colorScheme=='light'? {color: '#FF5436'} : {color: '#FF8975'}]} opacity={1}/>
               <Text className="flex-row text-xs text-gray-600"
                 style={[colorScheme=='light'? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
               >
@@ -38,7 +38,7 @@ const RestaurantCards = ({id, image, title, genre, timing, location, description
             </View>
 
             <View className="flex-row items-center space-x-1 mb-1">
-              <MapPinIcon size={14} color="#2989D6" opacity={1}/>
+              <MapPinIcon size={14} style={[colorScheme=='light'? {color: '#008FFF'} : {color: '#45ADFD'}]} opacity={1}/>
               <Text className="text-xs text-gray-600" 
                 style={[colorScheme=='light'? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
               >
@@ -47,7 +47,7 @@ const RestaurantCards = ({id, image, title, genre, timing, location, description
             </View>
 
             <View className="flex-row items-center space-x-1 mb-1">
-              <BoltIcon size={14} color="#FDD023" opacity={1}/>
+              <BoltIcon size={14} style={[colorScheme=='light'? {color: '#FDD023'} : {color: '#F1C40F'}]} opacity={1}/>
               <Text className="text-xs text-gray-600" style={[colorScheme=='light'? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
                 {description}
               </Text>
