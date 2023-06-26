@@ -160,17 +160,28 @@ const Styles = StyleSheet.create({
             {
                 translateY: scrollA.interpolate({
                     inputRange: [-200, 0, 200, 201],
-                    outputRange: [-200/2, 0, 200 * 0.75, 200 * 0.75]
+                    outputRange: [-200/2, 0, 200 * 0.25, 200 * 0.1]
                 }),
             },
             {
                 scale: scrollA.interpolate({
                     inputRange: [-200, 0, 200, 201],
-                    outputRange: [2, 1, 0.5, 0.5]
+                    outputRange: [2, 1, 1, 1]
                 })
             }
-        ]
-    })
+        ],
+        backgroundColor: '#f2f2f2'
+    }),
+    LightBackButton: {
+        width: "10%",
+        marginLeft: 20,
+        backgroundColor: 'white'
+    },
+    DarkBackButton:{
+        width: "10%",
+        marginLeft: 20,
+        backgroundColor: '#262626'
+    }
 });
 
 export default Styles;
