@@ -1,35 +1,35 @@
 {
-  "expo": {
-    "name": "react-native-food-app-practice",
-    "slug": "react-native-food-app-practice",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "scheme": "com.anonymous.reactnativefoodapppractice",
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.reactnativefoodapppractice",
-      "userInterfaceStyle": "automatic"
-    },
-    "android": {
-      "userInterfaceStyle": "automatic",
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      },
-      "package": "com.anonymous.reactnativefoodapppractice"
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    }
-  }
+	"expo": {
+		"name": "react-native-food-app-practice",
+		"slug": "react-native-food-app-practice",
+		"version": "1.0.0",
+		"orientation": "portrait",
+		"icon": "./assets/icon.png",
+		"userInterfaceStyle": "light",
+		"splash": {
+			"image": "./assets/splash.png",
+			"resizeMode": "contain",
+			"backgroundColor": "#ffffff"
+		},
+		"scheme": "com.anonymous.reactnativefoodapppractice",
+		"assetBundlePatterns": [
+			"**/*"
+		],
+		"ios": {
+			"supportsTablet": true,
+			"bundleIdentifier": "com.anonymous.reactnativefoodapppractice",
+			"userInterfaceStyle": "automatic"
+		},
+		"android": {
+			"userInterfaceStyle": "automatic",
+			"adaptiveIcon": {
+				"foregroundImage": "./assets/adaptive-icon.png",
+				"backgroundColor": "#ffffff"
+			},
+			"package": "com.anonymous.reactnativefoodapppractice"
+		},
+		"web": {
+			"favicon": "./assets/favicon.png"
+		}
+	}
 }
