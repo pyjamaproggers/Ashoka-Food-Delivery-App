@@ -176,7 +176,7 @@ const RestaurantScreen = () => {
                 <>
                     {
                         section.content.map((dish) => (
-                            <DishRow name={dish.name} Price={dish.Price} Veg_NonVeg={dish.Veg_NonVeg} delivery={delivery} />
+                            <DishRow name={dish.name} Price={dish.Price} Veg_NonVeg={dish.Veg_NonVeg} delivery={delivery} key={dish._id} id={dish._id}/>
                         ))
                     }
                 </>

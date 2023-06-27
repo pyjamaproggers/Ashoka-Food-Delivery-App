@@ -10,15 +10,27 @@ export const cartSlice = createSlice({
       state.items = [...state.items, action.payload];
     },
     removeFromCart: (state, action) => {
-      state.items = state.items.filter((item) => item.id !== action.payload.id);
-    },
-  },
-});
+      const index = state.items.findIndex(item => item.id === action.payload.id)
+      let newCart = [...state.items]
+      if (index >= 0) {
+        newCart.splice(index, 1)
+      } else {
+        console.warn(
+          `Can't remove product (id: ${action.payload.id}) as it is not in basket`
+        )
+      }
+      state.items = newCart
+    }
+  }
+})
 
 export const { addToCart, removeFromCart } = cartSlice.actions;
 
 export const selectCartItems = (state) => state.cart.items;
 
+export const selectCartItemsWithId = (state, id) =>
+  state.cart.items.filter(item => item.id === id)
+  
 export const selectCartTotal = state =>
   state.cart.items.reduce((total, item) => (total += item.Price), 0)
 

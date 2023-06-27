@@ -19,7 +19,7 @@ export default defineType({
     },
     {
       name: "Price",
-      type: 'string',
+      type: 'number',
       title: 'Price of the dish in INR',
       validation: (Rule) => Rule.required(),
     },
