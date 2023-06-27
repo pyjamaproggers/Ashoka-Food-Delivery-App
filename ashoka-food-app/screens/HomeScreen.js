@@ -8,6 +8,7 @@ import { ChevronDownIcon, MagnifyingGlassIcon, ChevronUpIcon } from 'react-nativ
 import Restaurants from './Restaurants';
 import Styles from '../components/Styles';
 
+
 const HomeScreen = () => {
     const navigation = useNavigation();
 

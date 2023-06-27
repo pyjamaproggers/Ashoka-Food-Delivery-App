@@ -14,9 +14,12 @@ import { HStack, VStack } from 'native-base';
 import Accordion from 'react-native-collapsible/Accordion';
 import VegIcon from '../assets/vegicon.png';
 import NonVegIcon from '../assets/nonvegicon.png';
-
+import clockIcon from '../assets/clockicon.png'
+import cashIcon from '../assets/cashicon.png'
+import phoneIcon from '../assets/phoneicon.png';
 
 const RestaurantScreen = () => {
+
     const [VegDishes, setVegDishes] = useState([]);
     const [VegMenu, setVegMenu] = useState();
     const [showVegMenu, setShowVegMenu] = useState(false);
@@ -49,10 +52,14 @@ const RestaurantScreen = () => {
 
     const segregateDishes = (dishes) => {
         var TempVegDishes = []
+        var TempVegMenuCategories = []
         var TempNonVegDishes = []
+        var TempNonVegMenuCategories = []
         var i, j
         var TempMenuCategories = []
+
         for (i = 0; i < dishes.length; i++) {
+
             if (TempMenuCategories.length == 0) {
                 TempMenuCategories.push(dishes[i].Menu_category)
             }
@@ -70,19 +77,27 @@ const RestaurantScreen = () => {
                     }
                 }
             }
+
             if (dishes[i].Veg_NonVeg == 'Veg') {
                 TempVegDishes.push(dishes[i])
+                TempVegMenuCategories.push(dishes[i].Menu_category)
             }
             else {
                 TempNonVegDishes.push(dishes[i])
+                TempNonVegMenuCategories.push(dishes[i].Menu_category)
             }
+
         }
+        var UniqueVegMenuCategories = [... new Set(TempVegMenuCategories)]
+        var UniqueNonVegMenuCategories = [... new Set(TempNonVegMenuCategories)]
+
         setVegDishes(TempVegDishes);
         setNonVegDishes(TempNonVegDishes);
 
         var TempCategoriesArray = []
         var TempVegMenu = []
         var TempNonVegMenu = []
+
         for (i = 0; i < TempMenuCategories.length; i++) {
             let section = {
                 title: '',
@@ -101,14 +116,55 @@ const RestaurantScreen = () => {
             }
         }
         setCategories(TempCategoriesArray)
+
+        for (i = 0; i < UniqueVegMenuCategories.length; i++) {
+            let section = {
+                title: '',
+                content: []
+            }
+            TempVegMenu.push(section)
+        }
+        for (i = 0; i < UniqueVegMenuCategories.length; i++) {
+            TempVegMenu[i]['title'] = UniqueVegMenuCategories[i]
+        }
+        for (i = 0; i < dishes.length; i++) {
+            for (j = 0; j < TempVegMenu.length; j++) {
+                if (dishes[i].Veg_NonVeg == 'Veg' && dishes[i].Menu_category == TempVegMenu[j].title) {
+                    TempVegMenu[j].content.push(dishes[i])
+                }
+            }
+        }
+        setVegMenu(TempVegMenu)
+
+        for (i = 0; i < UniqueNonVegMenuCategories.length; i++) {
+            let section = {
+                title: '',
+                content: []
+            }
+            TempNonVegMenu.push(section)
+        }
+        for (i = 0; i < UniqueNonVegMenuCategories.length; i++) {
+            TempNonVegMenu[i]['title'] = UniqueNonVegMenuCategories[i]
+        }
+        for (i = 0; i < dishes.length; i++) {
+            for (j = 0; j < TempNonVegMenu.length; j++) {
+                if (dishes[i].Veg_NonVeg == 'Non Veg' && dishes[i].Menu_category == TempNonVegMenu[j].title) {
+                    TempNonVegMenu[j].content.push(dishes[i])
+                }
+            }
+        }
+        setNonVegMenu(TempNonVegMenu)
+
     }
+
+
 
     _renderHeader = (section) => {
         return (
-            <View className='mt-3 rounded-lg'
-            style={[colorScheme == 'light' ? { backgroundColor: 'white' } : { backgroundColor: '#262626' }]}>
-                <Text className='font-medium pl-2 text-lg py-2.5'
-                style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+            <View className='mt-1 rounded-t-xl'
+                style={[colorScheme == 'light' ? { backgroundColor: 'white' } : { backgroundColor: '#262626' }]}>
+                <Text className='font-semibold pl-2 text-lg py-2.5'
+                    style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
                 >
                     {section.title}
                 </Text>
@@ -172,81 +228,87 @@ const RestaurantScreen = () => {
                 </View>
 
                 <View className='w-full flex-row justify-between pl-2 pr-4 py-1 items-center' style={[colorScheme == 'light' ? Styles.LightBGSec : Styles.DarkBGSec]}>
-                    <VStack space={0.5}>
-                        <HStack className='items-center'>
+                    <VStack space={1.5}>
+                        <HStack className='items-center border-b ' style={[colorScheme == 'light' ? { borderColor: 'rgb(255,255,255)' } : { borderColor: '#262626' }]}>
                             <Text className='text-2xl font-semibold' style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>{title} • </Text>
                             <Text className='italic text-xs pt-0.5 font-medium' style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>{genre}</Text>
                         </HStack>
-                        <VStack space={1}>
-                            <HStack space={2} alignContent={'center'}>
-                                <ClockIcon opacity={1} color='#F04C0F' size={15} />
+                        <HStack space={2} className='mb-1'>
+                            <HStack space={1} alignContent={'center'} className='content-center'>
+                                <Image
+                                    style={{ width: 15, height: 15, resizeMode: "contain" }}
+                                    source={clockIcon}
+                                />
                                 <Text className='text-xs' style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>{timing}</Text>
                             </HStack>
-                            <HStack space={2} alignContent={'center'}>
-                                <MapPinIcon opacity={1} color='#008FFF' size={15} />
-                                <Text className='text-xs' style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>{location}</Text>
+                            <HStack space={1} alignContent={'center'}>
+                                <Image
+                                    style={{ width: 15, height: 15, resizeMode: "contain" }}
+                                    source={cashIcon}
+                                />
+                                <Text className='text-xs' style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>₹350 for two</Text>
                             </HStack>
-                            <HStack space={2} alignContent={'center'}>
-                                <BoltIcon opacity={1} color='#FDD023' size={15} />
-                                <Text className='text-xs' style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>{description}</Text>
-                            </HStack>
-                        </VStack>
+                        </HStack>
 
                     </VStack>
 
                     {/* Phone Icon */}
-                    <PhoneArrowUpRightIcon opacity={1} color='#f87c7c' size={25} />
+                    <Image
+                        style={{ width: 25, height: 25, resizeMode: "contain" }}
+                        source={phoneIcon}
+                    />
                 </View>
 
                 {/* Menu */}
                 <View>
                     <VStack space={1} className='justify-center'>
-                        <Text className="px-4 pt-2 pb-1 font-semibold text-xl text-center" style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
+                        <Text className="px-4 pt-2 pb-1 font-semibold text-2xl text-center" style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
                             Menu
                         </Text>
-                        <HStack space={1} className='justify-center content-center pb-1'>
+                        <HStack space={1} className='justify-center content-center pb-3'>
 
-                                <TouchableOpacity className='flex-row content-center'
-                                onPress={()=>{
+                            <TouchableOpacity className='flex-row content-center'
+                                onPress={() => {
                                     setShowVegMenu(!showVegMenu)
                                 }}
-                                style={[colorScheme=='light'? [showVegMenu==true? Styles.LightSelectedVegButton : Styles.LightUnselectedVegButton] : [showVegMenu==true? Styles.DarkSelectedVegButton : Styles.DarkUnselectedVegButton]]}>
-                                    <Image
-                                        style={{ width: 15, height: 15, resizeMode: "contain" }}
-                                        source={VegIcon}
-                                    />
-                                    <Text className='pl-1 font-medium'
+                                style={[colorScheme == 'light' ? [showVegMenu == true ? Styles.LightSelectedVegButton : Styles.LightUnselectedVegButton] : [showVegMenu == true ? Styles.DarkSelectedVegButton : Styles.DarkUnselectedVegButton]]}>
+                                <Image
+                                    style={{ width: 15, height: 15, resizeMode: "contain" }}
+                                    source={VegIcon}
+                                />
+                                <Text className='pl-1 font-medium'
                                     style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
-                                    >
-                                        Veg
-                                    </Text>
-                                    {showVegMenu &&
-                                        <XMarkIcon size={17} style={[colorScheme=='light'? {color: '#000000'} : {color: '#ffffff'}]}/>
-                                    }
-                                </TouchableOpacity>
+                                >
+                                    Veg
+                                </Text>
+                                {showVegMenu &&
+                                    <XMarkIcon size={17} style={[colorScheme == 'light' ? { color: '#000000' } : { color: '#ffffff' }]} />
+                                }
+                            </TouchableOpacity>
 
-                                <TouchableOpacity className='flex-row content-center'
-                                onPress={()=>{
+                            <TouchableOpacity className='flex-row content-center'
+                                onPress={() => {
                                     setShowNonVegMenu(!showNonVegMenu)
                                 }}
-                                style={[colorScheme=='light'? [showNonVegMenu==true? Styles.LightSelectedNonVegButton : Styles.LightUnselectedNonVegButton] : [showNonVegMenu==true? Styles.DarkSelectedNonVegButton : Styles.DarkUnselectedNonVegButton]]}>
-                                    <Image
-                                        style={{ width: 15, height: 15, resizeMode: "contain" }}
-                                        source={NonVegIcon}
-                                    />
-                                    <Text className='pl-1 font-medium'
+                                style={[colorScheme == 'light' ? [showNonVegMenu == true ? Styles.LightSelectedNonVegButton : Styles.LightUnselectedNonVegButton] : [showNonVegMenu == true ? Styles.DarkSelectedNonVegButton : Styles.DarkUnselectedNonVegButton]]}>
+                                <Image
+                                    style={{ width: 15, height: 15, resizeMode: "contain" }}
+                                    source={NonVegIcon}
+                                />
+                                <Text className='pl-1 font-medium'
                                     style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
-                                    >
-                                        Non-Veg
-                                    </Text>
-                                    {showNonVegMenu &&
-                                        <XMarkIcon size={17} style={[colorScheme=='light'? {color: '#000000'} : {color: '#ffffff'}]}/>
-                                    }
-                                </TouchableOpacity>
+                                >
+                                    Non-Veg
+                                </Text>
+                                {showNonVegMenu &&
+                                    <XMarkIcon size={17} style={[colorScheme == 'light' ? { color: '#000000' } : { color: '#ffffff' }]} />
+                                }
+                            </TouchableOpacity>
+
                         </HStack>
                     </VStack>
 
-                    {Categories &&
+                    {Categories && !showVegMenu && !showNonVegMenu &&
                         <Accordion
                             activeSections={activeSections}
                             sections={Categories}
@@ -254,7 +316,46 @@ const RestaurantScreen = () => {
                             expandMultiple={multipleSelect}
                             renderHeader={_renderHeader}
                             renderContent={_renderContent}
-                            duration={400}
+                            duration={200}
+                            onChange={setSections}
+                        />
+                    }
+
+                    {VegMenu && showVegMenu && !showNonVegMenu &&
+                        <Accordion
+                            activeSections={activeSections}
+                            sections={VegMenu}
+                            touchableComponent={TouchableOpacity}
+                            expandMultiple={multipleSelect}
+                            renderHeader={_renderHeader}
+                            renderContent={_renderContent}
+                            duration={200}
+                            onChange={setSections}
+                        />
+                    }
+
+                    {NonVegMenu && !showVegMenu && showNonVegMenu &&
+                        <Accordion
+                            activeSections={activeSections}
+                            sections={NonVegMenu}
+                            touchableComponent={TouchableOpacity}
+                            expandMultiple={multipleSelect}
+                            renderHeader={_renderHeader}
+                            renderContent={_renderContent}
+                            duration={200}
+                            onChange={setSections}
+                        />
+                    }
+
+                    {Categories && showVegMenu && showNonVegMenu &&
+                        <Accordion
+                            activeSections={activeSections}
+                            sections={Categories}
+                            touchableComponent={TouchableOpacity}
+                            expandMultiple={multipleSelect}
+                            renderHeader={_renderHeader}
+                            renderContent={_renderContent}
+                            duration={200}
                             onChange={setSections}
                         />
                     }

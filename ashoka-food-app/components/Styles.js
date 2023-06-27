@@ -186,7 +186,7 @@ const Styles = StyleSheet.create({
 
     LightSelectedVegButton: {
         backgroundColor: 'white',
-        padding: 3,
+        padding: 5,
         borderRadius: 5,
         borderWidth: 1,
         borderColor: '#f87c7c',
@@ -197,7 +197,7 @@ const Styles = StyleSheet.create({
     },
     LightUnselectedVegButton: {
         backgroundColor: 'white',
-        padding: 3,
+        padding: 5,
         borderRadius: 5,
         borderWidth: 1,
         borderColor: 'white',
@@ -209,7 +209,7 @@ const Styles = StyleSheet.create({
 
     DarkSelectedVegButton: {
         backgroundColor: '#262626',
-        padding: 3,
+        padding: 5,
         borderRadius: 5,
         borderWidth: 1,
         borderColor: '#f87c7c',
@@ -220,7 +220,7 @@ const Styles = StyleSheet.create({
     },
     DarkUnselectedVegButton: {
         backgroundColor: '#262626',
-        padding: 3,
+        padding: 5,
         borderRadius: 5,
         borderWidth: 1,
         borderColor: '#262626',
@@ -232,7 +232,7 @@ const Styles = StyleSheet.create({
 
     LightSelectedNonVegButton: {
         backgroundColor: 'white',
-        padding: 3,
+        padding: 5,
         borderRadius: 5,
         borderWidth: 1,
         borderColor: '#f87c7c',
@@ -243,7 +243,7 @@ const Styles = StyleSheet.create({
     },
     LightUnselectedNonVegButton: {
         backgroundColor: 'white',
-        padding: 3,
+        padding: 5,
         borderRadius: 5,
         borderWidth: 1,
         borderColor: 'white',
@@ -255,7 +255,7 @@ const Styles = StyleSheet.create({
 
     DarkSelectedNonVegButton: {
         backgroundColor: '#262626',
-        padding: 3,
+        padding: 5,
         borderRadius: 5,
         borderWidth: 1,
         borderColor: '#f87c7c',
@@ -266,7 +266,7 @@ const Styles = StyleSheet.create({
     },
     DarkUnselectedNonVegButton: {
         backgroundColor: '#262626',
-        padding: 3,
+        padding: 5,
         borderRadius: 5,
         borderWidth: 1,
         borderColor: '#262626',
