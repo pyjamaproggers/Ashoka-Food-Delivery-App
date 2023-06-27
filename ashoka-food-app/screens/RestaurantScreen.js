@@ -46,10 +46,9 @@ const RestaurantScreen = () => {
 
     const {
         params: {
-            id, image, title, genre, timing, location, description, dishes
+            id, image, title, genre, timing, delivery, location, description, dishes, veg_nonveg
         },
     } = useRoute();
-
     const segregateDishes = (dishes) => {
         var TempVegDishes = []
         var TempVegMenuCategories = []
@@ -177,7 +176,7 @@ const RestaurantScreen = () => {
                 <>
                     {
                         section.content.map((dish) => (
-                            <DishRow name={dish.name} Price={dish.Price} Veg_NonVeg={dish.Veg_NonVeg} />
+                            <DishRow name={dish.name} Price={dish.Price} Veg_NonVeg={dish.Veg_NonVeg} delivery={delivery} />
                         ))
                     }
                 </>
@@ -264,47 +263,49 @@ const RestaurantScreen = () => {
                         <Text className="px-4 pt-2 pb-1 font-semibold text-2xl text-center" style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
                             Menu
                         </Text>
-                        <HStack space={1} className='justify-center content-center pb-3'>
+                        {veg_nonveg=='Non Veg' && 
+                            <HStack space={1} className='justify-center content-center pb-3'>
 
-                            <TouchableOpacity className='flex-row content-center'
-                                onPress={() => {
-                                    setShowVegMenu(!showVegMenu)
-                                }}
-                                style={[colorScheme == 'light' ? [showVegMenu == true ? Styles.LightSelectedVegButton : Styles.LightUnselectedVegButton] : [showVegMenu == true ? Styles.DarkSelectedVegButton : Styles.DarkUnselectedVegButton]]}>
-                                <Image
-                                    style={{ width: 15, height: 15, resizeMode: "contain" }}
-                                    source={VegIcon}
-                                />
-                                <Text className='pl-1 font-medium'
-                                    style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
-                                >
-                                    Veg
-                                </Text>
-                                {showVegMenu &&
-                                    <XMarkIcon size={17} style={[colorScheme == 'light' ? { color: '#000000' } : { color: '#ffffff' }]} />
-                                }
-                            </TouchableOpacity>
+                                <TouchableOpacity className='flex-row content-center'
+                                    onPress={() => {
+                                        setShowVegMenu(!showVegMenu)
+                                    }}
+                                    style={[colorScheme == 'light' ? [showVegMenu == true ? Styles.LightSelectedVegButton : Styles.LightUnselectedVegButton] : [showVegMenu == true ? Styles.DarkSelectedVegButton : Styles.DarkUnselectedVegButton]]}>
+                                    <Image
+                                        style={{ width: 15, height: 15, resizeMode: "contain" }}
+                                        source={VegIcon}
+                                    />
+                                    <Text className='pl-1 font-medium'
+                                        style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                    >
+                                        Veg
+                                    </Text>
+                                    {showVegMenu &&
+                                        <XMarkIcon size={17} style={[colorScheme == 'light' ? { color: '#000000' } : { color: '#ffffff' }]} />
+                                    }
+                                </TouchableOpacity>
 
-                            <TouchableOpacity className='flex-row content-center'
-                                onPress={() => {
-                                    setShowNonVegMenu(!showNonVegMenu)
-                                }}
-                                style={[colorScheme == 'light' ? [showNonVegMenu == true ? Styles.LightSelectedNonVegButton : Styles.LightUnselectedNonVegButton] : [showNonVegMenu == true ? Styles.DarkSelectedNonVegButton : Styles.DarkUnselectedNonVegButton]]}>
-                                <Image
-                                    style={{ width: 15, height: 15, resizeMode: "contain" }}
-                                    source={NonVegIcon}
-                                />
-                                <Text className='pl-1 font-medium'
-                                    style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
-                                >
-                                    Non-Veg
-                                </Text>
-                                {showNonVegMenu &&
-                                    <XMarkIcon size={17} style={[colorScheme == 'light' ? { color: '#000000' } : { color: '#ffffff' }]} />
-                                }
-                            </TouchableOpacity>
+                                <TouchableOpacity className='flex-row content-center'
+                                    onPress={() => {
+                                        setShowNonVegMenu(!showNonVegMenu)
+                                    }}
+                                    style={[colorScheme == 'light' ? [showNonVegMenu == true ? Styles.LightSelectedNonVegButton : Styles.LightUnselectedNonVegButton] : [showNonVegMenu == true ? Styles.DarkSelectedNonVegButton : Styles.DarkUnselectedNonVegButton]]}>
+                                    <Image
+                                        style={{ width: 15, height: 15, resizeMode: "contain" }}
+                                        source={NonVegIcon}
+                                    />
+                                    <Text className='pl-1 font-medium'
+                                        style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                    >
+                                        Non-Veg
+                                    </Text>
+                                    {showNonVegMenu &&
+                                        <XMarkIcon size={17} style={[colorScheme == 'light' ? { color: '#000000' } : { color: '#ffffff' }]} />
+                                    }
+                                </TouchableOpacity>
 
-                        </HStack>
+                            </HStack>
+                        }
                     </VStack>
 
                     {Categories && !showVegMenu && !showNonVegMenu &&

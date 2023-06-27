@@ -17,7 +17,7 @@ const Restaurants = () => {
 
     const query = `*[_type == "restaurant"]
         {description, location, delivery,
-        name, image, genre, timing, 
+        name, image, genre, timing, Veg_NonVeg, CostForTwo, RestaurantPhone,
         dishes[]->{name, Veg_NonVeg, Price, image, Menu_category}}`;
 
     useLayoutEffect(() => {
@@ -30,6 +30,7 @@ const Restaurants = () => {
             client
                 .fetch(query)
                 .then((data) => {
+                    console.log(data)
                     var drest = []
                     var ndrest = []
                     var i
@@ -220,20 +221,22 @@ const Restaurants = () => {
                     </VStack>
                 </View>
             }
-
+            
             {!Fetching &&
                 DRestaurants.map((restaurant) =>
-                (
+                (   
                     <RestaurantCards
                         // key={restaurant.id}
                         // id={restaurant.id}
                         image={restaurant["image"]}
                         title={restaurant["name"]}
                         timing={restaurant["timing"]}
+                        delivery={restaurant["delivery"]}
                         genre={restaurant["genre"]}
                         location={restaurant["location"]}
                         description={restaurant["description"]}
-                        dishes={restaurant["dishes"]} />
+                        dishes={restaurant["dishes"]} 
+                        veg_nonveg={restaurant["Veg_NonVeg"]}/>
                 ))
             }
 
@@ -377,10 +380,12 @@ const Restaurants = () => {
                         image={restaurant["image"]}
                         title={restaurant["name"]}
                         timing={restaurant["timing"]}
+                        delivery={restaurant["delivery"]}
                         genre={restaurant["genre"]}
                         location={restaurant["location"]}
                         description={restaurant["description"]}
-                        dishes={restaurant["dishes"]} />
+                        dishes={restaurant["dishes"]} 
+                        veg_nonveg={restaurant["Veg_NonVeg"]}/>
                 ))
             }
 

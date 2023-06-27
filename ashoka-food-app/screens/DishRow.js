@@ -9,7 +9,7 @@ import NonVegIcon from '../assets/nonvegicon.png';
 import Styles from "../components/Styles";
 import { HStack, VStack } from "native-base";
 
-const DishRow = ({ id, name, Veg_NonVeg, Price, image, Menu_category }) => {
+const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery }) => {
     const [isPressed, setIsPressed] = React.useState(false);
     const colorScheme = useColorScheme();
     const dispatch = useDispatch();
@@ -23,7 +23,6 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, Menu_category }) => {
     const removeItem = () => {
         dispatch(removeFromCart({ id, name, Price, image }));
     };
-
     return (
         <>
             <HStack className='items-center justify-between w-full py-4' style={[colorScheme == 'light' ? Styles.LightBGSec : Styles.DarkBGSec]}>
@@ -57,7 +56,7 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, Menu_category }) => {
 
                 {/* Add/Minus BUtton Block */}
 
-                {itemQuantity == 0 &&
+                {itemQuantity == 0 && delivery=='Yes' &&
                     <TouchableOpacity onPress={addItem}>
                         <HStack
                             style={[colorScheme == 'light' ? Styles.LightAddButtonInitial : Styles.DarkAddButtonInitial]}
@@ -70,7 +69,7 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, Menu_category }) => {
                     </TouchableOpacity>
                 }
 
-                {itemQuantity > 0 &&
+                {itemQuantity > 0 && delivery=='Yes' &&
                     <HStack
                         style={[colorScheme == 'light' ? Styles.LightAddButtonFinal : Styles.DarkAddButtonFinal]}
                     >
