@@ -64,5 +64,11 @@ export default defineType({
       title: 'Restaurant Phone Number',
       validation: (Rule) => Rule.max(100),
     },
+    {
+      name: "delivery",
+      type: 'string',
+      title: 'Does it deliver?',
+      validation: (Rule) => Rule.max(100),
+    },
   ]
 })
