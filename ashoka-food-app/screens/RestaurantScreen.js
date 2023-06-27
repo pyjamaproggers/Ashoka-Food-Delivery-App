@@ -157,12 +157,11 @@ const RestaurantScreen = () => {
 
     }
 
-
-
-    _renderHeader = (section) => {
+    _renderHeader = (section, _, isActive) => {
         return (
-            <View className='mt-1 rounded-t-xl'
-                style={[colorScheme == 'light' ? { backgroundColor: 'white' } : { backgroundColor: '#262626' }]}>
+            <View className='mt-3'
+            style={[colorScheme == 'light' ? [isActive == true ? Styles.LightActiveAccordionButton : Styles.LightInactiveAccordionButton] : [isActive == true ? Styles.DarkActiveAccordionButton : Styles.DarkInactiveAccordionButton]]}
+            >
                 <Text className='font-semibold pl-2 text-lg py-2.5'
                     style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
                 >
@@ -170,7 +169,7 @@ const RestaurantScreen = () => {
                 </Text>
             </View>
         );
-    };
+    }
 
     _renderContent = (section) => {
         {
@@ -359,8 +358,6 @@ const RestaurantScreen = () => {
                             onChange={setSections}
                         />
                     }
-
-
 
                 </View>
             </Animated.ScrollView>
