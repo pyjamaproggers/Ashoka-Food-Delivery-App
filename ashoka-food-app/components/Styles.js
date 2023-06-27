@@ -187,7 +187,7 @@ const Styles = StyleSheet.create({
     LightSelectedVegButton: {
         backgroundColor: 'white',
         padding: 5,
-        borderRadius: 5,
+        borderRadius: 8,
         borderWidth: 1,
         borderColor: '#f87c7c',
         shadowColor: '#000',
@@ -198,7 +198,7 @@ const Styles = StyleSheet.create({
     LightUnselectedVegButton: {
         backgroundColor: 'white',
         padding: 5,
-        borderRadius: 5,
+        borderRadius: 8,
         borderWidth: 1,
         borderColor: 'white',
         shadowColor: '#000',
@@ -210,7 +210,7 @@ const Styles = StyleSheet.create({
     DarkSelectedVegButton: {
         backgroundColor: '#262626',
         padding: 5,
-        borderRadius: 5,
+        borderRadius: 8,
         borderWidth: 1,
         borderColor: '#f87c7c',
         shadowColor: '#000',
@@ -221,7 +221,7 @@ const Styles = StyleSheet.create({
     DarkUnselectedVegButton: {
         backgroundColor: '#262626',
         padding: 5,
-        borderRadius: 5,
+        borderRadius: 8,
         borderWidth: 1,
         borderColor: '#262626',
         shadowColor: '#000',
@@ -233,7 +233,7 @@ const Styles = StyleSheet.create({
     LightSelectedNonVegButton: {
         backgroundColor: 'white',
         padding: 5,
-        borderRadius: 5,
+        borderRadius: 8,
         borderWidth: 1,
         borderColor: '#f87c7c',
         shadowColor: '#000',
@@ -244,7 +244,7 @@ const Styles = StyleSheet.create({
     LightUnselectedNonVegButton: {
         backgroundColor: 'white',
         padding: 5,
-        borderRadius: 5,
+        borderRadius: 8,
         borderWidth: 1,
         borderColor: 'white',
         shadowColor: '#000',
@@ -256,7 +256,7 @@ const Styles = StyleSheet.create({
     DarkSelectedNonVegButton: {
         backgroundColor: '#262626',
         padding: 5,
-        borderRadius: 5,
+        borderRadius: 8,
         borderWidth: 1,
         borderColor: '#f87c7c',
         shadowColor: '#000',
@@ -267,7 +267,7 @@ const Styles = StyleSheet.create({
     DarkUnselectedNonVegButton: {
         backgroundColor: '#262626',
         padding: 5,
-        borderRadius: 5,
+        borderRadius: 8,
         borderWidth: 1,
         borderColor: '#262626',
         shadowColor: '#000',
@@ -276,27 +276,107 @@ const Styles = StyleSheet.create({
         shadowOpacity: 0.1,
     },
 
+
     LightActiveAccordionButton:{
         backgroundColor: 'white',
-        borderTopRightRadius: '12px',
-        borderTopLeftRadius: '12px',
+        borderTopRightRadius: '8px',
+        borderTopLeftRadius: '8px',
         borderBottomLeftRadius: '0px',
         borderBottomRightRadius: '0px'
     },
     LightInactiveAccordionButton:{
         backgroundColor: 'white',
-        borderRadius: '12px',
+        borderRadius: '8px',
     },
     DarkActiveAccordionButton:{
         backgroundColor: '#262626',
-        borderTopRightRadius: '12px',
-        borderTopLeftRadius: '12px',
+        borderTopRightRadius: '8px',
+        borderTopLeftRadius: '8px',
         borderBottomLeftRadius: '0px',
         borderBottomRightRadius: '0px'
     },
     DarkInactiveAccordionButton:{
         backgroundColor: '#262626',
-        borderRadius: '12px'
+        borderRadius: '8px'
+    },
+
+
+    LightAddButtonInitial:{
+        justifyContent: 'center',
+        textAlign: 'center',
+        color: '#f87c7c',
+        paddingTop: 8,
+        paddingRight: 8,
+        paddingLeft: 16,
+        paddingBottom: 8,
+        backgroundColor: '#fffbfc',
+        marginRight: '5%',
+        borderRadius: 8,
+        borderColor: '#f87c7c',
+        borderWidth: '1px',
+        height: 'auto',
+        width: 100,
+        shadowColor: '#000',
+        shadowOffset: {width: 1, height: 1},
+        shadowRadius: 3,
+        shadowOpacity: 0.1,
+    },
+    DarkAddButtonInitial:{
+        justifyContent: 'center',
+        color: '#f87c7c',
+        paddingTop: 8,
+        paddingRight: 8,
+        paddingLeft: 16,
+        paddingBottom: 8,
+        backgroundColor: '#0c0c0c',
+        marginRight: '5%',
+        borderRadius: 8,
+        borderColor: '#f87c7c',
+        borderWidth: '1px',
+        height: 'auto',
+        width: 100,
+        shadowColor: '#000',
+        shadowOffset: {width: 1, height: 1},
+        shadowRadius: 3,
+        shadowOpacity: 0.1,
+    },
+
+    LightAddButtonFinal:{
+        justifyContent: 'space-between',
+        alignContent: 'center',
+        alignItems: 'center',
+        textAlign: 'center',
+        color: '#f87c7c',
+        padding: 1,
+        backgroundColor: '#f65959',
+        marginRight: '5%',
+        borderRadius: 8,
+        borderColor: '#f65959',
+        borderWidth: '1px',
+        height: 'auto',
+        width: 100,
+        shadowColor: '#000',
+        shadowOffset: {width: 1, height: 1},
+        shadowRadius: 3,
+        shadowOpacity: 0.1,
+    },
+    DarkAddButtonFinal:{
+        justifyContent: 'space-evenly',
+        alignContent: 'center',
+        alignItems: 'center',
+        color: '#f87c7c',
+        padding: 1,
+        backgroundColor: '#f65959',
+        marginRight: '5%',
+        borderRadius: 8,
+        borderColor: '#f65959',
+        borderWidth: '1px',
+        height: 'auto',
+        width: 100,
+        shadowColor: '#000',
+        shadowOffset: {width: 1, height: 1},
+        shadowRadius: 3,
+        shadowOpacity: 0.1,
     }
 
 });

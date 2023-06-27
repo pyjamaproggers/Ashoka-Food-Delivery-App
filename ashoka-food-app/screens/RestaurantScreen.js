@@ -162,7 +162,7 @@ const RestaurantScreen = () => {
             <View className='mt-3'
             style={[colorScheme == 'light' ? [isActive == true ? Styles.LightActiveAccordionButton : Styles.LightInactiveAccordionButton] : [isActive == true ? Styles.DarkActiveAccordionButton : Styles.DarkInactiveAccordionButton]]}
             >
-                <Text className='font-semibold pl-2 text-lg py-2.5'
+                <Text className='font-semibold pl-2 text-lg py-3'
                     style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
                 >
                     {section.title}
@@ -226,7 +226,7 @@ const RestaurantScreen = () => {
                     </TouchableOpacity>
                 </View>
 
-                <View className='w-full flex-row justify-between pl-2 pr-4 py-1 items-center' style={[colorScheme == 'light' ? Styles.LightBGSec : Styles.DarkBGSec]}>
+                <View className='w-full flex-row justify-between pl-2 pr-4 py-2.5 items-center rounded-b-2xl' style={[colorScheme == 'light' ? Styles.LightBGSec : Styles.DarkBGSec]}>
                     <VStack space={1.5}>
                         <HStack className='items-center border-b ' style={[colorScheme == 'light' ? { borderColor: 'rgb(255,255,255)' } : { borderColor: '#262626' }]}>
                             <Text className='text-2xl font-semibold' style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>{title} • </Text>

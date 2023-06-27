@@ -1,12 +1,13 @@
 import { View, Text, TouchableOpacity, Image, useColorScheme } from "react-native";
 import React from "react";
 import { urlFor } from "../sanity";
-import { MinusCircleIcon, PlusCircleIcon } from "react-native-heroicons/solid";
+import { MinusCircleIcon, PlusCircleIcon, PlusSmallIcon, PlusIcon, MinusIcon } from "react-native-heroicons/solid";
 import { addToCart, removeFromCart, selectCartItems } from "../reduxslices/cartslice";
 import { useDispatch, useSelector } from "react-redux";
 import VegIcon from '../assets/vegicon.png';
 import NonVegIcon from '../assets/nonvegicon.png';
 import Styles from "../components/Styles";
+import { HStack, VStack } from "native-base";
 
 const DishRow = ({ id, name, Veg_NonVeg, Price, image, Menu_category }) => {
     const [isPressed, setIsPressed] = React.useState(false);
@@ -25,8 +26,9 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, Menu_category }) => {
 
     return (
         <>
-            <View className='flex-row px-2 py-4' style={[colorScheme == 'light' ? Styles.LightBGSec : Styles.DarkBGSec]}>
-                <View style={{ flex: 1, paddingRight: 2 }}>
+            <HStack className='items-center justify-between w-full py-4' style={[colorScheme == 'light' ? Styles.LightBGSec : Styles.DarkBGSec]}>
+                {/* Dish Details Block */}
+                <VStack className='justify-start' style={{marginLeft: '2%'}}>
                     {Veg_NonVeg === "Veg" ? (
                         <Image
                             style={{ width: 15, height: 15, resizeMode: "contain" }}
@@ -38,28 +40,64 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, Menu_category }) => {
                             source={NonVegIcon}
                         />
                     )}
+
                     <Text className='text-lg font-medium py-1.5'
-                    style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                        style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
                     >
                         {name}
                     </Text>
-                    <Text 
-                    style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
-                    >
-                        ₹{Price} 
-                    </Text>
-                </View>
-            <View>
-                    {/* {
-              image!==null?(<Image
-                style={{ borderWidth: 1, borderColor: '#F3F3F4' }}
-                source={{ uri: urlFor(image).url() }}
-                className="h-20 w-20 bg-gray-300 p-4"
-              />):(<></>)
-            } */}
-            </View>
 
-                <View style={{ backgroundColor: "white", padding: 4 }}>
+                    <Text
+                        style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                    >
+                        ₹{Price}
+                    </Text>
+
+                </VStack>
+
+                {/* Add/Minus BUtton Block */}
+
+                {itemQuantity == 0 &&
+                    <TouchableOpacity onPress={addItem}>
+                        <HStack
+                            style={[colorScheme == 'light' ? Styles.LightAddButtonInitial : Styles.DarkAddButtonInitial]}
+                        >
+                            <Text className='text-xl font-medium ' style={{ color: '#f87c7c' }}>
+                                ADD
+                            </Text>
+                            <PlusSmallIcon size={16} color='#f87c7c' />
+                        </HStack>
+                    </TouchableOpacity>
+                }
+
+                {itemQuantity > 0 &&
+                    <HStack
+                        style={[colorScheme == 'light' ? Styles.LightAddButtonFinal : Styles.DarkAddButtonFinal]}
+                    >
+                        <TouchableOpacity onPress={removeItem} className='p-3 px-2'>
+                            <MinusIcon size={16} color='white' />
+                        </TouchableOpacity>
+
+                        <Text className='text-xl font-medium' style={{ color: 'white' }}>
+                            {itemQuantity}
+                        </Text>
+
+                        <TouchableOpacity onPress={addItem} className='p-3 px-2'>
+                            <PlusIcon size={16} color='white' />
+                        </TouchableOpacity>
+                    </HStack>
+                }
+
+                {/* <HStack>
+                    
+                    <Text >
+                        {itemQuantity}
+                    </Text>
+
+                </HStack> */}
+
+
+                {/* <View style={{ backgroundColor: "white", padding: 4 }}>
                     <View
                         style={{
                             flexDirection: "row",
@@ -79,8 +117,8 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, Menu_category }) => {
                             <PlusCircleIcon color="#cb202d" size={25} />
                         </TouchableOpacity>
                     </View>
-                </View>
-            </View>
+                </View> */}
+            </HStack>
         </>
     );
 };
