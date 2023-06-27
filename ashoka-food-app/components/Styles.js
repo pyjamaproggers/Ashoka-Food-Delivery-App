@@ -276,6 +276,29 @@ const Styles = StyleSheet.create({
         shadowOpacity: 0.1,
     },
 
+    LightActiveAccordionButton:{
+        backgroundColor: 'white',
+        borderTopRightRadius: '12px',
+        borderTopLeftRadius: '12px',
+        borderBottomLeftRadius: '0px',
+        borderBottomRightRadius: '0px'
+    },
+    LightInactiveAccordionButton:{
+        backgroundColor: 'white',
+        borderRadius: '12px',
+    },
+    DarkActiveAccordionButton:{
+        backgroundColor: '#262626',
+        borderTopRightRadius: '12px',
+        borderTopLeftRadius: '12px',
+        borderBottomLeftRadius: '0px',
+        borderBottomRightRadius: '0px'
+    },
+    DarkInactiveAccordionButton:{
+        backgroundColor: '#262626',
+        borderRadius: '12px'
+    }
+
 });
 
 export default Styles;
