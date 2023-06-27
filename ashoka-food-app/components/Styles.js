@@ -181,7 +181,101 @@ const Styles = StyleSheet.create({
         width: "10%",
         marginLeft: 20,
         backgroundColor: '#262626'
-    }
+    },
+
+
+    LightSelectedVegButton: {
+        backgroundColor: 'white',
+        padding: 3,
+        borderRadius: 5,
+        borderWidth: 1,
+        borderColor: '#f87c7c',
+        shadowColor: '#000',
+        shadowOffset: {width: 1, height: 1},
+        shadowRadius: 3,
+        shadowOpacity: 0.1,
+    },
+    LightUnselectedVegButton: {
+        backgroundColor: 'white',
+        padding: 3,
+        borderRadius: 5,
+        borderWidth: 1,
+        borderColor: 'white',
+        shadowColor: '#000',
+        shadowOffset: {width: 1, height: 1},
+        shadowRadius: 3,
+        shadowOpacity: 0.1,
+    },
+
+    DarkSelectedVegButton: {
+        backgroundColor: '#262626',
+        padding: 3,
+        borderRadius: 5,
+        borderWidth: 1,
+        borderColor: '#f87c7c',
+        shadowColor: '#000',
+        shadowOffset: {width: 1, height: 1},
+        shadowRadius: 3,
+        shadowOpacity: 0.1,
+    },
+    DarkUnselectedVegButton: {
+        backgroundColor: '#262626',
+        padding: 3,
+        borderRadius: 5,
+        borderWidth: 1,
+        borderColor: '#262626',
+        shadowColor: '#000',
+        shadowOffset: {width: 1, height: 1},
+        shadowRadius: 3,
+        shadowOpacity: 0.1,
+    },
+
+    LightSelectedNonVegButton: {
+        backgroundColor: 'white',
+        padding: 3,
+        borderRadius: 5,
+        borderWidth: 1,
+        borderColor: '#f87c7c',
+        shadowColor: '#000',
+        shadowOffset: {width: 1, height: 1},
+        shadowRadius: 3,
+        shadowOpacity: 0.1,
+    },
+    LightUnselectedNonVegButton: {
+        backgroundColor: 'white',
+        padding: 3,
+        borderRadius: 5,
+        borderWidth: 1,
+        borderColor: 'white',
+        shadowColor: '#000',
+        shadowOffset: {width: 1, height: 1},
+        shadowRadius: 3,
+        shadowOpacity: 0.1,
+    },
+
+    DarkSelectedNonVegButton: {
+        backgroundColor: '#262626',
+        padding: 3,
+        borderRadius: 5,
+        borderWidth: 1,
+        borderColor: '#f87c7c',
+        shadowColor: '#000',
+        shadowOffset: {width: 1, height: 1},
+        shadowRadius: 3,
+        shadowOpacity: 0.1,
+    },
+    DarkUnselectedNonVegButton: {
+        backgroundColor: '#262626',
+        padding: 3,
+        borderRadius: 5,
+        borderWidth: 1,
+        borderColor: '#262626',
+        shadowColor: '#000',
+        shadowOffset: {width: 1, height: 1},
+        shadowRadius: 3,
+        shadowOpacity: 0.1,
+    },
+
 });
 
 export default Styles;
