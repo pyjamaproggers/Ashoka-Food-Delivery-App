@@ -16,7 +16,9 @@ import VegIcon from '../assets/vegicon.png';
 import NonVegIcon from '../assets/nonvegicon.png';
 import clockIcon from '../assets/clockicon.png'
 import cashIcon from '../assets/cashicon.png'
-import phoneIcon from '../assets/phoneicon.png';
+import phoneIcon from '../assets/phoneicon2.png';
+import ChevronUp from '../assets/chevronupicon.png'
+import ChevronDown from '../assets/chevrondownicon.png'
 
 const RestaurantScreen = () => {
 
@@ -49,6 +51,7 @@ const RestaurantScreen = () => {
             id, image, title, genre, timing, delivery, location, description, dishes, veg_nonveg
         },
     } = useRoute();
+
     const segregateDishes = (dishes) => {
         var TempVegDishes = []
         var TempVegMenuCategories = []
@@ -158,15 +161,26 @@ const RestaurantScreen = () => {
 
     _renderHeader = (section, _, isActive) => {
         return (
-            <View className='mt-3'
-            style={[colorScheme == 'light' ? [isActive == true ? Styles.LightActiveAccordionButton : Styles.LightInactiveAccordionButton] : [isActive == true ? Styles.DarkActiveAccordionButton : Styles.DarkInactiveAccordionButton]]}
+            <HStack className='mt-3 shadow-sm items-center justify-between pr-3'
+                style={[colorScheme == 'light' ? [isActive == true ? Styles.LightActiveAccordionButton : Styles.LightInactiveAccordionButton] : [isActive == true ? Styles.DarkActiveAccordionButton : Styles.DarkInactiveAccordionButton]]}
             >
                 <Text className='font-semibold pl-2 text-lg py-3'
                     style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
                 >
                     {section.title}
                 </Text>
-            </View>
+                {isActive?
+                <Image
+                    style={{ width: 12, height: 12, resizeMode: "contain" }}
+                    source={ChevronUp}
+                />
+                :
+                <Image
+                    style={{ width: 12, height: 12, resizeMode: "contain" }}
+                    source={ChevronDown}
+                />
+                }
+            </HStack>
         );
     }
 
@@ -176,7 +190,7 @@ const RestaurantScreen = () => {
                 <>
                     {
                         section.content.map((dish) => (
-                            <DishRow name={dish.name} Price={dish.Price} Veg_NonVeg={dish.Veg_NonVeg} delivery={delivery} key={dish._id} id={dish._id}/>
+                            <DishRow name={dish.name} Price={dish.Price} Veg_NonVeg={dish.Veg_NonVeg} delivery={delivery} key={dish._id} id={dish._id} />
                         ))
                     }
                 </>
@@ -225,7 +239,7 @@ const RestaurantScreen = () => {
                     </TouchableOpacity>
                 </View>
 
-                <View className='w-full flex-row justify-between pl-2 pr-4 py-2.5 items-center rounded-b-2xl' style={[colorScheme == 'light' ? Styles.LightBGSec : Styles.DarkBGSec]}>
+                <View className='w-full flex-row justify-between pl-2 pr-4 py-2.5 items-center rounded-b-2xl shadow-sm' style={[colorScheme == 'light' ? Styles.LightBGSec : Styles.DarkBGSec]}>
                     <VStack space={1.5}>
                         <HStack className='items-center border-b ' style={[colorScheme == 'light' ? { borderColor: 'rgb(255,255,255)' } : { borderColor: '#262626' }]}>
                             <Text className='text-2xl font-semibold' style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>{title} • </Text>
@@ -263,7 +277,7 @@ const RestaurantScreen = () => {
                         <Text className="px-4 pt-2 pb-1 font-semibold text-2xl text-center" style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
                             Menu
                         </Text>
-                        {veg_nonveg=='Non Veg' && 
+                        {veg_nonveg == 'Non Veg' &&
                             <HStack space={1} className='justify-center content-center pb-3'>
 
                                 <TouchableOpacity className='flex-row content-center'

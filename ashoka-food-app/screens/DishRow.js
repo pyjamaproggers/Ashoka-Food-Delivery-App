@@ -63,10 +63,10 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery }) => {
                         <HStack
                             style={[colorScheme == 'light' ? Styles.LightAddButtonInitial : Styles.DarkAddButtonInitial]}
                         >
-                            <Text className='text-xl font-medium ' style={{ color: '#f87c7c' }}>
+                            <Text className='text-xl font-medium ' style={{ color: '#3E5896', marginLeft: 4 }}>
                                 ADD
                             </Text>
-                            <PlusSmallIcon size={16} color='#f87c7c' />
+                            <PlusSmallIcon size={16} color='#3E5896' />
                         </HStack>
                     </TouchableOpacity>
                 }

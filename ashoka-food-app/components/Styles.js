@@ -41,7 +41,7 @@ const Styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         paddingLeft: 8,
-        paddingRight: 8,
+        paddingRight: 10,
         backgroundColor: '#FFFFFF',
     },
     DarkDropdownButton:{
@@ -59,7 +59,7 @@ const Styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         paddingLeft: 8,
-        paddingRight: 8,
+        paddingRight: 10,
         backgroundColor: '#262626',
     },
     LightDropdownMenu:{
@@ -309,10 +309,10 @@ const Styles = StyleSheet.create({
         paddingRight: 8,
         paddingLeft: 16,
         paddingBottom: 8,
-        backgroundColor: '#fffbfc',
+        backgroundColor: '#f7f9ff',
         marginRight: '5%',
         borderRadius: 8,
-        borderColor: '#f87c7c',
+        borderColor: '#3E5896',
         borderWidth: '1px',
         height: 'auto',
         width: 100,
@@ -331,7 +331,7 @@ const Styles = StyleSheet.create({
         backgroundColor: '#0c0c0c',
         marginRight: '5%',
         borderRadius: 8,
-        borderColor: '#f87c7c',
+        borderColor: '#3E5896',
         borderWidth: '1px',
         height: 'auto',
         width: 100,
@@ -348,10 +348,10 @@ const Styles = StyleSheet.create({
         textAlign: 'center',
         color: '#f87c7c',
         padding: 1,
-        backgroundColor: '#f65959',
+        backgroundColor: '#3E5896',
         marginRight: '5%',
         borderRadius: 8,
-        borderColor: '#f65959',
+        borderColor: '#3E5896',
         borderWidth: '1px',
         height: 'auto',
         width: 100,
@@ -366,10 +366,10 @@ const Styles = StyleSheet.create({
         alignItems: 'center',
         color: '#f87c7c',
         padding: 1,
-        backgroundColor: '#f65959',
+        backgroundColor: '#3E5896',
         marginRight: '5%',
         borderRadius: 8,
-        borderColor: '#f65959',
+        borderColor: '#3E5896',
         borderWidth: '1px',
         height: 'auto',
         width: 100,
@@ -377,6 +377,32 @@ const Styles = StyleSheet.create({
         shadowOffset: {width: 1, height: 1},
         shadowRadius: 3,
         shadowOpacity: 0.1,
+    },
+
+    NextButton:{
+        borderRadius: 8,
+        width: '40%',
+        justifyContent: 'center'
+    },
+
+    ShowCartButton:{
+        width: '40%',
+        justifyContent: 'center'
+    },
+
+    LightCartButton: {
+        backgroundColor: 'white',
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: -1},
+        shadowRadius: 3,
+        shadowOpacity: 0.2,
+    },
+    DarkCartButton: {
+        backgroundColor: '#262626',
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: -1},
+        shadowRadius: 3,
+        shadowOpacity: 0.4,
     }
 
 });

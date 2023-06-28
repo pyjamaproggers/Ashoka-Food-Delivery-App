@@ -7,6 +7,9 @@ import userPic from '../assets/userAvatar.png'
 import { ChevronDownIcon, MagnifyingGlassIcon, ChevronUpIcon } from 'react-native-heroicons/outline';
 import Restaurants from './Restaurants';
 import Styles from '../components/Styles';
+import ChevronUp from '../assets/chevronupicon.png'
+import ChevronDown from '../assets/chevrondownicon.png'
+import Search from '../assets/searchicon.png'
 
 
 const HomeScreen = () => {
@@ -63,9 +66,15 @@ const HomeScreen = () => {
                             {DeliveryLocation}
                         </Text>
                         {isOpen ?
-                            <ChevronUpIcon size={20} color="#f87c7c" />
+                            <Image
+                                style={{ width: 12, height: 12, resizeMode: "contain" }}
+                                source={ChevronUp}
+                            />
                             :
-                            <ChevronDownIcon size={20} color="#f87c7c" />
+                            <Image
+                                style={{ width: 12, height: 12, resizeMode: "contain" }}
+                                source={ChevronDown}
+                            />
                         }
                     </TouchableOpacity>
                     {isOpen === true &&
@@ -109,14 +118,17 @@ const HomeScreen = () => {
             {/* search */}
             <View className="flex-row item-center space-x-2 pb-2 mx-4 ">
                 <View className="flex-row space-x-2 flex-1 p-3 shadow-sm" style={[colorScheme == 'light' ? Styles.LightSearchBar : Styles.DarkSearchBar]} >
-                    <MagnifyingGlassIcon color="#f87c7c" size={20} />
+                    <Image
+                        style={{ width: 16, height: 16, resizeMode: "contain" }}
+                        source={Search}
+                    />
                     <TextInput placeholder="Search for a dish or place" keyboardType="default" className='w-full'
                         onPressIn={() => {
                             setIsOpen(false)
                         }} />
                 </View>
             </View>
-            
+
             {/* Body */}
             <Restaurants />
 
