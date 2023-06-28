@@ -67,24 +67,30 @@ const BasketScreen = () => {
         </View>
 
         <ScrollView className="divide-y divide-gray-200">
+        <ScrollView className="divide-y divide-gray-200">
           {Object.entries(groupedItemsInBasket).map(([key, items]) => (
-            <View
-              key={key}
-              className="flex-row items-center space-x-3 bg-white py-2 px-5"
-            >
-              <Text className="text-[#3E5896]">{items.length} x</Text>
-              <Text className="flex-1">{items[0]?.name}</Text>
-              <TouchableOpacity>
-                <Text
-                  className="text-[#3E5896] text-xs"
-                  onPress={() => dispatch(removeFromCart({ id: items[0].id}))}
-                >
-                  Remove
-                </Text>
-              </TouchableOpacity>
-            </View>
+            items.map((item, index) => (
+              <View
+                key={`${key}-${index}`}
+                className="flex-row items-center space-x-3 bg-white py-2 px-5"
+              >
+                <Text className="flex-1">{item.name}</Text>
+                <Text className="text-gray-400">₹{item.Price}</Text>
+                <TouchableOpacity>
+                  <Text
+                    className="text-[#3E5896] text-xs"
+                    onPress={() => dispatch(removeFromCart({ id: item.id }))}
+                  >
+                    Remove
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            ))
           ))}
         </ScrollView>
+
+    </ScrollView>
+
 
         <View className="p-5 bg-white space-y-4">
           <View className="flex-row justify-between">
