@@ -77,7 +77,7 @@ const BasketScreen = () => {
               <TouchableOpacity>
                 <Text
                   className="text-[#3E5896] text-xs"
-                  onPress={() => dispatch(removeFromCart({ id: key }))}
+                  onPress={() => dispatch(removeFromCart({ id: items[0].id}))}
                 >
                   Remove
                 </Text>
