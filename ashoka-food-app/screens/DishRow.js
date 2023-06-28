@@ -17,10 +17,12 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery }) => {
     const itemQuantity = items.filter(item => item.name === name).length;
 
     const addItem = () => {
+        Price = parseFloat(Price)
         dispatch(addToCart({ id, name, Price, image }));
     };
 
     const removeItem = () => {
+        Price = parseFloat(Price)
         dispatch(removeFromCart({ id, name, Price, image }));
     };
     return (

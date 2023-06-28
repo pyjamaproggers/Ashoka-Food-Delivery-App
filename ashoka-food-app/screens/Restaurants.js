@@ -18,7 +18,7 @@ const Restaurants = () => {
     const query = `*[_type == "restaurant"]
         {description, location, delivery,
         name, image, genre, timing, Veg_NonVeg, CostForTwo, RestaurantPhone,
-        dishes[]->{name, Veg_NonVeg, Price, image, Menu_category}}`;
+        dishes[]->{name, Veg_NonVeg, Price, image, Menu_category, _id}}`;
 
     useLayoutEffect(() => {
     }, [colorScheme])
@@ -30,7 +30,6 @@ const Restaurants = () => {
             client
                 .fetch(query)
                 .then((data) => {
-                    console.log(data)
                     var drest = []
                     var ndrest = []
                     var i
@@ -375,8 +374,8 @@ const Restaurants = () => {
                 NDRestaurants.map((restaurant) =>
                 (
                     <RestaurantCards
-                        // key={restaurant.id}
-                        // id={restaurant.id}
+                        key={restaurant._id}
+                        id={restaurant._id}
                         image={restaurant["image"]}
                         title={restaurant["name"]}
                         timing={restaurant["timing"]}
