@@ -87,36 +87,6 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery }) => {
                     </HStack>
                 }
 
-                {/* <HStack>
-                    
-                    <Text >
-                        {itemQuantity}
-                    </Text>
-
-                </HStack> */}
-
-
-                {/* <View style={{ backgroundColor: "white", padding: 4 }}>
-                    <View
-                        style={{
-                            flexDirection: "row",
-                            alignItems: "center",
-                            justifyContent: "space-between",
-                            paddingBottom: 3,
-                        }}
-                    >
-                        <TouchableOpacity disabled={!itemQuantity} onPress={removeItem}>
-                            <MinusCircleIcon
-                                color={itemQuantity > 0 ? "#00CCBB" : "gray"}
-                                size={25}
-                            />
-                        </TouchableOpacity>
-                        <Text>{itemQuantity}</Text>
-                        <TouchableOpacity onPress={addItem}>
-                            <PlusCircleIcon color="#cb202d" size={25} />
-                        </TouchableOpacity>
-                    </View>
-                </View> */}
             </HStack>
         </>
     );
