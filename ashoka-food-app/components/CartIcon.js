@@ -1,14 +1,15 @@
 import { useNavigation } from '@react-navigation/native';
 import { View, TouchableOpacity, Text, useColorScheme, Image, useDisclose, ScrollView } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from "react-redux";
 import { addToCart, removeFromCart, selectCartItems, selectCartTotal } from "../reduxslices/cartslice";
 import Styles from './Styles';
 import { HStack } from 'native-base';
 import Chevronup from '../assets/chevronupicon.png';
 import Chevrondown from '../assets/chevrondownicon.png';
 import Cart from '../assets/carticon.png';
-import { useState } from 'react';
+import React, { useMemo, useState, useLayoutEffect } from "react";
 import { Actionsheet } from "native-base";
+import DishRow from '../screens/DishRow';
 
 export default function CartIcon() {
     const items = useSelector(selectCartItems)
@@ -16,6 +17,15 @@ export default function CartIcon() {
     const navigation = useNavigation()
     const colorScheme = useColorScheme()
     const [showCartSheet, setShowCartSheet] = useState(false)
+    const [groupedItemsInBasket, setGroupedItemsInBasker] = useState([]);
+    const dispatch = useDispatch();
+    useMemo(() => {
+        const groupedItems = items.reduce((results, item) => {
+          (results[items.id] = results[items.id] || []).push(item);
+          return results;
+        }, {});
+        setGroupedItemsInBasker(groupedItems);
+      }, [items]);
 
     if (items.length === 0) return null
 
@@ -98,11 +108,23 @@ export default function CartIcon() {
                                     Items Added
                                 </Text>
                             </View>
-                            <ScrollView>
-                                <Actionsheet.Item>Dummy</Actionsheet.Item>
-                                <Actionsheet.Item>Data</Actionsheet.Item>
-                                <Actionsheet.Item>Play</Actionsheet.Item>
-                                <Actionsheet.Item>Favourite</Actionsheet.Item>
+                            <ScrollView className="h-full">
+                            {Object.entries(groupedItemsInBasket).map(([key, items]) => (
+                                items.map((item, index) => (
+                                    <Actionsheet.Item key={`${key}-${index}`}>
+                                        <Text>{item.name}</Text>
+                                        <Text className="text-gray-400">₹{item.Price}</Text>
+                                        <TouchableOpacity>
+                                        <Text
+                                            className="text-[#3E5896] text-xs"
+                                            onPress={() => dispatch(removeFromCart({ id: item.id }))}
+                                        >
+                                            Remove
+                                        </Text>
+                                        </TouchableOpacity>
+                                </Actionsheet.Item>
+                                ))
+                            ))}
                             </ScrollView>
                             <View className="absolute bottom-0 w-screen "
                                 style={[colorScheme == 'light' ? Styles.LightCartButton : Styles.DarkCartButton]}
@@ -119,26 +141,25 @@ export default function CartIcon() {
                                                 style={{ width: 20, height: 20, resizeMode: "contain", }}
                                                 source={Cart}
                                             />
-                                            {items.length == 1 &&
+                                            {items.length == 1 && showCartSheet == true &&
                                                 <Text className='text-md font-semibold text-black'
                                                     style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
                                                 >
                                                     {items.length} ITEM ADDED
                                                 </Text>
                                             }
-                                            {items.length > 1 &&
-                                                <Text className='text-md font-semibold text-black'
-                                                style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
+                                            {items.length > 1 && showCartSheet == true &&
+                                                <Text className='text-md font-semibold text-black'>
                                                     {items.length} ITEMS ADDED
                                                 </Text>
                                             }
-                                            {showCartSheet &&
+                                            {showCartSheet && showCartSheet == true &&
                                                 <Image
                                                     style={{ width: 12, height: 12, resizeMode: "contain", }}
                                                     source={Chevrondown}
                                                 />
                                             }
-                                            {!showCartSheet &&
+                                            {!showCartSheet && showCartSheet == true &&
                                                 <Image
                                                     style={{ width: 12, height: 12, resizeMode: "contain", }}
                                                     source={Chevronup}
