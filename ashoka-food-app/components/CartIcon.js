@@ -45,7 +45,9 @@ export default function CartIcon() {
                                     </Text>
                                 }
                                 {items.length > 1 &&
-                                    <Text className='text-md font-semibold text-black'>
+                                    <Text className='text-md font-semibold text-black'
+                                    style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                    >
                                         {items.length} ITEMS ADDED
                                     </Text>
                                 }
@@ -91,7 +93,8 @@ export default function CartIcon() {
                     }}>
                         <Actionsheet.Content>
                             <View className='border-b border-gray-200 w-full'>
-                                <Text className=' py-2 pl-2 text-lg font-medium'>
+                                <Text className=' py-2 pl-2 text-lg font-medium'
+                                style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
                                     Items Added
                                 </Text>
                             </View>
@@ -124,7 +127,8 @@ export default function CartIcon() {
                                                 </Text>
                                             }
                                             {items.length > 1 &&
-                                                <Text className='text-md font-semibold text-black'>
+                                                <Text className='text-md font-semibold text-black'
+                                                style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
                                                     {items.length} ITEMS ADDED
                                                 </Text>
                                             }
