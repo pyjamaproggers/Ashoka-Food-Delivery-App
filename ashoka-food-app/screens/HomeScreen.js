@@ -4,17 +4,20 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import AshokaLogo from '../assets/ASHOKAWHITELOGO.png';
 import userPic from '../assets/userAvatar.png'
+import Warning from '../assets/warning.png'
 import { ChevronDownIcon, MagnifyingGlassIcon, ChevronUpIcon } from 'react-native-heroicons/outline';
 import Restaurants from './Restaurants';
 import Styles from '../components/Styles';
 import ChevronUp from '../assets/chevronupicon.png'
 import ChevronDown from '../assets/chevrondownicon.png'
 import Search from '../assets/searchicon.png'
+import { Alert, CloseIcon, HStack, IconButton, Slide, VStack } from 'native-base';
+import { useNetInfo } from "@react-native-community/netinfo";
 
 
 const HomeScreen = () => {
     const navigation = useNavigation();
-
+    const netInfo = useNetInfo()
     const [DeliveryLocation, setDeliveryLocation] = useState('RH1')
     const [isOpen, setIsOpen] = useState(false)
     const [Searched, setSearched] = useState('')
@@ -45,6 +48,7 @@ const HomeScreen = () => {
 
     return (
         <SafeAreaView className=" pt-5" style={[colorScheme == 'light' ? { backgroundColor: '#F2F2F2' } : { backgroundColor: '#0c0c0f' }]}>
+
             <View className="flex-row pb-3 items-center mx-4 space-x-2 z-50">
 
                 <Image source={AshokaLogo} className="h-7 w-7 bg-gray-300 p-4 rounded-full" />
@@ -125,29 +129,40 @@ const HomeScreen = () => {
                     />
                     {colorScheme == 'light' &&
                         <TextInput placeholder="Search for a dish or place" keyboardType="default" className='w-full'
-                            style={{color: '#000'}}
+                            style={{ color: '#000' }}
                             onPressIn={() => {
                                 setIsOpen(false)
-                            }} 
-                            onChangeText={(text)=>{
+                            }}
+                            onChangeText={(text) => {
                                 setSearched(text)
-                            }}/>
+                            }} />
                     }
                     {colorScheme != 'light' &&
                         <TextInput placeholder="Search for a dish or place" keyboardType="default" className='w-full'
-                            style={{color: '#fff'}}
+                            style={{ color: '#fff' }}
                             onPressIn={() => {
                                 setIsOpen(false)
-                            }} 
-                            onChangeText={(text)=>{
+                            }}
+                            onChangeText={(text) => {
                                 setSearched(text)
-                            }}/>
+                            }} />
                     }
                 </View>
             </View>
 
+            <Slide in={!netInfo.isConnected} placement="top">
+                <Alert justifyContent="center" status="error" safeAreaTop={10}>
+                    <HStack space={3}>
+                        <Image source={Warning} className="h-7 w-7" />
+                        <Text className='text-md pt-2 font-medium'>
+                            Uh oh, you don't seem to be connected...
+                        </Text>
+                    </HStack>
+                </Alert>
+            </Slide>
+
             {/* Body */}
-            <Restaurants searched={Searched}/>
+            <Restaurants searched={Searched} />
 
         </SafeAreaView>
     );

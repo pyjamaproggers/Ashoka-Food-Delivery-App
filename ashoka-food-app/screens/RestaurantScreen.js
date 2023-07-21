@@ -1,7 +1,7 @@
 import React, { useLayoutEffect, useRef, useState } from 'react'
 import { useEffect } from 'react';
 import { useRoute, useNavigation } from '@react-navigation/native';
-import { View, Text, Image, TextInput, ScrollView, Animated, useColorScheme } from 'react-native'
+import { View, Text, Image, TextInput, ScrollView, Animated, useColorScheme, Linking, Platform } from 'react-native'
 import { TouchableOpacity } from 'react-native';
 import { ArrowLeftIcon, ClockIcon, MapPinIcon, BoltIcon, PhoneArrowUpRightIcon, XMarkIcon } from 'react-native-heroicons/solid';
 import { selectRestaurant, setRestaurant } from '../reduxslices/restaurantSlice'
@@ -10,7 +10,6 @@ import CartIcon from '../components/CartIcon';
 import DishRow from './DishRow';
 import { urlFor } from '../sanity';
 import Styles from '../components/Styles';
-import { HStack, VStack } from 'native-base';
 import Accordion from 'react-native-collapsible/Accordion';
 import VegIcon from '../assets/vegicon.png';
 import NonVegIcon from '../assets/nonvegicon.png';
@@ -19,6 +18,9 @@ import cashIcon from '../assets/cashicon.png'
 import phoneIcon from '../assets/phoneicon2.png';
 import ChevronUp from '../assets/chevronupicon.png'
 import ChevronDown from '../assets/chevrondownicon.png'
+import { useNetInfo } from "@react-native-community/netinfo";
+import { Alert, CloseIcon, HStack, IconButton, Slide, VStack } from 'native-base';
+import Warning from '../assets/warning.png'
 
 const RestaurantScreen = () => {
 
@@ -41,6 +43,7 @@ const RestaurantScreen = () => {
     };
 
     const colorScheme = useColorScheme();
+    const netInfo = useNetInfo();
 
     const navigation = useNavigation();
     const dispatch = useDispatch();
@@ -48,9 +51,10 @@ const RestaurantScreen = () => {
 
     const {
         params: {
-            id, image, title, genre, timing, delivery, location, description, dishes, veg_nonveg
+            id, image, title, genre, timing, delivery, location, description, dishes, veg_nonveg, phone
         },
     } = useRoute();
+    console.log(phone)
 
     const segregateDishes = (dishes) => {
         var TempVegDishes = []
@@ -169,16 +173,16 @@ const RestaurantScreen = () => {
                 >
                     {section.title}
                 </Text>
-                {isActive?
-                <Image
-                    style={{ width: 12, height: 12, resizeMode: "contain" }}
-                    source={ChevronUp}
-                />
-                :
-                <Image
-                    style={{ width: 12, height: 12, resizeMode: "contain" }}
-                    source={ChevronDown}
-                />
+                {isActive ?
+                    <Image
+                        style={{ width: 12, height: 12, resizeMode: "contain" }}
+                        source={ChevronUp}
+                    />
+                    :
+                    <Image
+                        style={{ width: 12, height: 12, resizeMode: "contain" }}
+                        source={ChevronDown}
+                    />
                 }
             </HStack>
         );
@@ -221,6 +225,16 @@ const RestaurantScreen = () => {
     return (
         <>
             <CartIcon />
+            <Slide in={!netInfo.isConnected} placement="top">
+                <Alert justifyContent="center" status="error" safeAreaTop={10}>
+                    <HStack space={3}>
+                        <Image source={Warning} className="h-7 w-7" />
+                        <Text className='text-md pt-2 font-medium'>
+                            Uh oh, you don't seem to be connected...
+                        </Text>
+                    </HStack>
+                </Alert>
+            </Slide>
             <Animated.ScrollView
                 onScroll={Animated.event(
                     [{ nativeEvent: { contentOffset: { y: scrollA } } }],
@@ -230,7 +244,7 @@ const RestaurantScreen = () => {
                 contentContainerStyle={{
                     paddingBottom: 150
                 }}
-                showsVerticalScrollIndicator={false} 
+                showsVerticalScrollIndicator={false}
                 style={[colorScheme == 'light' ? { backgroundColor: '#F2F2F2' } : { backgroundColor: '#0c0c0f' }]}
             >
                 <View className="relative" >
@@ -266,10 +280,15 @@ const RestaurantScreen = () => {
                     </VStack>
 
                     {/* Phone Icon */}
-                    <Image
-                        style={{ width: 25, height: 25, resizeMode: "contain" }}
-                        source={phoneIcon}
-                    />
+                    <TouchableOpacity
+                        onPress={() => {
+                            Linking.openURL(`tel:${phone}`)
+                        }}>
+                        <Image
+                            style={{ width: 25, height: 25, resizeMode: "contain" }}
+                            source={phoneIcon}
+                        />
+                    </TouchableOpacity>
                 </View>
 
                 {/* Menu */}

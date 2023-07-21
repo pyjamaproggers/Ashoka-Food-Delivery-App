@@ -3,7 +3,7 @@ import { View, TouchableOpacity, Text, useColorScheme, Image, useDisclose, Scrol
 import { useSelector, useDispatch } from "react-redux";
 import { addToCart, removeFromCart, selectCartItems, selectCartTotal } from "../reduxslices/cartslice";
 import Styles from './Styles';
-import { HStack } from 'native-base';
+import { HStack, PresenceTransition } from 'native-base';
 import Chevronup from '../assets/chevronupicon.png';
 import Chevrondown from '../assets/chevrondownicon.png';
 import Cart from '../assets/carticon.png';
@@ -19,8 +19,8 @@ export default function CartIcon() {
     const colorScheme = useColorScheme()
     const colorMode = useColorMode();
     const windowHeight = Dimensions.get('window').height;
-    const CartButtonHeight1 = Math.ceil(windowHeight*0.01)
-    const CartButtonHeight2 = Math.ceil(windowHeight*0.2)
+    const CartButtonHeight1 = Math.ceil(windowHeight * 0.01)
+    const CartButtonHeight2 = Math.ceil(windowHeight * 0.2)
     const [showCartSheet, setShowCartSheet] = useState(false)
     const [groupedItemsInBasket, setGroupedItemsInBasker] = useState([]);
     const dispatch = useDispatch();
@@ -42,64 +42,73 @@ export default function CartIcon() {
                 <SafeAreaView className="absolute bottom-0 w-screen z-20"
                     style={[colorScheme == 'light' ? Styles.LightCartButton : Styles.DarkCartButton]}
                 >
-                    <HStack className='justify-evenly mt-2'>
+                    <PresenceTransition visible={!showCartSheet} initial={{
+                        translateY: 100
+                    }} animate={{
+                        translateY: 0,
+                        transition: {
+                            duration: 200
+                        }
+                    }}>
+                        <HStack className='justify-evenly mt-2'>
 
-                        <TouchableOpacity
-                            onPress={() => setShowCartSheet(!showCartSheet)}
-                            className="py-2.5 flex-row items-center space-x-1"
-                            style={Styles.ShowCartButton}
-                        >
-                            <HStack className='items-center space-x-2'>
-                                <Image
-                                    style={{ width: 20, height: 20, resizeMode: "contain", }}
-                                    source={Cart}
-                                />
-                                {items.length == 1 &&
-                                    <Text className='text-md font-semibold text-black'
-                                        style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
-                                    >
-                                        {items.length} ITEM ADDED
+                            <TouchableOpacity
+                                onPress={() => setShowCartSheet(!showCartSheet)}
+                                className="py-2.5 flex-row items-center space-x-1"
+                                style={Styles.ShowCartButton}
+                            >
+                                <HStack className='items-center space-x-2'>
+                                        <Image
+                                            style={{ width: 20, height: 20, resizeMode: "contain", }}
+                                            source={Cart}
+                                        />
+                                        {items.length == 1 &&
+                                            <Text className='text-md font-semibold text-black'
+                                                style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                            >
+                                                {items.length} ITEM ADDED
+                                            </Text>
+                                        }
+                                        {items.length > 1 &&
+                                            <Text className='text-md font-semibold text-black'
+                                                style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                            >
+                                                {items.length} ITEMS ADDED
+                                            </Text>
+                                        }
+                                        {showCartSheet &&
+                                            <Image
+                                                style={{ width: 12, height: 12, resizeMode: "contain", }}
+                                                source={Chevrondown}
+                                            />
+                                        }
+                                        {!showCartSheet &&
+                                            <Image
+                                                style={{ width: 12, height: 12, resizeMode: "contain", }}
+                                                source={Chevronup}
+                                            />
+                                        }
+                                </HStack>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity
+                                onPress={() => navigation.navigate('Cart')}
+                                className="bg-[#3E5896] py-2.5 flex-row items-center space-x-1"
+                                style={Styles.NextButton}
+                            >
+                                <HStack className='items-center space-x-2'>
+                                    <Text className='text-xl font-semibold text-white' >
+                                        Next
                                     </Text>
-                                }
-                                {items.length > 1 &&
-                                    <Text className='text-md font-semibold text-black'
-                                        style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
-                                    >
-                                        {items.length} ITEMS ADDED
-                                    </Text>
-                                }
-                                {showCartSheet &&
                                     <Image
-                                        style={{ width: 12, height: 12, resizeMode: "contain", }}
-                                        source={Chevrondown}
-                                    />
-                                }
-                                {!showCartSheet &&
-                                    <Image
-                                        style={{ width: 12, height: 12, resizeMode: "contain", }}
+                                        style={{ width: 12, height: 12, resizeMode: "contain", transform: 'rotate(90deg)' }}
                                         source={Chevronup}
                                     />
-                                }
-                            </HStack>
-                        </TouchableOpacity>
+                                </HStack>
+                            </TouchableOpacity>
 
-                        <TouchableOpacity
-                            onPress={() => navigation.navigate('Cart')}
-                            className="bg-[#3E5896] py-2.5 flex-row items-center space-x-1"
-                            style={Styles.NextButton}
-                        >
-                            <HStack className='items-center space-x-2'>
-                                <Text className='text-xl font-semibold text-white' >
-                                    Next
-                                </Text>
-                                <Image
-                                    style={{ width: 12, height: 12, resizeMode: "contain", transform: 'rotate(90deg)' }}
-                                    source={Chevronup}
-                                />
-                            </HStack>
-                        </TouchableOpacity>
-
-                    </HStack >
+                        </HStack >
+                    </PresenceTransition>
 
                 </SafeAreaView >
             }
@@ -115,7 +124,7 @@ export default function CartIcon() {
                                 </Text>
                             </View>
 
-                            <ScrollView className="w-full" style={{minHeight: 200}}>
+                            <ScrollView className="w-full" style={{ minHeight: 200 }}>
                                 {Object.entries(groupedItemsInBasket).map(([key, items]) => (
                                     items.map((item, index) => (
                                         <>

@@ -143,7 +143,7 @@ const Restaurants = (props) => {
                                     {
                                         translateY: scrollY.interpolate({
                                             inputRange: [-200, 0, 200],
-                                            outputRange: [-height * 0.01, 0, height * 0.2]
+                                            outputRange: [-height * 0.075, 0, height * 0.2]
                                         })
                                     }
                                 ]
@@ -291,7 +291,8 @@ const Restaurants = (props) => {
                                 location={restaurant["location"]}
                                 description={restaurant["description"]}
                                 dishes={restaurant["dishes"]}
-                                veg_nonveg={restaurant["Veg_NonVeg"]} />
+                                veg_nonveg={restaurant["Veg_NonVeg"]}  
+                                phone={restaurant["RestaurantPhone"]}/>
                         ))
                     }
 
@@ -463,7 +464,8 @@ const Restaurants = (props) => {
                                 location={restaurant["location"]}
                                 description={restaurant["description"]}
                                 dishes={restaurant["dishes"]}
-                                veg_nonveg={restaurant["Veg_NonVeg"]} />
+                                veg_nonveg={restaurant["Veg_NonVeg"]}  
+                                phone={restaurant["RestaurantPhone"]}/>
                         ))
                     }
 
@@ -474,7 +476,7 @@ const Restaurants = (props) => {
                 </Animated.ScrollView>
             }
             {Searched &&
-                <>
+                <View className='h-screen' style={[colorScheme == 'light' ? { backgroundColor: '#F2F2F2' } : { backgroundColor: '#0c0c0f' }]}>
                     <View className='h-1.5'>
                         {''}
                     </View>
@@ -492,10 +494,11 @@ const Restaurants = (props) => {
                                 location={restaurant["location"]}
                                 description={restaurant["description"]}
                                 dishes={restaurant["dishes"]}
-                                veg_nonveg={restaurant["Veg_NonVeg"]} />
+                                veg_nonveg={restaurant["Veg_NonVeg"]} 
+                                phone={restaurant["RestaurantPhone"]}/>
                         ))
                     }
-                </>
+                </View>
             }
         </>
     )
