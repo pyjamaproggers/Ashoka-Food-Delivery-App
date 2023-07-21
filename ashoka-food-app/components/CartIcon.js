@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
-import { View, TouchableOpacity, Text, useColorScheme, Image, useDisclose, ScrollView, Dimensions, SafeAreaView } from 'react-native';
+import { View, TouchableOpacity, Text, useColorScheme, Image, useDisclose, ScrollView, Dimensions, SafeAreaView, Animated, Easing } from 'react-native';
 import { useSelector, useDispatch } from "react-redux";
 import { addToCart, removeFromCart, selectCartItems, selectCartTotal } from "../reduxslices/cartslice";
 import Styles from './Styles';
@@ -20,10 +20,11 @@ export default function CartIcon() {
     const colorMode = useColorMode();
     const windowHeight = Dimensions.get('window').height;
     const CartButtonHeight1 = Math.ceil(windowHeight*0.01)
-    const CartButtonHeight2 = Math.ceil(windowHeight*0.0175)
+    const CartButtonHeight2 = Math.ceil(windowHeight*0.2)
     const [showCartSheet, setShowCartSheet] = useState(false)
     const [groupedItemsInBasket, setGroupedItemsInBasker] = useState([]);
     const dispatch = useDispatch();
+
     useMemo(() => {
         const groupedItems = items.reduce((results, item) => {
             (results[items.id] = results[items.id] || []).push(item);
@@ -33,6 +34,7 @@ export default function CartIcon() {
     }, [items]);
 
     if (items.length === 0) return null
+
 
     return (
         <>
@@ -102,7 +104,7 @@ export default function CartIcon() {
                 </SafeAreaView >
             }
             {showCartSheet == true &&
-                <SafeAreaView>
+                <View>
                     <Actionsheet isOpen={showCartSheet} onClose={() => { setShowCartSheet(!showCartSheet) }} size='full'
                     >
                         <Actionsheet.Content bgColor={colorMode == 'light' ? "white" : "#262626"} >
@@ -113,7 +115,7 @@ export default function CartIcon() {
                                 </Text>
                             </View>
 
-                            <ScrollView className="w-full" >
+                            <ScrollView className="w-full" style={{minHeight: 200}}>
                                 {Object.entries(groupedItemsInBasket).map(([key, items]) => (
                                     items.map((item, index) => (
                                         <>
@@ -199,7 +201,7 @@ export default function CartIcon() {
 
                         </Actionsheet.Content>
                     </Actionsheet>
-                </SafeAreaView>
+                </View>
             }
 
         </>

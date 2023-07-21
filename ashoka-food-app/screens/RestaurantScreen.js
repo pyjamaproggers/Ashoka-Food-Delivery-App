@@ -230,6 +230,7 @@ const RestaurantScreen = () => {
                 contentContainerStyle={{
                     paddingBottom: 150
                 }}
+                showsVerticalScrollIndicator={false} 
                 style={[colorScheme == 'light' ? { backgroundColor: '#F2F2F2' } : { backgroundColor: '#0c0c0f' }]}
             >
                 <View className="relative" >

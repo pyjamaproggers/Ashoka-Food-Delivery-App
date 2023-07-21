@@ -17,6 +17,7 @@ const HomeScreen = () => {
 
     const [DeliveryLocation, setDeliveryLocation] = useState('RH1')
     const [isOpen, setIsOpen] = useState(false)
+    const [Searched, setSearched] = useState('')
 
     const colorScheme = useColorScheme();
 
@@ -122,15 +123,31 @@ const HomeScreen = () => {
                         style={{ width: 16, height: 16, resizeMode: "contain" }}
                         source={Search}
                     />
-                    <TextInput placeholder="Search for a dish or place" keyboardType="default" className='w-full'
-                        onPressIn={() => {
-                            setIsOpen(false)
-                        }} />
+                    {colorScheme == 'light' &&
+                        <TextInput placeholder="Search for a dish or place" keyboardType="default" className='w-full'
+                            style={{color: '#000'}}
+                            onPressIn={() => {
+                                setIsOpen(false)
+                            }} 
+                            onChangeText={(text)=>{
+                                setSearched(text)
+                            }}/>
+                    }
+                    {colorScheme != 'light' &&
+                        <TextInput placeholder="Search for a dish or place" keyboardType="default" className='w-full'
+                            style={{color: '#fff'}}
+                            onPressIn={() => {
+                                setIsOpen(false)
+                            }} 
+                            onChangeText={(text)=>{
+                                setSearched(text)
+                            }}/>
+                    }
                 </View>
             </View>
 
             {/* Body */}
-            <Restaurants />
+            <Restaurants searched={Searched}/>
 
         </SafeAreaView>
     );

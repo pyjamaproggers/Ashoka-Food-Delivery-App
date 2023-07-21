@@ -403,8 +403,7 @@ const Styles = StyleSheet.create({
         shadowOffset: {width: 0, height: -1},
         shadowRadius: 3,
         shadowOpacity: 0.4,
-    }
-
+    },  
 });
 
 export default Styles;
