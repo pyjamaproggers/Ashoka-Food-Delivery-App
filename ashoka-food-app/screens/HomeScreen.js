@@ -5,6 +5,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import AshokaLogo from '../assets/ASHOKAWHITELOGO.png';
 import userPic from '../assets/userAvatar.png'
 import Warning from '../assets/warning.png'
+import Decreasing from '../assets/decrease.png'
 import { ChevronDownIcon, MagnifyingGlassIcon, ChevronUpIcon } from 'react-native-heroicons/outline';
 import Restaurants from './Restaurants';
 import Styles from '../components/Styles';
@@ -152,12 +153,17 @@ const HomeScreen = () => {
 
             <Slide in={!netInfo.isConnected} placement="top">
                 <Alert justifyContent="center" status="error" safeAreaTop={10}>
-                    <HStack space={3}>
-                        <Image source={Warning} className="h-7 w-7" />
-                        <Text className='text-md pt-2 font-medium'>
-                            Uh oh, you don't seem to be connected...
-                        </Text>
-                    </HStack>
+                    <VStack space={1} >
+                        <HStack className='justify-center pt-2'>
+                            <Image source={Warning} className="h-7 w-7" />
+                        </HStack>
+                        <HStack className='items-center justify-center'>
+                            <Text className='text-md pt-1 font-medium pl-2 pr-1'>
+                                Mmm, Ashoka wifi stonks
+                            </Text>
+                            <Image source={Decreasing} className="h-5 w-5" />
+                        </HStack>
+                    </VStack>
                 </Alert>
             </Slide>
 
