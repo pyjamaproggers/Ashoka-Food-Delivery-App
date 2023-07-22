@@ -34,5 +34,11 @@ export default defineType({
       type: 'image',
       title: 'Dish Image',
     }, 
+    {
+      name: "Restaurant",
+      type: 'string',
+      title: 'Which restaurant is the dish from?',
+      validation: (Rule) => Rule.required(),
+    },
   ]
 })

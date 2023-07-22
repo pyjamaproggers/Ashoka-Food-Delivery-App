@@ -17,6 +17,7 @@ const Restaurants = (props) => {
     const [Refreshing, setRefreshing] = useState()
     const colorScheme = useColorScheme();
     const Searched = props.searched
+    const actualUser = props.actualUser
     const [SearchedRestaurants, setSearchedRestaurants] = useState([])
 
     const scrollY = useRef(new Animated.Value(0)).current;
@@ -27,7 +28,7 @@ const Restaurants = (props) => {
     const query = `*[_type == "restaurant"]
         {description, location, delivery,
         name, image, genre, timing, Veg_NonVeg, CostForTwo, RestaurantPhone,
-        dishes[]->{name, Veg_NonVeg, Price, image, Menu_category, _id}}`;
+        dishes[]->{name, Veg_NonVeg, Price, image, Menu_category, Restaurant ,_id}}`;
 
     useLayoutEffect(() => {
     }, [colorScheme])
@@ -292,7 +293,8 @@ const Restaurants = (props) => {
                                 description={restaurant["description"]}
                                 dishes={restaurant["dishes"]}
                                 veg_nonveg={restaurant["Veg_NonVeg"]}  
-                                phone={restaurant["RestaurantPhone"]}/>
+                                phone={restaurant["RestaurantPhone"]}
+                                actualUser={actualUser}/>
                         ))
                     }
 
@@ -465,7 +467,8 @@ const Restaurants = (props) => {
                                 description={restaurant["description"]}
                                 dishes={restaurant["dishes"]}
                                 veg_nonveg={restaurant["Veg_NonVeg"]}  
-                                phone={restaurant["RestaurantPhone"]}/>
+                                phone={restaurant["RestaurantPhone"]}
+                                actualUser={actualUser}/>
                         ))
                     }
 
@@ -495,7 +498,8 @@ const Restaurants = (props) => {
                                 description={restaurant["description"]}
                                 dishes={restaurant["dishes"]}
                                 veg_nonveg={restaurant["Veg_NonVeg"]} 
-                                phone={restaurant["RestaurantPhone"]}/>
+                                phone={restaurant["RestaurantPhone"]}
+                                actualUser={actualUser}/>
                         ))
                     }
                 </View>

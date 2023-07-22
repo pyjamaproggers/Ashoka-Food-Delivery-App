@@ -9,7 +9,7 @@ import NonVegIcon from '../assets/nonvegicon.png';
 import Styles from "../components/Styles";
 import { HStack, VStack } from "native-base";
 
-const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery }) => {
+const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant }) => {
     const [isPressed, setIsPressed] = React.useState(false);
     const colorScheme = useColorScheme();
     const dispatch = useDispatch();
@@ -18,12 +18,12 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery }) => {
 
     const addItem = () => {
         Price = parseFloat(Price)
-        dispatch(addToCart({ id, name, Price, image }));
+        dispatch(addToCart({ id, name, Price, image, Restaurant }));
     };
 
     const removeItem = () => {
         Price = parseFloat(Price)
-        dispatch(removeFromCart({ id, name, Price, image }));
+        dispatch(removeFromCart({ id, name, Price, image, Restaurant }));
     };
     return (
         <>

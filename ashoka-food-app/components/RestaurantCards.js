@@ -21,7 +21,7 @@ import ChicagoPizza from '../assets/chicagopizzaicon.png';
 import Fuelzone from '../assets/fuelzoneicon.png';
 import Chaishai from '../assets/chaishaiicon.png';
 
-const RestaurantCards = ({ id, image, title, genre, timing, delivery, location, description, dishes, veg_nonveg, phone }) => {
+const RestaurantCards = ({ id, image, title, genre, timing, delivery, location, description, dishes, veg_nonveg, phone, actualUser }) => {
     const navigation = useNavigation();
     const colorScheme = useColorScheme();
     console.log(phone)
@@ -29,7 +29,7 @@ const RestaurantCards = ({ id, image, title, genre, timing, delivery, location, 
         <View className='shadow'>
             <TouchableOpacity onPress={() => {
                 navigation.navigate('Restaurant', {
-                    id, image, title, genre, timing, delivery, location, description, dishes, veg_nonveg, phone
+                    id, image, title, genre, timing, delivery, location, description, dishes, veg_nonveg, phone, actualUser
                 })
             }} className="mb-3 rounded-xl mx-4 " style={[colorScheme == 'light' ? Styles.LightBGSec : Styles.DarkBGSec]}>
 

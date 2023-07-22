@@ -61,7 +61,7 @@ const RestaurantScreen = () => {
 
     const {
         params: {
-            id, image, title, genre, timing, delivery, location, description, dishes, veg_nonveg, phone
+            id, image, title, genre, timing, delivery, location, description, dishes, veg_nonveg, phone, actualUser
         },
     } = useRoute();
 
@@ -374,7 +374,7 @@ const RestaurantScreen = () => {
                 <>
                     {
                         section.content.map((dish) => (
-                            <DishRow name={dish.name} Price={dish.Price} Veg_NonVeg={dish.Veg_NonVeg} delivery={delivery} key={dish._id} id={dish._id} />
+                            <DishRow name={dish.name} Price={dish.Price} Veg_NonVeg={dish.Veg_NonVeg} delivery={delivery} key={dish._id} id={dish._id} Restaurant={dish.Restaurant} />
                         ))
                     }
                 </>
@@ -408,7 +408,7 @@ const RestaurantScreen = () => {
 
     return (
         <>
-            <CartIcon />
+            <CartIcon actualUser={actualUser} />
             <Slide in={!netInfo.isConnected} placement="top">
                 <Alert justifyContent="center" status="error" safeAreaTop={10}>
                     <HStack space={3}>

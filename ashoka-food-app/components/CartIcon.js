@@ -12,7 +12,7 @@ import { Actionsheet, useColorMode } from "native-base";
 import DishRow from '../screens/DishRow';
 import { color } from '@rneui/base';
 
-export default function CartIcon() {
+export default function CartIcon({actualUser}) {
     const items = useSelector(selectCartItems)
     const cartTotal = useSelector(selectCartTotal)
     const navigation = useNavigation()
@@ -92,7 +92,7 @@ export default function CartIcon() {
                             </TouchableOpacity>
 
                             <TouchableOpacity
-                                onPress={() => navigation.navigate('Cart')}
+                                onPress={() => navigation.navigate('Cart', {actualUser})}
                                 className="bg-[#3E5896] py-2.5 flex-row items-center space-x-1"
                                 style={Styles.NextButton}
                             >
@@ -189,7 +189,7 @@ export default function CartIcon() {
                                     </TouchableOpacity>
 
                                     <TouchableOpacity
-                                        onPress={() => navigation.navigate('Cart')}
+                                        onPress={() => navigation.navigate('Cart', {actualUser})}
                                         className="bg-[#3E5896] py-2.5 flex-row items-center space-x-1"
                                         style={Styles.NextButton}
                                     >

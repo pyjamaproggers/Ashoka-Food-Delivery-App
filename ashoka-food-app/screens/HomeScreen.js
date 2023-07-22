@@ -168,7 +168,7 @@ const HomeScreen = () => {
             </Slide>
 
             {/* Body */}
-            <Restaurants searched={Searched} />
+            <Restaurants searched={Searched} actualUser={actualUser} />
 
         </SafeAreaView>
     );
