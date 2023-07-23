@@ -24,7 +24,6 @@ import Chaishai from '../assets/chaishaiicon.png';
 const RestaurantCards = ({ id, image, title, genre, timing, delivery, location, description, dishes, veg_nonveg, phone, actualUser }) => {
     const navigation = useNavigation();
     const colorScheme = useColorScheme();
-    console.log(phone)
     return (
         <View className='shadow'>
             <TouchableOpacity onPress={() => {
@@ -33,23 +32,25 @@ const RestaurantCards = ({ id, image, title, genre, timing, delivery, location, 
                 })
             }} className="mb-3 rounded-xl mx-4 " style={[colorScheme == 'light' ? Styles.LightBGSec : Styles.DarkBGSec]}>
 
-                <View className='flex-row place-items-start w-24 h-24'>
+                <View className='flex-row place-items-start w-24'>
 
-                    <Image source={{ uri: urlFor(image).url() }} className="h-full w-full" resizeMode='stretch' style={styles.restaurantImage} />
+                    <Image source={{ uri: urlFor(image).url() }} className="h-full w-full" resizeMode='cover' style={styles.restaurantImage} />
 
-                    <View className="px-3 flex-column">
-                        <Text className="font-semibold text-lg pt-1 pb-1 pl-0.5"
+                    <View className="px-2 flex-column">
+                        <Text className="font-semibold text-base pt-1 pb-1 pl-1"
+                             
                             style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
                         >
                             {title}
                         </Text>
 
-                        <View className="flex-row items-center space-x-1 mb-1 w-60">
+                        <View className="flex-row items-center space-x-1 mb-1 w-60 h-max">
                             <Image
                                 style={{ width: 16, height: 16, resizeMode: "contain" }}
                                 source={clockIcon}
                             />
-                            <Text className="flex-row text-xs text-gray-600"
+                            <Text className="flex-row text-sm text-gray-600"
+                                 
                                 style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
                             >
                                 {timing}
@@ -61,7 +62,8 @@ const RestaurantCards = ({ id, image, title, genre, timing, delivery, location, 
                                 style={{ width: 16, height: 16, resizeMode: "contain" }}
                                 source={mapPinIcon}
                             />
-                            <Text className="text-xs text-gray-600"
+                            <Text className="text-sm text-gray-600"
+                                 
                                 style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
                             >
                                 {location}
@@ -141,7 +143,11 @@ const RestaurantCards = ({ id, image, title, genre, timing, delivery, location, 
                                     source={Nescafe}
                                 />
                             }
-                            <Text className="text-xs text-gray-600" style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
+                            <Text 
+                            className="text-sm text-gray-600" 
+                             
+                            style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                            >
                                 {description}
                             </Text>
                         </View>

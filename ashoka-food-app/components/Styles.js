@@ -64,7 +64,7 @@ const Styles = StyleSheet.create({
     },
     LightDropdownMenu:{
         width: '100%',
-        height: 200,
+        height: 240,
         borderRadius: '6px',
         borderWidth: '1px',
         borderColor: 'rgb(229,231,235)',
@@ -78,7 +78,7 @@ const Styles = StyleSheet.create({
     },
     DarkDropdownMenu:{
         width: '100%',
-        height: 200,
+        height: 240,
         borderRadius: '6px',
         borderTopWidth: '1px',
         borderColor: 'rgb(0,0,0)',
@@ -394,17 +394,32 @@ const Styles = StyleSheet.create({
     LightCartButton: {
         backgroundColor: 'white',
         shadowColor: '#000',
-        shadowOffset: {width: 0, height: -1},
+        shadowOffset: {width: 0, height: -2},
         shadowRadius: 3,
-        shadowOpacity: 0.2,
+        shadowOpacity: 0.05,
     },
     DarkCartButton: {
         backgroundColor: '#262626',
         shadowColor: '#000',
-        shadowOffset: {width: 0, height: -1},
+        shadowOffset: {width: 0, height: -2},
         shadowRadius: 3,
-        shadowOpacity: 0.4,
+        shadowOpacity: 0.05,
     },  
+
+    LightHomeAdlibCart:{
+        color: 'rgb(156, 163, 175)',
+        backgroundColor: '#fff'
+    },
+    DarkHomeAdlibCart:{
+        color: 'rgb(107, 114, 128)',
+        backgroundColor: '#262626'
+    },
+    LightHomeAdlibCartBorder:{
+        borderColor: 'rgb(209, 213, 219)'
+    },
+    DarkHomeAdlibCartBorder:{
+        borderColor: 'rgb(75, 85, 99)'
+    },
 });
 
 export default Styles;

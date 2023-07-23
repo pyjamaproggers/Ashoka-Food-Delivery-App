@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, Image, useColorScheme } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { urlFor } from "../sanity";
 import { MinusCircleIcon, PlusCircleIcon, PlusSmallIcon, PlusIcon, MinusIcon } from "react-native-heroicons/solid";
 import { addToCart, removeFromCart, selectCartItems } from "../reduxslices/cartslice";
@@ -14,22 +14,83 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant }) =
     const colorScheme = useColorScheme();
     const dispatch = useDispatch();
     const items = useSelector(selectCartItems);
-    const itemQuantity = items.filter(item => item.name === name).length;
+    const [itemQuantity, setItemQuantity] = useState(0)
+
+    console.log(items)
 
     const addItem = () => {
         Price = parseFloat(Price)
-        dispatch(addToCart({ id, name, Price, image, Restaurant }));
-    };
+        console.log('****')
+        var currentQuantity
+        var additemQ
+
+        if (items.length == 0) {
+            currentQuantity = 0
+            additemQ = currentQuantity + 1
+            setItemQuantity(currentQuantity + 1)
+            dispatch(addToCart({ id, name, Price, image, Restaurant, Veg_NonVeg, quantity: additemQ }));
+        }
+        else {
+            if (items.filter((x) => (x.name == name)).length == 0) {
+                currentQuantity = 0
+                additemQ = currentQuantity + 1
+                setItemQuantity(currentQuantity + 1)
+                dispatch(addToCart({ id, name, Price, image, Restaurant, Veg_NonVeg, quantity: additemQ }));
+            }
+            else {
+                items.map((item) => {
+                    if (item.name == name) {
+                        currentQuantity = item.quantity
+                        additemQ = currentQuantity + 1
+                        setItemQuantity(currentQuantity + 1)
+                        dispatch(addToCart({ id, name, Price, image, Restaurant, Veg_NonVeg, quantity: additemQ }));
+                        dispatch(removeFromCart({ id, name, Price, image, Restaurant, Veg_NonVeg, quantity: currentQuantity }));
+                    }
+                })
+            }
+        };
+    }
 
     const removeItem = () => {
         Price = parseFloat(Price)
-        dispatch(removeFromCart({ id, name, Price, image, Restaurant }));
+        console.log('****')
+        var currentQuantity
+        var additemQ
+        items.map((item) => {
+            if (item.name == name && item.quantity == 1) {
+                currentQuantity = 1
+                setItemQuantity(currentQuantity - 1)
+                dispatch(removeFromCart({ id, name, Price, image, Restaurant, Veg_NonVeg, quantity: currentQuantity }));
+            }
+            if (item.name == name && item.quantity >= 1) {
+                currentQuantity = item.quantity
+                additemQ = currentQuantity - 1
+                setItemQuantity(currentQuantity - 1)
+                dispatch(addToCart({ id, name, Price, image, Restaurant, Veg_NonVeg, quantity: additemQ }));
+                dispatch(removeFromCart({ id, name, Price, image, Restaurant, Veg_NonVeg, quantity: currentQuantity }));
+            }
+        })
     };
+
+    useEffect(()=>{
+
+        if(items.length==0){
+            setItemQuantity(0)
+        }
+        if(items.length!=0){
+            items.map((item)=>{
+                if(item.name===name){
+                    setItemQuantity(item.quantity)
+                }
+            })
+        }
+    },[items])
+
     return (
         <>
             <HStack className='items-center justify-between w-full py-4' style={[colorScheme == 'light' ? Styles.LightBGSec : Styles.DarkBGSec]}>
                 {/* Dish Details Block */}
-                <VStack className='justify-start' style={{marginLeft: '2%'}}>
+                <VStack className='justify-start' style={{ marginLeft: '2%' }}>
                     {Veg_NonVeg === "Veg" ? (
                         <Image
                             style={{ width: 15, height: 15, resizeMode: "contain" }}
@@ -58,7 +119,7 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant }) =
 
                 {/* Add/Minus BUtton Block */}
 
-                {itemQuantity == 0 && delivery=='Yes' &&
+                {itemQuantity == 0 && delivery == 'Yes' &&
                     <TouchableOpacity onPress={addItem}>
                         <HStack
                             style={[colorScheme == 'light' ? Styles.LightAddButtonInitial : Styles.DarkAddButtonInitial]}
@@ -71,7 +132,7 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant }) =
                     </TouchableOpacity>
                 }
 
-                {itemQuantity > 0 && delivery=='Yes' &&
+                {itemQuantity > 0 && delivery == 'Yes' &&
                     <HStack
                         style={[colorScheme == 'light' ? Styles.LightAddButtonFinal : Styles.DarkAddButtonFinal]}
                     >

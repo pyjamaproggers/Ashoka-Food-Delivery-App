@@ -52,6 +52,9 @@ const Restaurants = (props) => {
                         else {
                             totalND += 1
                         }
+                        if (data[i].name == 'Roti Boti') {
+                            console.log(data[i].dishes)
+                        }
                     }
 
                     if (DRestaurants.length != totalD) {
@@ -83,23 +86,21 @@ const Restaurants = (props) => {
 
     const handleSearchedRestaurants = (Searched) => {
         const TempSearchedRestaurants = []
-        DRestaurants.map((rest, index)=>{
-            rest.dishes.map((dish,index)=>{
-                if(rest.name.includes(Searched) || dish.Menu_category.includes(Searched) || dish.name.includes(Searched)){
-                    if(!TempSearchedRestaurants.includes(rest)){
+        DRestaurants.map((rest, index) => {
+            rest.dishes.map((dish, index) => {
+                if (rest.name.includes(Searched) || dish.Menu_category.includes(Searched) || dish.name.includes(Searched)) {
+                    if (!TempSearchedRestaurants.includes(rest)) {
                         TempSearchedRestaurants.push(rest)
                     }
-                    
                 }
             })
         })
-        NDRestaurants.map((rest, index)=>{
-            rest.dishes.map((dish,index)=>{
-                if(rest.name.includes(Searched) || dish.Menu_category.includes(Searched) || dish.name.includes(Searched)){
-                    if(!TempSearchedRestaurants.includes(rest)){
+        NDRestaurants.map((rest, index) => {
+            rest.dishes.map((dish, index) => {
+                if (rest.name.includes(Searched) || dish.Menu_category.includes(Searched) || dish.name.includes(Searched)) {
+                    if (!TempSearchedRestaurants.includes(rest)) {
                         TempSearchedRestaurants.push(rest)
                     }
-                    
                 }
             })
         })
@@ -109,14 +110,14 @@ const Restaurants = (props) => {
     useEffect(() => {
         setFetching(true)
         fetchRestaurants(query)
-        if(Searched){
+        if (Searched) {
             handleSearchedRestaurants(Searched)
         }
     }, [Searched]);
 
     return (
         <>
-            {!Searched && 
+            {!Searched &&
                 <Animated.ScrollView
                     contentContainerStyle={{
                         paddingBottom: 120
@@ -125,6 +126,7 @@ const Restaurants = (props) => {
                         <RefreshControl refreshing={Refreshing}
                             onRefresh={() => {
                                 fetchRestaurants(query);
+                                props.LoadJoke(true)
                             }}
                         />
                     }
@@ -133,7 +135,7 @@ const Restaurants = (props) => {
                         { useNativeDriver: true },
                     )}
                     scrollEventThrottle={16}
-                    showsVerticalScrollIndicator={false} 
+                    showsVerticalScrollIndicator={false}
                 >
                     <View className='self-center mt-2 mb-2 shadow-md'
                         style={{
@@ -302,9 +304,9 @@ const Restaurants = (props) => {
                                 location={restaurant["location"]}
                                 description={restaurant["description"]}
                                 dishes={restaurant["dishes"]}
-                                veg_nonveg={restaurant["Veg_NonVeg"]}  
+                                veg_nonveg={restaurant["Veg_NonVeg"]}
                                 phone={restaurant["RestaurantPhone"]}
-                                actualUser={actualUser}/>
+                                actualUser={actualUser} />
                         ))
                     }
 
@@ -321,14 +323,14 @@ const Restaurants = (props) => {
                         <Animated.Image source={HomeImage2}
                             style={{
                                 width: imageWidth,
-                                height: imageHeight*2.8,
+                                height: imageHeight * 2.8,
                                 resizeMode: 'cover',
                                 borderRadius: 15,
                                 transform: [
                                     {
                                         translateY: scrollY.interpolate({
-                                            inputRange: [525, 1000, 1475, ],
-                                            outputRange: [-height*0.4, 0, height*0.4,]
+                                            inputRange: [525, 1000, 1475,],
+                                            outputRange: [-height * 0.4, 0, height * 0.4,]
                                         })
                                     }
                                 ]
@@ -476,9 +478,9 @@ const Restaurants = (props) => {
                                 location={restaurant["location"]}
                                 description={restaurant["description"]}
                                 dishes={restaurant["dishes"]}
-                                veg_nonveg={restaurant["Veg_NonVeg"]}  
+                                veg_nonveg={restaurant["Veg_NonVeg"]}
                                 phone={restaurant["RestaurantPhone"]}
-                                actualUser={actualUser}/>
+                                actualUser={actualUser} />
                         ))
                     }
 
@@ -490,32 +492,39 @@ const Restaurants = (props) => {
             }
             {Searched &&
                 <View className='h-screen' style={[colorScheme == 'light' ? { backgroundColor: '#F2F2F2' } : { backgroundColor: '#0c0c0f' }]}>
-                    <View className='h-1.5'>
-                        {''}
+                    <View className='mt-5 border-t' style={[colorScheme == 'light' ? Styles.LightHomeAdlibBorder : Styles.DarkHomeAdlibBorder]}  >
+                        <Text
+                            className="text-center font-normal text-xs mx-20 mt-3 -top-5"
+                            style={[colorScheme == 'light' ? Styles.LightHomeAdlib : Styles.DarkHomeAdlib]}
+                        >
+                            IS THIS WHAT YOU"RE LOOKING FOR?
+                        </Text>
                     </View>
-                    {SearchedRestaurants && 
-                        SearchedRestaurants.map((restaurant) =>
-                        (
-                            <RestaurantCards
-                                // key={restaurant.id}
-                                // id={restaurant.id}
-                                image={restaurant["image"]}
-                                title={restaurant["name"]}
-                                timing={restaurant["timing"]}
-                                delivery={restaurant["delivery"]}
-                                genre={restaurant["genre"]}
-                                location={restaurant["location"]}
-                                description={restaurant["description"]}
-                                dishes={restaurant["dishes"]}
-                                veg_nonveg={restaurant["Veg_NonVeg"]} 
-                                phone={restaurant["RestaurantPhone"]}
-                                actualUser={actualUser}/>
-                        ))
-                    }
+                    <ScrollView>
+                        {SearchedRestaurants &&
+                            SearchedRestaurants.map((restaurant) =>
+                            (
+                                <RestaurantCards
+                                    // key={restaurant.id}
+                                    // id={restaurant.id}
+                                    image={restaurant["image"]}
+                                    title={restaurant["name"]}
+                                    timing={restaurant["timing"]}
+                                    delivery={restaurant["delivery"]}
+                                    genre={restaurant["genre"]}
+                                    location={restaurant["location"]}
+                                    description={restaurant["description"]}
+                                    dishes={restaurant["dishes"]}
+                                    veg_nonveg={restaurant["Veg_NonVeg"]}
+                                    phone={restaurant["RestaurantPhone"]}
+                                    actualUser={actualUser} />
+                            ))
+                        }
+                    </ScrollView>
                 </View>
             }
         </>
     )
 }
 
-export default Restaurants
+export default Restaurants;

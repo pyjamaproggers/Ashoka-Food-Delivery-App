@@ -5,7 +5,7 @@ import { View, Text, Image, TextInput, ScrollView, Animated, useColorScheme, Lin
 import { TouchableOpacity } from 'react-native';
 import { ArrowLeftIcon, ClockIcon, MapPinIcon, BoltIcon, PhoneArrowUpRightIcon, XMarkIcon } from 'react-native-heroicons/solid';
 import { selectRestaurant, setRestaurant } from '../reduxslices/restaurantSlice'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import CartIcon from '../components/CartIcon';
 import DishRow from './DishRow';
 import { urlFor } from '../sanity';
@@ -22,6 +22,7 @@ import Search from '../assets/searchicon.png'
 import { useNetInfo } from "@react-native-community/netinfo";
 import { Alert, CloseIcon, HStack, IconButton, PresenceTransition, Slide, VStack } from 'native-base';
 import Warning from '../assets/warning.png'
+import { addToCart, removeFromCart, selectCartItems, selectCartTotal } from "../reduxslices/cartslice";
 
 const RestaurantScreen = () => {
     const [Transitions, setTransitions] = useState(true)
@@ -33,6 +34,7 @@ const RestaurantScreen = () => {
     const [NonVegMenu, setNonVegMenu] = useState();
     const [NonVegDishes, setNonVegDishes] = useState([]);
 
+    const items = useSelector(selectCartItems)
     const [AllDishes, setAllDishes] = useState([])
 
     const [SearchedText, setSearchedText] = useState('')
@@ -370,6 +372,9 @@ const RestaurantScreen = () => {
 
     _renderContent = (section) => {
         {
+            section.content.map((dish)=>{
+                console.log(dish)
+            })
             return (
                 <>
                     {
@@ -399,9 +404,9 @@ const RestaurantScreen = () => {
         )
         segregateDishes(dishes)
         setAllDishes(dishes)
-        window.setTimeout(() => {
-            setTransitions(false)
-        }, 300)
+        if(items.length==0){
+            setTransitions(true)
+        }
     }, [dispatch, SearchedText])
 
 
@@ -433,11 +438,11 @@ const RestaurantScreen = () => {
             >
 
                 <PresenceTransition visible={true} initial={{
-                    translateY: -300
+                    translateY: -100
                 }} animate={{
                     translateY: 0,
                     transition: {
-                        duration: 250,
+                        duration: 400,
                         delay: 25
                     }
                 }}>
@@ -490,11 +495,11 @@ const RestaurantScreen = () => {
                 <View>
                     <VStack space={1} className='justify-center'>
                         <PresenceTransition visible={true} initial={{
-                            translateY: -300
+                            translateY: -100
                         }} animate={{
                             translateY: 0,
                             transition: {
-                                duration: 250,
+                                duration: 400,
                                 delay: 25
                             }
                         }}>
@@ -509,14 +514,14 @@ const RestaurantScreen = () => {
 
                         </PresenceTransition>
                         {veg_nonveg == 'Non Veg' &&
-                            <HStack space={3} className='justify-center content-center pb-3'>
+                            <HStack space={3} className='justify-center content-center pb-1.5'>
 
                                 <PresenceTransition visible={true} initial={{
-                                    translateY: -500
+                                    translateX: -100
                                 }} animate={{
-                                    translateY: 0,
+                                    translateX: 0,
                                     transition: {
-                                        duration: 250
+                                        duration: 400
                                     }
                                 }}>
                                     <TouchableOpacity className='flex-row content-center'
@@ -549,11 +554,11 @@ const RestaurantScreen = () => {
                                 </PresenceTransition>
 
                                 <PresenceTransition visible={true} initial={{
-                                    translateY: -500
+                                    translateX: 100
                                 }} animate={{
-                                    translateY: 0,
+                                    translateX: 0,
                                     transition: {
-                                        duration: 250
+                                        duration: 400
                                     }
                                 }}>
                                     <TouchableOpacity className='flex-row content-center'
@@ -590,7 +595,16 @@ const RestaurantScreen = () => {
                         {VegMenu && NonVegMenu && AllDishes &&
                             <View className="flex-row item-center space-x-2 mx-4 ">
                                 <View className="self-center flex-row flex-1 p-3 shadow-sm w-11/12" style={[colorScheme == 'light' ? Styles.LightSearchBar : Styles.DarkSearchBar]}>
-
+                                <PresenceTransition visible={true} initial={{
+                                    opacity: 0
+                                }} animate={{
+                                    opacity: 1,
+                                    transition: {
+                                        type: 'spring',
+                                        delay: 50
+                                    }
+                                }}>
+                                    <HStack>
                                     <Image
                                         style={{ width: 16, height: 16, resizeMode: "contain", }}
                                         source={Search}
@@ -625,17 +639,20 @@ const RestaurantScreen = () => {
                                                 }
                                             }} />
                                     }
+                                    </HStack>
+
+                                </PresenceTransition>
                                 </View>
                             </View>
                         }
                     </VStack>
 
                     <PresenceTransition visible={true} initial={{
-                        translateY: 500
+                        translateY: 100
                     }} animate={{
                         translateY: 0,
                         transition: {
-                            duration: 250
+                            duration: 400
                         }
                     }}>
 
