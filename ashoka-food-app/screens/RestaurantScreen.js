@@ -498,9 +498,14 @@ const RestaurantScreen = () => {
                                 delay: 25
                             }
                         }}>
-                            <Text className="px-4 pt-2 pb-1 font-semibold text-2xl text-center" style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
-                                Menu
-                            </Text>
+                            <View className='mt-7 border-t' style={[colorScheme == 'light' ? Styles.LightHomeAdlibBorder : Styles.DarkHomeAdlibBorder]}  >
+                                <Text
+                                    className="text-center font-semibold text-xl mx-40 mt-3 -top-7 -mb-5"
+                                    style={[colorScheme == 'light' ? Styles.LightHomeAdlib : Styles.DarkHomeAdlib]}
+                                >
+                                    Menu
+                                </Text>
+                            </View>
 
                         </PresenceTransition>
                         {veg_nonveg == 'Non Veg' &&
@@ -634,110 +639,110 @@ const RestaurantScreen = () => {
                         }
                     }}>
 
-                    {Categories && !showVegMenu && !showNonVegMenu && !ShowSearchedMenu && !ShowSearchedVegMenu && !ShowSearchedNonVegMenu && SearchedText.length == 0 &&
-                    
-                        <Accordion
-                            activeSections={activeSections}
-                            sections={Categories}
-                            touchableComponent={TouchableOpacity}
-                            expandMultiple={multipleSelect}
-                            renderHeader={_renderHeader}
-                            renderContent={_renderContent}
-                            duration={200}
-                            onChange={setSections}
-                        />
-                    }
+                        {Categories && !showVegMenu && !showNonVegMenu && !ShowSearchedMenu && !ShowSearchedVegMenu && !ShowSearchedNonVegMenu && SearchedText.length == 0 &&
 
-                    {VegMenu && showVegMenu && !showNonVegMenu && !ShowSearchedMenu && !ShowSearchedVegMenu && !ShowSearchedNonVegMenu &&
-                        <Accordion
-                            activeSections={activeSections}
-                            sections={VegMenu}
-                            touchableComponent={TouchableOpacity}
-                            expandMultiple={multipleSelect}
-                            renderHeader={_renderHeader}
-                            renderContent={_renderContent}
-                            duration={200}
-                            onChange={setSections}
-                        />
-                    }
+                            <Accordion
+                                activeSections={activeSections}
+                                sections={Categories}
+                                touchableComponent={TouchableOpacity}
+                                expandMultiple={multipleSelect}
+                                renderHeader={_renderHeader}
+                                renderContent={_renderContent}
+                                duration={200}
+                                onChange={setSections}
+                            />
+                        }
 
-                    {NonVegMenu && !showVegMenu && showNonVegMenu && !ShowSearchedMenu && !ShowSearchedVegMenu && !ShowSearchedNonVegMenu &&
-                        <Accordion
-                            activeSections={activeSections}
-                            sections={NonVegMenu}
-                            touchableComponent={TouchableOpacity}
-                            expandMultiple={multipleSelect}
-                            renderHeader={_renderHeader}
-                            renderContent={_renderContent}
-                            duration={200}
-                            onChange={setSections}
-                        />
-                    }
+                        {VegMenu && showVegMenu && !showNonVegMenu && !ShowSearchedMenu && !ShowSearchedVegMenu && !ShowSearchedNonVegMenu &&
+                            <Accordion
+                                activeSections={activeSections}
+                                sections={VegMenu}
+                                touchableComponent={TouchableOpacity}
+                                expandMultiple={multipleSelect}
+                                renderHeader={_renderHeader}
+                                renderContent={_renderContent}
+                                duration={200}
+                                onChange={setSections}
+                            />
+                        }
 
-                    {Categories && showVegMenu && showNonVegMenu && !ShowSearchedMenu && !ShowSearchedVegMenu && !ShowSearchedNonVegMenu &&
-                        <Accordion
-                            activeSections={activeSections}
-                            sections={Categories}
-                            touchableComponent={TouchableOpacity}
-                            expandMultiple={multipleSelect}
-                            renderHeader={_renderHeader}
-                            renderContent={_renderContent}
-                            duration={200}
-                            onChange={setSections}
-                        />
-                    }
+                        {NonVegMenu && !showVegMenu && showNonVegMenu && !ShowSearchedMenu && !ShowSearchedVegMenu && !ShowSearchedNonVegMenu &&
+                            <Accordion
+                                activeSections={activeSections}
+                                sections={NonVegMenu}
+                                touchableComponent={TouchableOpacity}
+                                expandMultiple={multipleSelect}
+                                renderHeader={_renderHeader}
+                                renderContent={_renderContent}
+                                duration={200}
+                                onChange={setSections}
+                            />
+                        }
 
-                    {ShowSearchedMenu && !ShowSearchedVegMenu && !ShowSearchedNonVegMenu &&
-                        <Accordion
-                            activeSections={activeSections}
-                            sections={SearchedMenu}
-                            touchableComponent={TouchableOpacity}
-                            expandMultiple={multipleSelect}
-                            renderHeader={_renderHeader}
-                            renderContent={_renderContent}
-                            duration={200}
-                            onChange={setSections}
-                        />
-                    }
+                        {Categories && showVegMenu && showNonVegMenu && !ShowSearchedMenu && !ShowSearchedVegMenu && !ShowSearchedNonVegMenu &&
+                            <Accordion
+                                activeSections={activeSections}
+                                sections={Categories}
+                                touchableComponent={TouchableOpacity}
+                                expandMultiple={multipleSelect}
+                                renderHeader={_renderHeader}
+                                renderContent={_renderContent}
+                                duration={200}
+                                onChange={setSections}
+                            />
+                        }
 
-                    {ShowSearchedMenu && ShowSearchedVegMenu && !ShowSearchedNonVegMenu &&
-                        <Accordion
-                            activeSections={activeSections}
-                            sections={SearchedVegMenu}
-                            touchableComponent={TouchableOpacity}
-                            expandMultiple={multipleSelect}
-                            renderHeader={_renderHeader}
-                            renderContent={_renderContent}
-                            duration={200}
-                            onChange={setSections}
-                        />
-                    }
+                        {ShowSearchedMenu && !ShowSearchedVegMenu && !ShowSearchedNonVegMenu &&
+                            <Accordion
+                                activeSections={activeSections}
+                                sections={SearchedMenu}
+                                touchableComponent={TouchableOpacity}
+                                expandMultiple={multipleSelect}
+                                renderHeader={_renderHeader}
+                                renderContent={_renderContent}
+                                duration={200}
+                                onChange={setSections}
+                            />
+                        }
 
-                    {ShowSearchedMenu && !ShowSearchedVegMenu && ShowSearchedNonVegMenu &&
-                        <Accordion
-                            activeSections={activeSections}
-                            sections={SearchedNonVegMenu}
-                            touchableComponent={TouchableOpacity}
-                            expandMultiple={multipleSelect}
-                            renderHeader={_renderHeader}
-                            renderContent={_renderContent}
-                            duration={200}
-                            onChange={setSections}
-                        />
-                    }
+                        {ShowSearchedMenu && ShowSearchedVegMenu && !ShowSearchedNonVegMenu &&
+                            <Accordion
+                                activeSections={activeSections}
+                                sections={SearchedVegMenu}
+                                touchableComponent={TouchableOpacity}
+                                expandMultiple={multipleSelect}
+                                renderHeader={_renderHeader}
+                                renderContent={_renderContent}
+                                duration={200}
+                                onChange={setSections}
+                            />
+                        }
 
-                    {ShowSearchedMenu && ShowSearchedVegMenu && ShowSearchedNonVegMenu &&
-                        <Accordion
-                            activeSections={activeSections}
-                            sections={SearchedMenu}
-                            touchableComponent={TouchableOpacity}
-                            expandMultiple={multipleSelect}
-                            renderHeader={_renderHeader}
-                            renderContent={_renderContent}
-                            duration={200}
-                            onChange={setSections}
-                        />
-                    }
+                        {ShowSearchedMenu && !ShowSearchedVegMenu && ShowSearchedNonVegMenu &&
+                            <Accordion
+                                activeSections={activeSections}
+                                sections={SearchedNonVegMenu}
+                                touchableComponent={TouchableOpacity}
+                                expandMultiple={multipleSelect}
+                                renderHeader={_renderHeader}
+                                renderContent={_renderContent}
+                                duration={200}
+                                onChange={setSections}
+                            />
+                        }
+
+                        {ShowSearchedMenu && ShowSearchedVegMenu && ShowSearchedNonVegMenu &&
+                            <Accordion
+                                activeSections={activeSections}
+                                sections={SearchedMenu}
+                                touchableComponent={TouchableOpacity}
+                                expandMultiple={multipleSelect}
+                                renderHeader={_renderHeader}
+                                renderContent={_renderContent}
+                                duration={200}
+                                onChange={setSections}
+                            />
+                        }
 
                     </PresenceTransition>
 

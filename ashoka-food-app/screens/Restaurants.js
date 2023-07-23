@@ -84,14 +84,24 @@ const Restaurants = (props) => {
     const handleSearchedRestaurants = (Searched) => {
         const TempSearchedRestaurants = []
         DRestaurants.map((rest, index)=>{
-            if(rest.name.includes(Searched)){
-                TempSearchedRestaurants.push(rest)
-            }
+            rest.dishes.map((dish,index)=>{
+                if(rest.name.includes(Searched) || dish.Menu_category.includes(Searched) || dish.name.includes(Searched)){
+                    if(!TempSearchedRestaurants.includes(rest)){
+                        TempSearchedRestaurants.push(rest)
+                    }
+                    
+                }
+            })
         })
         NDRestaurants.map((rest, index)=>{
-            if(rest.name.includes(Searched)){
-                TempSearchedRestaurants.push(rest)
-            }
+            rest.dishes.map((dish,index)=>{
+                if(rest.name.includes(Searched) || dish.Menu_category.includes(Searched) || dish.name.includes(Searched)){
+                    if(!TempSearchedRestaurants.includes(rest)){
+                        TempSearchedRestaurants.push(rest)
+                    }
+                    
+                }
+            })
         })
         setSearchedRestaurants(TempSearchedRestaurants)
     }
@@ -472,7 +482,7 @@ const Restaurants = (props) => {
                         ))
                     }
 
-                    <Text className='self-center font-semibold my-12 text-xl' style={[colorScheme == 'light' ? Styles.LightHomeAdlib : Styles.DarkHomeAdlib]}>
+                    <Text className='self-center font-semibold my-6 text-xl italic w-11/12' style={[colorScheme == 'light' ? Styles.LightHomeAdlib : Styles.DarkHomeAdlib]}>
                         AshokaEats™
                     </Text>
 
