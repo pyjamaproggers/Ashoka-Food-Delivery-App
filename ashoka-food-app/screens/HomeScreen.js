@@ -12,10 +12,9 @@ import Styles from '../components/Styles';
 import ChevronUp from '../assets/chevronupicon.png'
 import ChevronDown from '../assets/chevrondownicon.png'
 import Search from '../assets/searchicon.png'
-import { Alert, CloseIcon, HStack, IconButton, Slide, VStack } from 'native-base';
+import { Alert, CloseIcon, HStack, IconButton, Slide, VStack, Skeleton } from 'native-base';
 import { useNetInfo } from "@react-native-community/netinfo";
 import axios from 'axios';
-import { LoadJoke } from './Restaurants';
 
 const HomeScreen = () => {
     const navigation = useNavigation();
@@ -25,6 +24,8 @@ const HomeScreen = () => {
     const [Searched, setSearched] = useState('')
     const [Joke, setJoke] = useState('')
     const [GetJoke, setGetJoke] = useState(false)
+    const [LoadingJoke, setLoadingJoke] = useState(false)
+    const [showDropDown, setShowDropDown] = useState(false)
 
     const colorScheme = useColorScheme();
 
@@ -40,14 +41,13 @@ const HomeScreen = () => {
     ]
 
     const LoadJoke = (data) => {
-        if (data = true) {
-            fetchJokes()
-        }
+        console.log('Reloading')
     }
 
     const options = {
         method: 'GET',
         url: 'https://v2.jokeapi.dev/joke/Any?blacklistFlags=nsfw,religious,political,racist&type=single',
+        // url: 'https://official-joke-api.appspot.com/random_joke',
         contentType: 'application/json',
     };
 
@@ -56,23 +56,27 @@ const HomeScreen = () => {
             const response = await axios.request(options)
                 .then(response => {
                     if (response.status == 200) {
-                        if (response.data.joke.length <= 100) {
+                        if (response.data.joke.length <= 150) {
                             setJoke(response.data.joke)
+                            setLoadingJoke(false)
+                            setShowDropDown(false)
                         }
                         else {
                             fetchJokes()
                         }
                     }
+                    else {
+                        setShowDropDown(true)
+                        setLoadingJoke(false)
+                    }
                 })
         } catch (error) {
             console.error(error);
+            setJoke('')
+            setShowDropDown(true)
+            setLoadingJoke(false)
         }
     }
-    const test = () => {
-        console.log('*')
-    }
-
-
 
     const {
         params: { actualUser },
@@ -86,15 +90,17 @@ const HomeScreen = () => {
         });
     }, [colorScheme]);
 
-    const MINUTE_MS = 36000000; //every hour
+    const MINUTE_MS = 3600000; //every day
 
     useEffect(() => {
+        setLoadingJoke(true)
         fetchJokes()
         const interval = setInterval(() => {
+            setLoadingJoke(true)
             fetchJokes()
         }, MINUTE_MS);
 
-        return () => clearInterval(interval); // This represents the unmount function, in which you need to clear your interval to prevent memory leaks.
+        return () => clearInterval(interval);
     }, [])
 
 
@@ -110,15 +116,15 @@ const HomeScreen = () => {
                 </VStack>
                 <View className="flex-1">
 
-                    {/* Dropdown Menu */}
-                    {Joke &&
-                        <VStack space={1}>
-                            <Text className="font-normal text-xs pl-2"
+                    {/* Joke */}
+                    {Joke && !LoadingJoke &&
+                        <VStack space={1} className='content-between'>
+                            <Text className="font-normal text-xs px-1"
                                 style={[colorScheme == 'light' ? Styles.LightTextSecondary : Styles.DarkTextSecondary]}
                             >
-                                Joke of the hour
+                                Joke of the day
                             </Text>
-                            <Text className="font-normal text-xs pl-2"
+                            <Text className="font-normal text-xs px-1"
                                 style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
                             >
                                 {Joke}
@@ -126,9 +132,28 @@ const HomeScreen = () => {
                         </VStack>
                     }
 
-                    {Joke.length == 0 &&
+                    {LoadingJoke &&
+                        <VStack space={2}>
+                            <Skeleton h='2' rounded='full' w='20%'
+                                startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                            <Skeleton h='2' rounded='full' w='90%'
+                                startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                            <Skeleton h='2' rounded='full' w='90%'
+                                startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                        </VStack>
+                    }
+
+                    {/* Dropdown Menu */}
+                    {showDropDown && !LoadingJoke &&
                         <>
+                            <Text className='w-10/12 self-center font-semibold text-xs' style={[colorScheme == 'light' ? Styles.LightHomeAdlib : Styles.DarkHomeAdlib]}>
+                                Deliver to
+                            </Text>
                             <TouchableOpacity
+                                className='w-11/12 self-center'
                                 onPress={() => {
                                     setIsOpen(!isOpen)
                                 }}

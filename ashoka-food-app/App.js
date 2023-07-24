@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreen from './screens/HomeScreen';
+import VendorLogin from './screens/VendorLogin';
 import AshokaLogo from './assets/ASHOKAWHITELOGO.png'
 import RestaurantScreen from './screens/RestaurantScreen';
 import Login from './screens/Login';
@@ -24,6 +25,7 @@ export default function App() {
 				<Provider store={store}>
 					<Stack.Navigator>
 						<Stack.Screen name="Login" component={Login} initialParams={{ logout: null }} />
+                        <Stack.Screen name="VendorLogin" component={VendorLogin} />
 						<Stack.Screen name="PhoneAuth" component={PhoneAuthScreen} />
 						<Stack.Screen name="Home" component={HomeScreen} />
 						<Stack.Screen name="Restaurant" component={RestaurantScreen} />

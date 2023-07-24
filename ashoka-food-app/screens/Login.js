@@ -8,179 +8,173 @@ import AshokaLogo from '../assets/ashokauniversity.png';
 import { ArrowRightIcon } from 'react-native-heroicons/outline';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Styles from '../components/Styles';
+import { HStack, VStack } from 'native-base';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 WebBrowser.maybeCompleteAuthSession();
 
-export default function Login() {
-  const navigation = useNavigation();
-  const [user, setUser] = useState(null);
-  const [loggedOut, setLoggedOut] = useState(0);
-  const [request, response, promptAsync] = Google.useAuthRequest({
-    iosClientId: IOS,
-    webClientId: WEB,
-    expoClientId: EXPO
-  });
-
-  const colorScheme = useColorScheme();
-
-  const {
-    params: { logout:logoutParam, phone:phone},
-  } = useRoute();
-  console.log(phone)
-  console.log("LOGOUT = "+logoutParam)
-  if (logoutParam === 1 && loggedOut === 0) {
-    console.log("LOGOUT TIME");
-    (async () => {
-      try {
-        await AsyncStorage.removeItem("@user");
-        setUser(null);
-        setLoggedOut(1);
-        navigation.navigate("Login", { logout: 0 });
-      } catch (error) {
-        console.log("Logout error:", error);
-      }
-    })();
-  }
-
-  if (phone) {
-    console.log(phone + " received at top level!");
-  
-    const updateUserPhone = async () => {
-      let actualUser = await AsyncStorage.getItem("@user");
-      actualUser = JSON.parse(actualUser); // Parse the JSON string into an object
-      actualUser.phone = phone;
-      console.log(actualUser);
-      AsyncStorage.setItem("@user", JSON.stringify(actualUser));
-      console.log("Phone number added now: " + JSON.stringify(actualUser));
-      navigation.navigate('Home', { actualUser });
-    };
-  
-    updateUserPhone(); // Call the async function to update user phone number
-  }
-
-  async function handleSigninWithGoogle()
-  {
-    const userCheck = await AsyncStorage.getItem("@user");
-    if(!userCheck)
-    {
-      console.log("No User...")
-      if(response?.type === "success")
-      {
-        await getUserInfo(response.authentication.accessToken);
-      }
-      
-    }
-    else{
-      const actualUser = JSON.parse(userCheck);
-      console.log("There is user... and it is= " +typeof(actualUser))
-      setUser(actualUser);
-      setLoggedOut(0);
-      if(actualUser.phone)
-      {
-        console.log("There is user and PHONE")
-        navigation.navigate('Home', { actualUser })
-      }
-      else if(!actualUser.phone && phone)
-      {
-        console.log(phone+" received!");
-        console.log("Before adding phone"+typeof(actualUser))
-        actualUser['phone']=phone;
-        console.log("AFTER adding phone"+typeof(actualUser))
-        AsyncStorage.setItem("@user",JSON.stringify(actualUser))
-        console.log("Phone number added noww: "+actualUser)
-        navigation.navigate('Home', { actualUser })
-      }
-      else if(!actualUser.phone && !phone)
-      {
-        console.log("Time to get Phone")
-        navigation.navigate('PhoneAuth', { actualUser })
-      }
-      
-    }
-  }
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerShown: false,
+function Login() {
+    const navigation = useNavigation();
+    const [user, setUser] = useState(null);
+    const [loggedOut, setLoggedOut] = useState(0);
+    const [request, response, promptAsync] = Google.useAuthRequest({
+        iosClientId: IOS,
+        webClientId: WEB,
+        expoClientId: EXPO
     });
-  }, []);
 
-  const getUserInfo = async (token) => {
-    if(!token) return;
-    try {
-      const response = await fetch(
-        "https://www.googleapis.com/userinfo/v2/me",
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+    const colorScheme = useColorScheme();
 
-      const actualUser = await response.json();
-      setUser(actualUser);
-      setLoggedOut(0);
-      const storageUser = JSON.stringify(actualUser)
-      AsyncStorage.setItem("@user", storageUser);
-      console.log("User set to "+ actualUser);
-      navigation.navigate('PhoneAuth', { actualUser })
-    } catch (error) {
-      console.log(error)
+    const {
+        params: { logout: logoutParam, phone: phone },
+    } = useRoute();
+    console.log(phone)
+    console.log("LOGOUT = " + logoutParam)
+    if (logoutParam === 1 && loggedOut === 0) {
+        console.log("LOGOUT TIME");
+        (async () => {
+            try {
+                await AsyncStorage.removeItem("@user");
+                setUser(null);
+                setLoggedOut(1);
+                navigation.navigate("Login", { logout: 0 });
+            } catch (error) {
+                console.log("Logout error:", error);
+            }
+        })();
     }
-  };
 
-  useEffect(()=>{
-    handleSigninWithGoogle();
-  }, [response])
+    if (phone) {
+        console.log(phone + " received at top level!");
 
-  return (
-    <View style={[colorScheme=='light' ? styles.Lightcontainer: styles.Darkcontainer]}>
-      <View style={styles.imageContainer}>
-        <Image source={AshokaLogo} style={styles.image} />
-      </View>
-      <TouchableOpacity style={styles.button} onPress={() => promptAsync()}>
-        <Text style={styles.buttonText}>Sign in with Ashoka email</Text>
-      </TouchableOpacity>
-    </View>
-  );
+        const updateUserPhone = async () => {
+            let actualUser = await AsyncStorage.getItem("@user");
+            actualUser = JSON.parse(actualUser); // Parse the JSON string into an object
+            actualUser.phone = phone;
+            console.log(actualUser);
+            AsyncStorage.setItem("@user", JSON.stringify(actualUser));
+            console.log("Phone number added now: " + JSON.stringify(actualUser));
+            navigation.navigate('Home', { actualUser });
+        };
+
+        updateUserPhone(); // Call the async function to update user phone number
+    }
+
+    async function handleSigninWithGoogle() {
+        const userCheck = await AsyncStorage.getItem("@user");
+        if (!userCheck) {
+            console.log("No User...")
+            if (response?.type === "success") {
+                await getUserInfo(response.authentication.accessToken);
+            }
+
+        }
+        else {
+            const actualUser = JSON.parse(userCheck);
+            console.log("There is user... and it is= " + typeof (actualUser))
+            setUser(actualUser);
+            setLoggedOut(0);
+            if (actualUser.phone) {
+                console.log("There is user and PHONE")
+                navigation.navigate('Home', { actualUser })
+            }
+            else if (!actualUser.phone && phone) {
+                console.log(phone + " received!");
+                console.log("Before adding phone" + typeof (actualUser))
+                actualUser['phone'] = phone;
+                console.log("AFTER adding phone" + typeof (actualUser))
+                AsyncStorage.setItem("@user", JSON.stringify(actualUser))
+                console.log("Phone number added noww: " + actualUser)
+                navigation.navigate('Home', { actualUser })
+            }
+            else if (!actualUser.phone && !phone) {
+                console.log("Time to get Phone")
+                navigation.navigate('PhoneAuth', { actualUser })
+            }
+
+        }
+    }
+    useLayoutEffect(() => {
+        navigation.setOptions({
+            headerShown: false,
+        });
+    }, []);
+
+    const getUserInfo = async (token) => {
+        if (!token) return;
+        try {
+            const response = await fetch(
+                "https://www.googleapis.com/userinfo/v2/me",
+                {
+                    headers: { Authorization: `Bearer ${token}` },
+                }
+            );
+
+            const actualUser = await response.json();
+            setUser(actualUser);
+            setLoggedOut(0);
+            const storageUser = JSON.stringify(actualUser)
+            AsyncStorage.setItem("@user", storageUser);
+            console.log("User set to " + actualUser);
+            navigation.navigate('PhoneAuth', { actualUser })
+        } catch (error) {
+            console.log(error)
+        }
+    };
+
+    useEffect(() => {
+        handleSigninWithGoogle();
+    }, [response])
+
+    return (
+        <View
+            style={[colorScheme == 'light' ? styles.Lightcontainer : styles.Darkcontainer]}
+        >
+            <VStack className='w-screen h-screen content-center justify-center'>
+                <Image source={AshokaLogo} className='self-center' style={{resizeMode:"contain", width: '80%', }}/>
+                <HStack space={5} className='w-screen justify-center '>
+                    <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("VendorLogin")}>
+                        <Text style={styles.buttonText}>Vendor Sign In</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.button} onPress={() => promptAsync()}>
+                        <Text style={styles.buttonText}>Student Sign In</Text>
+                    </TouchableOpacity>
+                </HStack>
+
+            </VStack>
+        </View>
+    );
 }
 
 const styles = StyleSheet.create({
-  Lightcontainer: {
-    flex: 1,
-    backgroundColor: "#F2F2F2",
-    alignItems: "center",
-    paddingTop: '60%'
-  },
-  Darkcontainer:{
-    flex: 1,
-    backgroundColor: '#0c0c0f',
-    alignItems: "center",
-    paddingTop: '60%'
-  },
-  imageContainer: {
-    width: "80%",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  image: {
-    width: "100%",
-    resizeMode: "contain",
-  },
-  button: {
-    backgroundColor: "#3E5896", // Ashoka University primary color
-    padding: 10,
-    borderRadius: 5,
-    top: '-5%',
-    alignItems: 'center'
-  },
-  buttonText: {
-    color: "#fff",
-    fontSize: 16,
-    textAlign: "center",
-  },
-  welcomeText: {
-    top: '-5%',
-    fontSize: 24
-  },
-  welcomeContainer: {
-    top: '-4%'
-  }
+    Lightcontainer: {
+        backgroundColor: "#F2F2F2",
+        alignItems: "center",
+    },
+    Darkcontainer: {
+        backgroundColor: '#0c0c0f',
+        alignItems: "center",
+    },
+    imageContainer: {
+        width: "70%",
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    image: {
+        width: "100%",
+        resizeMode: "contain",
+    },
+    button: {
+        backgroundColor: "#3E5896", // Ashoka University primary color
+        padding: 10,
+        borderRadius: 5,
+        alignItems: 'center'
+    },
+    buttonText: {
+        color: "#fff",
+        fontSize: 16,
+        textAlign: "center",
+    },
 });
+
+export default Login;

@@ -36,51 +36,49 @@ const Restaurants = (props) => {
     const fetchRestaurants = (query) => {
         setFetching(true)
         setRefreshing(true)
-        window.setTimeout(() => {
-            client
-                .fetch(query)
-                .then((data) => {
-                    var drest = []
-                    var ndrest = []
-                    var i
-                    var totalD = 0
-                    var totalND = 0
+        client
+            .fetch(query)
+            .then((data) => {
+                var drest = []
+                var ndrest = []
+                var i
+                var totalD = 0
+                var totalND = 0
+                for (i = 0; i < data.length; i++) {
+                    if (data[i].delivery == 'Yes') {
+                        totalD += 1
+                    }
+                    else {
+                        totalND += 1
+                    }
+                    if (data[i].name == 'Roti Boti') {
+                        console.log(data[i].dishes)
+                    }
+                }
+
+                if (DRestaurants.length != totalD) {
                     for (i = 0; i < data.length; i++) {
                         if (data[i].delivery == 'Yes') {
-                            totalD += 1
-                        }
-                        else {
-                            totalND += 1
-                        }
-                        if (data[i].name == 'Roti Boti') {
-                            console.log(data[i].dishes)
+                            drest.push(data[i])
                         }
                     }
+                    setDRestaurants(drest)
+                }
 
-                    if (DRestaurants.length != totalD) {
-                        for (i = 0; i < data.length; i++) {
-                            if (data[i].delivery == 'Yes') {
-                                drest.push(data[i])
-                            }
+                if (NDRestaurants.length != totalND) {
+                    for (i = 0; i < data.length; i++) {
+                        if (data[i].delivery == 'No') {
+                            ndrest.push(data[i])
                         }
-                        setDRestaurants(drest)
                     }
-
-                    if (NDRestaurants.length != totalND) {
-                        for (i = 0; i < data.length; i++) {
-                            if (data[i].delivery == 'No') {
-                                ndrest.push(data[i])
-                            }
-                        }
-                        setNDRestaurants(ndrest)
-                    }
-                    setFetching(false)
-                    setRefreshing(false)
-                })
-                .catch((error) => {
-                    console.log('Error:', error); // Log any errors that occur
-                });
-        }, 1000)
+                    setNDRestaurants(ndrest)
+                }
+                setFetching(false)
+                setRefreshing(false)
+            })
+            .catch((error) => {
+                console.log('Error:', error); // Log any errors that occur
+            });
 
     }
 
@@ -484,8 +482,12 @@ const Restaurants = (props) => {
                         ))
                     }
 
-                    <Text className='self-center font-semibold my-6 text-xl italic w-11/12' style={[colorScheme == 'light' ? Styles.LightHomeAdlib : Styles.DarkHomeAdlib]}>
-                        AshokaEats™
+                    <Text
+                        allowFontScaling={false}
+                        className='self-center text-center font-semibold my-8 text-md italic w-11/12'
+                        style={[colorScheme == 'light' ? Styles.LightHomeAdlib : Styles.DarkHomeAdlib]}
+                    >
+                        By Aryan Yadav & Zahaan Shapoorjee
                     </Text>
 
                 </Animated.ScrollView>
@@ -494,6 +496,7 @@ const Restaurants = (props) => {
                 <View className='h-screen' style={[colorScheme == 'light' ? { backgroundColor: '#F2F2F2' } : { backgroundColor: '#0c0c0f' }]}>
                     <View className='mt-5 border-t' style={[colorScheme == 'light' ? Styles.LightHomeAdlibBorder : Styles.DarkHomeAdlibBorder]}  >
                         <Text
+
                             className="text-center font-normal text-xs mx-20 mt-3 -top-5"
                             style={[colorScheme == 'light' ? Styles.LightHomeAdlib : Styles.DarkHomeAdlib]}
                         >

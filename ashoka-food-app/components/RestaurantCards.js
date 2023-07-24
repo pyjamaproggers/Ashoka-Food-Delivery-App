@@ -6,7 +6,7 @@ import { useNavigation } from "@react-navigation/native";
 import { urlFor } from '../sanity';
 import Styles from './Styles';
 import clockIcon from '../assets/clockicon.png'
-import mapPinIcon from '../assets/mappinicon.png'
+import mapPinIcon from '../assets/shopmapicon.png'
 import boltIcon from '../assets/bolticon.png'
 import Dhaba from '../assets/dhabaicon.png';
 import Rotiboti from '../assets/rotibotiicon.png';
@@ -25,7 +25,7 @@ const RestaurantCards = ({ id, image, title, genre, timing, delivery, location, 
     const navigation = useNavigation();
     const colorScheme = useColorScheme();
     return (
-        <View className='shadow'>
+        <View className='shadow-sm'>
             <TouchableOpacity onPress={() => {
                 navigation.navigate('Restaurant', {
                     id, image, title, genre, timing, delivery, location, description, dishes, veg_nonveg, phone, actualUser
