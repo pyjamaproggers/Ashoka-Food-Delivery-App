@@ -330,7 +330,8 @@ const placeOrder = () => {
       // Extract item names and prices from the BasketRestaurant items
       const orderItems = BasketRestaurant.items.map(item => ({
         name: item.name,
-        price: item.Price
+        price: item.Price,
+        quantity: item.quantity
       }));
 
       const orderInstructions = getInstructions(BasketRestaurant.name)

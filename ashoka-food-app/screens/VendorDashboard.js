@@ -57,7 +57,7 @@ function VendorDashboard() {
                 <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Ordered Items:</Text>
                 {order.orderItems.map((item, index) => (
                   <View key={index} style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                    <Text>{item.name}</Text>
+                    <Text>{item.name} x{item.quantity}</Text>
                     <Text>Rs.{item.price}</Text>
                   </View>
                 ))}
