@@ -223,7 +223,7 @@ export default function CartIcon({ actualUser }) {
                                                 {BasketRestaurant.name === 'The Hunger Cycle' &&
                                                     <Text
                                                         allowFontScaling={false}
-                                                        className="text-center font-semibold text-md mx-28 mt-3 -top-5 -mb-5"
+                                                        className="text-center font-normal text-md mx-28 mt-3 -top-5 -mb-5"
                                                         style={[colorScheme == 'light' ? Styles.LightHomeAdlibCart : Styles.DarkHomeAdlibCart]}
                                                     >
                                                         {BasketRestaurant.name}
@@ -232,7 +232,7 @@ export default function CartIcon({ actualUser }) {
                                                 {BasketRestaurant.name === 'Roti Boti' &&
                                                     <Text
                                                         allowFontScaling={false}
-                                                        className="text-center font-semibold text-md mx-36 mt-3 -top-5 -mb-5"
+                                                        className="text-center font-normal text-md mx-36 mt-3 -top-5 -mb-5"
                                                         style={[colorScheme == 'light' ? Styles.LightHomeAdlibCart : Styles.DarkHomeAdlibCart]}
                                                     >
                                                         {BasketRestaurant.name}
@@ -241,7 +241,7 @@ export default function CartIcon({ actualUser }) {
                                                 {BasketRestaurant.name === 'Dhaba' &&
                                                     <Text
                                                         allowFontScaling={false}
-                                                        className="text-center font-semibold text-md mx-36 mt-3 -top-5 -mb-5"
+                                                        className="text-center font-normal text-md mx-36 mt-3 -top-5 -mb-5"
                                                         style={[colorScheme == 'light' ? Styles.LightHomeAdlibCart : Styles.DarkHomeAdlibCart]}
                                                     >
                                                         {BasketRestaurant.name}
@@ -250,7 +250,7 @@ export default function CartIcon({ actualUser }) {
                                                 {BasketRestaurant.name === 'Chicago Pizza' &&
                                                     <Text
                                                         allowFontScaling={false}
-                                                        className="text-center font-semibold text-md mx-32 mt-3 -top-5 -mb-5"
+                                                        className="text-center font-normal text-md mx-32 mt-3 -top-5 -mb-5"
                                                         style={[colorScheme == 'light' ? Styles.LightHomeAdlibCart : Styles.DarkHomeAdlibCart]}
                                                     >
                                                         {BasketRestaurant.name}
@@ -259,7 +259,7 @@ export default function CartIcon({ actualUser }) {
                                                 {BasketRestaurant.name === 'Subway' &&
                                                     <Text
                                                         allowFontScaling={false}
-                                                        className="text-center font-semibold text-md mx-36 mt-3 -top-5 -mb-5"
+                                                        className="text-center font-normal text-md mx-36 mt-3 -top-5 -mb-5"
                                                         style={[colorScheme == 'light' ? Styles.LightHomeAdlibCart : Styles.DarkHomeAdlibCart]}
                                                     >
                                                         {BasketRestaurant.name}
@@ -268,7 +268,7 @@ export default function CartIcon({ actualUser }) {
                                                 {BasketRestaurant.name === 'Rasananda' &&
                                                     <Text
                                                         allowFontScaling={false}
-                                                        className="text-center font-semibold text-md mx-32 mt-3 -top-5 -mb-5"
+                                                        className="text-center font-normal text-md mx-32 mt-3 -top-5 -mb-5"
                                                         style={[colorScheme == 'light' ? Styles.LightHomeAdlibCart : Styles.DarkHomeAdlibCart]}
                                                     >
                                                         {BasketRestaurant.name}
@@ -277,7 +277,7 @@ export default function CartIcon({ actualUser }) {
                                                 {BasketRestaurant.name === 'Chaat Stall' &&
                                                     <Text
                                                         allowFontScaling={false}
-                                                        className="text-center font-semibold text-md mx-32 mt-3 -top-5 -mb-5"
+                                                        className="text-center font-normal text-md mx-32 mt-3 -top-5 -mb-5"
                                                         style={[colorScheme == 'light' ? Styles.LightHomeAdlibCart : Styles.DarkHomeAdlibCart]}
                                                     >
                                                         {BasketRestaurant.name}

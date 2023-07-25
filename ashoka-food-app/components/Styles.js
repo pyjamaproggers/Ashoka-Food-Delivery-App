@@ -40,7 +40,7 @@ const Styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        paddingLeft: 8,
+        paddingLeft: 0,
         paddingRight: 10,
         backgroundColor: '#FFFFFF',
     },
@@ -58,7 +58,7 @@ const Styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        paddingLeft: 8,
+        paddingLeft: 0,
         paddingRight: 10,
         backgroundColor: '#262626',
     },
@@ -420,6 +420,45 @@ const Styles = StyleSheet.create({
     DarkHomeAdlibCartBorder:{
         borderColor: 'rgb(75, 85, 99)'
     },
+
+    LightAddButtonFinalOrder:{
+        justifyContent: 'space-between',
+        alignContent: 'center',
+        alignItems: 'center',
+        textAlign: 'center',
+        color: '#f87c7c',
+        padding: 1,
+        backgroundColor: '#3E5896',
+        marginRight: '5%',
+        borderRadius: 8,
+        borderColor: '#3E5896',
+        borderWidth: '1px',
+        height: 35,
+        width: 100,
+        shadowColor: '#000',
+        shadowOffset: {width: 1, height: 1},
+        shadowRadius: 3,
+        shadowOpacity: 0.1,
+    },
+    DarkAddButtonFinalOrder:{
+        justifyContent: 'space-evenly',
+        alignContent: 'center',
+        alignItems: 'center',
+        color: '#f87c7c',
+        padding: 1,
+        backgroundColor: '#3E5896',
+        marginRight: '5%',
+        borderRadius: 8,
+        borderColor: '#3E5896',
+        borderWidth: '1px',
+        height: 35,
+        width: 100,
+        shadowColor: '#000',
+        shadowOffset: {width: 1, height: 1},
+        shadowRadius: 3,
+        shadowOpacity: 0.1,
+    },
+
 });
 
 export default Styles;

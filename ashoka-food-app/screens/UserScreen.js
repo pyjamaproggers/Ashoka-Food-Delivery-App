@@ -29,15 +29,15 @@ export default function UserScreen() {
             //   borderWidth: 1,
         },
         userPic: {
-            width: 70,
-            height: 70,
+            width: 80,
+            height: 80,
             borderRadius: 100,
         },
         LightnameEmailPhotoContainer: {
             width: '95%',
             flexDirection: 'row',
             alignItems: 'center',
-            paddingVertical: 10,
+            paddingVertical: 12,
             marginTop: 10,
             backgroundColor: 'white',
             borderTopLeftRadius: '20',
@@ -49,7 +49,7 @@ export default function UserScreen() {
             width: '95%',
             flexDirection: 'row',
             alignItems: 'center',
-            paddingVertical: 10,
+            paddingVertical: 12,
             marginTop: 10,
             backgroundColor: '#262626',
             borderTopLeftRadius: '20',
@@ -70,11 +70,11 @@ export default function UserScreen() {
             color: 'white'
         },
         LightemailText: {
-            fontSize: '12%',
+            fontSize: 12,
             color: 'black'
         },
         DarkemailText: {
-            fontSize: '12%',
+            fontSize: 12,
             color: 'white'
         },
         LightbackButton: {
@@ -88,11 +88,11 @@ export default function UserScreen() {
             backgroundColor: '#262626'
         },
         LightphoneText: {
-            fontSize: '12%',
+            fontSize: 12,
             color: 'black'
         },
         DarkphoneText: {
-            fontSize: '12%',
+            fontSize: 12,
             color: 'white'
         },
         LightuserDetailsContainer: {
@@ -149,7 +149,7 @@ export default function UserScreen() {
                 {/* First container of name, email, and photo */}
                 <View style={colorScheme == 'light' ? styles.LightnameEmailPhotoContainer : styles.DarknameEmailPhotoContainer} className='shadow-sm'>
 
-                    <View className='px-4'>
+                    <View className='px-3'>
                         {actualUser.hasOwnProperty('picture') ? (
                             <Image style={styles.userPic} source={{ uri: actualUser.picture }} />
                         ) : (
@@ -157,8 +157,8 @@ export default function UserScreen() {
                         )}
                     </View>
 
-                    <View className='flex-col space-y-1'>
-                        <Text allowFontScaling={false} style={colorScheme == 'light' ? styles.LightnameText : styles.DarknameText}>Hi, {actualUser.given_name}</Text>
+                    <View className='flex-col space-y-1 pl-0.5'>
+                        <Text allowFontScaling={false} style={colorScheme == 'light' ? styles.LightnameText : styles.DarknameText}>{actualUser.given_name} {actualUser.family_name}</Text>
 
                         {/* user.phone */}
                         <View className='flex-row items-center space-x-1 '>
@@ -167,7 +167,7 @@ export default function UserScreen() {
                         </View>
 
                         <View className='flex-row items-center space-x-1 '>
-                            <Text allowFontScaling={false} style={colorScheme == 'light' ? styles.LightemailText : styles.DarkemailText}>{actualUser.email}</Text>
+                            <Text allowFontScaling={false} style={colorScheme == 'light' ? styles.LightemailText : styles.DarkemailText}>@{actualUser.email.replace('@ashoka.edu.in','')}</Text>
                             {actualUser.verified_email == true &&
                                 <Image source={Verified} style={{ width: 16, height: 16 }} />
                             }

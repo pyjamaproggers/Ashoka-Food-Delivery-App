@@ -124,8 +124,8 @@ const PhoneAuthScreen = () => {
                 />
 
                 {/* Go back Button */}
-                <TouchableOpacity onPress={navigation.goBack} className="p-2 bg-gray-100 rounded-full items-center" style={styles.backButton}>
-                    <ArrowLeftIcon size={20} color="black" />
+                <TouchableOpacity onPress={navigation.goBack} className="p-2 mt-2 left-5 bg-gray-100 rounded-full items-center" style={[colorScheme == 'light' ? Styles.LightBackButton : Styles.DarkBackButton]}>
+                    <ArrowLeftIcon size={20} style={[colorScheme == 'light' ? { color: 'black' } : { color: 'white' }]}/>
                 </TouchableOpacity>
 
                 <Text className='text-center text-lg font-normal' style={[colorScheme=='light'? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>Hi, {actualUser.given_name}</Text>
@@ -141,7 +141,11 @@ const PhoneAuthScreen = () => {
                         onChangeFormattedText={(text) => {
                             setPhoneNumberFormatted(text);
                         }}
-                        
+                        withDarkTheme={true}
+                        containerStyle={[colorScheme=='light'? {backgroundColor: '#fff', borderRadius: '7.5'} : {backgroundColor: '#262626', borderRadius: '7.5'}]}
+                        textContainerStyle={[colorScheme=='light'? {backgroundColor: '#fff', borderRadius: '7.5'} : {backgroundColor: '#262626', borderRadius: '7.5'}]}
+                        codeTextStyle={[colorScheme=='light'? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                        textInputStyle={[colorScheme=='light'? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
                     />
                 </View>
 

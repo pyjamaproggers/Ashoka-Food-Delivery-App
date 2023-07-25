@@ -130,7 +130,7 @@ function Login() {
         <View
             style={[colorScheme == 'light' ? styles.Lightcontainer : styles.Darkcontainer]}
         >
-            <VStack className='w-screen h-screen content-center justify-center'>
+            <VStack className='w-full h-screen content-center justify-center'>
                 <Image source={AshokaLogo} className='self-center' style={{resizeMode:"contain", width: '80%', }}/>
                 <HStack space={5} className='w-screen justify-center '>
                     <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("VendorLogin")}>
@@ -155,11 +155,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#0c0c0f',
         alignItems: "center",
     },
-    imageContainer: {
-        width: "70%",
-        alignItems: "center",
-        justifyContent: "center",
-    },
     image: {
         width: "100%",
         resizeMode: "contain",
@@ -168,7 +163,8 @@ const styles = StyleSheet.create({
         backgroundColor: "#3E5896", // Ashoka University primary color
         padding: 10,
         borderRadius: 5,
-        alignItems: 'center'
+        alignItems: 'center',
+        top: -20
     },
     buttonText: {
         color: "#fff",

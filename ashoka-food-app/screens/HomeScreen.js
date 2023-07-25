@@ -88,7 +88,7 @@ const HomeScreen = () => {
             headerShown: false,
             gestureEnabled: false,
         });
-    }, [colorScheme]);
+    }, []);
 
     const MINUTE_MS = 3600000; //every day
 
@@ -105,7 +105,7 @@ const HomeScreen = () => {
 
 
     return (
-        <SafeAreaView className=" pt-5" style={[colorScheme == 'light' ? { backgroundColor: '#F2F2F2' } : { backgroundColor: '#0c0c0f' }]}>
+        <SafeAreaView className="pt-5" style={[colorScheme == 'light' ? { backgroundColor: '#F2F2F2' } : { backgroundColor: '#0c0c0f' }]}>
 
             <View className="flex-row pb-3 items-center mx-2 space-x-1 z-50 h-max">
                 <VStack className='self-center justify-center items-center' space={2}>

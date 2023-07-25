@@ -447,8 +447,11 @@ const RestaurantScreen = () => {
                     }
                 }}>
                     <View className="relative">
+                        {console.log('this image is')}
+                        {console.log(image)}
+                        {console.log('***')}
                         <Animated.Image source={{ uri: urlFor(image).url() }} style={Styles.RestaurantImage(scrollA)} />
-                        <TouchableOpacity onPress={navigation.goBack} className="absolute top-14 left-5 p-2 rounded-full" style={[colorScheme == 'light' ? Styles.LightBackButton : Styles.DarkBackButton]}>
+                        <TouchableOpacity onPress={navigation.goBack} className="absolute top-14 p-2 rounded-full" style={[colorScheme == 'light' ? Styles.LightBackButton : Styles.DarkBackButton]}>
                             <ArrowLeftIcon size={20} style={[colorScheme == 'light' ? { color: 'black' } : { color: 'white' }]} />
                         </TouchableOpacity>
                     </View>
