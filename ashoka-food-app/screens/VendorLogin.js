@@ -10,8 +10,7 @@ function VendorLogin() {
     const [selectedRestaurant, setSelectedRestaurant] = useState('');
     const [password, setPassword] = useState('');
 
-    const colorScheme = useColorScheme();
-
+    const colorScheme = useColorScheme()
     useLayoutEffect(() => {
         navigation.setOptions({
             headerShown: false,
@@ -19,11 +18,7 @@ function VendorLogin() {
     }, []);
 
     const handleLogin = () => {
-        // Here, you can use the selectedRestaurant and password values to perform the login operation
-        console.log("Selected Restaurant:", selectedRestaurant);
-        console.log("Password:", password);
-        // Add your logic to authenticate the vendor using the provided credentials
-        // Once the login is successful, you can navigate to the vendor's dashboard or any other relevant screen
+       navigation.navigate('VendorDashboard', {selectedRestaurant} )
     };
 
     // List of restaurant options
