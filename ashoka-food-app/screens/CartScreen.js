@@ -347,7 +347,8 @@ const placeOrder = () => {
         orderInstructions: orderInstructions,
         DeliveryLocation: DeliveryLocation,
         payment: PaymentOption,
-        type: OrderTypeOption
+        type: OrderTypeOption,
+        orderStatus: "placed"
       };
   
       // Push the order object to the orders array
