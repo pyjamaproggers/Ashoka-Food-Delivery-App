@@ -170,6 +170,17 @@ const BasketScreen = () => {
         setFinalBasket(TempFinalBasket)
     }
 
+    const getInstructions = (restaurant) => {
+        for (const Outlet of FinalBasket) {
+          if (Outlet.name === restaurant) {
+            console.log(restaurant + " FOUND");
+            console.log(Outlet.instructions);
+            return Outlet.instructions;
+          }
+        }
+        return null; // Return null or any default value if the restaurant is not found
+      };
+
     useMemo(() => {
         console.log('MEMO RUNNING AGAIN YAY')
 
@@ -269,40 +280,87 @@ const BasketScreen = () => {
         });
     }, []);
 
-    const sendOrderToDatabase = async (groupedItems, restaurantName) => {
-        const url = ""; // Node Server
+    const sendOrderToDatabase = async (orderData) => {
+        const url = "http://10.77.1.70:8800/api/orders"; // Node Server (Our backend, put the IP address as ur local IPV4 address)
+        try {
+            const response = await fetch(url, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(orderData),
+            });
+  
+            if (response.ok) {
+              console.log("Order sent successfully!");
+              // Perform any actions after a successful order submission if needed
+            } else {
+              console.error("Failed to send order!");
+              // Handle error scenarios if needed
+            }
+          } catch (error) {
+            console.error("Error occurred while sending order:", error);
+            // Handle error scenarios if needed
+          }
+      };
+      
+      // Function to calculate GST for a restaurant
+const calculateGST = (subtotal, restaurantName) => {
+    if (restaurantName === 'Roti Boti' || restaurantName === 'Subway' || restaurantName === 'Chicago Pizza') {
+      return (Math.round(subtotal * 0.18 * 100) / 100);
+    } else {
+      return 0;
+    }
+  };
+  
+// Function to place the order
+const placeOrder = () => {
+    // Create an array to store separate order objects for each restaurant
+    const orders = [];
+    
+    // Iterate over the FinalBasket array
+    for (const BasketRestaurant of FinalBasket) {
+      // Calculate the subtotal and GST for the current restaurant
+      const subtotal = BasketRestaurant.restaurantTotal;
+      const gst = calculateGST(subtotal, BasketRestaurant.name);
+  
+      // Calculate the total amount with GST and delivery charges
+      const totalAmount = (subtotal + gst + deliveryCharges[BasketRestaurant.name]).toFixed(2);
+  
+      // Extract item names and prices from the BasketRestaurant items
+      const orderItems = BasketRestaurant.items.map(item => ({
+        name: item.name,
+        price: item.Price
+      }));
 
-        const orderData = {
-            phone: actualUser.phone,
-            email: actualUser.email,
-            name: actualUser.name,
-            groupedItemsInBasket: groupedItems,
-            restaurant: restaurantName,
-            orderDate: new Date().toISOString(), // Adding the date and time of the order
-        };
-        // console.log(orderData);
-
-        // try {
-        //   const response = await fetch(url, {
-        //     method: "POST",
-        //     headers: {
-        //       "Content-Type": "application/json",
-        //     },
-        //     body: JSON.stringify(orderData),
-        //   });
-
-        //   if (response.ok) {
-        //     console.log("Order sent successfully!");
-        //     // Perform any actions after a successful order submission if needed
-        //   } else {
-        //     console.error("Failed to send order!");
-        //     // Handle error scenarios if needed
-        //   }
-        // } catch (error) {
-        //   console.error("Error occurred while sending order:", error);
-        //   // Handle error scenarios if needed
-        // }
-    };
+      const orderInstructions = getInstructions(BasketRestaurant.name)
+  
+      // Create an order object for the current restaurant
+      const orderData = {
+        name: actualUser.name,
+        phone: actualUser.phone,
+        email: actualUser.email,
+        Restaurant: BasketRestaurant.name,
+        orderAmount: totalAmount,
+        orderItems: orderItems,
+        orderDate: new Date().toISOString(),
+        orderInstructions: orderInstructions,
+        DeliveryLocation: DeliveryLocation,
+        payment: PaymentOption,
+        type: OrderTypeOption
+      };
+  
+      // Push the order object to the orders array
+      orders.push(orderData);
+    }
+  
+    // Now, you have an array of order objects, each representing an order for a different restaurant
+    // Call the sendOrderToDatabase function to send the orders to the API
+    for (const orderData of orders) {
+      console.log(orderData);
+      sendOrderToDatabase(orderData);
+    }
+  };
 
     return (
         <View className="flex-1 pt-14" style={[colorScheme == 'light' ? { backgroundColor: '#F2F2F2' } : { backgroundColor: '#0c0c0f' }]}>
@@ -866,7 +924,7 @@ const BasketScreen = () => {
                             </VStack>
 
                             <TouchableOpacity
-                                onPress={() => navigation.navigate('Cart', { actualUser, Basket })}
+                                onPress={placeOrder}
                                 className="bg-[#3E5896] py-1.5 my-0.5 px-3 flex-row items-center rounded-lg z-20"
                                 style={{ width: '47.5%' }}
                             >
