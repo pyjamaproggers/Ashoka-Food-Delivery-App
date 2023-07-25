@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useRef, useState } from 'react'
+import React, { useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { useEffect } from 'react';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { View, Text, Image, TextInput, ScrollView, Animated, useColorScheme, Linking, Platform } from 'react-native'
@@ -393,7 +393,7 @@ const RestaurantScreen = () => {
         })
     }, [])
 
-    useEffect(() => {
+    useMemo(() => {
         dispatch(
             setRestaurant({
                 description: description, location: location,
@@ -407,7 +407,7 @@ const RestaurantScreen = () => {
         if(items.length==0){
             setTransitions(true)
         }
-    }, [dispatch, SearchedText])
+    }, [dispatch, SearchedText, items])
 
 
 

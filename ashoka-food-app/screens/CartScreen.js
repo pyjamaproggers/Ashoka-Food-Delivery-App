@@ -33,6 +33,7 @@ import Mess from '../assets/mess.png'
 import UPI from '../assets/upi.png'
 import COD from '../assets/cod.png'
 import Doubleright from '../assets/doubleright.png'
+import DishRow from "./DishRow";
 
 
 const BasketScreen = () => {
@@ -69,10 +70,20 @@ const BasketScreen = () => {
         { option: 'Pay On Delivery', icon: COD },
         { option: 'Pay via UPI', icon: UPI },
     ]
+    const paymentOptions2 = [
+        { option: 'Pay On Delivery', icon: COD },
+    ]
+    const paymentOptions3 = [
+        { option: 'Pay via UPI', icon: UPI },
+    ]
 
     const orderTypeOptions = [
         { option: 'Delivery', icon: FoodDelivery },
         { option: 'Dine In', icon: DineIn },
+    ]
+
+    const orderTypeOptions2 = [
+        { option: 'Delivery', icon: FoodDelivery },
     ]
 
 
@@ -86,10 +97,6 @@ const BasketScreen = () => {
         'Bun Muska mei thodi honey kam please...',
         'Thodi extra chilli flakes please...',
     ]
-
-    const updateCartTotal = (price) => {
-        setCartTotal(CartTotal + price)
-    }
 
     const deliveryCharges = {
         'Chicago Pizza': 20,
@@ -353,15 +360,43 @@ const BasketScreen = () => {
                                     <View style={[colorScheme == 'light' ? styles.LightDropdownMenu2 : styles.DarkDropdownMenu2]}
                                         className='h-max'
                                     >
-                                        <FlatList data={orderTypeOptions} renderItem={({ item, index }) => {
-                                            if (index == orderTypeOptions.length - 1) {
+                                        {FinalBasket.length > 1 &&
+                                            <FlatList data={orderTypeOptions2} renderItem={({ item, index }) => {
+                                                if (index == orderTypeOptions.length - 1) {
+                                                    return (
+                                                        <TouchableOpacity
+                                                            onPress={() => {
+                                                                setOrderTypeOption(item.option)
+                                                                setIsOrderTypeOpen(false)
+                                                            }}
+                                                            style={[colorScheme == 'light' ? styles.LightDropdownItemEnd : styles.DarkDropdownItemEnd]}
+                                                        >
+                                                            <HStack className='items-center'>
+                                                                {item.option == 'Delivery' ?
+                                                                    <Image
+                                                                        style={{ width: 20, height: 20, resizeMode: "contain" }}
+                                                                        source={FoodDelivery}
+                                                                    />
+                                                                    :
+                                                                    <Image
+                                                                        style={{ width: 20, height: 20, resizeMode: "contain" }}
+                                                                        source={DineIn}
+                                                                    />
+                                                                }
+                                                                <Text className='text-sm pl-2 font-medium' style={[colorScheme == 'light' ? Styles.LightDropdownText : Styles.DarkDropdownText]}>
+                                                                    {item.option}
+                                                                </Text>
+                                                            </HStack>
+                                                        </TouchableOpacity>
+                                                    )
+                                                }
                                                 return (
                                                     <TouchableOpacity
                                                         onPress={() => {
                                                             setOrderTypeOption(item.option)
                                                             setIsOrderTypeOpen(false)
                                                         }}
-                                                        style={[colorScheme == 'light' ? styles.LightDropdownItemEnd : styles.DarkDropdownItemEnd]}
+                                                        style={[colorScheme == 'light' ? styles.LightDropdownItem : styles.DarkDropdownItem]}
                                                     >
                                                         <HStack className='items-center'>
                                                             {item.option == 'Delivery' ?
@@ -381,34 +416,68 @@ const BasketScreen = () => {
                                                         </HStack>
                                                     </TouchableOpacity>
                                                 )
-                                            }
-                                            return (
-                                                <TouchableOpacity
-                                                    onPress={() => {
-                                                        setOrderTypeOption(item.option)
-                                                        setIsOrderTypeOpen(false)
-                                                    }}
-                                                    style={[colorScheme == 'light' ? styles.LightDropdownItem : styles.DarkDropdownItem]}
-                                                >
-                                                    <HStack className='items-center'>
-                                                        {item.option == 'Delivery' ?
-                                                            <Image
-                                                                style={{ width: 20, height: 20, resizeMode: "contain" }}
-                                                                source={FoodDelivery}
-                                                            />
-                                                            :
-                                                            <Image
-                                                                style={{ width: 20, height: 20, resizeMode: "contain" }}
-                                                                source={DineIn}
-                                                            />
-                                                        }
-                                                        <Text className='text-sm pl-2 font-medium' style={[colorScheme == 'light' ? Styles.LightDropdownText : Styles.DarkDropdownText]}>
-                                                            {item.option}
-                                                        </Text>
-                                                    </HStack>
-                                                </TouchableOpacity>
-                                            )
-                                        }} />
+                                            }} />
+                                        }
+                                        {FinalBasket.length == 1 &&
+                                            <FlatList data={orderTypeOptions} renderItem={({ item, index }) => {
+                                                if (index == orderTypeOptions.length - 1) {
+                                                    return (
+                                                        <TouchableOpacity
+                                                            onPress={() => {
+                                                                setOrderTypeOption(item.option)
+                                                                setPaymentOption('Pay via UPI')
+                                                                setIsOrderTypeOpen(false)
+                                                            }}
+                                                            style={[colorScheme == 'light' ? styles.LightDropdownItemEnd : styles.DarkDropdownItemEnd]}
+                                                        >
+                                                            <HStack className='items-center'>
+                                                                {item.option == 'Delivery' ?
+                                                                    <Image
+                                                                        style={{ width: 20, height: 20, resizeMode: "contain" }}
+                                                                        source={FoodDelivery}
+                                                                    />
+                                                                    :
+                                                                    <Image
+                                                                        style={{ width: 20, height: 20, resizeMode: "contain" }}
+                                                                        source={DineIn}
+                                                                    />
+                                                                }
+                                                                <Text className='text-sm pl-2 font-medium' style={[colorScheme == 'light' ? Styles.LightDropdownText : Styles.DarkDropdownText]}>
+                                                                    {item.option}
+                                                                </Text>
+                                                            </HStack>
+                                                        </TouchableOpacity>
+                                                    )
+                                                }
+                                                return (
+                                                    <TouchableOpacity
+                                                        onPress={() => {
+                                                            setOrderTypeOption(item.option)
+                                                            setIsOrderTypeOpen(false)
+                                                        }}
+                                                        style={[colorScheme == 'light' ? styles.LightDropdownItem : styles.DarkDropdownItem]}
+                                                    >
+                                                        <HStack className='items-center'>
+                                                            {item.option == 'Delivery' ?
+                                                                <Image
+                                                                    style={{ width: 20, height: 20, resizeMode: "contain" }}
+                                                                    source={FoodDelivery}
+                                                                />
+                                                                :
+                                                                <Image
+                                                                    style={{ width: 20, height: 20, resizeMode: "contain" }}
+                                                                    source={DineIn}
+                                                                />
+                                                            }
+                                                            <Text className='text-sm pl-2 font-medium' style={[colorScheme == 'light' ? Styles.LightDropdownText : Styles.DarkDropdownText]}>
+                                                                {item.option}
+                                                            </Text>
+                                                        </HStack>
+                                                    </TouchableOpacity>
+                                                )
+                                            }} />
+
+                                        }
                                     </View>
                                 }
                             </VStack>
@@ -480,8 +549,8 @@ const BasketScreen = () => {
                                                 return (
                                                     <TouchableOpacity
                                                         onPress={() => {
-                                                            setOrderTypeOption(item.option)
-                                                            setIsOrderTypeOpen(false)
+                                                            setDeliveryLocation(item.location)
+                                                            setIsLocationOpen(false)
                                                         }}
                                                         style={[colorScheme == 'light' ? styles.LightDropdownItemEnd : styles.DarkDropdownItemEnd]}
                                                     >
@@ -617,15 +686,43 @@ const BasketScreen = () => {
                                     <View style={[colorScheme == 'light' ? styles.LightDropdownMenu2 : styles.DarkDropdownMenu2]}
                                         className='h-max'
                                     >
-                                        <FlatList data={paymentOptions} renderItem={({ item, index }) => {
-                                            if (index == paymentOptions.length - 1) {
+                                        {FinalBasket.length > 1 &&
+                                            <FlatList data={paymentOptions2} renderItem={({ item, index }) => {
+                                                if (index == paymentOptions.length - 1) {
+                                                    return (
+                                                        <TouchableOpacity
+                                                            onPress={() => {
+                                                                setPaymentOption(item.option)
+                                                                setIsPaymentOpen(false)
+                                                            }}
+                                                            style={[colorScheme == 'light' ? styles.LightDropdownItemEnd : styles.DarkDropdownItemEnd]}
+                                                        >
+                                                            <HStack className='items-center'>
+                                                                {item.option == 'Pay On Delivery' ?
+                                                                    <Image
+                                                                        style={{ width: 20, height: 20, resizeMode: "contain" }}
+                                                                        source={COD}
+                                                                    />
+                                                                    :
+                                                                    <Image
+                                                                        style={{ width: 20, height: 20, resizeMode: "contain" }}
+                                                                        source={UPI}
+                                                                    />
+                                                                }
+                                                                <Text className='text-sm pl-2 font-medium' style={[colorScheme == 'light' ? Styles.LightDropdownText : Styles.DarkDropdownText]}>
+                                                                    {item.option}
+                                                                </Text>
+                                                            </HStack>
+                                                        </TouchableOpacity>
+                                                    )
+                                                }
                                                 return (
                                                     <TouchableOpacity
                                                         onPress={() => {
-                                                            setOrderTypeOption(item.option)
-                                                            setIsOrderTypeOpen(false)
+                                                            setPaymentOption(item.option)
+                                                            setIsPaymentOpen(false)
                                                         }}
-                                                        style={[colorScheme == 'light' ? styles.LightDropdownItemEnd : styles.DarkDropdownItemEnd]}
+                                                        style={[colorScheme == 'light' ? styles.LightDropdownItem : styles.DarkDropdownItem]}
                                                     >
                                                         <HStack className='items-center'>
                                                             {item.option == 'Pay On Delivery' ?
@@ -645,34 +742,125 @@ const BasketScreen = () => {
                                                         </HStack>
                                                     </TouchableOpacity>
                                                 )
-                                            }
-                                            return (
-                                                <TouchableOpacity
-                                                    onPress={() => {
-                                                        setPaymentOption(item.option)
-                                                        setIsPaymentOpen(false)
-                                                    }}
-                                                    style={[colorScheme == 'light' ? styles.LightDropdownItem : styles.DarkDropdownItem]}
-                                                >
-                                                    <HStack className='items-center'>
-                                                        {item.option == 'Pay On Delivery' ?
-                                                            <Image
-                                                                style={{ width: 20, height: 20, resizeMode: "contain" }}
-                                                                source={COD}
-                                                            />
-                                                            :
-                                                            <Image
-                                                                style={{ width: 20, height: 20, resizeMode: "contain" }}
-                                                                source={UPI}
-                                                            />
-                                                        }
-                                                        <Text className='text-sm pl-2 font-medium' style={[colorScheme == 'light' ? Styles.LightDropdownText : Styles.DarkDropdownText]}>
-                                                            {item.option}
-                                                        </Text>
-                                                    </HStack>
-                                                </TouchableOpacity>
-                                            )
-                                        }} />
+                                            }} />
+                                        }
+                                        {FinalBasket.length == 1 && OrderTypeOption != 'Dine In' &&
+                                            <FlatList data={paymentOptions} renderItem={({ item, index }) => {
+                                                if (index == paymentOptions.length - 1) {
+                                                    return (
+                                                        <TouchableOpacity
+                                                            onPress={() => {
+                                                                setPaymentOption(item.option)
+                                                                setIsPaymentOpen(false)
+                                                            }}
+                                                            style={[colorScheme == 'light' ? styles.LightDropdownItemEnd : styles.DarkDropdownItemEnd]}
+                                                        >
+                                                            <HStack className='items-center'>
+                                                                {item.option == 'Pay On Delivery' ?
+                                                                    <Image
+                                                                        style={{ width: 20, height: 20, resizeMode: "contain" }}
+                                                                        source={COD}
+                                                                    />
+                                                                    :
+                                                                    <Image
+                                                                        style={{ width: 20, height: 20, resizeMode: "contain" }}
+                                                                        source={UPI}
+                                                                    />
+                                                                }
+                                                                <Text className='text-sm pl-2 font-medium' style={[colorScheme == 'light' ? Styles.LightDropdownText : Styles.DarkDropdownText]}>
+                                                                    {item.option}
+                                                                </Text>
+                                                            </HStack>
+                                                        </TouchableOpacity>
+                                                    )
+                                                }
+                                                return (
+                                                    <TouchableOpacity
+                                                        onPress={() => {
+                                                            setPaymentOption(item.option)
+                                                            setIsPaymentOpen(false)
+                                                        }}
+                                                        style={[colorScheme == 'light' ? styles.LightDropdownItem : styles.DarkDropdownItem]}
+                                                    >
+                                                        <HStack className='items-center'>
+                                                            {item.option == 'Pay On Delivery' ?
+                                                                <Image
+                                                                    style={{ width: 20, height: 20, resizeMode: "contain" }}
+                                                                    source={COD}
+                                                                />
+                                                                :
+                                                                <Image
+                                                                    style={{ width: 20, height: 20, resizeMode: "contain" }}
+                                                                    source={UPI}
+                                                                />
+                                                            }
+                                                            <Text className='text-sm pl-2 font-medium' style={[colorScheme == 'light' ? Styles.LightDropdownText : Styles.DarkDropdownText]}>
+                                                                {item.option}
+                                                            </Text>
+                                                        </HStack>
+                                                    </TouchableOpacity>
+                                                )
+                                            }} />
+                                        }
+                                        {FinalBasket.length == 1 && OrderTypeOption == 'Dine In' &&
+                                            <FlatList data={paymentOptions3} renderItem={({ item, index }) => {
+                                                if (index == paymentOptions.length - 1) {
+                                                    return (
+                                                        <TouchableOpacity
+                                                            onPress={() => {
+                                                                setPaymentOption(item.option)
+                                                                setIsPaymentOpen(false)
+                                                            }}
+                                                            style={[colorScheme == 'light' ? styles.LightDropdownItemEnd : styles.DarkDropdownItemEnd]}
+                                                        >
+                                                            <HStack className='items-center'>
+                                                                {item.option == 'Pay On Delivery' ?
+                                                                    <Image
+                                                                        style={{ width: 20, height: 20, resizeMode: "contain" }}
+                                                                        source={COD}
+                                                                    />
+                                                                    :
+                                                                    <Image
+                                                                        style={{ width: 20, height: 20, resizeMode: "contain" }}
+                                                                        source={UPI}
+                                                                    />
+                                                                }
+                                                                <Text className='text-sm pl-2 font-medium' style={[colorScheme == 'light' ? Styles.LightDropdownText : Styles.DarkDropdownText]}>
+                                                                    {item.option}
+                                                                </Text>
+                                                            </HStack>
+                                                        </TouchableOpacity>
+                                                    )
+                                                }
+                                                return (
+                                                    <TouchableOpacity
+                                                        onPress={() => {
+                                                            setPaymentOption(item.option)
+                                                            setIsPaymentOpen(false)
+                                                        }}
+                                                        style={[colorScheme == 'light' ? styles.LightDropdownItem : styles.DarkDropdownItem]}
+                                                    >
+                                                        <HStack className='items-center'>
+                                                            {item.option == 'Pay On Delivery' ?
+                                                                <Image
+                                                                    style={{ width: 20, height: 20, resizeMode: "contain" }}
+                                                                    source={COD}
+                                                                />
+                                                                :
+                                                                <Image
+                                                                    style={{ width: 20, height: 20, resizeMode: "contain" }}
+                                                                    source={UPI}
+                                                                />
+                                                            }
+                                                            <Text className='text-sm pl-2 font-medium' style={[colorScheme == 'light' ? Styles.LightDropdownText : Styles.DarkDropdownText]}>
+                                                                {item.option}
+                                                            </Text>
+                                                        </HStack>
+                                                    </TouchableOpacity>
+                                                )
+                                            }} />
+
+                                        }
                                     </View>
                                 }
                             </VStack>
@@ -685,9 +873,9 @@ const BasketScreen = () => {
                                 <HStack className='items-center justify-between  w-full'>
                                     <VStack>
                                         <Text className='text-base pl-1 font-medium text-white' >
-                                            Place Order
+                                            Place Your Order
                                         </Text>
-                                        <Text className='text-sm font-medium text-white' >
+                                        <Text className='text-sm pl-1 font-medium text-white' >
                                             (₹{CartTotal})
                                         </Text>
                                     </VStack>
@@ -745,14 +933,13 @@ const BasketScreen = () => {
                                                 Item(s) Added
                                             </Text>
                                         </View>
-                                        <View className='rounded-xl shadow-sm' style={[colorScheme == 'light' ? Styles.LightBGSec : Styles.DarkBGSec]}>
+                                        <View className='rounded-xl w-full shadow-sm' style={[colorScheme == 'light' ? Styles.LightBGSec : Styles.DarkBGSec]}>
                                             {
                                                 BasketRestaurant.items.map((dish, index) => (
                                                     <>
-                                                        {/* <DishRow name={dish.name} Price={dish.Price} Veg_NonVeg={dish.Veg_NonVeg} key={dish._id} id={dish._id} Restaurant={dish.Restaurant} /> */}
+                                                        {/* <DishRow name={dish.name} Price={dish.Price} Veg_NonVeg={dish.Veg_NonVeg} key={dish._id} id={dish._id} Restaurant={dish.Restaurant} delivery='Yes'/> */}
                                                         <HStack className='items-center justify-between py-2 rounded-lg' style={[colorScheme == 'light' ? Styles.LightBGSec : Styles.DarkBGSec]}>
 
-                                                            {/* Dish Details Block */}
                                                             <VStack style={{ marginLeft: '2%' }}>
                                                                 <HStack className='items-center space-x-1'>
                                                                     {dish.Veg_NonVeg === "Veg" ? (
@@ -788,7 +975,6 @@ const BasketScreen = () => {
                                                                 }
                                                             </VStack>
 
-                                                            {/* Add/Minus BUtton Block */}
 
                                                             {
                                                                 <HStack
@@ -831,7 +1017,55 @@ const BasketScreen = () => {
                                                         style={{ width: 15, height: 15, resizeMode: "contain" }}
                                                         source={PenIcon}
                                                     />
-                                                    {colorScheme == 'light' &&
+                                                    {colorScheme == 'light' && BasketRestaurant.name == 'Chaat Stall' &&
+                                                        <TextInput placeholder={instructionsPlaceholders[4]} keyboardType="default" className='w-10/12 text-xs'
+                                                            placeholderTextColor='#666666'
+                                                            style={{ color: '#000', paddingTop: 0 }}
+                                                            onChangeText={(text) => {
+                                                                updateInstructions(text, BasketRestaurant.name)
+                                                            }}
+                                                            autoComplete='off'
+                                                            autoCorrect={false}
+                                                            multiline={true}
+                                                            maxLength={100}
+                                                            numberOfLines={4}
+                                                            allowFontScaling={false}
+                                                            enterKeyHint='done'
+                                                        />
+                                                    }
+                                                    {colorScheme == 'light' && BasketRestaurant.name == 'Rasananda' &&
+                                                        <TextInput placeholder={instructionsPlaceholders[5]} keyboardType="default" className='w-10/12 text-xs'
+                                                            placeholderTextColor='#666666'
+                                                            style={{ color: '#000', paddingTop: 0 }}
+                                                            onChangeText={(text) => {
+                                                                updateInstructions(text, BasketRestaurant.name)
+                                                            }}
+                                                            autoComplete='off'
+                                                            autoCorrect={false}
+                                                            multiline={true}
+                                                            maxLength={100}
+                                                            numberOfLines={4}
+                                                            allowFontScaling={false}
+                                                            enterKeyHint='done'
+                                                        />
+                                                    }
+                                                    {colorScheme == 'light' && BasketRestaurant.name == 'Dhaba' &&
+                                                        <TextInput placeholder={instructionsPlaceholders[1]} keyboardType="default" className='w-10/12 text-xs'
+                                                            placeholderTextColor='#666666'
+                                                            style={{ color: '#000', paddingTop: 0 }}
+                                                            onChangeText={(text) => {
+                                                                updateInstructions(text, BasketRestaurant.name)
+                                                            }}
+                                                            autoComplete='off'
+                                                            autoCorrect={false}
+                                                            multiline={true}
+                                                            maxLength={100}
+                                                            numberOfLines={4}
+                                                            allowFontScaling={false}
+                                                            enterKeyHint='done'
+                                                        />
+                                                    }
+                                                    {colorScheme == 'light' && BasketRestaurant.name == 'Roti Boti' &&
                                                         <TextInput placeholder={instructionsPlaceholders[0]} keyboardType="default" className='w-10/12 text-xs'
                                                             placeholderTextColor='#666666'
                                                             style={{ color: '#000', paddingTop: 0 }}
@@ -847,10 +1081,10 @@ const BasketScreen = () => {
                                                             enterKeyHint='done'
                                                         />
                                                     }
-                                                    {colorScheme != 'light' &&
-                                                        <TextInput placeholder="Bhaiya mirchi kam daalna... (max 100 char)" keyboardType="default" className='w-10/12 text-xs'
-                                                            placeholderTextColor='#8f8f8f'
-                                                            style={{ color: '#fff', paddingTop: 0 }}
+                                                    {colorScheme == 'light' && BasketRestaurant.name == 'Subway' &&
+                                                        <TextInput placeholder={instructionsPlaceholders[2]} keyboardType="default" className='w-10/12 text-xs'
+                                                            placeholderTextColor='#666666'
+                                                            style={{ color: '#000', paddingTop: 0 }}
                                                             onChangeText={(text) => {
                                                                 updateInstructions(text, BasketRestaurant.name)
                                                             }}
@@ -860,6 +1094,151 @@ const BasketScreen = () => {
                                                             maxLength={100}
                                                             numberOfLines={4}
                                                             allowFontScaling={false}
+                                                            enterKeyHint='done'
+                                                        />
+                                                    }
+                                                    {colorScheme == 'light' && BasketRestaurant.name == 'Chicago Pizza' &&
+                                                        <TextInput placeholder={instructionsPlaceholders[6]} keyboardType="default" className='w-10/12 text-xs'
+                                                            placeholderTextColor='#666666'
+                                                            style={{ color: '#000', paddingTop: 0 }}
+                                                            onChangeText={(text) => {
+                                                                updateInstructions(text, BasketRestaurant.name)
+                                                            }}
+                                                            autoComplete='off'
+                                                            autoCorrect={false}
+                                                            multiline={true}
+                                                            maxLength={100}
+                                                            numberOfLines={4}
+                                                            allowFontScaling={false}
+                                                            enterKeyHint='done'
+                                                        />
+                                                    }
+                                                    {colorScheme == 'light' && BasketRestaurant.name == 'The Hunger Cycle' &&
+                                                        <TextInput placeholder={instructionsPlaceholders[3]} keyboardType="default" className='w-10/12 text-xs'
+                                                            placeholderTextColor='#666666'
+                                                            style={{ color: '#000', paddingTop: 0 }}
+                                                            onChangeText={(text) => {
+                                                                updateInstructions(text, BasketRestaurant.name)
+                                                            }}
+                                                            autoComplete='off'
+                                                            autoCorrect={false}
+                                                            multiline={true}
+                                                            maxLength={100}
+                                                            numberOfLines={4}
+                                                            allowFontScaling={false}
+                                                            enterKeyHint='done'
+                                                        />
+                                                    }
+                                                    {!colorScheme == 'light' && BasketRestaurant.name == 'Chaat Stall' &&
+                                                        <TextInput placeholder={instructionsPlaceholders[4]} keyboardType="default" className='w-10/12 text-xs'
+                                                            placeholderTextColor='#666666'
+                                                            style={{ color: '#000', paddingTop: 0 }}
+                                                            onChangeText={(text) => {
+                                                                updateInstructions(text, BasketRestaurant.name)
+                                                            }}
+                                                            autoComplete='off'
+                                                            autoCorrect={false}
+                                                            multiline={true}
+                                                            maxLength={100}
+                                                            numberOfLines={4}
+                                                            allowFontScaling={false}
+                                                            enterKeyHint='done'
+                                                        />
+                                                    }
+                                                    {!colorScheme == 'light' && BasketRestaurant.name == 'Rasananda' &&
+                                                        <TextInput placeholder={instructionsPlaceholders[5]} keyboardType="default" className='w-10/12 text-xs'
+                                                            placeholderTextColor='#666666'
+                                                            style={{ color: '#000', paddingTop: 0 }}
+                                                            onChangeText={(text) => {
+                                                                updateInstructions(text, BasketRestaurant.name)
+                                                            }}
+                                                            autoComplete='off'
+                                                            autoCorrect={false}
+                                                            multiline={true}
+                                                            maxLength={100}
+                                                            numberOfLines={4}
+                                                            allowFontScaling={false}
+                                                            enterKeyHint='done'
+                                                        />
+                                                    }
+                                                    {!colorScheme == 'light' && BasketRestaurant.name == 'Dhaba' &&
+                                                        <TextInput placeholder={instructionsPlaceholders[1]} keyboardType="default" className='w-10/12 text-xs'
+                                                            placeholderTextColor='#666666'
+                                                            style={{ color: '#000', paddingTop: 0 }}
+                                                            onChangeText={(text) => {
+                                                                updateInstructions(text, BasketRestaurant.name)
+                                                            }}
+                                                            autoComplete='off'
+                                                            autoCorrect={false}
+                                                            multiline={true}
+                                                            maxLength={100}
+                                                            numberOfLines={4}
+                                                            allowFontScaling={false}
+                                                            enterKeyHint='done'
+                                                        />
+                                                    }
+                                                    {!colorScheme == 'light' && BasketRestaurant.name == 'Roti Boti' &&
+                                                        <TextInput placeholder={instructionsPlaceholders[0]} keyboardType="default" className='w-10/12 text-xs'
+                                                            placeholderTextColor='#666666'
+                                                            style={{ color: '#000', paddingTop: 0 }}
+                                                            onChangeText={(text) => {
+                                                                updateInstructions(text, BasketRestaurant.name)
+                                                            }}
+                                                            autoComplete='off'
+                                                            autoCorrect={false}
+                                                            multiline={true}
+                                                            maxLength={100}
+                                                            numberOfLines={4}
+                                                            allowFontScaling={false}
+                                                            enterKeyHint='done'
+                                                        />
+                                                    }
+                                                    {!colorScheme == 'light' && BasketRestaurant.name == 'Subway' &&
+                                                        <TextInput placeholder={instructionsPlaceholders[2]} keyboardType="default" className='w-10/12 text-xs'
+                                                            placeholderTextColor='#666666'
+                                                            style={{ color: '#000', paddingTop: 0 }}
+                                                            onChangeText={(text) => {
+                                                                updateInstructions(text, BasketRestaurant.name)
+                                                            }}
+                                                            autoComplete='off'
+                                                            autoCorrect={false}
+                                                            multiline={true}
+                                                            maxLength={100}
+                                                            numberOfLines={4}
+                                                            allowFontScaling={false}
+                                                            enterKeyHint='done'
+                                                        />
+                                                    }
+                                                    {!colorScheme == 'light' && BasketRestaurant.name == 'Chicago Pizza' &&
+                                                        <TextInput placeholder={instructionsPlaceholders[6]} keyboardType="default" className='w-10/12 text-xs'
+                                                            placeholderTextColor='#666666'
+                                                            style={{ color: '#000', paddingTop: 0 }}
+                                                            onChangeText={(text) => {
+                                                                updateInstructions(text, BasketRestaurant.name)
+                                                            }}
+                                                            autoComplete='off'
+                                                            autoCorrect={false}
+                                                            multiline={true}
+                                                            maxLength={100}
+                                                            numberOfLines={4}
+                                                            allowFontScaling={false}
+                                                            enterKeyHint='done'
+                                                        />
+                                                    }
+                                                    {!colorScheme == 'light' && BasketRestaurant.name == 'The Hunger Cycle' &&
+                                                        <TextInput placeholder={instructionsPlaceholders[3]} keyboardType="default" className='w-10/12 text-xs'
+                                                            placeholderTextColor='#666666'
+                                                            style={{ color: '#000', paddingTop: 0 }}
+                                                            onChangeText={(text) => {
+                                                                updateInstructions(text, BasketRestaurant.name)
+                                                            }}
+                                                            autoComplete='off'
+                                                            autoCorrect={false}
+                                                            multiline={true}
+                                                            maxLength={100}
+                                                            numberOfLines={4}
+                                                            allowFontScaling={false}
+                                                            enterKeyHint='done'
                                                         />
                                                     }
                                                 </HStack>

@@ -107,13 +107,15 @@ const HomeScreen = () => {
     return (
         <SafeAreaView className="pt-5" style={[colorScheme == 'light' ? { backgroundColor: '#F2F2F2' } : { backgroundColor: '#0c0c0f' }]}>
 
-            <View className="flex-row pb-3 items-center mx-2 space-x-1 z-50 h-max">
+            <View className="flex-row pb-3 items-center mx-2 space-x-1 z-50 h-max w-10/12 justify-between self-center">
+
                 <Image source={AshokaLogo} className="p-4 rounded-full" style={{ height: 50, width: 50 }} />
 
-                <View className="flex-1">
+                <View className="">
 
-                    <VStack space={1} className='justify-center '>
-                        <Text className='self-center font-semibold text-2xl italic ' style={[colorScheme == 'light' ? Styles.LightHomeAdlib : Styles.DarkHomeAdlib]}>
+                    <VStack space={1} className='justify-center'>
+                        <Text allowFontScaling={false}
+                         className='self-center font-semibold text-xl italic ' style={[colorScheme == 'light' ? Styles.LightHomeAdlib : Styles.DarkHomeAdlib]}>
                             AshokaEats™
                         </Text>
                     </VStack>
@@ -184,7 +186,7 @@ const HomeScreen = () => {
 
                 </View>
 
-                <View className='flex-end'>
+                <View className=''>
                     <TouchableOpacity onPress={() => {
                         console.log(actualUser);
                         navigation.navigate('UserScreen', { actualUser })

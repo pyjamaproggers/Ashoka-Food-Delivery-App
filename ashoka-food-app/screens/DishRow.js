@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, Image, useColorScheme } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { urlFor } from "../sanity";
 import { MinusCircleIcon, PlusCircleIcon, PlusSmallIcon, PlusIcon, MinusIcon } from "react-native-heroicons/solid";
 import { addToCart, removeFromCart, selectCartItems } from "../reduxslices/cartslice";
@@ -51,7 +51,6 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant }) =
 
     const removeItem = () => {
         Price = parseFloat(Price)
-        console.log('****')
         var currentQuantity
         var additemQ
         items.map((item) => {
@@ -71,17 +70,20 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant }) =
     };
 
     useEffect(()=>{
-
         if(items.length==0){
             setItemQuantity(0)
         }
         if(items.length!=0){
             items.map((item)=>{
-                if(item.name===name){
+                if(items.filter((x)=>(x.name==name)).length!=0){
                     setItemQuantity(item.quantity)
                 }
-            })
-        }
+                else {
+                    setItemQuantity(0)
+                }
+            })  
+            
+        }  
     },[items])
 
     return (
@@ -116,8 +118,7 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant }) =
                 </VStack>
 
                 {/* Add/Minus BUtton Block */}
-
-                {itemQuantity == 0 && delivery == 'Yes' &&
+                {(itemQuantity == 0 || itemQuantity==null) && delivery == 'Yes' &&
                     <TouchableOpacity onPress={addItem}>
                         <HStack
                             style={[colorScheme == 'light' ? Styles.LightAddButtonInitial : Styles.DarkAddButtonInitial]}
@@ -129,7 +130,9 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant }) =
                         </HStack>
                     </TouchableOpacity>
                 }
-
+                {/* {console.log(name)}
+                {console.log(delivery)}
+                {console.log(itemQuantity)} */}
                 {itemQuantity > 0 && delivery == 'Yes' &&
                     <HStack
                         style={[colorScheme == 'light' ? Styles.LightAddButtonFinal : Styles.DarkAddButtonFinal]}
