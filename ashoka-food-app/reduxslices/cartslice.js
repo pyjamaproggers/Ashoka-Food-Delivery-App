@@ -31,7 +31,6 @@ export const cartSlice = createSlice({
                     return item;
                 }
             });
-            console.log(stateUpdated)
             state.items=[...stateUpdated]
         },
         addToCart: (state, action) => {

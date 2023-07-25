@@ -64,7 +64,7 @@ const Styles = StyleSheet.create({
     },
     LightDropdownMenu:{
         width: '100%',
-        height: 240,
+        height: 200,
         borderRadius: '6px',
         borderWidth: '1px',
         borderColor: 'rgb(229,231,235)',
@@ -78,7 +78,7 @@ const Styles = StyleSheet.create({
     },
     DarkDropdownMenu:{
         width: '100%',
-        height: 240,
+        height: 200,
         borderRadius: '6px',
         borderTopWidth: '1px',
         borderColor: 'rgb(0,0,0)',
@@ -458,6 +458,7 @@ const Styles = StyleSheet.create({
         shadowRadius: 3,
         shadowOpacity: 0.1,
     },
+
 
 });
 

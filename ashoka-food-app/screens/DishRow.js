@@ -16,8 +16,6 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant }) =
     const items = useSelector(selectCartItems);
     const [itemQuantity, setItemQuantity] = useState(0)
 
-    console.log(items)
-
     const addItem = () => {
         Price = parseFloat(Price)
         console.log('****')

@@ -413,7 +413,7 @@ const RestaurantScreen = () => {
 
     return (
         <>
-            <CartIcon actualUser={actualUser} />
+            <CartIcon actualUser={actualUser} image={image} outletName={title}/>
             <Slide in={!netInfo.isConnected} placement="top">
                 <Alert justifyContent="center" status="error" safeAreaTop={10}>
                     <HStack space={3}>
@@ -447,9 +447,6 @@ const RestaurantScreen = () => {
                     }
                 }}>
                     <View className="relative">
-                        {console.log('this image is')}
-                        {console.log(image)}
-                        {console.log('***')}
                         <Animated.Image source={{ uri: urlFor(image).url() }} style={Styles.RestaurantImage(scrollA)} />
                         <TouchableOpacity onPress={navigation.goBack} className="absolute top-14 p-2 rounded-full" style={[colorScheme == 'light' ? Styles.LightBackButton : Styles.DarkBackButton]}>
                             <ArrowLeftIcon size={20} style={[colorScheme == 'light' ? { color: 'black' } : { color: 'white' }]} />
@@ -625,7 +622,9 @@ const RestaurantScreen = () => {
                                                     setSearchedText('')
                                                     setShowSearchedMenu(false)
                                                 }
-                                            }} />
+                                            }} 
+                                            enterKeyHint='done'
+                                            />
                                     }
                                     {colorScheme != 'light' &&
                                         <TextInput placeholder="What are we looking for today?" keyboardType="default" className='w-full'
@@ -640,7 +639,9 @@ const RestaurantScreen = () => {
                                                     setSearchedText('')
                                                     setShowSearchedMenu(false)
                                                 }
-                                            }} />
+                                            }} 
+                                            enterKeyHint='done'
+                                            />
                                     }
                                     </HStack>
 

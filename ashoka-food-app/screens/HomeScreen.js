@@ -1,5 +1,5 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react';
-import { View, Text, Image, TextInput, ScrollView, TouchableOpacity, StyleSheet, FlatList, useColorScheme } from 'react-native';
+import { View, Text, Image, TextInput, ScrollView, TouchableOpacity, StyleSheet, FlatList, useColorScheme, } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import AshokaLogo from '../assets/AshokaLogo.png';
@@ -108,31 +108,17 @@ const HomeScreen = () => {
         <SafeAreaView className="pt-5" style={[colorScheme == 'light' ? { backgroundColor: '#F2F2F2' } : { backgroundColor: '#0c0c0f' }]}>
 
             <View className="flex-row pb-3 items-center mx-2 space-x-1 z-50 h-max">
-                <VStack className='self-center justify-center items-center' space={2}>
-                    <Image source={AshokaLogo} className="p-4 rounded-full" style={{ height: 30, width: 30 }} />
-                    <Text className='self-center font-semibold text-xs italic' style={[colorScheme == 'light' ? Styles.LightHomeAdlib : Styles.DarkHomeAdlib]}>
-                        AshokaEats™
-                    </Text>
-                </VStack>
+                <Image source={AshokaLogo} className="p-4 rounded-full" style={{ height: 50, width: 50 }} />
+
                 <View className="flex-1">
 
-                    {/* Joke */}
-                    {Joke && !LoadingJoke &&
-                        <VStack space={1} className='content-between'>
-                            <Text className="font-normal text-xs px-1"
-                                style={[colorScheme == 'light' ? Styles.LightTextSecondary : Styles.DarkTextSecondary]}
-                            >
-                                Joke of the day
-                            </Text>
-                            <Text className="font-normal text-xs px-1"
-                                style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
-                            >
-                                {Joke}
-                            </Text>
-                        </VStack>
-                    }
+                    <VStack space={1} className='justify-center '>
+                        <Text className='self-center font-semibold text-2xl italic ' style={[colorScheme == 'light' ? Styles.LightHomeAdlib : Styles.DarkHomeAdlib]}>
+                            AshokaEats™
+                        </Text>
+                    </VStack>
 
-                    {LoadingJoke &&
+                    {/* {LoadingJoke &&
                         <VStack space={2}>
                             <Skeleton h='2' rounded='full' w='20%'
                                 startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
@@ -144,22 +130,22 @@ const HomeScreen = () => {
                                 startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
                                 endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
                         </VStack>
-                    }
+                    } */}
 
                     {/* Dropdown Menu */}
-                    {showDropDown && !LoadingJoke &&
+                    {/* {!showDropDown && !LoadingJoke &&
                         <>
-                            <Text className='w-10/12 self-center font-semibold text-xs' style={[colorScheme == 'light' ? Styles.LightHomeAdlib : Styles.DarkHomeAdlib]}>
+                            <Text className='w-full pl-1 self-center font-semibold text-xs' style={[colorScheme == 'light' ? Styles.LightHomeAdlib : Styles.DarkHomeAdlib]}>
                                 Deliver to
                             </Text>
                             <TouchableOpacity
-                                className='w-11/12 self-center'
+                                className='w-full self-center'
                                 onPress={() => {
                                     setIsOpen(!isOpen)
                                 }}
                                 style={[colorScheme == 'light' ? Styles.LightDropdownButton : Styles.DarkDropdownButton]}
                             >
-                                <Text className='text-sm' style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
+                                <Text className='text-sm pl-2' style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
                                     {DeliveryLocation}
                                 </Text>
                                 {isOpen ?
@@ -194,7 +180,7 @@ const HomeScreen = () => {
                                 </View>
                             }
                         </>
-                    }
+                    } */}
 
                 </View>
 
@@ -231,7 +217,8 @@ const HomeScreen = () => {
                                 setSearched(text)
                             }}
                             autoComplete='off'
-                            autoCorrect={false} />
+                            autoCorrect={false}
+                            enterKeyHint='done' />
                     }
                     {colorScheme != 'light' &&
                         <TextInput placeholder="Search for a dish or place" keyboardType="default" className='w-full'
@@ -243,7 +230,9 @@ const HomeScreen = () => {
                                 setSearched(text)
                             }}
                             autoComplete='off'
-                            autoCorrect={false} />
+                            autoCorrect={false}
+                            enterKeyHint='done'
+                        />
                     }
                 </View>
             </View>
