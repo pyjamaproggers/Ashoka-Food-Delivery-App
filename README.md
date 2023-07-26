@@ -15,6 +15,8 @@ RESTful APIs - Google Auth 2.0
 
 ## Screenshots
 
+<img src="https://github.com/pyjamaproggers/Ashoka-Food-Delivery-App/assets/105544205/7f8f47dd-35bd-4261-890d-3187e22d84b1" width="100" height="100" />
+
 ![IMG_1607](https://github.com/pyjamaproggers/Ashoka-Food-Delivery-App/assets/105544205/7f8f47dd-35bd-4261-890d-3187e22d84b1)
 ![IMG_1609](https://github.com/pyjamaproggers/Ashoka-Food-Delivery-App/assets/105544205/3c3fe025-81f7-4e42-b4ac-1134420b101d)
 ![IMG_1608](https://github.com/pyjamaproggers/Ashoka-Food-Delivery-App/assets/105544205/014160b9-1c0f-4a68-a059-a590781c63a5)
