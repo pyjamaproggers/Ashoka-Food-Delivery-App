@@ -22,7 +22,7 @@ RESTful APIs - Google Auth 2.0
 <img src="https://github.com/pyjamaproggers/Ashoka-Food-Delivery-App/assets/105544205/a04a5d7a-86dd-43b2-bef8-5bd85eb72a1f" width="390" height="844" />
 <img src="https://github.com/pyjamaproggers/Ashoka-Food-Delivery-App/assets/105544205/c855f651-e616-450f-bac0-9f23408e1a2a" width="390" height="844" />
 <img src="https://github.com/pyjamaproggers/Ashoka-Food-Delivery-App/assets/105544205/89fb2e35-315c-4cc5-b06d-b81ee2301c40" width="390" height="844" />
-<img src="[https://github.com/pyjamaproggers/Ashoka-Food-Delivery-App/assets/105544205/c855f651-e616-450f-bac0-9f23408e1a2a](https://github.com/pyjamaproggers/Ashoka-Food-Delivery-App/assets/105544205/56765639-56b3-4659-852f-c5e8263ab2b6)" width="390" height="844" />
+<img src="https://github.com/pyjamaproggers/Ashoka-Food-Delivery-App/assets/105544205/56765639-56b3-4659-852f-c5e8263ab2b6" width="390" height="844" />
 <img src="https://github.com/pyjamaproggers/Ashoka-Food-Delivery-App/assets/105544205/71b7f6ce-a7c2-4e46-8ca1-9b0260fcbda1" width="390" height="844" />
 <img src="https://github.com/pyjamaproggers/Ashoka-Food-Delivery-App/assets/105544205/f507bf00-8be2-4b17-9468-742f16d77359" width="390" height="844" />
 <img src="https://github.com/pyjamaproggers/Ashoka-Food-Delivery-App/assets/105544205/920bf579-87eb-451f-832e-e0123fd9aa1d" width="390" height="844" />
