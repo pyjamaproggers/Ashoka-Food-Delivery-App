@@ -14,6 +14,7 @@ import PhoneAuthScreen from './screens/PhoneAuthScreen';
 import { setupURLPolyfill } from "react-native-url-polyfill"
 import CartScreen from './screens/CartScreen';
 import {NativeBaseProvider} from 'native-base'
+import VendorDashboard from './screens/VendorDashboard';
 
 setupURLPolyfill()
 const Stack = createNativeStackNavigator();
@@ -26,6 +27,7 @@ export default function App() {
 					<Stack.Navigator>
 						<Stack.Screen name="Login" component={Login} initialParams={{ logout: null }} />
                         <Stack.Screen name="VendorLogin" component={VendorLogin} />
+						<Stack.Screen name="VendorDashboard" component={VendorDashboard} />
 						<Stack.Screen name="PhoneAuth" component={PhoneAuthScreen} />
 						<Stack.Screen name="Home" component={HomeScreen} />
 						<Stack.Screen name="Restaurant" component={RestaurantScreen} />
