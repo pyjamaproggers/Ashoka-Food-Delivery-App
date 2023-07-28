@@ -15,6 +15,7 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant }) =
     const dispatch = useDispatch();
     const items = useSelector(selectCartItems);
     const [itemQuantity, setItemQuantity] = useState(0)
+    console.log(items)
 
     const addItem = () => {
         Price = parseFloat(Price)
@@ -74,15 +75,16 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant }) =
             setItemQuantity(0)
         }
         if(items.length!=0){
+            let dishNotFound = true
             items.map((item)=>{
-                if(items.filter((x)=>(x.name==name)).length!=0){
+                if(item.name==name){
+                    dishNotFound = false
                     setItemQuantity(item.quantity)
                 }
-                else {
-                    setItemQuantity(0)
-                }
-            })  
-            
+            });
+            if(dishNotFound){
+                setItemQuantity(0)
+            }
         }  
     },[items])
 

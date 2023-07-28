@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, ScrollView, colorScheme, useColorScheme, TextInput, FlatList } from "react-native";
+import { View, Text, TouchableOpacity, ScrollView, colorScheme, useColorScheme, TextInput, FlatList, Alert } from "react-native";
 import React, { useMemo, useState, useLayoutEffect, useRef } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { useSelector, useDispatch } from "react-redux";
@@ -55,7 +55,6 @@ const BasketScreen = () => {
     const [OrderTypeOption, setOrderTypeOption] = useState('Order Type')
     const [isOrderTypeOpen, setIsOrderTypeOpen] = useState(false)
 
-
     const Locations = [
         { location: 'RH1', icon: RH },
         { location: 'RH2', icon: RH },
@@ -66,6 +65,7 @@ const BasketScreen = () => {
         { location: 'Sports Block', icon: SportsBlock },
         { location: 'Mess', icon: Mess },
     ]
+
     const paymentOptions = [
         { option: 'Pay On Delivery', icon: COD },
         { option: 'Pay via UPI', icon: UPI },
@@ -81,12 +81,9 @@ const BasketScreen = () => {
         { option: 'Delivery', icon: FoodDelivery },
         { option: 'Dine In', icon: DineIn },
     ]
-
     const orderTypeOptions2 = [
         { option: 'Delivery', icon: FoodDelivery },
     ]
-
-
 
     const instructionsPlaceholders = [
         'Bhaiya mirchi thodi kam daalna...',
@@ -107,6 +104,7 @@ const BasketScreen = () => {
         'The Hunger Cycle': 30.00,
         'Rasananda': 10.00,
     }
+
     const query = `*[_type == "restaurant"]
         { name, image }`;
 
@@ -168,18 +166,18 @@ const BasketScreen = () => {
             }
         })
         setFinalBasket(TempFinalBasket)
-    }
+    };
 
     const getInstructions = (restaurant) => {
         for (const Outlet of FinalBasket) {
-          if (Outlet.name === restaurant) {
-            console.log(restaurant + " FOUND");
-            console.log(Outlet.instructions);
-            return Outlet.instructions;
-          }
+            if (Outlet.name === restaurant) {
+                console.log(restaurant + " FOUND");
+                console.log(Outlet.instructions);
+                return Outlet.instructions;
+            }
         }
         return null; // Return null or any default value if the restaurant is not found
-      };
+    };
 
     useMemo(() => {
         console.log('MEMO RUNNING AGAIN YAY')
@@ -281,92 +279,124 @@ const BasketScreen = () => {
     }, []);
 
     const sendOrderToDatabase = async (orderData) => {
-        const url = "http://10.77.1.70:8800/api/orders"; // Node Server (Our backend, put the IP address as ur local IPV4 address)
+        // const url = "http://10.77.1.70:8800/api/orders";
+        const url = "http://192.168.15.44:8800/api/orders"; // Node Server (Our backend, put the IP address as ur local IPV4 address)
         try {
             const response = await fetch(url, {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(orderData),
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(orderData),
             });
-  
+
             if (response.ok) {
-              console.log("Order sent successfully!");
-              // Perform any actions after a successful order submission if needed
+                console.log("Order sent successfully!");
+                // Perform any actions after a successful order submission if needed
             } else {
-              console.error("Failed to send order!");
-              // Handle error scenarios if needed
+                console.error("Failed to send order!");
+                // Handle error scenarios if needed
             }
-          } catch (error) {
+        } catch (error) {
             console.error("Error occurred while sending order:", error);
             // Handle error scenarios if needed
-          }
-      };
-      
-      // Function to calculate GST for a restaurant
-const calculateGST = (subtotal, restaurantName) => {
-    if (restaurantName === 'Roti Boti' || restaurantName === 'Subway' || restaurantName === 'Chicago Pizza') {
-      return (Math.round(subtotal * 0.18 * 100) / 100);
-    } else {
-      return 0;
-    }
-  };
-  
-// Function to place the order
-const placeOrder = () => {
-    // Create an array to store separate order objects for each restaurant
-    const orders = [];
-    
-    // Iterate over the FinalBasket array
-    for (const BasketRestaurant of FinalBasket) {
-      // Calculate the subtotal and GST for the current restaurant
-      const subtotal = BasketRestaurant.restaurantTotal;
-      const gst = calculateGST(subtotal, BasketRestaurant.name);
-  
-      // Calculate the total amount with GST and delivery charges
-      const totalAmount = (subtotal + gst + deliveryCharges[BasketRestaurant.name]).toFixed(2);
-  
-      // Extract item names and prices from the BasketRestaurant items
-      const orderItems = BasketRestaurant.items.map(item => ({
-        name: item.name,
-        price: item.Price,
-        quantity: item.quantity
-      }));
+        }
+    };
 
-      const orderInstructions = getInstructions(BasketRestaurant.name)
-  
-      // Create an order object for the current restaurant
-      const orderData = {
-        name: actualUser.name,
-        phone: actualUser.phone,
-        email: actualUser.email,
-        Restaurant: BasketRestaurant.name,
-        orderAmount: totalAmount,
-        orderItems: orderItems,
-        orderDate: new Date().toISOString(),
-        orderInstructions: orderInstructions,
-        DeliveryLocation: DeliveryLocation,
-        payment: PaymentOption,
-        type: OrderTypeOption,
-        orderStatus: "placed"
-      };
-  
-      // Push the order object to the orders array
-      orders.push(orderData);
-    }
-  
-    // Now, you have an array of order objects, each representing an order for a different restaurant
-    // Call the sendOrderToDatabase function to send the orders to the API
-    for (const orderData of orders) {
-      console.log(orderData);
-      sendOrderToDatabase(orderData);
-    }
-  };
+    // Function to calculate GST for a restaurant
+    const calculateGST = (subtotal, restaurantName) => {
+        if (restaurantName === 'Roti Boti' || restaurantName === 'Subway' || restaurantName === 'Chicago Pizza') {
+            return (Math.round(subtotal * 0.18 * 100) / 100);
+        } else {
+            return 0;
+        }
+    };
+
+    // Function to place the order
+    const placeOrder = () => {
+        // Create an array to store separate order objects for each restaurant
+        const orders = [];
+
+        if (DeliveryLocation == 'Location') {
+            Alert.alert(
+                'Where do we get it delivered to? Check the dropdown'
+            )
+            return
+        }
+        if (PaymentOption == 'Payment Mode') {
+            Alert.alert(
+                'How are you paying for this? Check the dropdown.'
+            )
+            return
+        }
+        if (OrderTypeOption == 'Order Type') {
+            Alert.alert(
+                'What is your order type? Check the dropdown'
+            )
+            return
+        }
+
+        const day = new Date();
+        const m = ["January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"]
+        var orderDate = ''
+        if(day.getHours()>=12){
+            orderDate = day.getHours() + ':' + day.getMinutes() + 'PM' + ' on ' + day.getDate() + ' ' + m[day.getMonth()] + ' ' + day.getFullYear()
+        }
+        else{
+            orderDate = day.getHours() + ':' + day.getMinutes() + 'AM' + ' on ' + day.getDate() + ' ' + m[day.getMonth()] + ' ' + day.getFullYear()
+        }
+
+        // Iterate over the FinalBasket array
+        for (const BasketRestaurant of FinalBasket) {
+            console.log('Still coming here')
+            // Calculate the subtotal and GST for the current restaurant
+            const subtotal = BasketRestaurant.restaurantTotal;
+            const gst = calculateGST(subtotal, BasketRestaurant.name);
+
+            // Calculate the total amount with GST and delivery charges
+            const totalAmount = (subtotal + gst + deliveryCharges[BasketRestaurant.name]).toFixed(2);
+
+            // Extract item names and prices from the BasketRestaurant items
+            const orderItems = BasketRestaurant.items.map(item => ({
+                name: item.name,
+                price: item.Price,
+                quantity: item.quantity
+            }));
+
+            const orderInstructions = getInstructions(BasketRestaurant.name)
+
+            // Create an order object for the current restaurant
+            const orderData = {
+                name: actualUser.name,
+                phone: actualUser.phone,
+                email: actualUser.email,
+                Restaurant: BasketRestaurant.name,
+                orderAmount: totalAmount,
+                orderItems: orderItems,
+                orderDate: orderDate,
+                orderInstructions: orderInstructions,
+                deliveryLocation: DeliveryLocation,
+                payment: PaymentOption,
+                type: OrderTypeOption,
+                orderStatus: "placed"
+            };
+
+            // Push the order object to the orders array
+            orders.push(orderData);
+        }
+
+        // Now, you have an array of order objects, each representing an order for a different restaurant
+        // Call the sendOrderToDatabase function to send the orders to the API
+        for (const orderData of orders) {
+            console.log(orderData);
+            sendOrderToDatabase(orderData);
+        }
+    };
 
     return (
         <View className="flex-1 pt-14" style={[colorScheme == 'light' ? { backgroundColor: '#F2F2F2' } : { backgroundColor: '#0c0c0f' }]}>
-            {CartTotal.length != 0 &&
+            {CartTotal.length != 0 && FinalBasketReady &&
                 <SafeAreaView className="absolute bottom-0 w-screen z-20 " style={[colorScheme == 'light' ? Styles.LightCartButton : Styles.DarkCartButton]}>
                     <VStack className='w-full'>
 
@@ -1078,7 +1108,7 @@ const placeOrder = () => {
                                                         source={PenIcon}
                                                     />
                                                     {colorScheme == 'light' &&
-                                                        <TextInput placeholder={instructionsPlaceholders[4]} keyboardType="default" className='w-10/12 text-xs'
+                                                        <TextInput placeholder='Bhaiya mirchi thodi kam...' keyboardType="default" className='w-10/12 text-xs'
                                                             placeholderTextColor='#666666'
                                                             style={{ color: '#000', paddingTop: 0 }}
                                                             onChangeText={(text) => {
@@ -1091,7 +1121,28 @@ const placeOrder = () => {
                                                             numberOfLines={4}
                                                             allowFontScaling={false}
                                                             enterKeyHint='done'
-                                                            onFocus={()=>{
+                                                            onFocus={() => {
+                                                                setIsLocationOpen(false)
+                                                                setIsOrderTypeOpen(false)
+                                                                setIsPaymentOpen(false)
+                                                            }}
+                                                        />
+                                                    }
+                                                    {colorScheme != 'light' &&
+                                                        <TextInput placeholder='Bhaiya mirchi thodi kam...' keyboardType="default" className='w-10/12 text-xs'
+                                                            placeholderTextColor='#a6a6a6'
+                                                            style={{ color: '#000', paddingTop: 0 }}
+                                                            onChangeText={(text) => {
+                                                                updateInstructions(text, BasketRestaurant.name)
+                                                            }}
+                                                            autoComplete='off'
+                                                            autoCorrect={false}
+                                                            multiline={true}
+                                                            maxLength={100}
+                                                            numberOfLines={4}
+                                                            allowFontScaling={false}
+                                                            enterKeyHint='done'
+                                                            onFocus={() => {
                                                                 setIsLocationOpen(false)
                                                                 setIsOrderTypeOpen(false)
                                                                 setIsPaymentOpen(false)
@@ -1194,22 +1245,6 @@ const placeOrder = () => {
                                                             enterKeyHint='done'
                                                         />
                                                     } */}
-                                                    {!colorScheme == 'light' &&
-                                                        <TextInput placeholder={instructionsPlaceholders[4]} keyboardType="default" className='w-10/12 text-xs'
-                                                            placeholderTextColor='#f6f6f6'
-                                                            style={{ color: '#000', paddingTop: 0 }}
-                                                            onChangeText={(text) => {
-                                                                updateInstructions(text, BasketRestaurant.name)
-                                                            }}
-                                                            autoComplete='off'
-                                                            autoCorrect={false}
-                                                            multiline={true}
-                                                            maxLength={100}
-                                                            numberOfLines={4}
-                                                            allowFontScaling={false}
-                                                            enterKeyHint='done'
-                                                        />
-                                                    }
                                                 </HStack>
                                             </View>
                                         </VStack>

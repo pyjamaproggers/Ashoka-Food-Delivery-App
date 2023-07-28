@@ -264,7 +264,7 @@ export default function UserScreen() {
                                 <Text className='font-medium text-md self-center pb-4 px-4 text-center'
                                     style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
                                 >
-                                    You know we still want you, right...?
+                                    We can work this out... just stay
                                 </Text>
                             </VStack>
                             <HStack className='self-center' space={2}>

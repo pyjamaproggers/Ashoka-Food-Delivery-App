@@ -372,9 +372,9 @@ const RestaurantScreen = () => {
 
     _renderContent = (section) => {
         {
-            section.content.map((dish)=>{
-                console.log(dish)
-            })
+            // section.content.map((dish)=>{
+            //     console.log(dish)
+            // })
             return (
                 <>
                     {
@@ -526,13 +526,10 @@ const RestaurantScreen = () => {
                                 }}>
                                     <TouchableOpacity className='flex-row content-center'
                                         onPress={() => {
-                                            if (ShowSearchedMenu) {
+                                            if (SearchedText.length>0){
                                                 setShowSearchedVegMenu(!ShowSearchedVegMenu)
-                                                if (showVegMenu == true) {
-                                                    setShowVegMenu(false)
-                                                }
                                             }
-                                            else {
+                                            else{
                                                 setShowVegMenu(!showVegMenu)
                                             }
                                         }}
@@ -563,13 +560,10 @@ const RestaurantScreen = () => {
                                 }}>
                                     <TouchableOpacity className='flex-row content-center'
                                         onPress={() => {
-                                            if (ShowSearchedMenu) {
+                                            if (SearchedText.length>0){
                                                 setShowSearchedNonVegMenu(!ShowSearchedNonVegMenu)
-                                                if (showNonVegMenu == true) {
-                                                    setShowNonVegMenu(false)
-                                                }
                                             }
-                                            else {
+                                            else{
                                                 setShowNonVegMenu(!showNonVegMenu)
                                             }
                                         }}
@@ -614,15 +608,36 @@ const RestaurantScreen = () => {
                                             style={{ color: '#000', marginLeft: 8, marginRight: -8 }}
                                             onChangeText={(text) => {
                                                 setSearchedText(text)
-                                                if (text) {
+                                                if (text && !showVegMenu && !showNonVegMenu) {
                                                     setShowSearchedMenu(true)
                                                     segregateSearchedDishes(text)
                                                 }
-                                                else {
-                                                    setSearchedText('')
-                                                    setShowSearchedMenu(false)
+                                                if (text && showVegMenu && !showNonVegMenu) {
+                                                    setShowSearchedVegMenu(!ShowSearchedVegMenu)
+                                                    segregateSearchedDishes(text)
                                                 }
-                                            }} 
+                                                if (text && !showVegMenu && showNonVegMenu) {
+                                                    setShowSearchedNonVegMenu(!ShowSearchedNonVegMenu)
+                                                    segregateSearchedDishes(text)
+                                                }
+                                                if (text && showVegMenu && showNonVegMenu) {
+                                                    setShowSearchedMenu(!ShowSearchedMenu)
+                                                    segregateSearchedDishes(text)
+                                                }
+
+                                                if (!text && showVegMenu && !showNonVegMenu) {
+                                                    setSearchedText('')
+                                                    setShowVegMenu(!showVegMenu)
+                                                }
+                                                if (!text && !showVegMenu && showNonVegMenu) {
+                                                    setSearchedText('')
+                                                    setShowNonVegMenu(!showNonVegMenu)
+                                                }
+                                                if (!text && !showVegMenu && !showNonVegMenu) {
+                                                    setSearchedText('')
+                                                    setShowSearchedMenu(!ShowSearchedMenu)
+                                                }
+                                            }}
                                             enterKeyHint='done'
                                             />
                                     }
@@ -631,11 +646,19 @@ const RestaurantScreen = () => {
                                             style={{ color: '#fff', marginLeft: 8, marginRight: -8 }}
                                             onChangeText={(text) => {
                                                 setSearchedText(text)
-                                                if (text) {
+                                                if(text){
                                                     segregateSearchedDishes(text)
                                                     setShowSearchedMenu(true)
                                                 }
-                                                else {
+                                                if(text && showNonVegMenu){
+                                                    setShowSearchedNonVegMenu(true)
+                                                    segregateSearchedDishes(text)
+                                                }
+                                                if(!text && showNonVegMenu){
+                                                    setShowNonVegMenu(true)
+                                                    segregateSearchedDishes(text)
+                                                }
+                                                if(!text && !showNonVegMenu){
                                                     setSearchedText('')
                                                     setShowSearchedMenu(false)
                                                 }
@@ -669,7 +692,7 @@ const RestaurantScreen = () => {
                                 expandMultiple={multipleSelect}
                                 renderHeader={_renderHeader}
                                 renderContent={_renderContent}
-                                duration={200}
+                                duration={100}
                                 onChange={setSections}
                             />
                         }
@@ -682,7 +705,7 @@ const RestaurantScreen = () => {
                                 expandMultiple={multipleSelect}
                                 renderHeader={_renderHeader}
                                 renderContent={_renderContent}
-                                duration={200}
+                                duration={100}
                                 onChange={setSections}
                             />
                         }
@@ -695,7 +718,7 @@ const RestaurantScreen = () => {
                                 expandMultiple={multipleSelect}
                                 renderHeader={_renderHeader}
                                 renderContent={_renderContent}
-                                duration={200}
+                                duration={100}
                                 onChange={setSections}
                             />
                         }
@@ -708,7 +731,7 @@ const RestaurantScreen = () => {
                                 expandMultiple={multipleSelect}
                                 renderHeader={_renderHeader}
                                 renderContent={_renderContent}
-                                duration={200}
+                                duration={100}
                                 onChange={setSections}
                             />
                         }
@@ -721,7 +744,7 @@ const RestaurantScreen = () => {
                                 expandMultiple={multipleSelect}
                                 renderHeader={_renderHeader}
                                 renderContent={_renderContent}
-                                duration={200}
+                                duration={100}
                                 onChange={setSections}
                             />
                         }
@@ -734,7 +757,7 @@ const RestaurantScreen = () => {
                                 expandMultiple={multipleSelect}
                                 renderHeader={_renderHeader}
                                 renderContent={_renderContent}
-                                duration={200}
+                                duration={100}
                                 onChange={setSections}
                             />
                         }
@@ -747,7 +770,7 @@ const RestaurantScreen = () => {
                                 expandMultiple={multipleSelect}
                                 renderHeader={_renderHeader}
                                 renderContent={_renderContent}
-                                duration={200}
+                                duration={100}
                                 onChange={setSections}
                             />
                         }
@@ -760,7 +783,7 @@ const RestaurantScreen = () => {
                                 expandMultiple={multipleSelect}
                                 renderHeader={_renderHeader}
                                 renderContent={_renderContent}
-                                duration={200}
+                                duration={100}
                                 onChange={setSections}
                             />
                         }
