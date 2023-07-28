@@ -4,7 +4,7 @@ import { View, Text, Image, TouchableOpacity, Linking, useColorScheme } from 're
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ArrowLeftIcon } from 'react-native-heroicons/solid';
 import Accordion from 'react-native-collapsible/Accordion';
-import { Button, HStack, VStack } from 'native-base';
+import { Button as NativeBaseButton, HStack, VStack } from 'native-base';
 import Styles from '../components/Styles';
 import ChevronUp from '../assets/chevronupicon.png';
 import ChevronDown from '../assets/chevrondownicon.png';
@@ -31,13 +31,45 @@ function VendorDashboard() {
         });
     }, []);
 
+    const changeStatus = async (_id, orderStatus) => {
+      try {
+        console.log(`http://10.77.1.70:8800/api/orders/${_id}/status`)
+        const response = await fetch(`http://10.77.1.70:8800/api/orders/${_id}/status`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ status: orderStatus }), 
+        });
+    
+        if (!response.ok) {
+          throw new Error('Failed to update order status.');
+        }
+    
+        // Update the local state with the new order status
+        const updatedOrders = orders.map(order => {
+          if (order._id === _id) {
+            return {
+              ...order,
+              orderStatus: orderStatus,
+            };
+          }
+          return order;
+        });
+        setOrders(updatedOrders);
+      } catch (error) {
+        console.error('Error updating order status:', error);
+      }
+    };
+    
+    
 
 
     useEffect(() => {
         const fetchOrders = async () => {
             try {
-                // const response = await fetch(`http://10.77.1.70:8800/api/orders/${selectedRestaurant}`);
-                const response = await fetch(`http://192.168.15.44:8800/api/orders/${selectedRestaurant}`);
+                const response = await fetch(`http://10.77.1.70:8800/api/orders/${selectedRestaurant}`);
+                // const response = await fetch(`http://192.168.15.44:8800/api/orders/${selectedRestaurant}`);
                 const data = await response.json();
                 setOrders(data);
             } catch (error) {
@@ -48,7 +80,7 @@ function VendorDashboard() {
         fetchOrders();
     }, [selectedRestaurant]);
 
-    _renderHeader = (section, _, isActive) => {
+    const _renderHeader = (section, _, isActive) => {
         return (
             <HStack className='mt-3 shadow-sm items-center justify-between px-3'
                 style={[colorScheme == 'light' ? [isActive == true ? Styles.LightActiveAccordionButton : Styles.LightInactiveAccordionButton] : [isActive == true ? Styles.DarkActiveAccordionButton : Styles.DarkInactiveAccordionButton]]}
@@ -118,7 +150,7 @@ function VendorDashboard() {
         );
     }
 
-    _renderContent = (section) => {
+    const _renderContent = (section) => {
         {
             return (
                 <>
@@ -130,7 +162,7 @@ function VendorDashboard() {
                                 Linking.openURL(`tel:${section.phone}`)
                             }}
                         >
-                            <Button className='w-3/6 self-center my-1' colorScheme='blue' variant='subtle' style={{ borderRadius: 7.5 }}>
+                            <NativeBaseButton className='w-3/6 self-center my-1' colorScheme='blue' variant='subtle' style={{ borderRadius: 7.5 }}>
                                 <HStack className='items-center space-x-2'>
                                     <Text className='font-medium text-blue-800'>
                                         Call / फ़ोन कॉल
@@ -140,7 +172,7 @@ function VendorDashboard() {
                                         source={Phone}
                                     />
                                 </HStack>
-                            </Button>
+                            </NativeBaseButton>
                         </TouchableOpacity>
                         <Text className='font-semibold text-base'
                             style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
@@ -173,7 +205,7 @@ function VendorDashboard() {
                         <Text className='font-normal text-md '
                             style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
                         >
-                            Payment / भुगतान विधि : {section.payment}
+                            Payment / भुगतान ज़रिया : {section.payment}
                         </Text>
                         <Text className='font-normal text-md'
                             style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
@@ -182,27 +214,27 @@ function VendorDashboard() {
                         </Text>
                         {section.orderStatus == 'placed' && // orderStatus == placed
                             <HStack className='w-full justify-evenly px-3 py-1'>
-                                <Button colorScheme='green' variant='subtle' style={{ borderRadius: 7.5 }}>
+                                <NativeBaseButton colorScheme='yellow' variant='subtle' style={{ borderRadius: 7.5 }} onPress={() => changeStatus(section._id, "accepted")}>
                                     Accept/स्वीकार
-                                </Button>
-                                <Button colorScheme='red' variant='subtle' style={{ borderRadius: 7.5 }}>
+                                </NativeBaseButton>
+                                <NativeBaseButton colorScheme='red' variant='subtle' style={{ borderRadius: 7.5 }} onPress={() => changeStatus(section._id, "declined")}>
                                     Decline/अस्वीकार
-                                </Button>
+                                </NativeBaseButton>
                             </HStack>
                         }
-                        {section.orderStatus == 'delined' && //change to -> orderStatus ==  declined by restaurant
+                        {section.orderStatus == 'declined' && //change to -> orderStatus ==  declined by restaurant
                             <VStack>
                                 <Text className='self-center py-1 font-medium text-md'>
                                     Currently / स्थिति : Declined
                                 </Text>
 
                                 <HStack className='w-full justify-evenly px-3 py-1'>
-                                    <Button isDisabled={true} colorScheme='green' variant='subtle' style={{ borderRadius: 7.5 }}>
+                                    <NativeBaseButton isDisabled={true} colorScheme='green' variant='subtle' style={{ borderRadius: 7.5 }}>
                                         Accept/स्वीकार
-                                    </Button>
-                                    <Button isDisabled={true} colorScheme='red' variant='subtle' style={{ borderRadius: 7.5 }}>
+                                    </NativeBaseButton>
+                                    <NativeBaseButton isDisabled={true} colorScheme='red' variant='subtle' style={{ borderRadius: 7.5 }}>
                                         Decline/अस्वीकार
-                                    </Button>
+                                    </NativeBaseButton>
                                 </HStack>
                             </VStack>
                         }
@@ -214,20 +246,20 @@ function VendorDashboard() {
                                 </Text>
 
                                 <HStack className='w-full justify-evenly px-3 py-1'>
-                                    <Button isDisabled={true} colorScheme='green' variant='subtle' style={{ borderRadius: 7.5 }}>
+                                    <NativeBaseButton isDisabled={true} colorScheme='green' variant='subtle' style={{ borderRadius: 7.5 }}>
                                         Accept/स्वीकार
-                                    </Button>
-                                    <Button isDisabled={true} colorScheme='red' variant='subtle' style={{ borderRadius: 7.5 }}>
+                                    </NativeBaseButton>
+                                    <NativeBaseButton isDisabled={true} colorScheme='red' variant='subtle' style={{ borderRadius: 7.5 }}>
                                         Decline/अस्वीकार
-                                    </Button>
+                                    </NativeBaseButton>
                                 </HStack>
 
 
 
                                 <HStack className='w-full justify-evenly px-3 py-1'>
-                                    <Button colorScheme='yellow' variant='subtle' style={{ borderRadius: 7.5 }}>
+                                    <NativeBaseButton colorScheme='yellow' variant='subtle' style={{ borderRadius: 7.5 }} onPress={() => changeStatus(section._id, "preparing")}>
                                         Preparing/बना रहे हैं
-                                    </Button>
+                                    </NativeBaseButton>
                                 </HStack>
                             </VStack>
                         }
@@ -239,24 +271,24 @@ function VendorDashboard() {
                                 </Text>
 
                                 <HStack className='w-full justify-evenly px-3 py-1'>
-                                    <Button isDisabled={true} colorScheme='green' variant='subtle' style={{ borderRadius: 7.5 }}>
+                                    <NativeBaseButton isDisabled={true} colorScheme='green' variant='subtle' style={{ borderRadius: 7.5 }}>
                                         Accept/स्वीकार
-                                    </Button>
-                                    <Button isDisabled={true} colorScheme='red' variant='subtle' style={{ borderRadius: 7.5 }}>
+                                    </NativeBaseButton>
+                                    <NativeBaseButton isDisabled={true} colorScheme='red' variant='subtle' style={{ borderRadius: 7.5 }}>
                                         Decline/अस्वीकार
-                                    </Button>
+                                    </NativeBaseButton>
                                 </HStack>
 
                                 <HStack className='w-full justify-evenly px-3 py-1'>
-                                    <Button colorScheme='yellow' isDisabled={true} variant='subtle' style={{ borderRadius: 7.5 }}>
+                                    <NativeBaseButton colorScheme='yellow' isDisabled={true} variant='subtle' style={{ borderRadius: 7.5 }}>
                                         Preparing/बना रहे हैं
-                                    </Button>
+                                    </NativeBaseButton>
                                 </HStack>
 
                                 <HStack className='w-full justify-evenly px-3 py-1'>
-                                    <Button colorScheme='blue' variant='subtle' style={{ borderRadius: 7.5 }}>
+                                    <NativeBaseButton colorScheme='blue' variant='subtle' style={{ borderRadius: 7.5 }} onPress={() => changeStatus(section._id, "out for delivery")}>
                                         Out For Delivery/डिलिवरी रस्ते मेई
-                                    </Button>
+                                    </NativeBaseButton>
                                 </HStack>
                             </VStack>
                         }
@@ -269,24 +301,24 @@ function VendorDashboard() {
                                 </Text>
 
                                 <HStack className='w-full justify-evenly px-3 py-1'>
-                                    <Button isDisabled={true} colorScheme='green' variant='subtle' style={{ borderRadius: 7.5 }}>
+                                    <NativeBaseButton isDisabled={true} colorScheme='green' variant='subtle' style={{ borderRadius: 7.5 }}>
                                         Accept/स्वीकार
-                                    </Button>
-                                    <Button isDisabled={true} colorScheme='red' variant='subtle' style={{ borderRadius: 7.5 }}>
+                                    </NativeBaseButton>
+                                    <NativeBaseButton isDisabled={true} colorScheme='red' variant='subtle' style={{ borderRadius: 7.5 }}>
                                         Decline/अस्वीकार
-                                    </Button>
+                                    </NativeBaseButton>
                                 </HStack>
 
                                 <HStack className='w-full justify-evenly px-3 py-1'>
-                                    <Button colorScheme='yellow' isDisabled={true} variant='subtle' style={{ borderRadius: 7.5 }}>
+                                    <NativeBaseButton colorScheme='yellow' isDisabled={true} variant='subtle' style={{ borderRadius: 7.5 }}>
                                         Preparing/बना रहे हैं
-                                    </Button>
+                                    </NativeBaseButton>
                                 </HStack>
 
                                 <HStack className='w-full justify-evenly px-3 py-1'>
-                                    <Button colorScheme='blue' variant='subtle' style={{ borderRadius: 7.5 }}>
+                                    <NativeBaseButton colorScheme='blue' variant='subtle' style={{ borderRadius: 7.5 }} onPress={() => changeStatus(section._id, "ready")}>
                                         Ready/तैयार
-                                    </Button>
+                                    </NativeBaseButton>
                                 </HStack>
                             </VStack>
                         }
@@ -299,30 +331,30 @@ function VendorDashboard() {
                                 </Text>
 
                                 <HStack className='w-full justify-evenly px-3 py-1'>
-                                    <Button isDisabled={true} colorScheme='green' variant='subtle' style={{ borderRadius: 7.5 }}>
+                                    <NativeBaseButton isDisabled={true} colorScheme='green' variant='subtle' style={{ borderRadius: 7.5 }}>
                                         Accept/स्वीकार
-                                    </Button>
-                                    <Button isDisabled={true} colorScheme='red' variant='subtle' style={{ borderRadius: 7.5 }}>
+                                    </NativeBaseButton>
+                                    <NativeBaseButton isDisabled={true} colorScheme='red' variant='subtle' style={{ borderRadius: 7.5 }}>
                                         Decline/अस्वीकार
-                                    </Button>
+                                    </NativeBaseButton>
                                 </HStack>
 
                                 <HStack className='w-full justify-evenly px-3 py-1'>
-                                    <Button colorScheme='yellow' isDisabled={true} variant='subtle' style={{ borderRadius: 7.5 }}>
+                                    <NativeBaseButton colorScheme='yellow' isDisabled={true} variant='subtle' style={{ borderRadius: 7.5 }}>
                                         Preparing/बना रहे हैं
-                                    </Button>
+                                    </NativeBaseButton>
                                 </HStack>
 
                                 <HStack className='w-full justify-evenly px-3 py-1'>
-                                    <Button colorScheme='blue' isDisabled={true} variant='subtle' style={{ borderRadius: 7.5 }}>
+                                    <NativeBaseButton colorScheme='blue' isDisabled={true} variant='subtle' style={{ borderRadius: 7.5 }}>
                                         Out For Delivery/डिलिवरी रस्ते मेई
-                                    </Button>
+                                    </NativeBaseButton>
                                 </HStack>
 
                                 <HStack className='w-full justify-evenly px-3 py-0.5'>
-                                    <Button colorScheme='green' variant='subtle' style={{ borderRadius: 7.5 }}>
+                                    <NativeBaseButton colorScheme='green' variant='subtle' style={{ borderRadius: 7.5 }} onPress={() => changeStatus(section._id, "completed")}>
                                         Completed/पुरा होगया
-                                    </Button>
+                                    </NativeBaseButton>
                                 </HStack>
                             </VStack>
                         }
@@ -334,30 +366,30 @@ function VendorDashboard() {
                                 </Text>
 
                                 <HStack className='w-full justify-evenly px-3 py-1'>
-                                    <Button isDisabled={true} colorScheme='green' variant='subtle' style={{ borderRadius: 7.5 }}>
+                                    <NativeBaseButton isDisabled={true} colorScheme='green' variant='subtle' style={{ borderRadius: 7.5 }}>
                                         Accept/स्वीकार
-                                    </Button>
-                                    <Button isDisabled={true} colorScheme='red' variant='subtle' style={{ borderRadius: 7.5 }}>
+                                    </NativeBaseButton>
+                                    <NativeBaseButton isDisabled={true} colorScheme='red' variant='subtle' style={{ borderRadius: 7.5 }}>
                                         Decline/अस्वीकार
-                                    </Button>
+                                    </NativeBaseButton>
                                 </HStack>
 
                                 <HStack className='w-full justify-evenly px-3 py-1'>
-                                    <Button colorScheme='yellow' isDisabled={true} variant='subtle' style={{ borderRadius: 7.5 }}>
+                                    <NativeBaseButton colorScheme='yellow' isDisabled={true} variant='subtle' style={{ borderRadius: 7.5 }}>
                                         Preparing/बना रहे हैं
-                                    </Button>
+                                    </NativeBaseButton>
                                 </HStack>
 
                                 <HStack className='w-full justify-evenly px-3 py-1'>
-                                    <Button colorScheme='blue' isDisabled={true} variant='subtle' style={{ borderRadius: 7.5 }}>
+                                    <NativeBaseButton colorScheme='blue' isDisabled={true} variant='subtle' style={{ borderRadius: 7.5 }}>
                                         Ready/तैयार
-                                    </Button>
+                                    </NativeBaseButton>
                                 </HStack>
 
                                 <HStack className='w-full justify-evenly px-3 py-0.5'>
-                                    <Button colorScheme='green' variant='subtle' style={{ borderRadius: 7.5 }}>
+                                    <NativeBaseButton colorScheme='green' variant='subtle' style={{ borderRadius: 7.5 }} onPress={() => changeStatus(section._id, "completed")}>
                                         Completed/पुरा होगया
-                                    </Button>
+                                    </NativeBaseButton>
                                 </HStack>
                             </VStack>
                         }
@@ -387,26 +419,26 @@ function VendorDashboard() {
                             setShowCompleted(false)
                         }}
                     >
-                        <Button className='self-center' colorScheme='violet' variant='subtle' style={{ borderRadius: 7.5 }}>
+                        <NativeBaseButton className='self-center' colorScheme='violet' variant='subtle' style={{ borderRadius: 7.5 }}>
                             <HStack className='items-center space-x-2'>
                                 <Text allowFontScaling={false} className='font-medium text-blue-800'>
                                     Ongoing/ चालू
                                 </Text>
                             </HStack>
-                        </Button>
+                        </NativeBaseButton>
                     </TouchableOpacity>
                     <TouchableOpacity
                         onPress={() => {
                             setShowCompleted(true)
                         }}
                     >
-                        <Button className='self-center' colorScheme='violet' variant='subtle' style={{ borderRadius: 7.5 }}>
+                        <NativeBaseButton className='self-center' colorScheme='violet' variant='subtle' style={{ borderRadius: 7.5 }}>
                             <HStack className='items-center space-x-2'>
                                 <Text allowFontScaling={false} className='font-medium text-blue-800'>
                                     Completed / हो गये
                                 </Text>
                             </HStack>
-                        </Button>
+                        </NativeBaseButton>
                     </TouchableOpacity>
                 </HStack>
                 <ScrollView>
