@@ -459,6 +459,28 @@ const Styles = StyleSheet.create({
         shadowOpacity: 0.1,
     },
 
+    LightActiveBTN:{
+        borderRadius: 7.5,
+        padding: 4,
+        backgroundColor: '#ddd6fe'
+    },
+    DarkActiveBTN:{
+        borderRadius: 7.5,
+        padding: 4,
+        backgroundColor: '#ddd6fe'
+    },
+
+    LightInactiveBTN:{
+        borderRadius: 7.5,
+        padding: 4,
+        backgroundColor: '#f2f2f2'
+    },
+    DarkInactiveBTN:{
+        borderRadius: 7.5,
+        padding: 4,
+        backgroundColor: '#262626'
+    }
+
 
 });
 

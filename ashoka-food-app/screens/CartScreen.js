@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { selectRestaurant } from "../reduxslices/restaurantSlice";
 import { addToCart, removeFromCart, selectCartItems, selectCartTotal, updateCartAdd, updateCartRemove } from "../reduxslices/cartslice";
 import { ArrowLeftIcon, ChevronRightIcon } from 'react-native-heroicons/solid';
-import { XCircleIcon } from "react-native-heroicons/solid";
+import { ExclamationCircleIcon } from "react-native-heroicons/solid";
 import { SafeAreaView, StyleSheet, StatusBar, Image } from "react-native";
 import { urlFor } from "../sanity";
 import AshokaLogo from '../assets/ASHOKAWHITELOGO.png';
@@ -280,7 +280,7 @@ const BasketScreen = () => {
 
     const sendOrderToDatabase = async (orderData) => {
         // const url = "http://10.77.1.70:8800/api/orders";
-        const url = "http://192.168.15.44:8800/api/orders"; // Node Server (Our backend, put the IP address as ur local IPV4 address)
+        const url = "http://172.20.10.2:8800/api/orders"; // Node Server (Our backend, put the IP address as ur local IPV4 address)
         try {
             const response = await fetch(url, {
                 method: "POST",
@@ -317,6 +317,29 @@ const BasketScreen = () => {
         // Create an array to store separate order objects for each restaurant
         const orders = [];
 
+        const day = new Date();
+        const m = ["January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"]
+        var orderDate = ''
+        if (day.getHours() >= 12) {
+            if(day.getMinutes() < 10){
+                console.log('coming here')
+                orderDate = day.getHours() + ':' + '0' + day.getMinutes() + 'PM' + ' on ' + day.getDate() + ' ' + m[day.getMonth()] + ' ' + day.getFullYear()
+            }
+            else{
+                orderDate = day.getHours() + ':' + day.getMinutes() + 'PM' + ' on ' + day.getDate() + ' ' + m[day.getMonth()] + ' ' + day.getFullYear()
+            }
+        }
+        else {
+            if(day.getMinutes() < 10){
+                orderDate = day.getHours() + ':' + '0' + day.getMinutes() + 'AM' + ' on ' + day.getDate() + ' ' + m[day.getMonth()] + ' ' + day.getFullYear()
+            }
+            else{
+                orderDate = day.getHours() + ':' + day.getMinutes() + 'AM' + ' on ' + day.getDate() + ' ' + m[day.getMonth()] + ' ' + day.getFullYear()
+            }
+        }
+        console.log(day)
+
         if (DeliveryLocation == 'Location') {
             Alert.alert(
                 'Where do we get it delivered to? Check the dropdown'
@@ -336,16 +359,7 @@ const BasketScreen = () => {
             return
         }
 
-        const day = new Date();
-        const m = ["January", "February", "March", "April", "May", "June",
-            "July", "August", "September", "October", "November", "December"]
-        var orderDate = ''
-        if(day.getHours()>=12){
-            orderDate = day.getHours() + ':' + day.getMinutes() + 'PM' + ' on ' + day.getDate() + ' ' + m[day.getMonth()] + ' ' + day.getFullYear()
-        }
-        else{
-            orderDate = day.getHours() + ':' + day.getMinutes() + 'AM' + ' on ' + day.getDate() + ' ' + m[day.getMonth()] + ' ' + day.getFullYear()
-        }
+
 
         // Iterate over the FinalBasket array
         for (const BasketRestaurant of FinalBasket) {
