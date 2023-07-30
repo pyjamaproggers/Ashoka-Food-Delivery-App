@@ -459,15 +459,37 @@ const Styles = StyleSheet.create({
         shadowOpacity: 0.1,
     },
 
-    LightActiveBTN:{
+    LightActivePurpleBTN:{
         borderRadius: 7.5,
         padding: 4,
         backgroundColor: '#ddd6fe'
     },
-    DarkActiveBTN:{
+    DarkActivePurpleBTN:{
         borderRadius: 7.5,
         padding: 4,
         backgroundColor: '#ddd6fe'
+    },
+
+    LightActiveBlueBTN:{
+        borderRadius: 7.5,
+        padding: 4,
+        backgroundColor: '#bfdbfe'
+    },
+    DarkActiveBlueBTN:{
+        borderRadius: 7.5,
+        padding: 4,
+        backgroundColor: '#bfdbfe'
+    },
+
+    LightActiveGreenBTN:{
+        borderRadius: 7.5,
+        padding: 4,
+        backgroundColor: '#bbf7d0'
+    },
+    DarkActiveGreenBTN:{
+        borderRadius: 7.5,
+        padding: 4,
+        backgroundColor: '#bbf7d0'
     },
 
     LightInactiveBTN:{
@@ -480,6 +502,7 @@ const Styles = StyleSheet.create({
         padding: 4,
         backgroundColor: '#262626'
     }
+
 
 
 });

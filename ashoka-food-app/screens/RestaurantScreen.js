@@ -404,7 +404,7 @@ const RestaurantScreen = () => {
         )
         segregateDishes(dishes)
         setAllDishes(dishes)
-        if(items.length==0){
+        if (items.length == 0) {
             setTransitions(true)
         }
     }, [dispatch, SearchedText, items])
@@ -413,7 +413,7 @@ const RestaurantScreen = () => {
 
     return (
         <>
-            <CartIcon actualUser={actualUser} image={image} outletName={title}/>
+            <CartIcon actualUser={actualUser} image={image} outletName={title} />
             <Slide in={!netInfo.isConnected} placement="top">
                 <Alert justifyContent="center" status="error" safeAreaTop={10}>
                     <HStack space={3}>
@@ -526,10 +526,10 @@ const RestaurantScreen = () => {
                                 }}>
                                     <TouchableOpacity className='flex-row content-center'
                                         onPress={() => {
-                                            if (SearchedText.length>0){
+                                            if (SearchedText.length > 0) {
                                                 setShowSearchedVegMenu(!ShowSearchedVegMenu)
                                             }
-                                            else{
+                                            else {
                                                 setShowVegMenu(!showVegMenu)
                                             }
                                         }}
@@ -560,10 +560,10 @@ const RestaurantScreen = () => {
                                 }}>
                                     <TouchableOpacity className='flex-row content-center'
                                         onPress={() => {
-                                            if (SearchedText.length>0){
+                                            if (SearchedText.length > 0) {
                                                 setShowSearchedNonVegMenu(!ShowSearchedNonVegMenu)
                                             }
-                                            else{
+                                            else {
                                                 setShowNonVegMenu(!showNonVegMenu)
                                             }
                                         }}
@@ -589,86 +589,99 @@ const RestaurantScreen = () => {
                         {VegMenu && NonVegMenu && AllDishes &&
                             <View className="flex-row item-center space-x-2 mx-4 ">
                                 <View className="self-center flex-row flex-1 p-3 shadow-sm w-11/12" style={[colorScheme == 'light' ? Styles.LightSearchBar : Styles.DarkSearchBar]}>
-                                <PresenceTransition visible={true} initial={{
-                                    opacity: 0
-                                }} animate={{
-                                    opacity: 1,
-                                    transition: {
-                                        type: 'spring',
-                                        delay: 50
-                                    }
-                                }}>
-                                    <HStack>
-                                    <Image
-                                        style={{ width: 16, height: 16, resizeMode: "contain", }}
-                                        source={Search}
-                                    />
-                                    {colorScheme == 'light' &&
-                                        <TextInput placeholder="What are we looking for today?" keyboardType="default" className='w-full'
-                                            style={{ color: '#000', marginLeft: 8, marginRight: -8 }}
-                                            onChangeText={(text) => {
-                                                setSearchedText(text)
-                                                if (text && !showVegMenu && !showNonVegMenu) {
-                                                    setShowSearchedMenu(true)
-                                                    segregateSearchedDishes(text)
-                                                }
-                                                if (text && showVegMenu && !showNonVegMenu) {
-                                                    setShowSearchedVegMenu(!ShowSearchedVegMenu)
-                                                    segregateSearchedDishes(text)
-                                                }
-                                                if (text && !showVegMenu && showNonVegMenu) {
-                                                    setShowSearchedNonVegMenu(!ShowSearchedNonVegMenu)
-                                                    segregateSearchedDishes(text)
-                                                }
-                                                if (text && showVegMenu && showNonVegMenu) {
-                                                    setShowSearchedMenu(!ShowSearchedMenu)
-                                                    segregateSearchedDishes(text)
-                                                }
-
-                                                if (!text && showVegMenu && !showNonVegMenu) {
-                                                    setSearchedText('')
-                                                    setShowVegMenu(!showVegMenu)
-                                                }
-                                                if (!text && !showVegMenu && showNonVegMenu) {
-                                                    setSearchedText('')
-                                                    setShowNonVegMenu(!showNonVegMenu)
-                                                }
-                                                if (!text && !showVegMenu && !showNonVegMenu) {
-                                                    setSearchedText('')
-                                                    setShowSearchedMenu(!ShowSearchedMenu)
-                                                }
-                                            }}
-                                            enterKeyHint='done'
+                                    <PresenceTransition visible={true} initial={{
+                                        opacity: 0
+                                    }} animate={{
+                                        opacity: 1,
+                                        transition: {
+                                            type: 'spring',
+                                            delay: 50
+                                        }
+                                    }}>
+                                        <HStack>
+                                            <Image
+                                                style={{ width: 16, height: 16, resizeMode: "contain", }}
+                                                source={Search}
                                             />
-                                    }
-                                    {colorScheme != 'light' &&
-                                        <TextInput placeholder="What are we looking for today?" keyboardType="default" className='w-full'
-                                            style={{ color: '#fff', marginLeft: 8, marginRight: -8 }}
-                                            onChangeText={(text) => {
-                                                setSearchedText(text)
-                                                if(text){
-                                                    segregateSearchedDishes(text)
-                                                    setShowSearchedMenu(true)
-                                                }
-                                                if(text && showNonVegMenu){
-                                                    setShowSearchedNonVegMenu(true)
-                                                    segregateSearchedDishes(text)
-                                                }
-                                                if(!text && showNonVegMenu){
-                                                    setShowNonVegMenu(true)
-                                                    segregateSearchedDishes(text)
-                                                }
-                                                if(!text && !showNonVegMenu){
-                                                    setSearchedText('')
-                                                    setShowSearchedMenu(false)
-                                                }
-                                            }} 
-                                            enterKeyHint='done'
-                                            />
-                                    }
-                                    </HStack>
+                                            {colorScheme == 'light' &&
+                                                <TextInput placeholder="What are we looking for today?" keyboardType="default" className='w-full'
+                                                    style={{ color: '#000', marginLeft: 8, marginRight: -8 }}
+                                                    onChangeText={(text) => {
+                                                        setSearchedText(text)
+                                                        if (text && !showVegMenu && !showNonVegMenu) {
+                                                            setShowSearchedMenu(true)
+                                                            segregateSearchedDishes(text)
+                                                        }
+                                                        if (text && showVegMenu && !showNonVegMenu) {
+                                                            setShowSearchedVegMenu(!ShowSearchedVegMenu)
+                                                            segregateSearchedDishes(text)
+                                                        }
+                                                        if (text && !showVegMenu && showNonVegMenu) {
+                                                            setShowSearchedNonVegMenu(!ShowSearchedNonVegMenu)
+                                                            segregateSearchedDishes(text)
+                                                        }
+                                                        if (text && showVegMenu && showNonVegMenu) {
+                                                            setShowSearchedMenu(!ShowSearchedMenu)
+                                                            segregateSearchedDishes(text)
+                                                        }
 
-                                </PresenceTransition>
+                                                        if (!text && showVegMenu && !showNonVegMenu) {
+                                                            setSearchedText('')
+                                                            setShowVegMenu(!showVegMenu)
+                                                        }
+                                                        if (!text && !showVegMenu && showNonVegMenu) {
+                                                            setSearchedText('')
+                                                            setShowNonVegMenu(!showNonVegMenu)
+                                                        }
+                                                        if (!text && !showVegMenu && !showNonVegMenu) {
+                                                            setSearchedText('')
+                                                            setShowSearchedMenu(!ShowSearchedMenu)
+                                                        }
+                                                    }}
+                                                    enterKeyHint='done'
+                                                />
+                                            }
+                                            {colorScheme != 'light' &&
+                                                <TextInput placeholder="What are we looking for today?" keyboardType="default" className='w-full'
+                                                    style={{ color: '#fff', marginLeft: 8, marginRight: -8 }}
+                                                    onChangeText={(text) => {
+                                                        setSearchedText(text)
+                                                        if (text && !showVegMenu && !showNonVegMenu) {
+                                                            setShowSearchedMenu(true)
+                                                            segregateSearchedDishes(text)
+                                                        }
+                                                        if (text && showVegMenu && !showNonVegMenu) {
+                                                            setShowSearchedVegMenu(!ShowSearchedVegMenu)
+                                                            segregateSearchedDishes(text)
+                                                        }
+                                                        if (text && !showVegMenu && showNonVegMenu) {
+                                                            setShowSearchedNonVegMenu(!ShowSearchedNonVegMenu)
+                                                            segregateSearchedDishes(text)
+                                                        }
+                                                        if (text && showVegMenu && showNonVegMenu) {
+                                                            setShowSearchedMenu(!ShowSearchedMenu)
+                                                            segregateSearchedDishes(text)
+                                                        }
+
+                                                        if (!text && showVegMenu && !showNonVegMenu) {
+                                                            setSearchedText('')
+                                                            setShowVegMenu(!showVegMenu)
+                                                        }
+                                                        if (!text && !showVegMenu && showNonVegMenu) {
+                                                            setSearchedText('')
+                                                            setShowNonVegMenu(!showNonVegMenu)
+                                                        }
+                                                        if (!text && !showVegMenu && !showNonVegMenu) {
+                                                            setSearchedText('')
+                                                            setShowSearchedMenu(!ShowSearchedMenu)
+                                                        }
+                                                    }}
+                                                    enterKeyHint='done'
+                                                />
+                                            }
+                                        </HStack>
+
+                                    </PresenceTransition>
                                 </View>
                             </View>
                         }

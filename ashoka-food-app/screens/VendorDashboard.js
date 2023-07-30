@@ -1,10 +1,10 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { useRoute, useNavigation } from '@react-navigation/native';
-import { View, Text, Image, TouchableOpacity, Linking, useColorScheme, RefreshControl } from 'react-native';
+import { View, Text, Image, TouchableOpacity, Linking, useColorScheme, RefreshControl, TextInput } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ArrowLeftIcon } from 'react-native-heroicons/solid';
 import Accordion from 'react-native-collapsible/Accordion';
-import { Button as NativeBaseButton, HStack, VStack, Checkbox, Modal, Select, Radio, Button } from 'native-base';
+import { Button as NativeBaseButton, HStack, VStack, Checkbox, Modal, Select, Radio, Slide, Alert } from 'native-base';
 import Styles from '../components/Styles';
 import ChevronUp from '../assets/chevronupicon.png';
 import ChevronDown from '../assets/chevrondownicon.png';
@@ -17,22 +17,42 @@ import { ScrollView } from 'react-native';
 import Phone from '../assets/phoneicon.png';
 import TickCross from '../assets/tickcross.png';
 import Cross from '../assets/cross.png';
-import { ExclamationCircleIcon } from "react-native-heroicons/solid";
+import Cross2 from '../assets/cross2.png'
+import { ExclamationCircleIcon, XCircleIcon } from "react-native-heroicons/solid";
+import Search from '../assets/searchicon.png'
+import client from '../sanity'
+import VegIcon from '../assets/vegicon.png';
+import NonVegIcon from '../assets/nonvegicon.png';
+import { useNetInfo } from "@react-native-community/netinfo";
 
 function VendorDashboard() {
     const route = useRoute();
     const { selectedRestaurant } = route.params;
     const navigation = useNavigation();
+    const netInfo = useNetInfo()
+
     const [openOrders, setOpenOrders] = useState([]);
     const [closedOrders, setClosedOrders] = useState([]);
+
     const [activeOpenSections, setActiveOpenSection] = useState([]);
     const [activeClosedSections, setActiveClosedSection] = useState([]);
-    const [showCompleted, setShowCompleted] = useState();
+
+    const [showClosed, setShowClosed] = useState(false);
+    const [showOpen, setShowOpen] = useState(true);
+    const [showMenu, setShowMenu] = useState(false);
+
     const [Refreshing, setRefreshing] = useState()
+    const [Fetching, setFetching] = useState()
+
     const [showDeclineModal, setShowDeclineModal] = useState(false)
     const [declineReason, setDeclineReason] = useState('')
     const [declineItems, setDeclineItems] = useState([])
 
+    const [SearchedText, setSearchedText] = useState('')
+    const [Menu, setMenu] = useState([])
+    const [SearchedMenu, setSearchedMenu] = useState([])
+    const [unavailableItems, setUnavailableItems] = useState([])
+    const [fetchedUnavailableItems, setFetchedUnavailableItems] = useState([])
 
     const colorScheme = useColorScheme();
 
@@ -154,11 +174,135 @@ function VendorDashboard() {
             setRefreshing(false)
         } catch (error) {
             console.error('Error fetching orders:', error);
+            setRefreshing(false)
         }
     };
 
+    const fetchUnavailableItems = async () => {
+        setRefreshing(true)
+        try {
+            // const response = await fetch(`http://10.77.1.70:8800/api/orders/${selectedRestaurant}`);
+            const response = await fetch(`http://172.20.10.2:8800/api/items/${selectedRestaurant}`);
+            const data = await response.json();
+            var TempFetchedUnavailableItems = []
+            console.log(data)
+            if (data) {
+                data.map((item, index) => {
+                    TempFetchedUnavailableItems.push(item.name)
+                })
+                setFetchedUnavailableItems(TempFetchedUnavailableItems)
+                setUnavailableItems(TempFetchedUnavailableItems)
+            }
+            setRefreshing(false)
+        } catch (error) {
+            console.error('Error fetching orders:', error);
+            setRefreshing(false)
+        }
+    }
+
+    const fetchDishes = (query) => {
+        // setFetching(true)
+        client
+            .fetch(query)
+            .then((data) => {
+                var Dishes = []
+                var i
+                for (i = 0; i < data.length; i++) {
+                    if (data[i].name == selectedRestaurant) {
+                        Dishes = [...new Set(data[i].dishes)]
+                    }
+                }
+                setMenu(Dishes)
+                // setFetching(false)
+            })
+            .catch((error) => {
+                console.log('Error:', error); // Log any errors that occur
+            });
+
+        fetchUnavailableItems();
+    }
+
+    const updateMenu = async (unavailableItems) => {
+        // console.log(unavailableItems)
+        // console.log(selectedRestaurant)
+
+        var itemsToAdd = []
+        var itemsToRemove = []
+
+        for (i = 0; i < unavailableItems.length; i++) {
+            if (fetchedUnavailableItems.includes(unavailableItems[i]) == false) {
+                itemsToAdd.push(unavailableItems[i])
+            }
+        }
+
+        for (i = 0; i < fetchedUnavailableItems.length; i++) {
+            if (unavailableItems.includes(fetchedUnavailableItems[i]) == false) {
+                itemsToRemove.push(fetchedUnavailableItems[i])
+            }
+        }
+        // console.log('*ASBASKASOU*')
+        // console.log(itemsToAdd)
+        // console.log(itemsToRemove)
+
+        for (const item of itemsToAdd) {
+            const url = "http://172.20.10.2:8800/api/items";
+            try {
+                const response = await fetch(url, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        name: item,
+                        restaurant: selectedRestaurant
+                    }),
+                });
+            } catch (error) {
+                console.error("Error while executing updateOrder")
+            }
+        }
+
+        for (const item of itemsToRemove) {
+            const url = "http://172.20.10.2:8800/api/items";
+            try {
+                const response = await fetch(url, {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        name: item,
+                        restaurant: selectedRestaurant
+                    }),
+                });
+            } catch (error) {
+                console.error("Error while executing updateOrder")
+            }
+        }
+
+        fetchUnavailableItems();
+    }
+
+    const segregateDishes = (searched) => {
+        var TempSearchedMenu = []
+        Menu.map((item, index) => {
+            if (item.name.includes(searched)) {
+                TempSearchedMenu.push(item)
+            }
+        })
+        console.log('*******')
+        console.log(TempSearchedMenu)
+        setSearchedMenu(TempSearchedMenu)
+    }
+
+    const query = `*[_type == "restaurant"]
+        {description, location, delivery,
+        name, image, genre, timing, Veg_NonVeg, CostForTwo, RestaurantPhone,
+        dishes[]->{name, Veg_NonVeg, Price, image, Menu_category, Restaurant ,_id}}`;
+
     useEffect(() => {
         fetchOrders();
+        fetchDishes(query);
     }, [selectedRestaurant]);
 
     const _renderHeader = (section, _, isActive) => {
@@ -335,7 +479,7 @@ function VendorDashboard() {
                                                     <Text className='text-md font-medium'
                                                         style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
                                                     >
-                                                    Closing Time / दुकान बंद
+                                                        Closing Time / दुकान बंद
                                                     </Text>
                                                 </Radio>
                                                 <Radio size='sm' colorScheme='danger' value="Item(s) Unavailable" my={2}
@@ -344,7 +488,7 @@ function VendorDashboard() {
                                                     <Text className='text-md font-medium'
                                                         style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
                                                     >
-                                                    Item(s) Unavailable / चीज ख़तम
+                                                        Item(s) Unavailable / चीज ख़तम
                                                     </Text>
                                                 </Radio>
                                             </Radio.Group>
@@ -369,13 +513,13 @@ function VendorDashboard() {
                                                     <Checkbox.Group onChange={setDeclineItems} value={declineItems}>
                                                         {section.orderItems.map((item, index) => (
                                                             <Checkbox colorScheme="danger" value={item.name} my={2}
-                                                            style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
-                                                            size='sm'
+                                                                style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                                                size='sm'
                                                             >
                                                                 <Text className='text-md font-medium'
                                                                     style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
                                                                 >
-                                                                {item.name}
+                                                                    {item.name}
                                                                 </Text>
                                                             </Checkbox>
                                                         ))}
@@ -583,36 +727,92 @@ function VendorDashboard() {
     return (
         <SafeAreaView style={[colorScheme == 'light' ? { flex: 1, backgroundColor: '#f2f2f2' } : { flex: 1, backgroundColor: '#000000' }]}>
             <View style={{ flex: 1, padding: 16 }}>
-                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
-                    <TouchableOpacity onPress={() => navigation.goBack()} style={{ marginRight: 16 }}>
+
+
+                <Slide in={!netInfo.isConnected} placement="top">
+                    <Alert justifyContent="center" status="error" safeAreaTop={10}>
+                        <Text className='text-base pt-2 font-semibold '>
+                            No Internet
+                        </Text>
+                    </Alert>
+                </Slide>
+
+
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 16, justifyContent: 'space-between' }}>
+                    <TouchableOpacity onPress={() => navigation.goBack()} style={{ width: 56 }}>
                         <ArrowLeftIcon size={20} style={[colorScheme == 'light' ? { color: 'black' } : { color: 'white' }]} />
                     </TouchableOpacity>
                     <Text className='text-lg font-medium' style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>{selectedRestaurant}</Text>
+                    {(unavailableItems.length > 0 || unavailableItems.length == 0) &&
+                        <NativeBaseButton className='self-center' style={[(!showOpen && showMenu && !showClosed) ? [colorScheme == 'light' ? Styles.LightActiveGreenBTN : Styles.DarkActiveGreenBTN] : [colorScheme == 'light' ? Styles.LightInactiveBTN : Styles.DarkInactiveBTN]]} variant='subtle'
+                            onPress={() => {
+                                updateMenu(unavailableItems)
+                            }}
+                            isDisabled={fetchedUnavailableItems === unavailableItems}
+                        >
+                            <HStack className='items-center space-x-2 w-8'>
+                                <Text allowFontScaling={false} className='font-medium' style={[showMenu ? { color: '#16a34a' } : { color: 'gray' }]}>
+                                    Save
+                                </Text>
+                            </HStack>
+                        </NativeBaseButton>
+                    }
+
                 </View>
 
-                <HStack className='w-max space-evenly self-center space-x-2'>
-                    <NativeBaseButton className='self-center' style={[showCompleted ? [colorScheme == 'light' ? Styles.LightInactiveBTN : Styles.DarkInactiveBTN] : [colorScheme == 'light' ? Styles.LightActiveBTN : Styles.DarkActiveBTN]]} variant='subtle'
+                <HStack className='w-max justify-between items-center space-x-2'>
+
+                    <NativeBaseButton className='w-4/12 justify-self-start' style={[(showOpen && !showMenu && !showClosed) ? [colorScheme == 'light' ? Styles.LightActivePurpleBTN : Styles.DarkActivePurpleBTN] : [colorScheme == 'light' ? Styles.LightInactiveBTN : Styles.DarkInactiveBTN]]} variant='subtle'
                         onPress={() => {
-                            setShowCompleted(false)
+                            setShowClosed(false)
+                            setShowOpen(true)
+                            setShowMenu(false)
                         }}
                     >
-                        <HStack className='items-center space-x-2'>
-                            <Text allowFontScaling={false} className='font-medium text-blue-800' style={[showCompleted ? { color: 'gray' } : { color: '#7c3aed' }]}>
-                                Ongoing/ चालू
+                        <VStack className='items-center justify-center text-center'>
+                            <Text allowFontScaling={false} className='font-medium text-blue-800' style={[showOpen ? { color: '#7c3aed' } : { color: 'gray' }]}>
+                                Ongoing
                             </Text>
-                        </HStack>
+                            <Text allowFontScaling={false} className='font-medium ' style={[showOpen ? { color: '#7c3aed' } : { color: 'gray' }]}>
+                                चालू
+                            </Text>
+                        </VStack>
                     </NativeBaseButton>
-                    <NativeBaseButton className='self-center' style={[showCompleted ? [colorScheme == 'light' ? Styles.LightActiveBTN : Styles.DarkActiveBTN] : [colorScheme == 'light' ? Styles.LightInactiveBTN : Styles.DarkInactiveBTN]]} variant='subtle'
+
+                    <NativeBaseButton className='w-3/12 self-center' style={[(!showOpen && showMenu && !showClosed) ? [colorScheme == 'light' ? Styles.LightActivePurpleBTN : Styles.DarkActivePurpleBTN] : [colorScheme == 'light' ? Styles.LightInactiveBTN : Styles.DarkInactiveBTN]]} variant='subtle'
                         onPress={() => {
-                            setShowCompleted(true)
+                            setShowClosed(false)
+                            setShowOpen(false)
+                            setShowMenu(true)
                         }}
                     >
-                        <HStack className='items-center space-x-2'>
-                            <Text allowFontScaling={false} className='font-medium text-blue-800' style={[showCompleted ? { color: '#7c3aed' } : { color: 'gray' }]}>
-                                Completed / हो गये
+                        <VStack className='items-center justify-center text-center'>
+                            <Text allowFontScaling={false} className='font-medium text-blue-800' style={[showMenu ? { color: '#7c3aed' } : { color: 'gray' }]}>
+                                Menu
                             </Text>
-                        </HStack>
+                            <Text allowFontScaling={false} className='font-medium text-blue-800' style={[showMenu ? { color: '#7c3aed' } : { color: 'gray' }]}>
+                                मेनू
+                            </Text>
+                        </VStack>
                     </NativeBaseButton>
+
+                    <NativeBaseButton className='w-4/12 justify-self-end' style={[(!showOpen && !showMenu && showClosed) ? [colorScheme == 'light' ? Styles.LightActivePurpleBTN : Styles.DarkActivePurpleBTN] : [colorScheme == 'light' ? Styles.LightInactiveBTN : Styles.DarkInactiveBTN]]} variant='subtle'
+                        onPress={() => {
+                            setShowClosed(true)
+                            setShowOpen(false)
+                            setShowMenu(false)
+                        }}
+                    >
+                        <VStack className='items-center space-x-2'>
+                            <Text allowFontScaling={false} className='font-medium text-blue-800' style={[showClosed ? { color: '#7c3aed' } : { color: 'gray' }]}>
+                                Completed
+                            </Text>
+                            <Text allowFontScaling={false} className='font-medium text-blue-800' style={[showClosed ? { color: '#7c3aed' } : { color: 'gray' }]}>
+                                हो गये
+                            </Text>
+                        </VStack>
+                    </NativeBaseButton>
+
                 </HStack>
 
                 <ScrollView
@@ -620,11 +820,12 @@ function VendorDashboard() {
                         <RefreshControl refreshing={Refreshing}
                             onRefresh={() => {
                                 fetchOrders()
+                                fetchDishes(query)
                             }}
                         />
                     }
                 >
-                    {openOrders && !showCompleted &&
+                    {openOrders && !showClosed &&
                         <View>
                             <Accordion
                                 activeSections={activeOpenSections}
@@ -638,7 +839,7 @@ function VendorDashboard() {
                             />
                         </View>
                     }
-                    {closedOrders && showCompleted &&
+                    {closedOrders && showClosed &&
                         <View>
                             <Accordion
                                 activeSections={activeClosedSections}
@@ -651,6 +852,127 @@ function VendorDashboard() {
                                 onChange={setClosedSections}
                             />
                         </View>
+                    }
+                    {showMenu && Menu &&
+                        <VStack className='pt-3 space-y-2'>
+                            <View className="flex-row item-center ">
+                                <View className="self-center flex-row flex-1 p-3 shadow-sm" style={[colorScheme == 'light' ? Styles.LightSearchBar : Styles.DarkSearchBar]}>
+                                    <HStack>
+                                        <Image
+                                            style={{ width: 16, height: 16, resizeMode: "contain", }}
+                                            source={Search}
+                                        />
+                                        {colorScheme == 'light' &&
+                                            <TextInput placeholder="Dish name..." keyboardType="default" className='w-full'
+                                                style={{ color: '#000', marginLeft: 8, marginRight: -8 }}
+                                                onChangeText={(text) => {
+                                                    if (text) {
+                                                        segregateDishes(text)
+                                                    }
+                                                    else {
+                                                        setSearchedMenu([])
+                                                    }
+                                                }}
+                                                enterKeyHint='done'
+                                            />
+                                        }
+                                        {colorScheme != 'light' &&
+                                            <TextInput placeholder="Dish name..." keyboardType="default" className='w-full'
+                                                style={{ color: '#fff', marginLeft: 8, marginRight: -8 }}
+                                                onChangeText={(text) => {
+                                                    if (text) {
+                                                        segregateDishes(text)
+                                                    }
+                                                    else {
+                                                        setSearchedMenu([])
+                                                    }
+                                                }}
+                                                enterKeyHint='done'
+                                            />
+                                        }
+                                    </HStack>
+                                </View>
+                            </View>
+
+                            {(Menu && SearchedMenu.length == 0) &&
+                                <Checkbox.Group onChange={setUnavailableItems} value={unavailableItems}>
+                                    {Menu.map((item, index) => (
+                                        <View className='w-full'>
+                                            <Checkbox colorScheme="dark" value={item.name} my={2}
+                                                size='lg'
+                                                icon={<Image source={Cross} style={{ width: 20, height: 20 }} />}
+                                            >
+                                                <HStack className='w-11/12 justify-between pr-2'>
+                                                    <HStack className='space-x-2 items-center'>
+                                                        {item.Veg_NonVeg === "Veg" ? (
+                                                            <Image
+                                                                style={{ width: 15, height: 15, resizeMode: "contain" }}
+                                                                source={VegIcon}
+                                                            />
+                                                        ) : (
+                                                            <Image
+                                                                style={{ width: 15, height: 15, resizeMode: "contain" }}
+                                                                source={NonVegIcon}
+                                                            />
+                                                        )}
+                                                        <Text className='font-medium text-base'
+                                                            style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                                        >
+                                                            {item.name}
+                                                        </Text>
+                                                    </HStack>
+                                                    <Text className='text-base font-medium'
+                                                        style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                                    >
+                                                        ₹{item.Price}
+                                                    </Text>
+                                                </HStack>
+                                            </Checkbox>
+                                        </View>
+                                    ))}
+                                </Checkbox.Group>
+                            }
+
+                            {(Menu && SearchedMenu.length > 0) &&
+                                <Checkbox.Group onChange={setUnavailableItems} value={unavailableItems}>
+                                    {SearchedMenu.map((item, index) => (
+                                        <View className='w-full'>
+                                            <Checkbox colorScheme="dark" value={item.name} my={2}
+                                                size='lg'
+                                                icon={<Image source={Cross} style={{ width: 20, height: 20 }} />}
+                                            >
+                                                <HStack className='w-11/12 justify-between pr-2'>
+                                                    <HStack className='space-x-2 items-center'>
+                                                        {item.Veg_NonVeg === "Veg" ? (
+                                                            <Image
+                                                                style={{ width: 15, height: 15, resizeMode: "contain" }}
+                                                                source={VegIcon}
+                                                            />
+                                                        ) : (
+                                                            <Image
+                                                                style={{ width: 15, height: 15, resizeMode: "contain" }}
+                                                                source={NonVegIcon}
+                                                            />
+                                                        )}
+                                                        <Text className='font-medium text-base'
+                                                            style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                                        >
+                                                            {item.name}
+                                                        </Text>
+                                                    </HStack>
+                                                    <Text className='text-base font-medium'
+                                                        style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                                    >
+                                                        ₹{item.Price}
+                                                    </Text>
+                                                </HStack>
+                                            </Checkbox>
+                                        </View>
+                                    ))}
+                                </Checkbox.Group>
+                            }
+
+                        </VStack>
                     }
 
                 </ScrollView>
