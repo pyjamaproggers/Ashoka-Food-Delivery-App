@@ -25,6 +25,7 @@ import client from '../sanity'
 import VegIcon from '../assets/vegicon.png';
 import NonVegIcon from '../assets/nonvegicon.png';
 import { useNetInfo } from "@react-native-community/netinfo";
+import io from 'socket.io-client';
 
 function VendorDashboard() {
     const route = useRoute();
@@ -55,6 +56,8 @@ function VendorDashboard() {
     const [checkedItems, setCheckedItems] = useState([])
     const [unavailableItems, setUnavailableItems] = useState([])
     const [fetchedUnavailableItems, setFetchedUnavailableItems] = useState([])
+    const [socket, setSocket] = useState(null);
+    const [latestOrder, setLatestOrder] = useState(null);
 
     const colorScheme = useColorScheme();
 
@@ -63,6 +66,35 @@ function VendorDashboard() {
             headerShown: false,
         });
     }, []);
+
+    const connectToSocket = () => {
+        const socket = io('http://10.77.1.70:8800', {
+        });
+
+        socket.on('connect', () => {
+            console.log('Connected to WebSocket');
+        });
+
+        socket.on('newOrder', (order) => {
+            console.log('New order received:', order);
+            if(order.Restaurant===selectedRestaurant)
+            {
+                setLatestOrder(order);
+            }
+        });
+
+        socket.on('disconnect', () => {
+            console.log('WebSocket disconnected');
+        });
+
+        setSocket(socket);
+    };
+
+    useEffect(() => {
+        if (latestOrder) {
+            fetchOrders();
+        }
+    }, [latestOrder]);
 
     const changeStatus = async (_id, orderStatus) => {
         try {
@@ -75,7 +107,7 @@ function VendorDashboard() {
             //     body: JSON.stringify({ status: orderStatus }),
             // });
             if (orderStatus != 'Declined') {
-                const response = await fetch(`http://172.20.10.2:8800/api/orders/${_id}/status`, {
+                const response = await fetch(`http://10.77.1.70:8800/api/orders/${_id}/status`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -96,7 +128,7 @@ function VendorDashboard() {
 
             if (orderStatus == 'Declined') {
                 if (declineReason == 'Closing Time') {
-                    const response = await fetch(`http://172.20.10.2:8800/api/orders/${_id}/status`, {
+                    const response = await fetch(`http://10.77.1.70:8800/api/orders/${_id}/status`, {
                         method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json',
@@ -116,7 +148,7 @@ function VendorDashboard() {
                     }
                 }
                 else {
-                    const response = await fetch(`http://172.20.10.2:8800/api/orders/${_id}/status`, {
+                    const response = await fetch(`http://10.77.1.70:8800/api/orders/${_id}/status`, {
                         method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json',
@@ -158,8 +190,8 @@ function VendorDashboard() {
     const fetchOrders = async () => {
         setRefreshing(true)
         try {
-            // const response = await fetch(`http://10.77.1.70:8800/api/orders/${selectedRestaurant}`);
-            const response = await fetch(`http://172.20.10.2:8800/api/orders/${selectedRestaurant}`);
+            const response = await fetch(`http://10.77.1.70:8800/api/orders/${selectedRestaurant}`);
+            // const response = await fetch(`http://172.20.10.2:8800/api/orders/${selectedRestaurant}`);
             const data = await response.json();
             var tempClosedOrders = []
             var tempOpenOrders = []
@@ -183,8 +215,8 @@ function VendorDashboard() {
     const fetchUnavailableItems = async (tempCheckedItems) => {
         setRefreshing(true)
         try {
-            // const response = await fetch(`http://10.77.1.70:8800/api/orders/${selectedRestaurant}`);
-            const response = await fetch(`http://172.20.10.2:8800/api/items/${selectedRestaurant}`);
+            const response = await fetch(`http://10.77.1.70:8800/api/orders/${selectedRestaurant}`);
+            // const response = await fetch(`http://172.20.10.2:8800/api/items/${selectedRestaurant}`);
             const data = await response.json();
             var TempFetchedUnavailableItems = []
             if (data) {
@@ -262,7 +294,8 @@ function VendorDashboard() {
         // console.log(itemsToRemove)
 
         for (const item of itemsToAdd) {
-            const url = "http://172.20.10.2:8800/api/items";
+            // const url = "http://172.20.10.2:8800/api/items";
+            const url = "http://10.77.1.70:8800/api/items";
             try {
                 const response = await fetch(url, {
                     method: "POST",
@@ -280,7 +313,8 @@ function VendorDashboard() {
         }
 
         for (const item of itemsToRemove) {
-            const url = "http://172.20.10.2:8800/api/items";
+            // const url = "http://172.20.10.2:8800/api/items";
+            const url = "http://10.77.1.70:8800/api/items";
             try {
                 const response = await fetch(url, {
                     method: "DELETE",
@@ -321,6 +355,15 @@ function VendorDashboard() {
         fetchOrders();
         fetchDishes(query);
     }, [selectedRestaurant]);
+
+    useEffect(() => {
+        connectToSocket();
+        return () => {
+            if (socket) {
+                socket.disconnect();
+            }
+        };
+    }, []);
 
     const _renderHeader = (section, _, isActive) => {
         return (
@@ -756,7 +799,8 @@ function VendorDashboard() {
 
 
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 16, justifyContent: 'space-between' }}>
-                    <TouchableOpacity onPress={() => navigation.goBack()} style={{ width: 56 }}>
+                    <TouchableOpacity onPress={() => {navigation.goBack();if(socket) {
+                socket.disconnect();}}} style={{ width: 56 }}>
                         <ArrowLeftIcon size={20} style={[colorScheme == 'light' ? { color: 'black' } : { color: 'white' }]} />
                     </TouchableOpacity>
                     <Text className='text-lg font-medium' style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>{selectedRestaurant}</Text>
