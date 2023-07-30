@@ -279,8 +279,8 @@ const BasketScreen = () => {
     }, []);
 
     const sendOrderToDatabase = async (orderData) => {
-        // const url = "http://10.77.1.70:8800/api/orders";
-        const url = "http://172.20.10.2:8800/api/orders"; // Node Server (Our backend, put the IP address as ur local IPV4 address)
+        const url = "http://10.77.1.70:8800/api/orders";
+        // const url = "http://172.20.10.2:8800/api/orders"; // Node Server (Our backend, put the IP address as ur local IPV4 address)
         try {
             const response = await fetch(url, {
                 method: "POST",
