@@ -495,7 +495,7 @@ const Styles = StyleSheet.create({
     LightInactiveBTN:{
         borderRadius: 7.5,
         padding: 4,
-        backgroundColor: '#f2f2f2'
+        backgroundColor: '#ffffff'
     },
     DarkInactiveBTN:{
         borderRadius: 7.5,

@@ -19,6 +19,7 @@ import TickCross from '../assets/tickcross.png';
 import Cross from '../assets/cross.png';
 import Cross2 from '../assets/cross2.png'
 import { ExclamationCircleIcon, XCircleIcon } from "react-native-heroicons/solid";
+import { XMarkIcon } from "react-native-heroicons/outline";
 import Search from '../assets/searchicon.png'
 import client from '../sanity'
 import VegIcon from '../assets/vegicon.png';
@@ -51,6 +52,7 @@ function VendorDashboard() {
     const [SearchedText, setSearchedText] = useState('')
     const [Menu, setMenu] = useState([])
     const [SearchedMenu, setSearchedMenu] = useState([])
+    const [checkedItems, setCheckedItems] = useState([])
     const [unavailableItems, setUnavailableItems] = useState([])
     const [fetchedUnavailableItems, setFetchedUnavailableItems] = useState([])
 
@@ -178,20 +180,24 @@ function VendorDashboard() {
         }
     };
 
-    const fetchUnavailableItems = async () => {
+    const fetchUnavailableItems = async (tempCheckedItems) => {
         setRefreshing(true)
         try {
             // const response = await fetch(`http://10.77.1.70:8800/api/orders/${selectedRestaurant}`);
             const response = await fetch(`http://172.20.10.2:8800/api/items/${selectedRestaurant}`);
             const data = await response.json();
             var TempFetchedUnavailableItems = []
-            console.log(data)
             if (data) {
                 data.map((item, index) => {
                     TempFetchedUnavailableItems.push(item.name)
                 })
                 setFetchedUnavailableItems(TempFetchedUnavailableItems)
                 setUnavailableItems(TempFetchedUnavailableItems)
+                var finalCheckedItems = tempCheckedItems.filter(x => TempFetchedUnavailableItems.indexOf(x) === -1);
+                setCheckedItems(finalCheckedItems)
+            }
+            else {
+                setCheckedItems(tempCheckedItems)
             }
             setRefreshing(false)
         } catch (error) {
@@ -200,26 +206,37 @@ function VendorDashboard() {
         }
     }
 
+    const updateCheckedItems = (UncheckedItems) => {
+        console.log(UncheckedItems)
+        var finalCheckedItems = checkedItems.filter(x => UncheckedItems.indexOf(x) === -1);
+        setCheckedItems(finalCheckedItems)
+    }
+
     const fetchDishes = (query) => {
         // setFetching(true)
+
         client
             .fetch(query)
             .then((data) => {
                 var Dishes = []
+                var tempCheckedItems = []
                 var i
                 for (i = 0; i < data.length; i++) {
                     if (data[i].name == selectedRestaurant) {
                         Dishes = [...new Set(data[i].dishes)]
                     }
                 }
+                for (i = 0; i < Dishes.length; i++) {
+                    tempCheckedItems.push(Dishes[i].name)
+                }
                 setMenu(Dishes)
+                fetchUnavailableItems(tempCheckedItems);
                 // setFetching(false)
             })
             .catch((error) => {
                 console.log('Error:', error); // Log any errors that occur
             });
 
-        fetchUnavailableItems();
     }
 
     const updateMenu = async (unavailableItems) => {
@@ -280,7 +297,7 @@ function VendorDashboard() {
             }
         }
 
-        fetchUnavailableItems();
+        fetchUnavailableItems(checkedItems);
     }
 
     const segregateDishes = (searched) => {
@@ -743,20 +760,18 @@ function VendorDashboard() {
                         <ArrowLeftIcon size={20} style={[colorScheme == 'light' ? { color: 'black' } : { color: 'white' }]} />
                     </TouchableOpacity>
                     <Text className='text-lg font-medium' style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>{selectedRestaurant}</Text>
-                    {(unavailableItems.length > 0 || unavailableItems.length == 0) &&
-                        <NativeBaseButton className='self-center' style={[(!showOpen && showMenu && !showClosed) ? [colorScheme == 'light' ? Styles.LightActiveGreenBTN : Styles.DarkActiveGreenBTN] : [colorScheme == 'light' ? Styles.LightInactiveBTN : Styles.DarkInactiveBTN]]} variant='subtle'
-                            onPress={() => {
-                                updateMenu(unavailableItems)
-                            }}
-                            isDisabled={fetchedUnavailableItems === unavailableItems}
-                        >
-                            <HStack className='items-center space-x-2 w-8'>
-                                <Text allowFontScaling={false} className='font-medium' style={[showMenu ? { color: '#16a34a' } : { color: 'gray' }]}>
-                                    Save
-                                </Text>
-                            </HStack>
-                        </NativeBaseButton>
-                    }
+                    <NativeBaseButton className='self-center' style={[(!showOpen && showMenu && !showClosed) ? [colorScheme == 'light' ? Styles.LightActiveGreenBTN : Styles.DarkActiveGreenBTN] : [colorScheme == 'light' ? Styles.LightInactiveBTN : Styles.DarkInactiveBTN]]} variant='subtle'
+                        onPress={() => {
+                            updateMenu(unavailableItems)
+                        }}
+                        isDisabled={fetchedUnavailableItems === unavailableItems}
+                    >
+                        <HStack className='items-center space-x-2'>
+                            <Text allowFontScaling={false} className='font-medium' style={[showMenu ? { color: '#16a34a' } : { color: 'gray' }]}>
+                                Save
+                            </Text>
+                        </HStack>
+                    </NativeBaseButton>
 
                 </View>
 
@@ -898,9 +913,12 @@ function VendorDashboard() {
                                 <Checkbox.Group onChange={setUnavailableItems} value={unavailableItems}>
                                     {Menu.map((item, index) => (
                                         <View className='w-full'>
-                                            <Checkbox colorScheme="dark" value={item.name} my={2}
-                                                size='lg'
-                                                icon={<Image source={Cross} style={{ width: 20, height: 20 }} />}
+                                            <Checkbox colorScheme="danger" value={item.name} my={2}
+                                                size='md'
+                                                style={[unavailableItems.includes(item.name) ? [colorScheme=='light'? {backgroundColor: '#fb7185', borderColor: '#fb7185'} : {backgroundColor: '#fda4af', borderColor: '#fda4af'} ] : {backgroundColor: '#86efac', borderColor: '#86efac'} ]}
+                                                icon={<XMarkIcon style={{width: 16, height: 16, padding: 8, color: '#000'}}/>
+                                                // <Image source={Cross2} style={{ width: 16, height: 16 }} />
+                                            }
                                             >
                                                 <HStack className='w-11/12 justify-between pr-2'>
                                                     <HStack className='space-x-2 items-center'>
