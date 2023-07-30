@@ -5,17 +5,15 @@ import { useSelector, useDispatch } from "react-redux";
 import { selectRestaurant } from "../reduxslices/restaurantSlice";
 import { addToCart, removeFromCart, selectCartItems, selectCartTotal, updateCartAdd, updateCartRemove } from "../reduxslices/cartslice";
 import { ArrowLeftIcon, ChevronRightIcon } from 'react-native-heroicons/solid';
-import { ExclamationCircleIcon } from "react-native-heroicons/solid";
 import { SafeAreaView, StyleSheet, StatusBar, Image } from "react-native";
 import { urlFor } from "../sanity";
-import AshokaLogo from '../assets/ASHOKAWHITELOGO.png';
 import Styles from '../components/Styles.js'
-import { HStack, TextArea, VStack } from "native-base";
+import { HStack, TextArea, VStack, Alert as NativeBaseAlert } from "native-base";
 import VegIcon from '../assets/vegicon.png';
 import client from '../sanity';
 import NonVegIcon from '../assets/nonvegicon.png';
 import PenIcon from '../assets/pen.png';
-import { XMarkIcon, PlusSmallIcon, PlusIcon, MinusIcon } from 'react-native-heroicons/solid';
+import { PlusIcon, MinusIcon } from 'react-native-heroicons/solid';
 import Subtotal from '../assets/subtotal.png';
 import Total from '../assets/total.png'
 import FinalTotal from '../assets/finaltotal.png'
@@ -32,18 +30,16 @@ import SportsBlock from '../assets/sportsblock.png'
 import Mess from '../assets/mess.png'
 import UPI from '../assets/upi.png'
 import COD from '../assets/cod.png'
-import Doubleright from '../assets/doubleright.png'
-import DishRow from "./DishRow";
+import { ARYANIP, ZAHAANIP } from '@dotenv'
+import BrokenHeart from '../assets/brokenheart.png'
 
 
 const BasketScreen = () => {
     const colorScheme = useColorScheme()
     const { params: { actualUser, Basket } } = useRoute();
-    // console.log(Basket)
     const restaurant = useSelector(selectRestaurant);
     const navigation = useNavigation();
     const items = useSelector(selectCartItems);
-    const [groupedItemsInBasket, setGroupedItemsInBasket] = useState([]);
     const dispatch = useDispatch();
     const [FinalBasket, setFinalBasket] = useState()
     const [FinalBasketReady, setFinalBasketReady] = useState(false)
@@ -54,6 +50,7 @@ const BasketScreen = () => {
     const [isPaymentOpen, setIsPaymentOpen] = useState(false)
     const [OrderTypeOption, setOrderTypeOption] = useState('Order Type')
     const [isOrderTypeOpen, setIsOrderTypeOpen] = useState(false)
+    const [FetchedUnavailableItems, setFetchedUnavailableItems] = useState([])
 
     const Locations = [
         { location: 'RH1', icon: RH },
@@ -158,6 +155,49 @@ const BasketScreen = () => {
         })
     };
 
+    const checkUnavailableItems = async () => {
+        var checkArray = 'The following items were removed from your cart as they became unavailable: '
+        for (const basketRestaurant of Basket) {
+            try {
+                const response = await fetch(`http://${ARYANIP}:8800/api/items/${basketRestaurant.name}`)
+                const data = await response.json()
+                var TempFetchedUnavailableItems = []
+                var unavailableItemsInCart = ''
+                var flag = 0
+                if (data) {
+                    data.map((item, index) => {
+                        TempFetchedUnavailableItems.push(item.name)
+                    })
+                    items.map((item, index) => {
+                        if (TempFetchedUnavailableItems.includes(item.name)) {
+                            flag = 1
+                            if (unavailableItemsInCart.length == 0) {
+                                unavailableItemsInCart = unavailableItemsInCart.concat('', item.name)
+                            } else {
+                                unavailableItemsInCart = unavailableItemsInCart.concat(', ', item.name)
+                            }
+                            dispatch(removeFromCart({ id: item.id, name: item.name, Price: item.Price, image: item.image, Restaurant: item.Restaurant, Veg_NonVeg: item.Veg_NonVeg, quantity: 0 }))
+                        }
+                    })
+                    if (flag == 1) {
+                        unavailableItemsInCart = unavailableItemsInCart.concat(' from ', basketRestaurant.name)
+                    }
+                }
+                if (unavailableItemsInCart.length > 0) {
+                    checkArray = checkArray.concat('\n', `${unavailableItemsInCart}`)
+                } else {
+                    checkArray.concat('', '')
+                }
+            } catch (error) {
+                console.error('Error while fetching unavailable items on cart screen' + error)
+            }
+        }
+
+        return checkArray
+        // You can add further logic here to handle the `checkArray`.
+        // For example, you can display the result using Alert.alert or navigate to another screen.
+    }
+
     const updateInstructions = (instruction, restaurant) => {
         var TempFinalBasket = FinalBasket
         TempFinalBasket.map((Outlet, index) => {
@@ -171,8 +211,8 @@ const BasketScreen = () => {
     const getInstructions = (restaurant) => {
         for (const Outlet of FinalBasket) {
             if (Outlet.name === restaurant) {
-                console.log(restaurant + " FOUND");
-                console.log(Outlet.instructions);
+                // console.log(restaurant + " FOUND");
+                // console.log(Outlet.instructions);
                 return Outlet.instructions;
             }
         }
@@ -228,7 +268,7 @@ const BasketScreen = () => {
 
         var TempCartTotal = 0
         TempBasket.map((BasketRestaurant, index) => {
-            console.log(BasketRestaurant.name)
+            // console.log(BasketRestaurant.name)
             var Subtotal = 0
             var FinalTotal = 0
             BasketRestaurant.items.map((item, index) => {
@@ -237,17 +277,16 @@ const BasketScreen = () => {
             if (BasketRestaurant.name == 'Roti Boti' || BasketRestaurant.name == 'Subway' || BasketRestaurant.name == 'Chicago Pizza') {
                 var GSTtotal = (Math.round(Subtotal * (1.18) * 100) / 100).toFixed(2)
                 FinalTotal = ((Math.round(GSTtotal * 100) / 100) + (Math.round(deliveryCharges[BasketRestaurant.name] * 100) / 100)).toFixed(2)
-                console.log((Math.round(FinalTotal * 100) / 100).toFixed(2))
+                // console.log((Math.round(FinalTotal * 100) / 100).toFixed(2))
             }
             else {
                 FinalTotal = ((Math.round(Subtotal * 100) / 100) + (Math.round(deliveryCharges[BasketRestaurant.name] * 100) / 100))
-                console.log((Math.round(FinalTotal * 100) / 100).toFixed(2))
+                // console.log((Math.round(FinalTotal * 100) / 100).toFixed(2))
             }
             TempCartTotal = ((Math.round(TempCartTotal * 100) / 100) + (Math.round(FinalTotal * 100) / 100)).toFixed(2)
             BasketRestaurant.restaurantTotal = Subtotal
         })
         setCartTotal(TempCartTotal)
-        console.log(TempBasket)
 
         client
             .fetch(query)
@@ -268,6 +307,8 @@ const BasketScreen = () => {
                 console.log('Error:', error); // Log any errors that occur
             });
 
+        checkUnavailableItems();
+
     }, [items]);
 
     if (items.length == 0) { navigation.goBack() }
@@ -279,8 +320,8 @@ const BasketScreen = () => {
     }, []);
 
     const sendOrderToDatabase = async (orderData) => {
-        const url = "http://10.77.1.70:8800/api/orders";
-        // const url = "http://172.20.10.2:8800/api/orders"; // Node Server (Our backend, put the IP address as ur local IPV4 address)
+        // const url = "http://10.77.1.70:8800/api/orders";
+        const url = "http://172.20.10.2:8800/api/orders"; // Node Server (Our backend, put the IP address as ur local IPV4 address)
         try {
             const response = await fetch(url, {
                 method: "POST",
@@ -313,7 +354,7 @@ const BasketScreen = () => {
     };
 
     // Function to place the order
-    const placeOrder = () => {
+    const placeOrder = async () => {
         // Create an array to store separate order objects for each restaurant
         const orders = [];
 
@@ -322,23 +363,22 @@ const BasketScreen = () => {
             "July", "August", "September", "October", "November", "December"]
         var orderDate = ''
         if (day.getHours() >= 12) {
-            if(day.getMinutes() < 10){
+            if (day.getMinutes() < 10) {
                 console.log('coming here')
                 orderDate = day.getHours() + ':' + '0' + day.getMinutes() + 'PM' + ' on ' + day.getDate() + ' ' + m[day.getMonth()] + ' ' + day.getFullYear()
             }
-            else{
+            else {
                 orderDate = day.getHours() + ':' + day.getMinutes() + 'PM' + ' on ' + day.getDate() + ' ' + m[day.getMonth()] + ' ' + day.getFullYear()
             }
         }
         else {
-            if(day.getMinutes() < 10){
+            if (day.getMinutes() < 10) {
                 orderDate = day.getHours() + ':' + '0' + day.getMinutes() + 'AM' + ' on ' + day.getDate() + ' ' + m[day.getMonth()] + ' ' + day.getFullYear()
             }
-            else{
+            else {
                 orderDate = day.getHours() + ':' + day.getMinutes() + 'AM' + ' on ' + day.getDate() + ' ' + m[day.getMonth()] + ' ' + day.getFullYear()
             }
         }
-        console.log(day)
 
         if (DeliveryLocation == 'Location') {
             Alert.alert(
@@ -358,8 +398,6 @@ const BasketScreen = () => {
             )
             return
         }
-
-
 
         // Iterate over the FinalBasket array
         for (const BasketRestaurant of FinalBasket) {
@@ -400,12 +438,18 @@ const BasketScreen = () => {
             orders.push(orderData);
         }
 
-        // Now, you have an array of order objects, each representing an order for a different restaurant
-        // Call the sendOrderToDatabase function to send the orders to the API
-        for (const orderData of orders) {
-            console.log(orderData);
-            sendOrderToDatabase(orderData);
+        let itemsCheck = await checkUnavailableItems()
+        if (itemsCheck == 'The following items were removed from your cart as they became unavailable: ') {
+            // Now, you have an array of order objects, each representing an order for a different restaurant
+            // Call the sendOrderToDatabase function to send the orders to the API
+            for (const orderData of orders) {
+                sendOrderToDatabase(orderData);
+            }
         }
+        else{
+            Alert.alert(itemsCheck)
+        }
+
     };
 
     return (

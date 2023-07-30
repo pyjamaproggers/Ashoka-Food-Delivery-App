@@ -1,7 +1,7 @@
 import React, { useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { useEffect } from 'react';
 import { useRoute, useNavigation } from '@react-navigation/native';
-import { View, Text, Image, TextInput, ScrollView, Animated, useColorScheme, Linking, Platform } from 'react-native'
+import { View, Text, Image, TextInput, ScrollView, Animated, useColorScheme, Linking, RefreshControl } from 'react-native'
 import { TouchableOpacity } from 'react-native';
 import { ArrowLeftIcon, ClockIcon, MapPinIcon, BoltIcon, PhoneArrowUpRightIcon, XMarkIcon } from 'react-native-heroicons/solid';
 import { selectRestaurant, setRestaurant } from '../reduxslices/restaurantSlice'
@@ -53,6 +53,8 @@ const RestaurantScreen = () => {
     const setSections = (sections) => {
         setActiveSection(sections.includes(undefined) ? [] : sections);
     };
+
+    const [Refreshing, setRefreshing] = useState(false);
 
     const colorScheme = useColorScheme();
     const netInfo = useNetInfo();
@@ -387,6 +389,7 @@ const RestaurantScreen = () => {
         }
     };
 
+
     useLayoutEffect(() => {
         navigation.setOptions({
             headerShown: false,
@@ -397,18 +400,14 @@ const RestaurantScreen = () => {
         dispatch(
             setRestaurant({
                 description: description, location: location,
-                name: title, image: image, genre: null, timing: timing,
+                name: title, image: image, genre: genre, timing: timing,
                 dishes: dishes
             })
             // Menu_category, Price, Veg_NonVeg, image, name
         )
         segregateDishes(dishes)
         setAllDishes(dishes)
-        if (items.length == 0) {
-            setTransitions(true)
-        }
     }, [dispatch, SearchedText, items])
-
 
 
     return (
@@ -437,371 +436,315 @@ const RestaurantScreen = () => {
                 style={[colorScheme == 'light' ? { backgroundColor: '#F2F2F2' } : { backgroundColor: '#0c0c0f' }]}
             >
 
-                <PresenceTransition visible={true} initial={{
-                    translateY: -100
-                }} animate={{
-                    translateY: 0,
-                    transition: {
-                        duration: 400,
-                        delay: 25
-                    }
-                }}>
-                    <View className="relative">
-                        <Animated.Image source={{ uri: urlFor(image).url() }} style={Styles.RestaurantImage(scrollA)} />
-                        <TouchableOpacity onPress={navigation.goBack} className="absolute top-14 p-2 rounded-full" style={[colorScheme == 'light' ? Styles.LightBackButton : Styles.DarkBackButton]}>
-                            <ArrowLeftIcon size={20} style={[colorScheme == 'light' ? { color: 'black' } : { color: 'white' }]} />
-                        </TouchableOpacity>
-                    </View>
 
-                    <View className='w-full flex-row justify-between pl-2 pr-4 py-2.5 items-center rounded-b-2xl shadow-sm' style={[colorScheme == 'light' ? Styles.LightBGSec : Styles.DarkBGSec]}>
-                        <VStack space={1.5}>
-                            <HStack className='items-center border-b ' style={[colorScheme == 'light' ? { borderColor: 'rgb(255,255,255)' } : { borderColor: '#262626' }]}>
-                                <Text className='text-2xl font-semibold' style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>{title} • </Text>
-                                <Text className='italic text-xs pt-0.5 font-medium' style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>{genre}</Text>
+                <View className="relative">
+                    <Animated.Image source={{ uri: urlFor(image).url() }} style={Styles.RestaurantImage(scrollA)} />
+                    <TouchableOpacity onPress={navigation.goBack} className="absolute top-14 p-2 rounded-full" style={[colorScheme == 'light' ? Styles.LightBackButton : Styles.DarkBackButton]}>
+                        <ArrowLeftIcon size={20} style={[colorScheme == 'light' ? { color: 'black' } : { color: 'white' }]} />
+                    </TouchableOpacity>
+                </View>
+
+                <View className='w-full flex-row justify-between pl-2 pr-4 py-2.5 items-center rounded-b-2xl shadow-sm' style={[colorScheme == 'light' ? Styles.LightBGSec : Styles.DarkBGSec]}>
+                    <VStack space={1.5}>
+                        <HStack className='items-center border-b ' style={[colorScheme == 'light' ? { borderColor: 'rgb(255,255,255)' } : { borderColor: '#262626' }]}>
+                            <Text className='text-2xl font-semibold' style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>{title} • </Text>
+                            <Text className='italic text-xs pt-0.5 font-medium' style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>{genre}</Text>
+                        </HStack>
+                        <HStack space={2} className='mb-1'>
+                            <HStack space={1} alignContent={'center'} className='content-center'>
+                                <Image
+                                    style={{ width: 15, height: 15, resizeMode: "contain" }}
+                                    source={clockIcon}
+                                />
+                                <Text className='text-xs' style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>{timing}</Text>
                             </HStack>
-                            <HStack space={2} className='mb-1'>
-                                <HStack space={1} alignContent={'center'} className='content-center'>
-                                    <Image
-                                        style={{ width: 15, height: 15, resizeMode: "contain" }}
-                                        source={clockIcon}
-                                    />
-                                    <Text className='text-xs' style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>{timing}</Text>
-                                </HStack>
-                                <HStack space={1} alignContent={'center'}>
-                                    <Image
-                                        style={{ width: 15, height: 15, resizeMode: "contain" }}
-                                        source={cashIcon}
-                                    />
-                                    <Text className='text-xs' style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>₹350 for two</Text>
-                                </HStack>
+                            <HStack space={1} alignContent={'center'}>
+                                <Image
+                                    style={{ width: 15, height: 15, resizeMode: "contain" }}
+                                    source={cashIcon}
+                                />
+                                <Text className='text-xs' style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>₹350 for two</Text>
                             </HStack>
+                        </HStack>
 
-                        </VStack>
+                    </VStack>
 
-                        {/* Phone Icon */}
-                        <TouchableOpacity
-                            onPress={() => {
-                                Linking.openURL(`tel:${phone}`)
-                            }}>
-                            <Image
-                                style={{ width: 25, height: 25, resizeMode: "contain" }}
-                                source={phoneIcon}
-                            />
-                        </TouchableOpacity>
-                    </View>
-                </PresenceTransition>
+                    {/* Phone Icon */}
+                    <TouchableOpacity
+                        onPress={() => {
+                            Linking.openURL(`tel:${phone}`)
+                        }}>
+                        <Image
+                            style={{ width: 25, height: 25, resizeMode: "contain" }}
+                            source={phoneIcon}
+                        />
+                    </TouchableOpacity>
+                </View>
 
                 {/* Menu */}
                 <View>
                     <VStack space={1} className='justify-center'>
-                        <PresenceTransition visible={true} initial={{
-                            translateY: -100
-                        }} animate={{
-                            translateY: 0,
-                            transition: {
-                                duration: 400,
-                                delay: 25
-                            }
-                        }}>
-                            <View className='mt-7 border-t' style={[colorScheme == 'light' ? Styles.LightHomeAdlibBorder : Styles.DarkHomeAdlibBorder]}  >
-                                <Text
-                                    className="text-center font-semibold text-xl mx-40 mt-3 -top-7 -mb-5"
-                                    style={[colorScheme == 'light' ? Styles.LightHomeAdlib : Styles.DarkHomeAdlib]}
-                                >
-                                    Menu
-                                </Text>
-                            </View>
+                        <View className='mt-7 border-t' style={[colorScheme == 'light' ? Styles.LightHomeAdlibBorder : Styles.DarkHomeAdlibBorder]}  >
+                            <Text
+                                className="text-center font-semibold text-xl mx-40 mt-3 -top-7 -mb-5"
+                                style={[colorScheme == 'light' ? Styles.LightHomeAdlib : Styles.DarkHomeAdlib]}
+                            >
+                                Menu
+                            </Text>
+                        </View>
 
-                        </PresenceTransition>
                         {veg_nonveg == 'Non Veg' &&
                             <HStack space={3} className='justify-center content-center pb-1.5'>
 
-                                <PresenceTransition visible={true} initial={{
-                                    translateX: -100
-                                }} animate={{
-                                    translateX: 0,
-                                    transition: {
-                                        duration: 400
-                                    }
-                                }}>
-                                    <TouchableOpacity className='flex-row content-center'
-                                        onPress={() => {
-                                            if (SearchedText.length > 0) {
-                                                setShowSearchedVegMenu(!ShowSearchedVegMenu)
-                                            }
-                                            else {
-                                                setShowVegMenu(!showVegMenu)
-                                            }
-                                        }}
-                                        style={[colorScheme == 'light' ? [showVegMenu == true || ShowSearchedVegMenu == true ? Styles.LightSelectedVegButton : Styles.LightUnselectedVegButton] : [showVegMenu == true ? Styles.DarkSelectedVegButton : Styles.DarkUnselectedVegButton]]}>
-                                        <Image
-                                            style={{ width: 15, height: 15, resizeMode: "contain" }}
-                                            source={VegIcon}
-                                        />
-                                        <Text className='pl-1 font-medium'
-                                            style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
-                                        >
-                                            Veg
-                                        </Text>
-                                        {console.log(showVegMenu)}
-                                        {(showVegMenu || ShowSearchedVegMenu) &&
-                                            <XMarkIcon size={17} style={[colorScheme == 'light' ? { color: '#000000' } : { color: '#ffffff' }]} />
+                                <TouchableOpacity className='flex-row content-center'
+                                    onPress={() => {
+                                        if (SearchedText.length > 0) {
+                                            setShowSearchedVegMenu(!ShowSearchedVegMenu)
                                         }
-                                    </TouchableOpacity>
-                                </PresenceTransition>
-
-                                <PresenceTransition visible={true} initial={{
-                                    translateX: 100
-                                }} animate={{
-                                    translateX: 0,
-                                    transition: {
-                                        duration: 400
-                                    }
-                                }}>
-                                    <TouchableOpacity className='flex-row content-center'
-                                        onPress={() => {
-                                            if (SearchedText.length > 0) {
-                                                setShowSearchedNonVegMenu(!ShowSearchedNonVegMenu)
-                                            }
-                                            else {
-                                                setShowNonVegMenu(!showNonVegMenu)
-                                            }
-                                        }}
-                                        style={[colorScheme == 'light' ? [showNonVegMenu == true || ShowSearchedNonVegMenu == true ? Styles.LightSelectedNonVegButton : Styles.LightUnselectedNonVegButton] : [showNonVegMenu == true ? Styles.DarkSelectedNonVegButton : Styles.DarkUnselectedNonVegButton]]}>
-
-                                        <Image
-                                            style={{ width: 15, height: 15, resizeMode: "contain" }}
-                                            source={NonVegIcon}
-                                        />
-                                        <Text className='pl-1 font-medium'
-                                            style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
-                                        >
-                                            Non-Veg
-                                        </Text>
-                                        {(showNonVegMenu || ShowSearchedNonVegMenu) &&
-                                            <XMarkIcon size={17} style={[colorScheme == 'light' ? { color: '#000000' } : { color: '#ffffff' }]} />
+                                        else {
+                                            setShowVegMenu(!showVegMenu)
                                         }
-                                    </TouchableOpacity>
-                                </PresenceTransition>
+                                    }}
+                                    style={[colorScheme == 'light' ? [showVegMenu == true || ShowSearchedVegMenu == true ? Styles.LightSelectedVegButton : Styles.LightUnselectedVegButton] : [showVegMenu == true ? Styles.DarkSelectedVegButton : Styles.DarkUnselectedVegButton]]}>
+                                    <Image
+                                        style={{ width: 15, height: 15, resizeMode: "contain" }}
+                                        source={VegIcon}
+                                    />
+                                    <Text className='pl-1 font-medium'
+                                        style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                    >
+                                        Veg
+                                    </Text>
+                                    {console.log(showVegMenu)}
+                                    {(showVegMenu || ShowSearchedVegMenu) &&
+                                        <XMarkIcon size={17} style={[colorScheme == 'light' ? { color: '#000000' } : { color: '#ffffff' }]} />
+                                    }
+                                </TouchableOpacity>
+
+                                <TouchableOpacity className='flex-row content-center'
+                                    onPress={() => {
+                                        if (SearchedText.length > 0) {
+                                            setShowSearchedNonVegMenu(!ShowSearchedNonVegMenu)
+                                        }
+                                        else {
+                                            setShowNonVegMenu(!showNonVegMenu)
+                                        }
+                                    }}
+                                    style={[colorScheme == 'light' ? [showNonVegMenu == true || ShowSearchedNonVegMenu == true ? Styles.LightSelectedNonVegButton : Styles.LightUnselectedNonVegButton] : [showNonVegMenu == true ? Styles.DarkSelectedNonVegButton : Styles.DarkUnselectedNonVegButton]]}>
+
+                                    <Image
+                                        style={{ width: 15, height: 15, resizeMode: "contain" }}
+                                        source={NonVegIcon}
+                                    />
+                                    <Text className='pl-1 font-medium'
+                                        style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                    >
+                                        Non-Veg
+                                    </Text>
+                                    {(showNonVegMenu || ShowSearchedNonVegMenu) &&
+                                        <XMarkIcon size={17} style={[colorScheme == 'light' ? { color: '#000000' } : { color: '#ffffff' }]} />
+                                    }
+                                </TouchableOpacity>
 
                             </HStack>
                         }
                         {VegMenu && NonVegMenu && AllDishes &&
                             <View className="flex-row item-center space-x-2 mx-4 ">
                                 <View className="self-center flex-row flex-1 p-3 shadow-sm w-11/12" style={[colorScheme == 'light' ? Styles.LightSearchBar : Styles.DarkSearchBar]}>
-                                    <PresenceTransition visible={true} initial={{
-                                        opacity: 0
-                                    }} animate={{
-                                        opacity: 1,
-                                        transition: {
-                                            type: 'spring',
-                                            delay: 50
-                                        }
-                                    }}>
-                                        <HStack>
-                                            <Image
-                                                style={{ width: 16, height: 16, resizeMode: "contain", }}
-                                                source={Search}
+
+                                    <HStack>
+                                        <Image
+                                            style={{ width: 16, height: 16, resizeMode: "contain", }}
+                                            source={Search}
+                                        />
+                                        {colorScheme == 'light' &&
+                                            <TextInput placeholder="What are we looking for today?" keyboardType="default" className='w-full'
+                                                style={{ color: '#000', marginLeft: 8, marginRight: -8 }}
+                                                onChangeText={(text) => {
+                                                    setSearchedText(text)
+                                                    if (text && !showVegMenu && !showNonVegMenu) {
+                                                        setShowSearchedMenu(true)
+                                                        segregateSearchedDishes(text)
+                                                    }
+                                                    if (text && showVegMenu && !showNonVegMenu) {
+                                                        setShowSearchedVegMenu(!ShowSearchedVegMenu)
+                                                        segregateSearchedDishes(text)
+                                                    }
+                                                    if (text && !showVegMenu && showNonVegMenu) {
+                                                        setShowSearchedNonVegMenu(!ShowSearchedNonVegMenu)
+                                                        segregateSearchedDishes(text)
+                                                    }
+                                                    if (text && showVegMenu && showNonVegMenu) {
+                                                        setShowSearchedMenu(!ShowSearchedMenu)
+                                                        segregateSearchedDishes(text)
+                                                    }
+
+                                                    if (!text && showVegMenu && !showNonVegMenu) {
+                                                        setSearchedText('')
+                                                        setShowVegMenu(!showVegMenu)
+                                                    }
+                                                    if (!text && !showVegMenu && showNonVegMenu) {
+                                                        setSearchedText('')
+                                                        setShowNonVegMenu(!showNonVegMenu)
+                                                    }
+                                                    if (!text && !showVegMenu && !showNonVegMenu) {
+                                                        setSearchedText('')
+                                                        setShowSearchedMenu(!ShowSearchedMenu)
+                                                    }
+                                                }}
+                                                enterKeyHint='done'
                                             />
-                                            {colorScheme == 'light' &&
-                                                <TextInput placeholder="What are we looking for today?" keyboardType="default" className='w-full'
-                                                    style={{ color: '#000', marginLeft: 8, marginRight: -8 }}
-                                                    onChangeText={(text) => {
-                                                        setSearchedText(text)
-                                                        if (text && !showVegMenu && !showNonVegMenu) {
-                                                            setShowSearchedMenu(true)
-                                                            segregateSearchedDishes(text)
-                                                        }
-                                                        if (text && showVegMenu && !showNonVegMenu) {
-                                                            setShowSearchedVegMenu(!ShowSearchedVegMenu)
-                                                            segregateSearchedDishes(text)
-                                                        }
-                                                        if (text && !showVegMenu && showNonVegMenu) {
-                                                            setShowSearchedNonVegMenu(!ShowSearchedNonVegMenu)
-                                                            segregateSearchedDishes(text)
-                                                        }
-                                                        if (text && showVegMenu && showNonVegMenu) {
-                                                            setShowSearchedMenu(!ShowSearchedMenu)
-                                                            segregateSearchedDishes(text)
-                                                        }
+                                        }
+                                        {colorScheme != 'light' &&
+                                            <TextInput placeholder="What are we looking for today?" keyboardType="default" className='w-full'
+                                                style={{ color: '#fff', marginLeft: 8, marginRight: -8 }}
+                                                onChangeText={(text) => {
+                                                    setSearchedText(text)
+                                                    if (text && !showVegMenu && !showNonVegMenu) {
+                                                        setShowSearchedMenu(true)
+                                                        segregateSearchedDishes(text)
+                                                    }
+                                                    if (text && showVegMenu && !showNonVegMenu) {
+                                                        setShowSearchedVegMenu(!ShowSearchedVegMenu)
+                                                        segregateSearchedDishes(text)
+                                                    }
+                                                    if (text && !showVegMenu && showNonVegMenu) {
+                                                        setShowSearchedNonVegMenu(!ShowSearchedNonVegMenu)
+                                                        segregateSearchedDishes(text)
+                                                    }
+                                                    if (text && showVegMenu && showNonVegMenu) {
+                                                        setShowSearchedMenu(!ShowSearchedMenu)
+                                                        segregateSearchedDishes(text)
+                                                    }
 
-                                                        if (!text && showVegMenu && !showNonVegMenu) {
-                                                            setSearchedText('')
-                                                            setShowVegMenu(!showVegMenu)
-                                                        }
-                                                        if (!text && !showVegMenu && showNonVegMenu) {
-                                                            setSearchedText('')
-                                                            setShowNonVegMenu(!showNonVegMenu)
-                                                        }
-                                                        if (!text && !showVegMenu && !showNonVegMenu) {
-                                                            setSearchedText('')
-                                                            setShowSearchedMenu(!ShowSearchedMenu)
-                                                        }
-                                                    }}
-                                                    enterKeyHint='done'
-                                                />
-                                            }
-                                            {colorScheme != 'light' &&
-                                                <TextInput placeholder="What are we looking for today?" keyboardType="default" className='w-full'
-                                                    style={{ color: '#fff', marginLeft: 8, marginRight: -8 }}
-                                                    onChangeText={(text) => {
-                                                        setSearchedText(text)
-                                                        if (text && !showVegMenu && !showNonVegMenu) {
-                                                            setShowSearchedMenu(true)
-                                                            segregateSearchedDishes(text)
-                                                        }
-                                                        if (text && showVegMenu && !showNonVegMenu) {
-                                                            setShowSearchedVegMenu(!ShowSearchedVegMenu)
-                                                            segregateSearchedDishes(text)
-                                                        }
-                                                        if (text && !showVegMenu && showNonVegMenu) {
-                                                            setShowSearchedNonVegMenu(!ShowSearchedNonVegMenu)
-                                                            segregateSearchedDishes(text)
-                                                        }
-                                                        if (text && showVegMenu && showNonVegMenu) {
-                                                            setShowSearchedMenu(!ShowSearchedMenu)
-                                                            segregateSearchedDishes(text)
-                                                        }
+                                                    if (!text && showVegMenu && !showNonVegMenu) {
+                                                        setSearchedText('')
+                                                        setShowVegMenu(!showVegMenu)
+                                                    }
+                                                    if (!text && !showVegMenu && showNonVegMenu) {
+                                                        setSearchedText('')
+                                                        setShowNonVegMenu(!showNonVegMenu)
+                                                    }
+                                                    if (!text && !showVegMenu && !showNonVegMenu) {
+                                                        setSearchedText('')
+                                                        setShowSearchedMenu(!ShowSearchedMenu)
+                                                    }
+                                                }}
+                                                enterKeyHint='done'
+                                            />
+                                        }
+                                    </HStack>
 
-                                                        if (!text && showVegMenu && !showNonVegMenu) {
-                                                            setSearchedText('')
-                                                            setShowVegMenu(!showVegMenu)
-                                                        }
-                                                        if (!text && !showVegMenu && showNonVegMenu) {
-                                                            setSearchedText('')
-                                                            setShowNonVegMenu(!showNonVegMenu)
-                                                        }
-                                                        if (!text && !showVegMenu && !showNonVegMenu) {
-                                                            setSearchedText('')
-                                                            setShowSearchedMenu(!ShowSearchedMenu)
-                                                        }
-                                                    }}
-                                                    enterKeyHint='done'
-                                                />
-                                            }
-                                        </HStack>
-
-                                    </PresenceTransition>
                                 </View>
                             </View>
                         }
                     </VStack>
 
-                    <PresenceTransition visible={true} initial={{
-                        translateY: 100
-                    }} animate={{
-                        translateY: 0,
-                        transition: {
-                            duration: 400
-                        }
-                    }}>
 
-                        {Categories && !showVegMenu && !showNonVegMenu && !ShowSearchedMenu && !ShowSearchedVegMenu && !ShowSearchedNonVegMenu && SearchedText.length == 0 &&
+                    {Categories && !showVegMenu && !showNonVegMenu && !ShowSearchedMenu && !ShowSearchedVegMenu && !ShowSearchedNonVegMenu && SearchedText.length == 0 &&
 
-                            <Accordion
-                                activeSections={activeSections}
-                                sections={Categories}
-                                touchableComponent={TouchableOpacity}
-                                expandMultiple={multipleSelect}
-                                renderHeader={_renderHeader}
-                                renderContent={_renderContent}
-                                duration={100}
-                                onChange={setSections}
-                            />
-                        }
+                        <Accordion
+                            activeSections={activeSections}
+                            sections={Categories}
+                            touchableComponent={TouchableOpacity}
+                            expandMultiple={multipleSelect}
+                            renderHeader={_renderHeader}
+                            renderContent={_renderContent}
+                            duration={100}
+                            onChange={setSections}
+                        />
+                    }
 
-                        {VegMenu && showVegMenu && !showNonVegMenu && !ShowSearchedMenu && !ShowSearchedVegMenu && !ShowSearchedNonVegMenu &&
-                            <Accordion
-                                activeSections={activeSections}
-                                sections={VegMenu}
-                                touchableComponent={TouchableOpacity}
-                                expandMultiple={multipleSelect}
-                                renderHeader={_renderHeader}
-                                renderContent={_renderContent}
-                                duration={100}
-                                onChange={setSections}
-                            />
-                        }
+                    {VegMenu && showVegMenu && !showNonVegMenu && !ShowSearchedMenu && !ShowSearchedVegMenu && !ShowSearchedNonVegMenu &&
+                        <Accordion
+                            activeSections={activeSections}
+                            sections={VegMenu}
+                            touchableComponent={TouchableOpacity}
+                            expandMultiple={multipleSelect}
+                            renderHeader={_renderHeader}
+                            renderContent={_renderContent}
+                            duration={100}
+                            onChange={setSections}
+                        />
+                    }
 
-                        {NonVegMenu && !showVegMenu && showNonVegMenu && !ShowSearchedMenu && !ShowSearchedVegMenu && !ShowSearchedNonVegMenu &&
-                            <Accordion
-                                activeSections={activeSections}
-                                sections={NonVegMenu}
-                                touchableComponent={TouchableOpacity}
-                                expandMultiple={multipleSelect}
-                                renderHeader={_renderHeader}
-                                renderContent={_renderContent}
-                                duration={100}
-                                onChange={setSections}
-                            />
-                        }
+                    {NonVegMenu && !showVegMenu && showNonVegMenu && !ShowSearchedMenu && !ShowSearchedVegMenu && !ShowSearchedNonVegMenu &&
+                        <Accordion
+                            activeSections={activeSections}
+                            sections={NonVegMenu}
+                            touchableComponent={TouchableOpacity}
+                            expandMultiple={multipleSelect}
+                            renderHeader={_renderHeader}
+                            renderContent={_renderContent}
+                            duration={100}
+                            onChange={setSections}
+                        />
+                    }
 
-                        {Categories && showVegMenu && showNonVegMenu && !ShowSearchedMenu && !ShowSearchedVegMenu && !ShowSearchedNonVegMenu &&
-                            <Accordion
-                                activeSections={activeSections}
-                                sections={Categories}
-                                touchableComponent={TouchableOpacity}
-                                expandMultiple={multipleSelect}
-                                renderHeader={_renderHeader}
-                                renderContent={_renderContent}
-                                duration={100}
-                                onChange={setSections}
-                            />
-                        }
+                    {Categories && showVegMenu && showNonVegMenu && !ShowSearchedMenu && !ShowSearchedVegMenu && !ShowSearchedNonVegMenu &&
+                        <Accordion
+                            activeSections={activeSections}
+                            sections={Categories}
+                            touchableComponent={TouchableOpacity}
+                            expandMultiple={multipleSelect}
+                            renderHeader={_renderHeader}
+                            renderContent={_renderContent}
+                            duration={100}
+                            onChange={setSections}
+                        />
+                    }
 
-                        {ShowSearchedMenu && !ShowSearchedVegMenu && !ShowSearchedNonVegMenu &&
-                            <Accordion
-                                activeSections={activeSections}
-                                sections={SearchedMenu}
-                                touchableComponent={TouchableOpacity}
-                                expandMultiple={multipleSelect}
-                                renderHeader={_renderHeader}
-                                renderContent={_renderContent}
-                                duration={100}
-                                onChange={setSections}
-                            />
-                        }
+                    {ShowSearchedMenu && !ShowSearchedVegMenu && !ShowSearchedNonVegMenu &&
+                        <Accordion
+                            activeSections={activeSections}
+                            sections={SearchedMenu}
+                            touchableComponent={TouchableOpacity}
+                            expandMultiple={multipleSelect}
+                            renderHeader={_renderHeader}
+                            renderContent={_renderContent}
+                            duration={100}
+                            onChange={setSections}
+                        />
+                    }
 
-                        {ShowSearchedMenu && ShowSearchedVegMenu && !ShowSearchedNonVegMenu &&
-                            <Accordion
-                                activeSections={activeSections}
-                                sections={SearchedVegMenu}
-                                touchableComponent={TouchableOpacity}
-                                expandMultiple={multipleSelect}
-                                renderHeader={_renderHeader}
-                                renderContent={_renderContent}
-                                duration={100}
-                                onChange={setSections}
-                            />
-                        }
+                    {ShowSearchedMenu && ShowSearchedVegMenu && !ShowSearchedNonVegMenu &&
+                        <Accordion
+                            activeSections={activeSections}
+                            sections={SearchedVegMenu}
+                            touchableComponent={TouchableOpacity}
+                            expandMultiple={multipleSelect}
+                            renderHeader={_renderHeader}
+                            renderContent={_renderContent}
+                            duration={100}
+                            onChange={setSections}
+                        />
+                    }
 
-                        {ShowSearchedMenu && !ShowSearchedVegMenu && ShowSearchedNonVegMenu &&
-                            <Accordion
-                                activeSections={activeSections}
-                                sections={SearchedNonVegMenu}
-                                touchableComponent={TouchableOpacity}
-                                expandMultiple={multipleSelect}
-                                renderHeader={_renderHeader}
-                                renderContent={_renderContent}
-                                duration={100}
-                                onChange={setSections}
-                            />
-                        }
+                    {ShowSearchedMenu && !ShowSearchedVegMenu && ShowSearchedNonVegMenu &&
+                        <Accordion
+                            activeSections={activeSections}
+                            sections={SearchedNonVegMenu}
+                            touchableComponent={TouchableOpacity}
+                            expandMultiple={multipleSelect}
+                            renderHeader={_renderHeader}
+                            renderContent={_renderContent}
+                            duration={100}
+                            onChange={setSections}
+                        />
+                    }
 
-                        {ShowSearchedMenu && ShowSearchedVegMenu && ShowSearchedNonVegMenu &&
-                            <Accordion
-                                activeSections={activeSections}
-                                sections={SearchedMenu}
-                                touchableComponent={TouchableOpacity}
-                                expandMultiple={multipleSelect}
-                                renderHeader={_renderHeader}
-                                renderContent={_renderContent}
-                                duration={100}
-                                onChange={setSections}
-                            />
-                        }
-
-                    </PresenceTransition>
+                    {ShowSearchedMenu && ShowSearchedVegMenu && ShowSearchedNonVegMenu &&
+                        <Accordion
+                            activeSections={activeSections}
+                            sections={SearchedMenu}
+                            touchableComponent={TouchableOpacity}
+                            expandMultiple={multipleSelect}
+                            renderHeader={_renderHeader}
+                            renderContent={_renderContent}
+                            duration={100}
+                            onChange={setSections}
+                        />
+                    }
 
 
                 </View>

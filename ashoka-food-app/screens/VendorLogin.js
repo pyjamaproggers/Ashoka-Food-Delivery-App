@@ -63,7 +63,7 @@ function VendorLogin() {
                     value={password}
                     onChangeText={(text) => setPassword(text)}
                     secureTextEntry={true}
-                    style={styles.input}
+                    style={[colorScheme=='light'? styles.inputLight : styles.inputDark]}
                 />
 
                 {/* Login button */}
@@ -100,7 +100,15 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
     },
-    input: {
+    inputLight: {
+        height: 40,
+        width: "100%",
+        backgroundColor: '#ffffff',
+        borderRadius: 5,
+        paddingHorizontal: 10,
+        marginBottom: 20,
+    },
+    inputDark: {
         height: 40,
         width: "100%",
         backgroundColor: '#262626',

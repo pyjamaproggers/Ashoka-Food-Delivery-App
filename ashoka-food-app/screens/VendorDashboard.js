@@ -1,10 +1,10 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { useRoute, useNavigation } from '@react-navigation/native';
-import { View, Text, Image, TouchableOpacity, Linking, useColorScheme, RefreshControl, TextInput } from 'react-native';
+import { View, Text, Image, TouchableOpacity, Linking, useColorScheme, RefreshControl, TextInput, Alert as ReactNativeAlert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ArrowLeftIcon } from 'react-native-heroicons/solid';
 import Accordion from 'react-native-collapsible/Accordion';
-import { Button as NativeBaseButton, HStack, VStack, Checkbox, Modal, Select, Radio, Slide, Alert } from 'native-base';
+import { Button as NativeBaseButton, HStack, VStack, Checkbox, Modal, Select, Radio, Slide, Alert, PresenceTransition, useToast } from 'native-base';
 import Styles from '../components/Styles';
 import ChevronUp from '../assets/chevronupicon.png';
 import ChevronDown from '../assets/chevrondownicon.png';
@@ -26,6 +26,7 @@ import VegIcon from '../assets/vegicon.png';
 import NonVegIcon from '../assets/nonvegicon.png';
 import { useNetInfo } from "@react-native-community/netinfo";
 import io from 'socket.io-client';
+import { ARYANIP, ZAHAANIP } from '@dotenv'
 
 function VendorDashboard() {
     const route = useRoute();
@@ -60,6 +61,7 @@ function VendorDashboard() {
     const [latestOrder, setLatestOrder] = useState(null);
 
     const colorScheme = useColorScheme();
+    const toast = useToast();
 
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -68,7 +70,10 @@ function VendorDashboard() {
     }, []);
 
     const connectToSocket = () => {
-        const socket = io('http://10.77.1.70:8800', {
+        // const socket = io('http://10.77.1.70:8800', {
+        // });
+
+        const socket = io('http://172.20.10.2:8800', {
         });
 
         socket.on('connect', () => {
@@ -77,8 +82,7 @@ function VendorDashboard() {
 
         socket.on('newOrder', (order) => {
             console.log('New order received:', order);
-            if(order.Restaurant===selectedRestaurant)
-            {
+            if (order.Restaurant === selectedRestaurant) {
                 setLatestOrder(order);
             }
         });
@@ -98,16 +102,8 @@ function VendorDashboard() {
 
     const changeStatus = async (_id, orderStatus) => {
         try {
-            // console.log(`http://10.77.1.70:8800/api/orders/${_id}/status`)
-            // const response = await fetch(`http://10.77.1.70:8800/api/orders/${_id}/status`, {
-            //     method: 'PUT',
-            //     headers: {
-            //         'Content-Type': 'application/json',
-            //     },
-            //     body: JSON.stringify({ status: orderStatus }),
-            // });
             if (orderStatus != 'Declined') {
-                const response = await fetch(`http://10.77.1.70:8800/api/orders/${_id}/status`, {
+                const response = await fetch(`http://${ARYANIP}:8800/api/orders/${_id}/status`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -119,7 +115,7 @@ function VendorDashboard() {
                 }
 
                 if (!response.ok) {
-                    Alert.alert(
+                    ReactNativeAlert.alert(
                         'Something went wrong. Try Again. '
                     );
                 }
@@ -128,7 +124,7 @@ function VendorDashboard() {
 
             if (orderStatus == 'Declined') {
                 if (declineReason == 'Closing Time') {
-                    const response = await fetch(`http://10.77.1.70:8800/api/orders/${_id}/status`, {
+                    const response = await fetch(`http://${ARYANIP}:8800/api/orders/${_id}/status`, {
                         method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json',
@@ -142,13 +138,13 @@ function VendorDashboard() {
                     }
 
                     if (!response.ok) {
-                        Alert.alert(
+                        ReactNativeAlert.alert(
                             'Something went wrong. Try Again. '
                         );
                     }
                 }
                 else {
-                    const response = await fetch(`http://10.77.1.70:8800/api/orders/${_id}/status`, {
+                    const response = await fetch(`http://${ARYANIP}:8800/api/orders/${_id}/status`, {
                         method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json',
@@ -162,7 +158,7 @@ function VendorDashboard() {
                     }
 
                     if (!response.ok) {
-                        Alert.alert(
+                        ReactNativeAlert.alert(
                             'Something went wrong. Try Again. '
                         );
                     }
@@ -170,28 +166,15 @@ function VendorDashboard() {
 
             }
 
-            // Update the local state with the new order status
-            // const updatedOrders = orders.map(order => {
-            //     if (order._id === _id) {
-            //         return {
-            //             ...order,
-            //             orderStatus: orderStatus,
-            //         };
-            //     }
-            //     return order;
-            // });
-            // setOrders(updatedOrders);
-
         } catch (error) {
             console.error('Error updating order status:', error);
         }
     };
 
     const fetchOrders = async () => {
-        setRefreshing(true)
         try {
-            const response = await fetch(`http://10.77.1.70:8800/api/orders/${selectedRestaurant}`);
-            // const response = await fetch(`http://172.20.10.2:8800/api/orders/${selectedRestaurant}`);
+            // const response = await fetch(`http://10.77.1.70:8800/api/orders/${selectedRestaurant}`);
+            const response = await fetch(`http://${ARYANIP}:8800/api/orders/${selectedRestaurant}`);
             const data = await response.json();
             var tempClosedOrders = []
             var tempOpenOrders = []
@@ -212,11 +195,11 @@ function VendorDashboard() {
         }
     };
 
-    const fetchUnavailableItems = async (tempCheckedItems) => {
+    const fetchUnavailableItems = async (tempCheckedItems, showAlert) => {
         setRefreshing(true)
         try {
-            const response = await fetch(`http://10.77.1.70:8800/api/orders/${selectedRestaurant}`);
-            // const response = await fetch(`http://172.20.10.2:8800/api/items/${selectedRestaurant}`);
+            // const response = await fetch(`http://10.77.1.70:8800/api/items/${selectedRestaurant}`);
+            const response = await fetch(`http://${ARYANIP}:8800/api/items/${selectedRestaurant}`);
             const data = await response.json();
             var TempFetchedUnavailableItems = []
             if (data) {
@@ -232,16 +215,18 @@ function VendorDashboard() {
                 setCheckedItems(tempCheckedItems)
             }
             setRefreshing(false)
+            if (showAlert) {
+                toast.show({
+                    description: "Menu Updated",
+                    placement: 'bottom',
+                    backgroundColor: 'green.100',
+                    _description: { color: 'green.600' },
+                })
+            }
         } catch (error) {
             console.error('Error fetching orders:', error);
             setRefreshing(false)
         }
-    }
-
-    const updateCheckedItems = (UncheckedItems) => {
-        console.log(UncheckedItems)
-        var finalCheckedItems = checkedItems.filter(x => UncheckedItems.indexOf(x) === -1);
-        setCheckedItems(finalCheckedItems)
     }
 
     const fetchDishes = (query) => {
@@ -292,10 +277,11 @@ function VendorDashboard() {
         // console.log('*ASBASKASOU*')
         // console.log(itemsToAdd)
         // console.log(itemsToRemove)
+        var flag = 0
 
         for (const item of itemsToAdd) {
             // const url = "http://172.20.10.2:8800/api/items";
-            const url = "http://10.77.1.70:8800/api/items";
+            const url = `http://${ARYANIP}:8800/api/items`;
             try {
                 const response = await fetch(url, {
                     method: "POST",
@@ -309,12 +295,13 @@ function VendorDashboard() {
                 });
             } catch (error) {
                 console.error("Error while executing updateOrder")
+                flag = 1
             }
         }
 
         for (const item of itemsToRemove) {
             // const url = "http://172.20.10.2:8800/api/items";
-            const url = "http://10.77.1.70:8800/api/items";
+            const url = `http://${ARYANIP}:8800/api/items`;
             try {
                 const response = await fetch(url, {
                     method: "DELETE",
@@ -328,10 +315,19 @@ function VendorDashboard() {
                 });
             } catch (error) {
                 console.error("Error while executing updateOrder")
+                flag = 1
             }
         }
 
-        fetchUnavailableItems(checkedItems);
+
+        if (flag == 0) {
+            fetchUnavailableItems(checkedItems, true);
+
+        }
+        else {
+            ReactNativeAlert.alert('Something went wrong...')
+            fetchOrders()
+        }
     }
 
     const segregateDishes = (searched) => {
@@ -341,8 +337,6 @@ function VendorDashboard() {
                 TempSearchedMenu.push(item)
             }
         })
-        console.log('*******')
-        console.log(TempSearchedMenu)
         setSearchedMenu(TempSearchedMenu)
     }
 
@@ -799,8 +793,11 @@ function VendorDashboard() {
 
 
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 16, justifyContent: 'space-between' }}>
-                    <TouchableOpacity onPress={() => {navigation.goBack();if(socket) {
-                socket.disconnect();}}} style={{ width: 56 }}>
+                    <TouchableOpacity onPress={() => {
+                        navigation.goBack(); if (socket) {
+                            socket.disconnect();
+                        }
+                    }} style={{ width: 56 }}>
                         <ArrowLeftIcon size={20} style={[colorScheme == 'light' ? { color: 'black' } : { color: 'white' }]} />
                     </TouchableOpacity>
                     <Text className='text-lg font-medium' style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>{selectedRestaurant}</Text>
@@ -808,7 +805,7 @@ function VendorDashboard() {
                         onPress={() => {
                             updateMenu(unavailableItems)
                         }}
-                        isDisabled={fetchedUnavailableItems === unavailableItems}
+                        isDisabled={fetchedUnavailableItems == unavailableItems}
                     >
                         <HStack className='items-center space-x-2'>
                             <Text allowFontScaling={false} className='font-medium' style={[showMenu ? { color: '#16a34a' } : { color: 'gray' }]}>
@@ -826,6 +823,7 @@ function VendorDashboard() {
                             setShowClosed(false)
                             setShowOpen(true)
                             setShowMenu(false)
+                            setSearchedMenu([])
                         }}
                     >
                         <VStack className='items-center justify-center text-center'>
@@ -860,6 +858,7 @@ function VendorDashboard() {
                             setShowClosed(true)
                             setShowOpen(false)
                             setShowMenu(false)
+                            setSearchedMenu([])
                         }}
                     >
                         <VStack className='items-center space-x-2'>
@@ -878,13 +877,15 @@ function VendorDashboard() {
                     refreshControl={
                         <RefreshControl refreshing={Refreshing}
                             onRefresh={() => {
+                                setRefreshing(true)
                                 fetchOrders()
                                 fetchDishes(query)
                             }}
                         />
                     }
+                    showsVerticalScrollIndicator={false}
                 >
-                    {openOrders && !showClosed &&
+                    {openOrders && !showClosed && !showMenu &&
                         <View>
                             <Accordion
                                 activeSections={activeOpenSections}
@@ -898,7 +899,7 @@ function VendorDashboard() {
                             />
                         </View>
                     }
-                    {closedOrders && showClosed &&
+                    {closedOrders && showClosed && !showMenu &&
                         <View>
                             <Accordion
                                 activeSections={activeClosedSections}
@@ -912,8 +913,72 @@ function VendorDashboard() {
                             />
                         </View>
                     }
+
+                    {showMenu && Menu && unavailableItems.length > 0 &&
+
+                        <VStack>
+                            <Text className='text-lg font-medium self-center py-2'
+                                style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                            >
+                                Unavailable Items
+                            </Text>
+                            <PresenceTransition visible={true} initial={{
+                                opacity: 0
+                            }} animate={{
+                                opacity: 1,
+                                transition: {
+                                    duration: 300,
+                                }
+                            }}>
+                                <View className='pl-2 rounded-md shadow-sm'
+                                    style={[colorScheme == 'light' ? Styles.LightBGSec : Styles.DarkBGSec]}
+                                >
+                                    <Checkbox.Group onChange={setUnavailableItems} value={unavailableItems}
+                                        isDisabled={Refreshing}
+                                    >
+                                        {unavailableItems.map((item, index) => (
+                                            <View className='w-full'>
+                                                <PresenceTransition visible={true} initial={{
+                                                    opacity: 0
+                                                }} animate={{
+                                                    opacity: 1,
+                                                    transition: {
+                                                        duration: 300,
+                                                    }
+                                                }}>
+                                                    <Checkbox colorScheme="danger" value={item} my={2}
+                                                        size='md'
+                                                        style={[unavailableItems.includes(item) ? [colorScheme == 'light' ? { backgroundColor: '#fb7185', borderColor: '#fb7185' } : { backgroundColor: '#fda4af', borderColor: '#fda4af' }] : { backgroundColor: '#86efac', borderColor: '#86efac' }]}
+                                                        icon={<XMarkIcon style={{ width: 16, height: 16, padding: 8, color: '#000' }} />
+                                                            // <Image source={Cross2} style={{ width: 16, height: 16 }} />
+                                                        }
+                                                    >
+                                                        <HStack className='w-11/12 justify-between pr-2'>
+                                                            <HStack className='space-x-2 items-center'>
+                                                                <Text className='font-medium text-base'
+                                                                    style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                                                >
+                                                                    {item}
+                                                                </Text>
+                                                            </HStack>
+                                                        </HStack>
+                                                    </Checkbox>
+                                                </PresenceTransition>
+                                            </View>
+                                        ))}
+                                    </Checkbox.Group>
+                                </View>
+                            </PresenceTransition>
+                        </VStack>
+                    }
+
                     {showMenu && Menu &&
                         <VStack className='pt-3 space-y-2'>
+                            <Text className='text-lg font-medium self-center'
+                                style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                            >
+                                Live Menu
+                            </Text>
                             <View className="flex-row item-center ">
                                 <View className="self-center flex-row flex-1 p-3 shadow-sm" style={[colorScheme == 'light' ? Styles.LightSearchBar : Styles.DarkSearchBar]}>
                                     <HStack>
@@ -954,84 +1019,111 @@ function VendorDashboard() {
                             </View>
 
                             {(Menu && SearchedMenu.length == 0) &&
-                                <Checkbox.Group onChange={setUnavailableItems} value={unavailableItems}>
-                                    {Menu.map((item, index) => (
-                                        <View className='w-full'>
-                                            <Checkbox colorScheme="danger" value={item.name} my={2}
-                                                size='md'
-                                                style={[unavailableItems.includes(item.name) ? [colorScheme=='light'? {backgroundColor: '#fb7185', borderColor: '#fb7185'} : {backgroundColor: '#fda4af', borderColor: '#fda4af'} ] : {backgroundColor: '#86efac', borderColor: '#86efac'} ]}
-                                                icon={<XMarkIcon style={{width: 16, height: 16, padding: 8, color: '#000'}}/>
-                                                // <Image source={Cross2} style={{ width: 16, height: 16 }} />
-                                            }
-                                            >
-                                                <HStack className='w-11/12 justify-between pr-2'>
-                                                    <HStack className='space-x-2 items-center'>
-                                                        {item.Veg_NonVeg === "Veg" ? (
-                                                            <Image
-                                                                style={{ width: 15, height: 15, resizeMode: "contain" }}
-                                                                source={VegIcon}
-                                                            />
-                                                        ) : (
-                                                            <Image
-                                                                style={{ width: 15, height: 15, resizeMode: "contain" }}
-                                                                source={NonVegIcon}
-                                                            />
-                                                        )}
-                                                        <Text className='font-medium text-base'
-                                                            style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
-                                                        >
-                                                            {item.name}
-                                                        </Text>
-                                                    </HStack>
-                                                    <Text className='text-base font-medium'
-                                                        style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                <VStack>
+
+                                    <View className='pl-2 rounded-md shadow-sm'
+                                        style={[colorScheme == 'light' ? Styles.LightBGSec : Styles.DarkBGSec]}
+                                    >
+                                        <Checkbox.Group onChange={setUnavailableItems} value={unavailableItems}
+                                            isDisabled={Refreshing}
+                                        >
+                                            {Menu.map((item, index) => (
+                                                <View className='w-full'>
+                                                    <Checkbox colorScheme="danger" value={item.name} my={2}
+                                                        size='md'
+                                                        style={[unavailableItems.includes(item.name) ? [colorScheme == 'light' ? { backgroundColor: '#fb7185', borderColor: '#fb7185' } : { backgroundColor: '#fda4af', borderColor: '#fda4af' }] : { backgroundColor: '#86efac', borderColor: '#86efac' }]}
+                                                        icon={<XMarkIcon style={{ width: 16, height: 16, padding: 8, color: '#000' }} />
+                                                            // <Image source={Cross2} style={{ width: 16, height: 16 }} />
+                                                        }
                                                     >
-                                                        ₹{item.Price}
-                                                    </Text>
-                                                </HStack>
-                                            </Checkbox>
-                                        </View>
-                                    ))}
-                                </Checkbox.Group>
+                                                        <HStack className='w-11/12 justify-between pr-2'>
+                                                            <HStack className='space-x-2 items-center'>
+                                                                {item.Veg_NonVeg === "Veg" ? (
+                                                                    <Image
+                                                                        style={{ width: 15, height: 15, resizeMode: "contain" }}
+                                                                        source={VegIcon}
+                                                                    />
+                                                                ) : (
+                                                                    <Image
+                                                                        style={{ width: 15, height: 15, resizeMode: "contain" }}
+                                                                        source={NonVegIcon}
+                                                                    />
+                                                                )}
+                                                                <Text className='font-medium text-base'
+                                                                    style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                                                >
+                                                                    {item.name}
+                                                                </Text>
+                                                            </HStack>
+                                                            <Text className='text-base font-medium'
+                                                                style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                                            >
+                                                                ₹{item.Price}
+                                                            </Text>
+                                                        </HStack>
+                                                    </Checkbox>
+                                                </View>
+                                            ))}
+                                        </Checkbox.Group>
+                                    </View>
+                                </VStack>
                             }
 
+
+
                             {(Menu && SearchedMenu.length > 0) &&
-                                <Checkbox.Group onChange={setUnavailableItems} value={unavailableItems}>
-                                    {SearchedMenu.map((item, index) => (
-                                        <View className='w-full'>
-                                            <Checkbox colorScheme="dark" value={item.name} my={2}
-                                                size='lg'
-                                                icon={<Image source={Cross} style={{ width: 20, height: 20 }} />}
-                                            >
-                                                <HStack className='w-11/12 justify-between pr-2'>
-                                                    <HStack className='space-x-2 items-center'>
-                                                        {item.Veg_NonVeg === "Veg" ? (
-                                                            <Image
-                                                                style={{ width: 15, height: 15, resizeMode: "contain" }}
-                                                                source={VegIcon}
-                                                            />
-                                                        ) : (
-                                                            <Image
-                                                                style={{ width: 15, height: 15, resizeMode: "contain" }}
-                                                                source={NonVegIcon}
-                                                            />
-                                                        )}
-                                                        <Text className='font-medium text-base'
-                                                            style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
-                                                        >
-                                                            {item.name}
-                                                        </Text>
-                                                    </HStack>
-                                                    <Text className='text-base font-medium'
-                                                        style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                <VStack>
+                                    <Text className='text-lg font-medium self-center pb-2'
+                                        style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                    >
+                                        Live Menu
+                                    </Text>
+                                    <View className='pl-2 rounded-md shadow-sm'
+                                        style={[colorScheme == 'light' ? Styles.LightBGSec : Styles.DarkBGSec]}
+                                    >
+                                        <Checkbox.Group onChange={(e) => { console.log(e); setUnavailableItems(e) }} value={unavailableItems}
+                                            isDisabled={Refreshing}
+                                        >
+                                            {SearchedMenu.map((item, index) => (
+                                                <View className='w-full'>
+                                                    <Checkbox colorScheme="danger" value={item.name} my={2}
+                                                        size='md'
+                                                        style={[unavailableItems.includes(item.name) ? [colorScheme == 'light' ? { backgroundColor: '#fb7185', borderColor: '#fb7185' } : { backgroundColor: '#fda4af', borderColor: '#fda4af' }] : { backgroundColor: '#86efac', borderColor: '#86efac' }]}
+                                                        icon={<XMarkIcon style={{ width: 16, height: 16, padding: 8, color: '#000' }} />
+                                                            // <Image source={Cross2} style={{ width: 16, height: 16 }} />
+                                                        }
                                                     >
-                                                        ₹{item.Price}
-                                                    </Text>
-                                                </HStack>
-                                            </Checkbox>
-                                        </View>
-                                    ))}
-                                </Checkbox.Group>
+                                                        <HStack className='w-11/12 justify-between pr-2'>
+                                                            <HStack className='space-x-2 items-center'>
+                                                                {item.Veg_NonVeg === "Veg" ? (
+                                                                    <Image
+                                                                        style={{ width: 15, height: 15, resizeMode: "contain" }}
+                                                                        source={VegIcon}
+                                                                    />
+                                                                ) : (
+                                                                    <Image
+                                                                        style={{ width: 15, height: 15, resizeMode: "contain" }}
+                                                                        source={NonVegIcon}
+                                                                    />
+                                                                )}
+                                                                <Text className='font-medium text-base'
+                                                                    style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                                                >
+                                                                    {item.name}
+                                                                </Text>
+                                                            </HStack>
+                                                            <Text className='text-base font-medium'
+                                                                style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                                            >
+                                                                ₹{item.Price}
+                                                            </Text>
+                                                        </HStack>
+                                                    </Checkbox>
+                                                </View>
+                                            ))}
+                                        </Checkbox.Group>
+                                    </View>
+                                </VStack>
                             }
 
                         </VStack>

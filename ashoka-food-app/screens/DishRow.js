@@ -8,14 +8,14 @@ import VegIcon from '../assets/vegicon.png';
 import NonVegIcon from '../assets/nonvegicon.png';
 import Styles from "../components/Styles";
 import { HStack, VStack } from "native-base";
+import { ARYANIP, ZAHAANIP } from '@dotenv'
 
 const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant }) => {
-    const [isPressed, setIsPressed] = React.useState(false);
     const colorScheme = useColorScheme();
     const dispatch = useDispatch();
     const items = useSelector(selectCartItems);
     const [itemQuantity, setItemQuantity] = useState(0)
-    console.log(items)
+    const [FetchedUnavailableItems, setFetchedUnavailableItems] = useState([])
 
     const addItem = () => {
         Price = parseFloat(Price)
@@ -70,23 +70,41 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant }) =
         })
     };
 
-    useEffect(()=>{
-        if(items.length==0){
+    const fetchUnavailableItems = async () => {
+        try {
+            // const response = await fetch(`http://10.77.1.70:8800/api/items/${selectedRestaurant}`);
+            const response = await fetch(`http://${ARYANIP}:8800/api/items/${Restaurant}`);
+            const data = await response.json();
+            var TempFetchedUnavailableItems = []
+            if (data) {
+                data.map((item, index) => {
+                    TempFetchedUnavailableItems.push(item.name)
+                })
+                setFetchedUnavailableItems(TempFetchedUnavailableItems)
+            }
+        } catch (error) {
+            console.error('Error fetching orders:', error);
+        }
+    }
+
+    useEffect(() => {
+        if (items.length == 0) {
             setItemQuantity(0)
         }
-        if(items.length!=0){
+        if (items.length != 0) {
             let dishNotFound = true
-            items.map((item)=>{
-                if(item.name==name){
+            items.map((item) => {
+                if (item.name == name) {
                     dishNotFound = false
                     setItemQuantity(item.quantity)
                 }
             });
-            if(dishNotFound){
+            if (dishNotFound) {
                 setItemQuantity(0)
             }
-        }  
-    },[items])
+        }
+        fetchUnavailableItems()
+    }, [items])
 
     return (
         <>
@@ -119,39 +137,54 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant }) =
 
                 </VStack>
 
-                {/* Add/Minus BUtton Block */}
-                {(itemQuantity == 0 || itemQuantity==null) && delivery == 'Yes' &&
-                    <TouchableOpacity onPress={addItem}>
-                        <HStack
-                            style={[colorScheme == 'light' ? Styles.LightAddButtonInitial : Styles.DarkAddButtonInitial]}
+                {FetchedUnavailableItems.includes(name) ? 
+                    <VStack className='w-max pr-8 items-center'>
+                        <Text className='font-medium'
+                            style={[colorScheme == 'light' ? Styles.LightTextSecondary : Styles.DarkTextSecondary]}
                         >
-                            <Text className='text-xl font-medium ' style={{ color: '#3E5896', marginLeft: 4 }}>
-                                ADD
-                            </Text>
-                            <PlusSmallIcon size={16} color='#3E5896' />
-                        </HStack>
-                    </TouchableOpacity>
-                }
-                {/* {console.log(name)}
-                {console.log(delivery)}
-                {console.log(itemQuantity)} */}
-                {itemQuantity > 0 && delivery == 'Yes' &&
-                    <HStack
-                        style={[colorScheme == 'light' ? Styles.LightAddButtonFinal : Styles.DarkAddButtonFinal]}
-                    >
-                        <TouchableOpacity onPress={removeItem} className='p-3 px-2'>
-                            <MinusIcon size={16} color='white' />
-                        </TouchableOpacity>
-
-                        <Text className='text-xl font-medium' style={{ color: 'white' }}>
-                            {itemQuantity}
+                            Currently
                         </Text>
+                        <Text className='font-medium'
+                            style={[colorScheme == 'light' ? Styles.LightTextSecondary : Styles.DarkTextSecondary]}
+                        >  
+                           Unavailable 
+                        </Text>
+                    </VStack>
+                :
+                    <>
+                        {/* Add/Minus BUtton Block */}
+                        {(itemQuantity == 0 || itemQuantity == null) && delivery == 'Yes' &&
+                            <TouchableOpacity onPress={addItem}>
+                                <HStack
+                                    style={[colorScheme == 'light' ? Styles.LightAddButtonInitial : Styles.DarkAddButtonInitial]}
+                                >
+                                    <Text className='text-xl font-medium ' style={{ color: '#3E5896', marginLeft: 4 }}>
+                                        ADD
+                                    </Text>
+                                    <PlusSmallIcon size={16} color='#3E5896' />
+                                </HStack>
+                            </TouchableOpacity>
+                        }
+                        {itemQuantity > 0 && delivery == 'Yes' &&
+                            <HStack
+                                style={[colorScheme == 'light' ? Styles.LightAddButtonFinal : Styles.DarkAddButtonFinal]}
+                            >
+                                <TouchableOpacity onPress={removeItem} className='p-3 px-2'>
+                                    <MinusIcon size={16} color='white' />
+                                </TouchableOpacity>
 
-                        <TouchableOpacity onPress={addItem} className='p-3 px-2'>
-                            <PlusIcon size={16} color='white' />
-                        </TouchableOpacity>
-                    </HStack>
+                                <Text className='text-xl font-medium' style={{ color: 'white' }}>
+                                    {itemQuantity}
+                                </Text>
+
+                                <TouchableOpacity onPress={addItem} className='p-3 px-2'>
+                                    <PlusIcon size={16} color='white' />
+                                </TouchableOpacity>
+                            </HStack>
+                        }
+                    </>
                 }
+
 
             </HStack>
         </>
