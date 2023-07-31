@@ -106,9 +106,42 @@ const HomeScreen = () => {
 
 
     return (
-        <SafeAreaView className="" style={[colorScheme == 'light' ? { backgroundColor: '#F2F2F2' } : { backgroundColor: '#0c0c0f' }]}>
+        <View className="" style={[colorScheme == 'light' ? { backgroundColor: '#F2F2F2' } : { backgroundColor: '#0c0c0f' }]}>
 
-            <SafeAreaView className="absolute bottom-32 w-7/12 self-center z-50 shadow-sm">
+            <View className='absolute bottom-32 w-screen z-20 shadow-sm'>
+                <SafeAreaView>
+                    <TouchableOpacity
+                        onPress={() => {
+                            navigation.navigate('LiveOrders')
+                        }}
+                        className=" w-max h-max py-2 my-0.5 px-3 flex-row items-center rounded-lg z-20"
+                        style={{ backgroundColor: '#3E5896' }}
+                    >
+                        <HStack className='items-center justify-between w-full'>
+                            <>
+                                <HStack className='items-center' space={2}>
+                                    <Image
+                                        style={{ width: 20, height: 20, resizeMode: "contain" }}
+                                        source={Tracking}
+                                    />
+                                    <Text className='text-base font-medium text-white'
+                                    >
+                                        Track My Order
+                                    </Text>
+                                </HStack>
+                                <View style={{ transform: [{ rotate: '90deg' }] }}>
+                                    <Image
+                                        style={{ width: 12, height: 12, resizeMode: "contain" }}
+                                        source={ChevronUp}
+                                    />
+                                </View>
+                            </>
+                        </HStack>
+                    </TouchableOpacity>
+                </SafeAreaView>
+            </View>
+
+            {/* <SafeAreaView className="absolute bottom-32 w-7/12 self-center z-50 shadow-sm">
                 <TouchableOpacity
                     onPress={() => {
                         navigation.navigate('LiveOrders')
@@ -137,22 +170,23 @@ const HomeScreen = () => {
                         </>
                     </HStack>
                 </TouchableOpacity>
-            </SafeAreaView>
+            </SafeAreaView> */}
 
-            <View className="flex-row pb-3 items-center mx-2 space-x-1 z-50 h-max w-10/12 justify-between self-center">
+            <SafeAreaView>
+                <View className="flex-row pb-3 items-center mx-2 space-x-1 z-50 h-max w-10/12 justify-between self-center">
 
-                <Image source={AshokaLogo} className="p-4 rounded-full" style={{ height: 50, width: 50 }} />
+                    <Image source={AshokaLogo} className="p-4 rounded-full" style={{ height: 50, width: 50 }} />
 
-                <View className="">
+                    <View className="">
 
-                    <VStack space={1} className='justify-center'>
-                        <Text allowFontScaling={false}
-                            className='self-center font-semibold text-xl italic ' style={[colorScheme == 'light' ? Styles.LightHomeAdlib : Styles.DarkHomeAdlib]}>
-                            AshokaEats™
-                        </Text>
-                    </VStack>
+                        <VStack space={1} className='justify-center'>
+                            <Text allowFontScaling={false}
+                                className='self-center font-semibold text-xl italic ' style={[colorScheme == 'light' ? Styles.LightHomeAdlib : Styles.DarkHomeAdlib]}>
+                                AshokaEats™
+                            </Text>
+                        </VStack>
 
-                    {/* {LoadingJoke &&
+                        {/* {LoadingJoke &&
                         <VStack space={2}>
                             <Skeleton h='2' rounded='full' w='20%'
                                 startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
@@ -166,8 +200,8 @@ const HomeScreen = () => {
                         </VStack>
                     } */}
 
-                    {/* Dropdown Menu */}
-                    {/* {!showDropDown && !LoadingJoke &&
+                        {/* Dropdown Menu */}
+                        {/* {!showDropDown && !LoadingJoke &&
                         <>
                             <Text className='w-full pl-1 self-center font-semibold text-xs' style={[colorScheme == 'light' ? Styles.LightHomeAdlib : Styles.DarkHomeAdlib]}>
                                 Deliver to
@@ -216,83 +250,84 @@ const HomeScreen = () => {
                         </>
                     } */}
 
+                    </View>
+
+                    <View className=''>
+                        <TouchableOpacity onPress={() => {
+                            console.log(actualUser);
+                            navigation.navigate('UserScreen', { actualUser })
+                            setIsOpen(false)
+                        }}>
+                            {actualUser.hasOwnProperty('picture') ?
+                                <Image style={styles.userPic} source={{ uri: actualUser.picture }} />
+                                :
+                                <Image style={styles.userPic} source={userPic} />
+                            }
+                        </TouchableOpacity>
+                    </View>
+
                 </View>
-
-                <View className=''>
-                    <TouchableOpacity onPress={() => {
-                        console.log(actualUser);
-                        navigation.navigate('UserScreen', { actualUser })
-                        setIsOpen(false)
-                    }}>
-                        {actualUser.hasOwnProperty('picture') ?
-                            <Image style={styles.userPic} source={{ uri: actualUser.picture }} />
-                            :
-                            <Image style={styles.userPic} source={userPic} />
-                        }
-                    </TouchableOpacity>
-                </View>
-
-            </View>
-
-            {/* search */}
-            <View className="flex-row item-center space-x-2 pb-2 mx-4 ">
-                <View className="flex-row space-x-2 flex-1 p-3 shadow-sm" style={[colorScheme == 'light' ? Styles.LightSearchBar : Styles.DarkSearchBar]} >
-                    <Image
-                        style={{ width: 16, height: 16, resizeMode: "contain" }}
-                        source={Search}
-                    />
-                    {colorScheme == 'light' &&
-                        <TextInput placeholder="Search for a dish or place" keyboardType="default" className='w-full'
-                            style={{ color: '#000' }}
-                            onPressIn={() => {
-                                setIsOpen(false)
-                            }}
-                            onChangeText={(text) => {
-                                setSearched(text)
-                            }}
-                            autoComplete='off'
-                            autoCorrect={false}
-                            enterKeyHint='done' />
-                    }
-                    {colorScheme != 'light' &&
-                        <TextInput placeholder="Search for a dish or place" keyboardType="default" className='w-full'
-                            style={{ color: '#fff' }}
-                            onPressIn={() => {
-                                setIsOpen(false)
-                            }}
-                            onChangeText={(text) => {
-                                setSearched(text)
-                            }}
-                            autoComplete='off'
-                            autoCorrect={false}
-                            enterKeyHint='done'
+                {/* search */}
+                <View className="flex-row item-center space-x-2 pb-2 mx-4 ">
+                    <View className="flex-row space-x-2 flex-1 p-3 shadow-sm" style={[colorScheme == 'light' ? Styles.LightSearchBar : Styles.DarkSearchBar]} >
+                        <Image
+                            style={{ width: 16, height: 16, resizeMode: "contain" }}
+                            source={Search}
                         />
-                    }
+                        {colorScheme == 'light' &&
+                            <TextInput placeholder="Search for a dish or place" keyboardType="default" className='w-full'
+                                style={{ color: '#000' }}
+                                onPressIn={() => {
+                                    setIsOpen(false)
+                                }}
+                                onChangeText={(text) => {
+                                    setSearched(text)
+                                }}
+                                autoComplete='off'
+                                autoCorrect={false}
+                                enterKeyHint='done' />
+                        }
+                        {colorScheme != 'light' &&
+                            <TextInput placeholder="Search for a dish or place" keyboardType="default" className='w-full'
+                                style={{ color: '#fff' }}
+                                onPressIn={() => {
+                                    setIsOpen(false)
+                                }}
+                                onChangeText={(text) => {
+                                    setSearched(text)
+                                }}
+                                autoComplete='off'
+                                autoCorrect={false}
+                                enterKeyHint='done'
+                            />
+                        }
+                    </View>
                 </View>
-            </View>
 
-            <Slide in={!netInfo.isConnected} placement="top">
-                <Alert justifyContent="center" status="error" safeAreaTop={10}>
-                    <VStack space={1} >
-                        <HStack className='justify-center pt-2'>
-                            <Image source={Warning} className="h-7 w-7" />
-                        </HStack>
-                        <HStack className='items-center justify-center'>
-                            <Text className='text-md pt-1 font-medium pl-2 pr-1'>
-                                Mmm, Ashoka wifi stonks
-                            </Text>
-                            <Image source={Decreasing} className="h-5 w-5" />
-                        </HStack>
-                    </VStack>
-                </Alert>
-            </Slide>
+                <Slide in={!netInfo.isConnected} placement="top">
+                    <Alert justifyContent="center" status="error" safeAreaTop={10}>
+                        <VStack space={1} >
+                            <HStack className='justify-center pt-2'>
+                                <Image source={Warning} className="h-7 w-7" />
+                            </HStack>
+                            <HStack className='items-center justify-center'>
+                                <Text className='text-md pt-1 font-medium pl-2 pr-1'>
+                                    Mmm, Ashoka wifi stonks
+                                </Text>
+                                <Image source={Decreasing} className="h-5 w-5" />
+                            </HStack>
+                        </VStack>
+                    </Alert>
+                </Slide>
 
-            {/* Body */}
-            <Restaurants searched={Searched} actualUser={actualUser} LoadJoke={LoadJoke} />
+                {/* Body */}
+                <Restaurants searched={Searched} actualUser={actualUser} LoadJoke={LoadJoke} />
+            </SafeAreaView>
 
 
 
-        </SafeAreaView>
+
+        </View>
     );
 };
 

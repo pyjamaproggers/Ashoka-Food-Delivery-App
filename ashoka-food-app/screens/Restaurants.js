@@ -121,7 +121,7 @@ const Restaurants = (props) => {
                 <>
                     <Animated.ScrollView
                         contentContainerStyle={{
-                            paddingBottom: 120
+                            paddingBottom: 250
                         }}
                         refreshControl={
                             <RefreshControl refreshing={Refreshing}

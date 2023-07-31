@@ -503,17 +503,6 @@ const Styles = StyleSheet.create({
         backgroundColor: '#262626'
     },
 
-    LightTrackingTopBTN:{
-        backgroundColor: 'rgba(255,255,255,0.9)',
-        padding: 8,
-        borderRadius: 7.5,
-    },
-    DarkTrackingTopBTN:{
-        backgroundColor: 'rgba(26,26,26,0.9)',
-        padding: 8,
-        borderRadius: 7.5,
-    }
-    
 });
 
 export default Styles;
