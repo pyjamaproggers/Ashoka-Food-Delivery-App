@@ -97,12 +97,15 @@ export default LiveOrders = () => {
     }, [])
 
     return (
-        <>
+        <View style={[colorScheme == 'light' ? Styles.LightBG : Styles.DarkBG]}>
             <Animated.FlatList
                 data={usersLiveOrders}
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 pagingEnabled
+                bounces={false}
+                renderToHardwareTextureAndroid
+                snapToAlignment="start"
                 onScroll={Animated.event(
                     [{ nativeEvent: { contentOffset: { x: scrollX, y: scrollY } } }],
                     { useNativeDriver: true }
@@ -118,7 +121,7 @@ export default LiveOrders = () => {
                     const translateX = scrollX.interpolate({
                         inputRange,
                         outputRange: [
-                            -width * 0.99, 0, width * 0.99
+                            -width * 1, 0, width * 1
                         ]
                     })
 
@@ -268,7 +271,7 @@ export default LiveOrders = () => {
                                             width: ITEM_WIDTH,
                                             height: ITEM_HEIGHT,
                                             resizeMode: 'cover',
-                                            opacity: 0.8,
+                                            opacity: 1,
                                             transform: [
                                                 {
                                                     translateX
@@ -460,7 +463,7 @@ export default LiveOrders = () => {
                     )
                 }}
             />
-        </>
+        </View>
     )
 }
 
