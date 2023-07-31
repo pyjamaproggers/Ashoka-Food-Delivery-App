@@ -8,7 +8,7 @@ import { ArrowLeftIcon, ChevronRightIcon } from 'react-native-heroicons/solid';
 import { SafeAreaView, StyleSheet, StatusBar, Image } from "react-native";
 import { urlFor } from "../sanity";
 import Styles from '../components/Styles.js'
-import { HStack, TextArea, VStack, Alert as NativeBaseAlert } from "native-base";
+import { HStack, TextArea, VStack, Alert as NativeBaseAlert, Skeleton, Spinner } from "native-base";
 import VegIcon from '../assets/vegicon.png';
 import client from '../sanity';
 import NonVegIcon from '../assets/nonvegicon.png';
@@ -32,55 +32,66 @@ import UPI from '../assets/upi.png'
 import COD from '../assets/cod.png'
 import { ARYANIP, ZAHAANIP } from '@dotenv'
 import BrokenHeart from '../assets/brokenheart.png'
+import PayAtRestaurant from '../assets/payatrestaurant.png'
 
 
 const BasketScreen = () => {
     const colorScheme = useColorScheme()
     const { params: { actualUser, Basket } } = useRoute();
-    const restaurant = useSelector(selectRestaurant);
     const navigation = useNavigation();
+
     const items = useSelector(selectCartItems);
     const dispatch = useDispatch();
+
     const [FinalBasket, setFinalBasket] = useState()
     const [FinalBasketReady, setFinalBasketReady] = useState(false)
     const [CartTotal, setCartTotal] = useState(0)
+
     const [DeliveryLocation, setDeliveryLocation] = useState('Location')
-    const [PaymentOption, setPaymentOption] = useState('Payment Mode')
     const [isLocationOpen, setIsLocationOpen] = useState(false)
+    const [deliveryOptions, setDeliveryOptions] = useState()
+
+    const [PaymentOption, setPaymentOption] = useState('Payment Mode')
     const [isPaymentOpen, setIsPaymentOpen] = useState(false)
+    const [paymentOptions, setPaymentOptions] = useState()
+
     const [OrderTypeOption, setOrderTypeOption] = useState('Order Type')
     const [isOrderTypeOpen, setIsOrderTypeOpen] = useState(false)
-    const [FetchedUnavailableItems, setFetchedUnavailableItems] = useState([])
+    const [orderTypeOptions, setOrderTypeOptions] = useState()
 
-    const Locations = [
-        { location: 'RH1', icon: RH },
-        { location: 'RH2', icon: RH },
-        { location: 'RH3', icon: RH },
-        { location: 'RH4', icon: RH },
-        { location: 'RH5', icon: RH },
-        { location: 'Library AC04', icon: AC04 },
-        { location: 'Sports Block', icon: SportsBlock },
-        { location: 'Mess', icon: Mess },
-    ]
+    const [Fetching, setFetching] = useState()
 
-    const paymentOptions = [
-        { option: 'Pay On Delivery', icon: COD },
-        { option: 'Pay via UPI', icon: UPI },
-    ]
-    const paymentOptions2 = [
-        { option: 'Pay On Delivery', icon: COD },
-    ]
-    const paymentOptions3 = [
-        { option: 'Pay via UPI', icon: UPI },
-    ]
+    const [showSpinner, setShowSpinner] = useState(false)
 
-    const orderTypeOptions = [
-        { option: 'Delivery', icon: FoodDelivery },
-        { option: 'Dine In', icon: DineIn },
-    ]
-    const orderTypeOptions2 = [
-        { option: 'Delivery', icon: FoodDelivery },
-    ]
+    // const Locations = [
+    //     { location: 'RH1', icon: RH },
+    //     { location: 'RH2', icon: RH },
+    //     { location: 'RH3', icon: RH },
+    //     { location: 'RH4', icon: RH },
+    //     { location: 'RH5', icon: RH },
+    //     { location: 'Library AC04', icon: AC04 },
+    //     { location: 'Sports Block', icon: SportsBlock },
+    //     { location: 'Mess', icon: Mess },
+    // ]
+
+    // const paymentOptions = [
+    //     { option: 'Pay On Delivery', icon: COD },
+    //     { option: 'Pay via UPI', icon: UPI },
+    // ]
+    // const paymentOptions2 = [
+    //     { option: 'Pay On Delivery', icon: COD },
+    // ]
+    // const paymentOptions3 = [
+    //     { option: 'Pay via UPI', icon: UPI },
+    // ]
+
+    // const orderTypeOptions = [
+    //     { option: 'Delivery', icon: FoodDelivery },
+    //     { option: 'Dine In', icon: DineIn },
+    // ]
+    // const orderTypeOptions2 = [
+    //     { option: 'Delivery', icon: FoodDelivery },
+    // ]
 
     const instructionsPlaceholders = [
         'Bhaiya mirchi thodi kam daalna...',
@@ -93,12 +104,12 @@ const BasketScreen = () => {
     ]
 
     const deliveryCharges = {
-        'Chicago Pizza': 20,
-        'Roti Boti': 30.00,
-        'Dhaba': 15.00,
+        'Chicago Pizza': 20.00,
+        'Roti Boti': 0.00,
+        'Dhaba': 10.00,
         'Subway': 20.00,
-        'Chaat Stall': 20.00,
-        'The Hunger Cycle': 30.00,
+        'Chaat Stall': 0.00,
+        'The Hunger Cycle': 15.00,
         'Rasananda': 10.00,
     }
 
@@ -157,6 +168,7 @@ const BasketScreen = () => {
 
     const checkUnavailableItems = async () => {
         var checkArray = 'The following items were removed from your cart as they became unavailable: '
+
         for (const basketRestaurant of Basket) {
             try {
                 const response = await fetch(`http://${ARYANIP}:8800/api/items/${basketRestaurant.name}`)
@@ -194,8 +206,6 @@ const BasketScreen = () => {
         }
 
         return checkArray
-        // You can add further logic here to handle the `checkArray`.
-        // For example, you can display the result using Alert.alert or navigate to another screen.
     }
 
     const updateInstructions = (instruction, restaurant) => {
@@ -219,8 +229,9 @@ const BasketScreen = () => {
         return null; // Return null or any default value if the restaurant is not found
     };
 
-    useMemo(() => {
+    useMemo(async () => {
         console.log('MEMO RUNNING AGAIN YAY')
+        setFetching(true)
 
         var UniqueRestaurantsInCart = []
 
@@ -238,6 +249,7 @@ const BasketScreen = () => {
         }
 
         var TempBasket = []
+
         for (i = 0; i < UniqueRestaurantsInCart.length; i++) {
             let UniqueRestaurantMiniCart = {
                 name: UniqueRestaurantsInCart[i],
@@ -274,8 +286,8 @@ const BasketScreen = () => {
             BasketRestaurant.items.map((item, index) => {
                 Subtotal = Subtotal + (item.Price * item.quantity)
             })
-            if (BasketRestaurant.name == 'Roti Boti' || BasketRestaurant.name == 'Subway' || BasketRestaurant.name == 'Chicago Pizza') {
-                var GSTtotal = (Math.round(Subtotal * (1.18) * 100) / 100).toFixed(2)
+            if (BasketRestaurant.name == 'Roti Boti') {
+                var GSTtotal = (Math.round(Subtotal * (1.05) * 100) / 100).toFixed(2)
                 FinalTotal = ((Math.round(GSTtotal * 100) / 100) + (Math.round(deliveryCharges[BasketRestaurant.name] * 100) / 100)).toFixed(2)
                 // console.log((Math.round(FinalTotal * 100) / 100).toFixed(2))
             }
@@ -293,21 +305,58 @@ const BasketScreen = () => {
             .then((data) => {
                 var TempFinalBasket = []
                 TempFinalBasket = TempBasket
+                let FoodVillageInCart = false
                 data.map((restaurant, index) => {
                     TempFinalBasket.map((basketRestaurant, index) => {
                         if (restaurant.name == basketRestaurant.name) {
                             basketRestaurant['image'] = restaurant.image
                         }
+                        if (basketRestaurant.name == 'Chaat Stall') {
+                            FoodVillageInCart = true
+                        }
                     })
                 })
+                if (FoodVillageInCart) {
+                    setDeliveryOptions([
+                        { location: 'RH1', icon: RH },
+                        { location: 'RH2', icon: RH },
+                        { location: 'RH3', icon: RH },
+                        { location: 'RH4', icon: RH },
+                        { location: 'RH5', icon: RH },
+                    ])
+                }
+                else {
+                    setDeliveryOptions([
+                        { location: 'RH1', icon: RH },
+                        { location: 'RH2', icon: RH },
+                        { location: 'RH3', icon: RH },
+                        { location: 'RH4', icon: RH },
+                        { location: 'RH5', icon: RH },
+                        { location: 'Library AC04', icon: AC04 },
+                        { location: 'Sports Block', icon: SportsBlock },
+                        { location: 'Mess', icon: Mess },
+                    ])
+                }
+                setOrderTypeOptions([
+                    { option: 'Delivery', icon: FoodDelivery },
+                    { option: 'Dine In', icon: DineIn },
+                ])
+                setPaymentOptions([
+                    { option: 'Pay On Delivery', icon: COD },
+                    { option: 'Pay At Outlet', icon: PayAtRestaurant },
+                ])
                 setFinalBasket(TempFinalBasket)
                 setFinalBasketReady(true)
+                setFetching(false)
             })
             .catch((error) => {
                 console.log('Error:', error); // Log any errors that occur
             });
 
-        checkUnavailableItems();
+        // let itemsCheck = await checkUnavailableItems();
+        // if (itemsCheck != 'The following items were removed from your cart as they became unavailable: ') {
+        //     Alert.alert(itemsCheck)
+        // }
 
     }, [items]);
 
@@ -333,6 +382,7 @@ const BasketScreen = () => {
 
             if (response.ok) {
                 console.log("Order sent successfully!");
+                setShowSpinner(false)
                 // Perform any actions after a successful order submission if needed
             } else {
                 console.error("Failed to send order!");
@@ -384,18 +434,21 @@ const BasketScreen = () => {
             Alert.alert(
                 'Where do we get it delivered to? Check the dropdown'
             )
+            setShowSpinner(false)
             return
         }
         if (PaymentOption == 'Payment Mode') {
             Alert.alert(
                 'How are you paying for this? Check the dropdown.'
             )
+            setShowSpinner(false)
             return
         }
         if (OrderTypeOption == 'Order Type') {
             Alert.alert(
                 'What is your order type? Check the dropdown'
             )
+            setShowSpinner(false)
             return
         }
 
@@ -445,15 +498,68 @@ const BasketScreen = () => {
             for (const orderData of orders) {
                 sendOrderToDatabase(orderData);
             }
+            for (const item of items){
+                dispatch(removeFromCart({ id: item.id, name: item.name, Price: item.Price, image: item.image, Restaurant: item.Restaurant, Veg_NonVeg: item.Veg_NonVeg, quantity: 0 }))
+            }
+            navigation.navigate('LiveOrders');
         }
-        else{
+        else {
             Alert.alert(itemsCheck)
+            setShowSpinner(false)
         }
 
     };
 
     return (
         <View className="flex-1 pt-14" style={[colorScheme == 'light' ? { backgroundColor: '#F2F2F2' } : { backgroundColor: '#0c0c0f' }]}>
+
+            {!FinalBasketReady &&
+                <VStack className='pt-8 items-center space-y-6'>
+                    <Skeleton h='2' rounded='full' w='20%'
+                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                    <Skeleton h='12' rounded='md' w='12'
+                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                    <Skeleton h='3' rounded='full' w='20%'
+                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+
+                    <Skeleton h='2' rounded='full' w='80%'
+                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+
+                    <Skeleton h='12' rounded='md' w='90%'
+                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                    <Skeleton h='12' rounded='md' w='90%'
+                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+
+                    <Skeleton h='2' rounded='full' w='80%'
+                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                    <Skeleton h='8' rounded='md' w='90%'
+                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+
+                    <Skeleton h='2' rounded='full' w='20%'
+                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                    <Skeleton h='16' rounded='md' w='90%'
+                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+
+                    <Skeleton h='2' rounded='full' w='20%'
+                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                    <Skeleton h='24' rounded='md' w='90%'
+                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+
+                </VStack>
+            }
+
             {CartTotal.length != 0 && FinalBasketReady &&
                 <SafeAreaView className="absolute bottom-0 w-screen z-20 " style={[colorScheme == 'light' ? Styles.LightCartButton : Styles.DarkCartButton]}>
                     <VStack className='w-full'>
@@ -509,7 +615,7 @@ const BasketScreen = () => {
                                         className='h-max'
                                     >
                                         {FinalBasket.length > 1 &&
-                                            <FlatList data={orderTypeOptions2} renderItem={({ item, index }) => {
+                                            <FlatList data={orderTypeOptions} renderItem={({ item, index }) => {
                                                 if (index == orderTypeOptions.length - 1) {
                                                     return (
                                                         <TouchableOpacity
@@ -573,7 +679,6 @@ const BasketScreen = () => {
                                                         <TouchableOpacity
                                                             onPress={() => {
                                                                 setOrderTypeOption(item.option)
-                                                                setPaymentOption('Pay via UPI')
                                                                 setIsOrderTypeOpen(false)
                                                             }}
                                                             style={[colorScheme == 'light' ? styles.LightDropdownItemEnd : styles.DarkDropdownItemEnd]}
@@ -692,8 +797,8 @@ const BasketScreen = () => {
                                     <View style={[colorScheme == 'light' ? styles.LightDropdownMenu2 : styles.DarkDropdownMenu2]}
                                         className='h-max'
                                     >
-                                        <FlatList data={Locations} renderItem={({ item, index }) => {
-                                            if (index == Locations.length - 1) {
+                                        <FlatList data={deliveryOptions} renderItem={({ item, index }) => {
+                                            if (index == deliveryOptions.length - 1) {
                                                 return (
                                                     <TouchableOpacity
                                                         onPress={() => {
@@ -834,65 +939,7 @@ const BasketScreen = () => {
                                     <View style={[colorScheme == 'light' ? styles.LightDropdownMenu2 : styles.DarkDropdownMenu2]}
                                         className='h-max'
                                     >
-                                        {FinalBasket.length > 1 &&
-                                            <FlatList data={paymentOptions2} renderItem={({ item, index }) => {
-                                                if (index == paymentOptions.length - 1) {
-                                                    return (
-                                                        <TouchableOpacity
-                                                            onPress={() => {
-                                                                setPaymentOption(item.option)
-                                                                setIsPaymentOpen(false)
-                                                            }}
-                                                            style={[colorScheme == 'light' ? styles.LightDropdownItemEnd : styles.DarkDropdownItemEnd]}
-                                                        >
-                                                            <HStack className='items-center'>
-                                                                {item.option == 'Pay On Delivery' ?
-                                                                    <Image
-                                                                        style={{ width: 20, height: 20, resizeMode: "contain" }}
-                                                                        source={COD}
-                                                                    />
-                                                                    :
-                                                                    <Image
-                                                                        style={{ width: 20, height: 20, resizeMode: "contain" }}
-                                                                        source={UPI}
-                                                                    />
-                                                                }
-                                                                <Text className='text-sm pl-2 font-medium' style={[colorScheme == 'light' ? Styles.LightDropdownText : Styles.DarkDropdownText]}>
-                                                                    {item.option}
-                                                                </Text>
-                                                            </HStack>
-                                                        </TouchableOpacity>
-                                                    )
-                                                }
-                                                return (
-                                                    <TouchableOpacity
-                                                        onPress={() => {
-                                                            setPaymentOption(item.option)
-                                                            setIsPaymentOpen(false)
-                                                        }}
-                                                        style={[colorScheme == 'light' ? styles.LightDropdownItem : styles.DarkDropdownItem]}
-                                                    >
-                                                        <HStack className='items-center'>
-                                                            {item.option == 'Pay On Delivery' ?
-                                                                <Image
-                                                                    style={{ width: 20, height: 20, resizeMode: "contain" }}
-                                                                    source={COD}
-                                                                />
-                                                                :
-                                                                <Image
-                                                                    style={{ width: 20, height: 20, resizeMode: "contain" }}
-                                                                    source={UPI}
-                                                                />
-                                                            }
-                                                            <Text className='text-sm pl-2 font-medium' style={[colorScheme == 'light' ? Styles.LightDropdownText : Styles.DarkDropdownText]}>
-                                                                {item.option}
-                                                            </Text>
-                                                        </HStack>
-                                                    </TouchableOpacity>
-                                                )
-                                            }} />
-                                        }
-                                        {FinalBasket.length == 1 && OrderTypeOption != 'Dine In' &&
+                                        {FinalBasket.length >= 1 &&
                                             <FlatList data={paymentOptions} renderItem={({ item, index }) => {
                                                 if (index == paymentOptions.length - 1) {
                                                     return (
@@ -950,89 +997,42 @@ const BasketScreen = () => {
                                                 )
                                             }} />
                                         }
-                                        {FinalBasket.length == 1 && OrderTypeOption == 'Dine In' &&
-                                            <FlatList data={paymentOptions3} renderItem={({ item, index }) => {
-                                                if (index == paymentOptions.length - 1) {
-                                                    return (
-                                                        <TouchableOpacity
-                                                            onPress={() => {
-                                                                setPaymentOption(item.option)
-                                                                setIsPaymentOpen(false)
-                                                            }}
-                                                            style={[colorScheme == 'light' ? styles.LightDropdownItemEnd : styles.DarkDropdownItemEnd]}
-                                                        >
-                                                            <HStack className='items-center'>
-                                                                {item.option == 'Pay On Delivery' ?
-                                                                    <Image
-                                                                        style={{ width: 20, height: 20, resizeMode: "contain" }}
-                                                                        source={COD}
-                                                                    />
-                                                                    :
-                                                                    <Image
-                                                                        style={{ width: 20, height: 20, resizeMode: "contain" }}
-                                                                        source={UPI}
-                                                                    />
-                                                                }
-                                                                <Text className='text-sm pl-2 font-medium' style={[colorScheme == 'light' ? Styles.LightDropdownText : Styles.DarkDropdownText]}>
-                                                                    {item.option}
-                                                                </Text>
-                                                            </HStack>
-                                                        </TouchableOpacity>
-                                                    )
-                                                }
-                                                return (
-                                                    <TouchableOpacity
-                                                        onPress={() => {
-                                                            setPaymentOption(item.option)
-                                                            setIsPaymentOpen(false)
-                                                        }}
-                                                        style={[colorScheme == 'light' ? styles.LightDropdownItem : styles.DarkDropdownItem]}
-                                                    >
-                                                        <HStack className='items-center'>
-                                                            {item.option == 'Pay On Delivery' ?
-                                                                <Image
-                                                                    style={{ width: 20, height: 20, resizeMode: "contain" }}
-                                                                    source={COD}
-                                                                />
-                                                                :
-                                                                <Image
-                                                                    style={{ width: 20, height: 20, resizeMode: "contain" }}
-                                                                    source={UPI}
-                                                                />
-                                                            }
-                                                            <Text className='text-sm pl-2 font-medium' style={[colorScheme == 'light' ? Styles.LightDropdownText : Styles.DarkDropdownText]}>
-                                                                {item.option}
-                                                            </Text>
-                                                        </HStack>
-                                                    </TouchableOpacity>
-                                                )
-                                            }} />
-
-                                        }
                                     </View>
                                 }
                             </VStack>
 
                             <TouchableOpacity
-                                onPress={placeOrder}
+                                onPress={()=>{
+                                    setShowSpinner(true)
+                                    placeOrder()
+                                }}
                                 className="bg-[#3E5896] py-1.5 my-0.5 px-3 flex-row items-center rounded-lg z-20"
                                 style={{ width: '47.5%' }}
                             >
                                 <HStack className='items-center justify-between  w-full'>
-                                    <VStack>
-                                        <Text className='text-base pl-1 font-medium text-white' >
-                                            Place Your Order
-                                        </Text>
-                                        <Text className='text-sm pl-1 font-medium text-white' >
-                                            (₹{CartTotal})
-                                        </Text>
-                                    </VStack>
-                                    <View style={{ transform: [{ rotate: '90deg' }] }}>
-                                        <Image
-                                            style={{ width: 12, height: 12, resizeMode: "contain" }}
-                                            source={Chevronup}
-                                        />
-                                    </View>
+                                    {!showSpinner &&
+                                        <>
+                                            <VStack>
+                                                <Text className='text-base pl-1 font-medium text-white' >
+                                                    Place Your Order
+                                                </Text>
+                                                <Text className='text-sm pl-1 font-medium text-white' >
+                                                    (₹{CartTotal})
+                                                </Text>
+                                            </VStack>
+                                            <View style={{ transform: [{ rotate: '90deg' }] }}>
+                                                <Image
+                                                    style={{ width: 12, height: 12, resizeMode: "contain" }}
+                                                    source={Chevronup}
+                                                />
+                                            </View>
+                                        </>
+                                    }
+                                    {showSpinner &&
+                                        <View className='w-full py-2.5'>
+                                            <Spinner color='white' />
+                                        </View>
+                                    }
                                 </HStack>
                             </TouchableOpacity>
 
@@ -1064,7 +1064,7 @@ const BasketScreen = () => {
                             <View className='w-11/12 pb-3 space-y-6 ' >
                                 {FinalBasket.map((BasketRestaurant, index) => (
                                     <View className='space-y-2'>
-                                        <VStack className='w-full items-center space-x-2 pt-2 pb-4'>
+                                        <VStack className='w-full items-center space-y-2 pb-3 pt-2'>
                                             <Image source={{ uri: urlFor(BasketRestaurant.image).url() }} style={{ width: 40, height: 40, borderRadius: 5 }} />
                                             <Text allowFontScaling={false} className='text-lg font-medium'
                                                 style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
@@ -1350,11 +1350,11 @@ const BasketScreen = () => {
                                                                     GST
                                                                 </Text>
                                                             </HStack>
-                                                            {(BasketRestaurant.name == 'Roti Boti' || BasketRestaurant.name == 'Subway' || BasketRestaurant.name == 'Chicago Pizza') ?
+                                                            {(BasketRestaurant.name == 'Roti Boti') ?
                                                                 <Text allowFontScaling={false} className='font-normal text-xs'
                                                                     style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
                                                                 >
-                                                                    ₹{(Math.round(BasketRestaurant.restaurantTotal * (0.18) * 100) / 100).toFixed(2)}
+                                                                    ₹{(Math.round(BasketRestaurant.restaurantTotal * (0.05) * 100) / 100).toFixed(2)}
                                                                 </Text>
                                                                 :
                                                                 <Text allowFontScaling={false} className='font-normal text-xs'
@@ -1547,11 +1547,11 @@ const BasketScreen = () => {
                                                             GST
                                                         </Text>
                                                     </HStack>
-                                                    {(BasketRestaurant.name == 'Roti Boti' || BasketRestaurant.name == 'Subway' || BasketRestaurant.name == 'Chicago Pizza') ?
+                                                    {(BasketRestaurant.name == 'Roti Boti') ?
                                                         <Text allowFontScaling={false} className='font-normal text-xs'
                                                             style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
                                                         >
-                                                            ₹{(Math.round(BasketRestaurant.restaurantTotal * (0.18) * 100) / 100).toFixed(2)}
+                                                            ₹{(Math.round(BasketRestaurant.restaurantTotal * (0.05) * 100) / 100).toFixed(2)}
                                                         </Text>
                                                         :
                                                         <Text allowFontScaling={false} className='font-normal text-xs'
@@ -1597,7 +1597,7 @@ const BasketScreen = () => {
                                                         <Text allowFontScaling={false} className='font-semibold text-md'
                                                             style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
                                                         >
-                                                            ₹{((Math.round(BasketRestaurant.restaurantTotal * (1.18) * 100) / 100) + (Math.round(deliveryCharges[BasketRestaurant.name] * 100) / 100)).toFixed(2)}
+                                                            ₹{((Math.round(BasketRestaurant.restaurantTotal * (1.05) * 100) / 100) + (Math.round(deliveryCharges[BasketRestaurant.name] * 100) / 100)).toFixed(2)}
                                                         </Text>
                                                         :
                                                         <Text allowFontScaling={false} className='font-semibold text-md'
@@ -1648,8 +1648,9 @@ const BasketScreen = () => {
 
                     </ScrollView>
                 }
-
             </KeyboardAwareScrollView>
+
+
         </View>
     );
 };

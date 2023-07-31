@@ -4,7 +4,7 @@ import { View, Text, Image, TouchableOpacity, Linking, useColorScheme, RefreshCo
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ArrowLeftIcon } from 'react-native-heroicons/solid';
 import Accordion from 'react-native-collapsible/Accordion';
-import { Button as NativeBaseButton, HStack, VStack, Checkbox, Modal, Select, Radio, Slide, Alert, PresenceTransition, useToast } from 'native-base';
+import { Button as NativeBaseButton, HStack, VStack, Checkbox, Modal, Select, Radio, Slide, Alert, PresenceTransition, useToast, Skeleton } from 'native-base';
 import Styles from '../components/Styles';
 import ChevronUp from '../assets/chevronupicon.png';
 import ChevronDown from '../assets/chevrondownicon.png';
@@ -97,6 +97,12 @@ function VendorDashboard() {
     useEffect(() => {
         if (latestOrder) {
             fetchOrders();
+            toast.show({
+                description: "New Order Received!",
+                placement: 'bottom',
+                backgroundColor: 'green.100',
+                _description: { color: 'green.600' },
+            })
         }
     }, [latestOrder]);
 
@@ -172,6 +178,7 @@ function VendorDashboard() {
     };
 
     const fetchOrders = async () => {
+        setFetching(true)
         try {
             // const response = await fetch(`http://10.77.1.70:8800/api/orders/${selectedRestaurant}`);
             const response = await fetch(`http://${ARYANIP}:8800/api/orders/${selectedRestaurant}`);
@@ -189,14 +196,16 @@ function VendorDashboard() {
             setOpenOrders(tempOpenOrders.reverse())
             setClosedOrders(tempClosedOrders)
             setRefreshing(false)
+            setFetching(false)
         } catch (error) {
             console.error('Error fetching orders:', error);
             setRefreshing(false)
+            setFetching(false)
         }
     };
 
     const fetchUnavailableItems = async (tempCheckedItems, showAlert) => {
-        setRefreshing(true)
+        setFetching(true)
         try {
             // const response = await fetch(`http://10.77.1.70:8800/api/items/${selectedRestaurant}`);
             const response = await fetch(`http://${ARYANIP}:8800/api/items/${selectedRestaurant}`);
@@ -215,6 +224,7 @@ function VendorDashboard() {
                 setCheckedItems(tempCheckedItems)
             }
             setRefreshing(false)
+            setFetching(false)
             if (showAlert) {
                 toast.show({
                     description: "Menu Updated",
@@ -226,6 +236,7 @@ function VendorDashboard() {
         } catch (error) {
             console.error('Error fetching orders:', error);
             setRefreshing(false)
+            setFetching(false)
         }
     }
 
@@ -259,6 +270,7 @@ function VendorDashboard() {
     const updateMenu = async (unavailableItems) => {
         // console.log(unavailableItems)
         // console.log(selectedRestaurant)
+        setFetching(true)
 
         var itemsToAdd = []
         var itemsToRemove = []
@@ -319,13 +331,12 @@ function VendorDashboard() {
             }
         }
 
-
         if (flag == 0) {
             fetchUnavailableItems(checkedItems, true);
 
         }
         else {
-            ReactNativeAlert.alert('Something went wrong...')
+            ReactNativeAlert.alert('Something went wrong updating status...')
             fetchOrders()
         }
     }
@@ -346,8 +357,11 @@ function VendorDashboard() {
         dishes[]->{name, Veg_NonVeg, Price, image, Menu_category, Restaurant ,_id}}`;
 
     useEffect(() => {
-        fetchOrders();
-        fetchDishes(query);
+        setFetching(true)
+        window.setTimeout(() => {
+            fetchOrders();
+            fetchDishes(query);
+        }, 1000)
     }, [selectedRestaurant]);
 
     useEffect(() => {
@@ -801,7 +815,7 @@ function VendorDashboard() {
                         <ArrowLeftIcon size={20} style={[colorScheme == 'light' ? { color: 'black' } : { color: 'white' }]} />
                     </TouchableOpacity>
                     <Text className='text-lg font-medium' style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>{selectedRestaurant}</Text>
-                    <NativeBaseButton className='self-center' style={[(!showOpen && showMenu && !showClosed) ? [colorScheme == 'light' ? Styles.LightActiveGreenBTN : Styles.DarkActiveGreenBTN] : [colorScheme == 'light' ? Styles.LightInactiveBTN : Styles.DarkInactiveBTN]]} variant='subtle'
+                    <NativeBaseButton className='self-center shadow-sm' style={[(!showOpen && showMenu && !showClosed) ? [colorScheme == 'light' ? Styles.LightActiveGreenBTN : Styles.DarkActiveGreenBTN] : [colorScheme == 'light' ? Styles.LightInactiveBTN : Styles.DarkInactiveBTN]]} variant='subtle'
                         onPress={() => {
                             updateMenu(unavailableItems)
                         }}
@@ -818,7 +832,7 @@ function VendorDashboard() {
 
                 <HStack className='w-max justify-between items-center space-x-2'>
 
-                    <NativeBaseButton className='w-4/12 justify-self-start' style={[(showOpen && !showMenu && !showClosed) ? [colorScheme == 'light' ? Styles.LightActivePurpleBTN : Styles.DarkActivePurpleBTN] : [colorScheme == 'light' ? Styles.LightInactiveBTN : Styles.DarkInactiveBTN]]} variant='subtle'
+                    <NativeBaseButton className='w-4/12 justify-self-start shadow-sm' style={[(showOpen && !showMenu && !showClosed) ? [colorScheme == 'light' ? Styles.LightActivePurpleBTN : Styles.DarkActivePurpleBTN] : [colorScheme == 'light' ? Styles.LightInactiveBTN : Styles.DarkInactiveBTN]]} variant='subtle'
                         onPress={() => {
                             setShowClosed(false)
                             setShowOpen(true)
@@ -836,7 +850,7 @@ function VendorDashboard() {
                         </VStack>
                     </NativeBaseButton>
 
-                    <NativeBaseButton className='w-3/12 self-center' style={[(!showOpen && showMenu && !showClosed) ? [colorScheme == 'light' ? Styles.LightActivePurpleBTN : Styles.DarkActivePurpleBTN] : [colorScheme == 'light' ? Styles.LightInactiveBTN : Styles.DarkInactiveBTN]]} variant='subtle'
+                    <NativeBaseButton className='w-3/12 self-center shadow-sm' style={[(!showOpen && showMenu && !showClosed) ? [colorScheme == 'light' ? Styles.LightActivePurpleBTN : Styles.DarkActivePurpleBTN] : [colorScheme == 'light' ? Styles.LightInactiveBTN : Styles.DarkInactiveBTN]]} variant='subtle'
                         onPress={() => {
                             setShowClosed(false)
                             setShowOpen(false)
@@ -853,7 +867,7 @@ function VendorDashboard() {
                         </VStack>
                     </NativeBaseButton>
 
-                    <NativeBaseButton className='w-4/12 justify-self-end' style={[(!showOpen && !showMenu && showClosed) ? [colorScheme == 'light' ? Styles.LightActivePurpleBTN : Styles.DarkActivePurpleBTN] : [colorScheme == 'light' ? Styles.LightInactiveBTN : Styles.DarkInactiveBTN]]} variant='subtle'
+                    <NativeBaseButton className='w-4/12 justify-self-end shadow-sm' style={[(!showOpen && !showMenu && showClosed) ? [colorScheme == 'light' ? Styles.LightActivePurpleBTN : Styles.DarkActivePurpleBTN] : [colorScheme == 'light' ? Styles.LightInactiveBTN : Styles.DarkInactiveBTN]]} variant='subtle'
                         onPress={() => {
                             setShowClosed(true)
                             setShowOpen(false)
@@ -885,249 +899,336 @@ function VendorDashboard() {
                     }
                     showsVerticalScrollIndicator={false}
                 >
-                    {openOrders && !showClosed && !showMenu &&
-                        <View>
-                            <Accordion
-                                activeSections={activeOpenSections}
-                                sections={openOrders}
-                                touchableComponent={TouchableOpacity}
-                                expandMultiple={true}
-                                renderHeader={_renderHeader}
-                                renderContent={_renderContent}
-                                duration={100}
-                                onChange={setOpenSections}
-                            />
-                        </View>
-                    }
-                    {closedOrders && showClosed && !showMenu &&
-                        <View>
-                            <Accordion
-                                activeSections={activeClosedSections}
-                                sections={closedOrders}
-                                touchableComponent={TouchableOpacity}
-                                expandMultiple={true}
-                                renderHeader={_renderHeader}
-                                renderContent={_renderContent}
-                                duration={100}
-                                onChange={setClosedSections}
-                            />
-                        </View>
-                    }
-
-                    {showMenu && Menu && unavailableItems.length > 0 &&
-
-                        <VStack>
-                            <Text className='text-lg font-medium self-center py-2'
-                                style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
-                            >
-                                Unavailable Items
-                            </Text>
-                            <PresenceTransition visible={true} initial={{
-                                opacity: 0
-                            }} animate={{
-                                opacity: 1,
-                                transition: {
-                                    duration: 300,
-                                }
-                            }}>
-                                <View className='pl-2 rounded-md shadow-sm'
-                                    style={[colorScheme == 'light' ? Styles.LightBGSec : Styles.DarkBGSec]}
-                                >
-                                    <Checkbox.Group onChange={setUnavailableItems} value={unavailableItems}
-                                        isDisabled={Refreshing}
-                                    >
-                                        {unavailableItems.map((item, index) => (
-                                            <View className='w-full'>
-                                                <PresenceTransition visible={true} initial={{
-                                                    opacity: 0
-                                                }} animate={{
-                                                    opacity: 1,
-                                                    transition: {
-                                                        duration: 300,
-                                                    }
-                                                }}>
-                                                    <Checkbox colorScheme="danger" value={item} my={2}
-                                                        size='md'
-                                                        style={[unavailableItems.includes(item) ? [colorScheme == 'light' ? { backgroundColor: '#fb7185', borderColor: '#fb7185' } : { backgroundColor: '#fda4af', borderColor: '#fda4af' }] : { backgroundColor: '#86efac', borderColor: '#86efac' }]}
-                                                        icon={<XMarkIcon style={{ width: 16, height: 16, padding: 8, color: '#000' }} />
-                                                            // <Image source={Cross2} style={{ width: 16, height: 16 }} />
-                                                        }
-                                                    >
-                                                        <HStack className='w-11/12 justify-between pr-2'>
-                                                            <HStack className='space-x-2 items-center'>
-                                                                <Text className='font-medium text-base'
-                                                                    style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
-                                                                >
-                                                                    {item}
-                                                                </Text>
-                                                            </HStack>
-                                                        </HStack>
-                                                    </Checkbox>
-                                                </PresenceTransition>
-                                            </View>
-                                        ))}
-                                    </Checkbox.Group>
+                    {openOrders && Menu && closedOrders && !Fetching &&
+                        <>
+                            {openOrders && !showClosed && !showMenu &&
+                                <View>
+                                    <Accordion
+                                        activeSections={activeOpenSections}
+                                        sections={openOrders}
+                                        touchableComponent={TouchableOpacity}
+                                        expandMultiple={true}
+                                        renderHeader={_renderHeader}
+                                        renderContent={_renderContent}
+                                        duration={100}
+                                        onChange={setOpenSections}
+                                    />
                                 </View>
-                            </PresenceTransition>
-                        </VStack>
-                    }
-
-                    {showMenu && Menu &&
-                        <VStack className='pt-3 space-y-2'>
-                            <Text className='text-lg font-medium self-center'
-                                style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
-                            >
-                                Live Menu
-                            </Text>
-                            <View className="flex-row item-center ">
-                                <View className="self-center flex-row flex-1 p-3 shadow-sm" style={[colorScheme == 'light' ? Styles.LightSearchBar : Styles.DarkSearchBar]}>
-                                    <HStack>
-                                        <Image
-                                            style={{ width: 16, height: 16, resizeMode: "contain", }}
-                                            source={Search}
-                                        />
-                                        {colorScheme == 'light' &&
-                                            <TextInput placeholder="Dish name..." keyboardType="default" className='w-full'
-                                                style={{ color: '#000', marginLeft: 8, marginRight: -8 }}
-                                                onChangeText={(text) => {
-                                                    if (text) {
-                                                        segregateDishes(text)
-                                                    }
-                                                    else {
-                                                        setSearchedMenu([])
-                                                    }
-                                                }}
-                                                enterKeyHint='done'
-                                            />
-                                        }
-                                        {colorScheme != 'light' &&
-                                            <TextInput placeholder="Dish name..." keyboardType="default" className='w-full'
-                                                style={{ color: '#fff', marginLeft: 8, marginRight: -8 }}
-                                                onChangeText={(text) => {
-                                                    if (text) {
-                                                        segregateDishes(text)
-                                                    }
-                                                    else {
-                                                        setSearchedMenu([])
-                                                    }
-                                                }}
-                                                enterKeyHint='done'
-                                            />
-                                        }
-                                    </HStack>
+                            }
+                            {closedOrders && showClosed && !showMenu &&
+                                <View>
+                                    <Accordion
+                                        activeSections={activeClosedSections}
+                                        sections={closedOrders}
+                                        touchableComponent={TouchableOpacity}
+                                        expandMultiple={true}
+                                        renderHeader={_renderHeader}
+                                        renderContent={_renderContent}
+                                        duration={100}
+                                        onChange={setClosedSections}
+                                    />
                                 </View>
-                            </View>
-
-                            {(Menu && SearchedMenu.length == 0) &&
+                            }
+                            {showMenu && Menu && unavailableItems.length > 0 &&
                                 <VStack>
-
-                                    <View className='pl-2 rounded-md shadow-sm'
-                                        style={[colorScheme == 'light' ? Styles.LightBGSec : Styles.DarkBGSec]}
+                                    <Text className='text-lg font-medium self-center py-2'
+                                        style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
                                     >
-                                        <Checkbox.Group onChange={setUnavailableItems} value={unavailableItems}
-                                            isDisabled={Refreshing}
+                                        Unavailable Items
+                                    </Text>
+                                    <PresenceTransition visible={true} initial={{
+                                        opacity: 0
+                                    }} animate={{
+                                        opacity: 1,
+                                        transition: {
+                                            duration: 300,
+                                        }
+                                    }}>
+                                        <View className='pl-2 rounded-md shadow-sm'
+                                            style={[colorScheme == 'light' ? Styles.LightBGSec : Styles.DarkBGSec]}
                                         >
-                                            {Menu.map((item, index) => (
-                                                <View className='w-full'>
-                                                    <Checkbox colorScheme="danger" value={item.name} my={2}
-                                                        size='md'
-                                                        style={[unavailableItems.includes(item.name) ? [colorScheme == 'light' ? { backgroundColor: '#fb7185', borderColor: '#fb7185' } : { backgroundColor: '#fda4af', borderColor: '#fda4af' }] : { backgroundColor: '#86efac', borderColor: '#86efac' }]}
-                                                        icon={<XMarkIcon style={{ width: 16, height: 16, padding: 8, color: '#000' }} />
-                                                            // <Image source={Cross2} style={{ width: 16, height: 16 }} />
-                                                        }
-                                                    >
-                                                        <HStack className='w-11/12 justify-between pr-2'>
-                                                            <HStack className='space-x-2 items-center'>
-                                                                {item.Veg_NonVeg === "Veg" ? (
-                                                                    <Image
-                                                                        style={{ width: 15, height: 15, resizeMode: "contain" }}
-                                                                        source={VegIcon}
-                                                                    />
-                                                                ) : (
-                                                                    <Image
-                                                                        style={{ width: 15, height: 15, resizeMode: "contain" }}
-                                                                        source={NonVegIcon}
-                                                                    />
-                                                                )}
-                                                                <Text className='font-medium text-base'
-                                                                    style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
-                                                                >
-                                                                    {item.name}
-                                                                </Text>
-                                                            </HStack>
-                                                            <Text className='text-base font-medium'
-                                                                style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                            <Checkbox.Group onChange={setUnavailableItems} value={unavailableItems}
+                                                isDisabled={Refreshing}
+                                            >
+                                                {unavailableItems.map((item, index) => (
+                                                    <View className='w-full'>
+                                                        <PresenceTransition visible={true} initial={{
+                                                            opacity: 0
+                                                        }} animate={{
+                                                            opacity: 1,
+                                                            transition: {
+                                                                duration: 300,
+                                                            }
+                                                        }}>
+                                                            <Checkbox colorScheme="danger" value={item} my={2}
+                                                                size='md'
+                                                                style={[unavailableItems.includes(item) ? [colorScheme == 'light' ? { backgroundColor: '#fb7185', borderColor: '#fb7185' } : { backgroundColor: '#fda4af', borderColor: '#fda4af' }] : { backgroundColor: '#86efac', borderColor: '#86efac' }]}
+                                                                icon={<XMarkIcon style={{ width: 16, height: 16, padding: 8, color: '#000' }} />
+                                                                    // <Image source={Cross2} style={{ width: 16, height: 16 }} />
+                                                                }
                                                             >
-                                                                ₹{item.Price}
-                                                            </Text>
-                                                        </HStack>
-                                                    </Checkbox>
-                                                </View>
-                                            ))}
-                                        </Checkbox.Group>
-                                    </View>
+                                                                <HStack className='w-11/12 justify-between pr-2'>
+                                                                    <HStack className='space-x-2 items-center'>
+                                                                        <Text className='font-medium text-base'
+                                                                            style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                                                        >
+                                                                            {item}
+                                                                        </Text>
+                                                                    </HStack>
+                                                                </HStack>
+                                                            </Checkbox>
+                                                        </PresenceTransition>
+                                                    </View>
+                                                ))}
+                                            </Checkbox.Group>
+                                        </View>
+                                    </PresenceTransition>
                                 </VStack>
                             }
-
-
-
-                            {(Menu && SearchedMenu.length > 0) &&
-                                <VStack>
-                                    <Text className='text-lg font-medium self-center pb-2'
+                            {showMenu && Menu &&
+                                <VStack className='pt-3 space-y-2'>
+                                    <Text className='text-lg font-medium self-center'
                                         style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
                                     >
                                         Live Menu
                                     </Text>
-                                    <View className='pl-2 rounded-md shadow-sm'
-                                        style={[colorScheme == 'light' ? Styles.LightBGSec : Styles.DarkBGSec]}
-                                    >
-                                        <Checkbox.Group onChange={(e) => { console.log(e); setUnavailableItems(e) }} value={unavailableItems}
-                                            isDisabled={Refreshing}
-                                        >
-                                            {SearchedMenu.map((item, index) => (
-                                                <View className='w-full'>
-                                                    <Checkbox colorScheme="danger" value={item.name} my={2}
-                                                        size='md'
-                                                        style={[unavailableItems.includes(item.name) ? [colorScheme == 'light' ? { backgroundColor: '#fb7185', borderColor: '#fb7185' } : { backgroundColor: '#fda4af', borderColor: '#fda4af' }] : { backgroundColor: '#86efac', borderColor: '#86efac' }]}
-                                                        icon={<XMarkIcon style={{ width: 16, height: 16, padding: 8, color: '#000' }} />
-                                                            // <Image source={Cross2} style={{ width: 16, height: 16 }} />
-                                                        }
-                                                    >
-                                                        <HStack className='w-11/12 justify-between pr-2'>
-                                                            <HStack className='space-x-2 items-center'>
-                                                                {item.Veg_NonVeg === "Veg" ? (
-                                                                    <Image
-                                                                        style={{ width: 15, height: 15, resizeMode: "contain" }}
-                                                                        source={VegIcon}
-                                                                    />
-                                                                ) : (
-                                                                    <Image
-                                                                        style={{ width: 15, height: 15, resizeMode: "contain" }}
-                                                                        source={NonVegIcon}
-                                                                    />
-                                                                )}
-                                                                <Text className='font-medium text-base'
-                                                                    style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
-                                                                >
-                                                                    {item.name}
-                                                                </Text>
-                                                            </HStack>
-                                                            <Text className='text-base font-medium'
-                                                                style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
-                                                            >
-                                                                ₹{item.Price}
-                                                            </Text>
-                                                        </HStack>
-                                                    </Checkbox>
-                                                </View>
-                                            ))}
-                                        </Checkbox.Group>
+                                    <View className="flex-row item-center ">
+                                        <View className="self-center flex-row flex-1 p-3 shadow-sm" style={[colorScheme == 'light' ? Styles.LightSearchBar : Styles.DarkSearchBar]}>
+                                            <HStack>
+                                                <Image
+                                                    style={{ width: 16, height: 16, resizeMode: "contain", }}
+                                                    source={Search}
+                                                />
+                                                {colorScheme == 'light' &&
+                                                    <TextInput placeholder="Dish name..." keyboardType="default" className='w-full'
+                                                        style={{ color: '#000', marginLeft: 8, marginRight: -8 }}
+                                                        onChangeText={(text) => {
+                                                            if (text) {
+                                                                segregateDishes(text)
+                                                            }
+                                                            else {
+                                                                setSearchedMenu([])
+                                                            }
+                                                        }}
+                                                        enterKeyHint='done'
+                                                    />
+                                                }
+                                                {colorScheme != 'light' &&
+                                                    <TextInput placeholder="Dish name..." keyboardType="default" className='w-full'
+                                                        style={{ color: '#fff', marginLeft: 8, marginRight: -8 }}
+                                                        onChangeText={(text) => {
+                                                            if (text) {
+                                                                segregateDishes(text)
+                                                            }
+                                                            else {
+                                                                setSearchedMenu([])
+                                                            }
+                                                        }}
+                                                        enterKeyHint='done'
+                                                    />
+                                                }
+                                            </HStack>
+                                        </View>
                                     </View>
+
+                                    {(Menu && SearchedMenu.length == 0) &&
+                                        <VStack>
+
+                                            <View className='pl-2 rounded-md shadow-sm'
+                                                style={[colorScheme == 'light' ? Styles.LightBGSec : Styles.DarkBGSec]}
+                                            >
+                                                <Checkbox.Group onChange={setUnavailableItems} value={unavailableItems}
+                                                    isDisabled={Refreshing}
+                                                >
+                                                    {Menu.map((item, index) => (
+                                                        <View className='w-full'>
+                                                            <Checkbox colorScheme="danger" value={item.name} my={2}
+                                                                size='md'
+                                                                style={[unavailableItems.includes(item.name) ? [colorScheme == 'light' ? { backgroundColor: '#fb7185', borderColor: '#fb7185' } : { backgroundColor: '#fda4af', borderColor: '#fda4af' }] : { backgroundColor: '#86efac', borderColor: '#86efac' }]}
+                                                                icon={<XMarkIcon style={{ width: 16, height: 16, padding: 8, color: '#000' }} />
+                                                                    // <Image source={Cross2} style={{ width: 16, height: 16 }} />
+                                                                }
+                                                            >
+                                                                <HStack className='w-11/12 justify-between pr-2'>
+                                                                    <HStack className='space-x-2 items-center'>
+                                                                        {item.Veg_NonVeg === "Veg" ? (
+                                                                            <Image
+                                                                                style={{ width: 15, height: 15, resizeMode: "contain" }}
+                                                                                source={VegIcon}
+                                                                            />
+                                                                        ) : (
+                                                                            <Image
+                                                                                style={{ width: 15, height: 15, resizeMode: "contain" }}
+                                                                                source={NonVegIcon}
+                                                                            />
+                                                                        )}
+                                                                        <Text className='font-medium text-base'
+                                                                            style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                                                        >
+                                                                            {item.name}
+                                                                        </Text>
+                                                                    </HStack>
+                                                                    <Text className='text-base font-medium'
+                                                                        style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                                                    >
+                                                                        ₹{item.Price}
+                                                                    </Text>
+                                                                </HStack>
+                                                            </Checkbox>
+                                                        </View>
+                                                    ))}
+                                                </Checkbox.Group>
+                                            </View>
+                                        </VStack>
+                                    }
+
+
+
+                                    {(Menu && SearchedMenu.length > 0) &&
+                                        <VStack>
+                                            <Text className='text-lg font-medium self-center pb-2'
+                                                style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                            >
+                                                Live Menu
+                                            </Text>
+                                            <View className='pl-2 rounded-md shadow-sm'
+                                                style={[colorScheme == 'light' ? Styles.LightBGSec : Styles.DarkBGSec]}
+                                            >
+                                                <Checkbox.Group onChange={(e) => { console.log(e); setUnavailableItems(e) }} value={unavailableItems}
+                                                    isDisabled={Refreshing}
+                                                >
+                                                    {SearchedMenu.map((item, index) => (
+                                                        <View className='w-full'>
+                                                            <Checkbox colorScheme="danger" value={item.name} my={2}
+                                                                size='md'
+                                                                style={[unavailableItems.includes(item.name) ? [colorScheme == 'light' ? { backgroundColor: '#fb7185', borderColor: '#fb7185' } : { backgroundColor: '#fda4af', borderColor: '#fda4af' }] : { backgroundColor: '#86efac', borderColor: '#86efac' }]}
+                                                                icon={<XMarkIcon style={{ width: 16, height: 16, padding: 8, color: '#000' }} />
+                                                                    // <Image source={Cross2} style={{ width: 16, height: 16 }} />
+                                                                }
+                                                            >
+                                                                <HStack className='w-11/12 justify-between pr-2'>
+                                                                    <HStack className='space-x-2 items-center'>
+                                                                        {item.Veg_NonVeg === "Veg" ? (
+                                                                            <Image
+                                                                                style={{ width: 15, height: 15, resizeMode: "contain" }}
+                                                                                source={VegIcon}
+                                                                            />
+                                                                        ) : (
+                                                                            <Image
+                                                                                style={{ width: 15, height: 15, resizeMode: "contain" }}
+                                                                                source={NonVegIcon}
+                                                                            />
+                                                                        )}
+                                                                        <Text className='font-medium text-base'
+                                                                            style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                                                        >
+                                                                            {item.name}
+                                                                        </Text>
+                                                                    </HStack>
+                                                                    <Text className='text-base font-medium'
+                                                                        style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                                                    >
+                                                                        ₹{item.Price}
+                                                                    </Text>
+                                                                </HStack>
+                                                            </Checkbox>
+                                                        </View>
+                                                    ))}
+                                                </Checkbox.Group>
+                                            </View>
+                                        </VStack>
+                                    }
+
                                 </VStack>
                             }
-
-                        </VStack>
+                        </>
                     }
+
+                    {Fetching &&
+                        <>
+                            {!showMenu &&
+                                <VStack space={3} className='pt-3'>
+                                    <Skeleton h='20' rounded='md' w='100%'
+                                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                    <Skeleton h='20' rounded='md' w='100%'
+                                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                    <Skeleton h='20' rounded='md' w='100%'
+                                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                    <Skeleton h='20' rounded='md' w='100%'
+                                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                </VStack>
+                            }
+                            {showMenu &&
+                                <VStack space={4} className='pt-4 items-center'>
+                                    <Skeleton h='4' rounded='full' w='30%'
+                                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                    <Skeleton h='8' rounded='md' w='99%'
+                                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+
+                                    <HStack className='w-full justify-between items-center'>
+                                        <Skeleton h='8' rounded='md' w='10%'
+                                            startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                            endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                        <Skeleton h='6' rounded='md' w='85%'
+                                            startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                            endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                    </HStack>
+
+                                    <HStack className='w-full justify-between items-center'>
+                                        <Skeleton h='8' rounded='md' w='10%'
+                                            startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                            endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                        <Skeleton h='6' rounded='md' w='85%'
+                                            startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                            endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                    </HStack>
+
+                                    <HStack className='w-full justify-between items-center'>
+                                        <Skeleton h='8' rounded='md' w='10%'
+                                            startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                            endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                        <Skeleton h='6' rounded='md' w='85%'
+                                            startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                            endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                    </HStack>
+
+                                    <HStack className='w-full justify-between items-center'>
+                                        <Skeleton h='8' rounded='md' w='10%'
+                                            startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                            endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                        <Skeleton h='6' rounded='md' w='85%'
+                                            startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                            endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                    </HStack>
+
+                                    <HStack className='w-full justify-between items-center'>
+                                        <Skeleton h='8' rounded='md' w='10%'
+                                            startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                            endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                        <Skeleton h='6' rounded='md' w='85%'
+                                            startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                            endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                    </HStack>
+
+                                    <HStack className='w-full justify-between items-center'>
+                                        <Skeleton h='8' rounded='md' w='10%'
+                                            startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                            endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                        <Skeleton h='6' rounded='md' w='85%'
+                                            startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                            endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                    </HStack>
+                                </VStack>
+                            }
+                        </>
+                    }
+
 
                 </ScrollView>
 

@@ -15,6 +15,7 @@ import Search from '../assets/searchicon.png'
 import { Alert, CloseIcon, HStack, IconButton, Slide, VStack, Skeleton } from 'native-base';
 import { useNetInfo } from "@react-native-community/netinfo";
 import axios from 'axios';
+import Tracking from '../assets/tracking.png'
 
 const HomeScreen = () => {
     const navigation = useNavigation();
@@ -105,7 +106,38 @@ const HomeScreen = () => {
 
 
     return (
-        <SafeAreaView className="pt-5" style={[colorScheme == 'light' ? { backgroundColor: '#F2F2F2' } : { backgroundColor: '#0c0c0f' }]}>
+        <SafeAreaView className="" style={[colorScheme == 'light' ? { backgroundColor: '#F2F2F2' } : { backgroundColor: '#0c0c0f' }]}>
+
+            <SafeAreaView className="absolute bottom-32 w-7/12 self-center z-50 shadow-sm">
+                <TouchableOpacity
+                    onPress={() => {
+                        navigation.navigate('LiveOrders')
+                    }}
+                    className=" w-max h-max py-2 my-0.5 px-3 flex-row items-center rounded-lg z-50"
+                    style={{backgroundColor: '#3E5896'}}
+                >
+                    <HStack className='items-center justify-between w-full'>
+                        <>
+                            <HStack className='items-center' space={2}>
+                                <Image
+                                    style={{ width: 20, height: 20, resizeMode: "contain" }}
+                                    source={Tracking}
+                                />
+                                <Text className='text-base font-medium text-white'
+                                >
+                                    Track My Order
+                                </Text>
+                            </HStack>
+                            <View style={{ transform: [{ rotate: '90deg' }] }}>
+                                <Image
+                                    style={{ width: 12, height: 12, resizeMode: "contain" }}
+                                    source={ChevronUp}
+                                />
+                            </View>
+                        </>
+                    </HStack>
+                </TouchableOpacity>
+            </SafeAreaView>
 
             <View className="flex-row pb-3 items-center mx-2 space-x-1 z-50 h-max w-10/12 justify-between self-center">
 
@@ -115,7 +147,7 @@ const HomeScreen = () => {
 
                     <VStack space={1} className='justify-center'>
                         <Text allowFontScaling={false}
-                         className='self-center font-semibold text-xl italic ' style={[colorScheme == 'light' ? Styles.LightHomeAdlib : Styles.DarkHomeAdlib]}>
+                            className='self-center font-semibold text-xl italic ' style={[colorScheme == 'light' ? Styles.LightHomeAdlib : Styles.DarkHomeAdlib]}>
                             AshokaEats™
                         </Text>
                     </VStack>
@@ -257,6 +289,8 @@ const HomeScreen = () => {
 
             {/* Body */}
             <Restaurants searched={Searched} actualUser={actualUser} LoadJoke={LoadJoke} />
+
+
 
         </SafeAreaView>
     );

@@ -15,6 +15,7 @@ import { setupURLPolyfill } from "react-native-url-polyfill"
 import CartScreen from './screens/CartScreen';
 import {NativeBaseProvider} from 'native-base'
 import VendorDashboard from './screens/VendorDashboard';
+import LiveOrders from './screens/LiveOrders';
 
 setupURLPolyfill()
 const Stack = createNativeStackNavigator();
@@ -33,6 +34,7 @@ export default function App() {
 						<Stack.Screen name="Restaurant" component={RestaurantScreen} />
 						<Stack.Screen name="UserScreen" component={UserScreen} />
 						<Stack.Screen name="Cart" component={CartScreen} />
+                        <Stack.Screen name="LiveOrders" component={LiveOrders} />
 					</Stack.Navigator>
 				</Provider>
 			</NavigationContainer>

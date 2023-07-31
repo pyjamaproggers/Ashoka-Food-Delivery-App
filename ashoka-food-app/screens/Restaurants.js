@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, Image, useColorScheme, RefreshControl, Animated, Dimensions } from 'react-native'
+import { View, Text, ScrollView, Image, useColorScheme, RefreshControl, Animated, Dimensions, SafeAreaView, TouchableOpacity } from 'react-native'
 import React, { useEffect, useState, useRef } from 'react'
 import RestaurantCards from '../components/RestaurantCards'
 import Grey from '../assets/greysquare.jpeg'
@@ -9,6 +9,8 @@ import client from '../sanity'
 import { useLayoutEffect } from 'react'
 import Styles from '../components/Styles'
 import { FlatList, HStack, Skeleton, VStack } from 'native-base';
+import ChevronUp from '../assets/chevronupicon.png'
+import ChevronDown from '../assets/chevrondownicon.png'
 
 const Restaurants = (props) => {
     const [DRestaurants, setDRestaurants] = useState([]);
@@ -116,381 +118,396 @@ const Restaurants = (props) => {
     return (
         <>
             {!Searched &&
-                <Animated.ScrollView
-                    contentContainerStyle={{
-                        paddingBottom: 120
-                    }}
-                    refreshControl={
-                        <RefreshControl refreshing={Refreshing}
-                            onRefresh={() => {
-                                fetchRestaurants(query);
-                                props.LoadJoke(true)
+                <>
+                    <Animated.ScrollView
+                        contentContainerStyle={{
+                            paddingBottom: 120
+                        }}
+                        refreshControl={
+                            <RefreshControl refreshing={Refreshing}
+                                onRefresh={() => {
+                                    fetchRestaurants(query);
+                                    props.LoadJoke(true)
+                                }}
+                            />
+                        }
+                        onScroll={Animated.event(
+                            [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+                            { useNativeDriver: true },
+                        )}
+                        scrollEventThrottle={16}
+                        showsVerticalScrollIndicator={false}
+                    >
+
+
+                        <View className='self-center mt-2 mb-2 shadow-md'
+                            style={{
+                                width: imageWidth,
+                                height: imageHeight,
+                                overflow: 'hidden',
+                                borderRadius: 15,
+                                alignItems: 'center'
                             }}
-                        />
-                    }
-                    onScroll={Animated.event(
-                        [{ nativeEvent: { contentOffset: { y: scrollY } } }],
-                        { useNativeDriver: true },
-                    )}
-                    scrollEventThrottle={16}
-                    showsVerticalScrollIndicator={false}
-                >
-                    <View className='self-center mt-2 mb-2 shadow-md'
-                        style={{
-                            width: imageWidth,
-                            height: imageHeight,
-                            overflow: 'hidden',
-                            borderRadius: 15,
-                            alignItems: 'center'
-                        }}
-                    >
-                        <Animated.Image source={HomeImage1}
+                        >
+                            <Animated.Image source={HomeImage1}
+                                style={{
+                                    width: imageWidth,
+                                    height: imageHeight * 1.18,
+                                    resizeMode: 'cover',
+                                    borderRadius: 15,
+                                    transform: [
+                                        {
+                                            translateY: scrollY.interpolate({
+                                                inputRange: [-200, 0, 200],
+                                                outputRange: [-height * 0.075, 0, height * 0.2]
+                                            })
+                                        }
+                                    ]
+                                }} />
+                        </View>
+
+                        <View className='mt-5 border-t' style={[colorScheme == 'light' ? Styles.LightHomeAdlibBorder : Styles.DarkHomeAdlibBorder]}  >
+                            <Text
+                                className="text-center font-normal text-xs mx-28 mt-3 -top-5"
+                                style={[colorScheme == 'light' ? Styles.LightHomeAdlib : Styles.DarkHomeAdlib]}
+                            >
+                                WHAT'S ON YOUR MIND?
+                            </Text>
+                        </View>
+
+                        {/* Loading Skeleton */}
+                        {Fetching &&
+                            <View className='mb-3 mx-4 flex-row '>
+                                <Skeleton w='24' h='24' rounded='lg'
+                                    startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                    endColor={colorScheme == 'light' ? 'gray.300' : '#0c0c0f'}
+                                    style={{ marginRight: 16 }}
+                                />
+                                <VStack flex="3" space="2">
+                                    <Skeleton h='3' rounded='full' w='50%'
+                                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                    <HStack space="2" alignItems="center">
+                                        <Skeleton size="4" rounded="full"
+                                            startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                            endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                        <Skeleton h='2' rounded='full' w='70%'
+                                            startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                            endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                    </HStack>
+                                    <HStack space="1" alignItems="center">
+                                        <Skeleton size="4" rounded="full"
+                                            startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                            endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                        <Skeleton h='2' rounded='full' w='70%'
+                                            startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                            endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                    </HStack>
+                                    <HStack space="1" alignItems="center">
+                                        <Skeleton size="4" rounded="full"
+                                            startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                            endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                        <Skeleton h='2' rounded='full' w='70%'
+                                            startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                            endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                    </HStack>
+                                </VStack>
+                            </View>
+                        }
+
+                        {Fetching &&
+                            <View className='mb-3 mx-4 flex-row '>
+                                <Skeleton w='24' h='24' rounded='lg'
+                                    startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                    endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'}
+                                    style={{ marginRight: 16 }}
+                                />
+                                <VStack flex="3" space="2">
+                                    <Skeleton h='3' rounded='full' w='50%'
+                                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                    <HStack space="2" alignItems="center">
+                                        <Skeleton size="4" rounded="full"
+                                            startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                            endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                        <Skeleton h='2' rounded='full' w='70%'
+                                            startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                            endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                    </HStack>
+                                    <HStack space="1" alignItems="center">
+                                        <Skeleton size="4" rounded="full"
+                                            startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                            endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                        <Skeleton h='2' rounded='full' w='70%'
+                                            startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                            endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                    </HStack>
+                                    <HStack space="1" alignItems="center">
+                                        <Skeleton size="4" rounded="full"
+                                            startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                            endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                        <Skeleton h='2' rounded='full' w='70%'
+                                            startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                            endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                    </HStack>
+                                </VStack>
+                            </View>
+                        }
+
+                        {Fetching &&
+                            <View className='mb-3 mx-4 flex-row '>
+                                <Skeleton w='24' h='24' rounded='lg'
+                                    startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                    endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'}
+                                    style={{ marginRight: 16 }}
+                                />
+                                <VStack flex="3" space="2">
+                                    <Skeleton h='3' rounded='full' w='50%'
+                                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                    <HStack space="2" alignItems="center">
+                                        <Skeleton size="4" rounded="full"
+                                            startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                            endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                        <Skeleton h='2' rounded='full' w='70%'
+                                            startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                            endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                    </HStack>
+                                    <HStack space="1" alignItems="center">
+                                        <Skeleton size="4" rounded="full"
+                                            startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                            endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                        <Skeleton h='2' rounded='full' w='70%'
+                                            startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                            endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                    </HStack>
+                                    <HStack space="1" alignItems="center">
+                                        <Skeleton size="4" rounded="full"
+                                            startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                            endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                        <Skeleton h='2' rounded='full' w='70%'
+                                            startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                            endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                    </HStack>
+                                </VStack>
+                            </View>
+                        }
+
+                        {!Fetching &&
+                            DRestaurants.map((restaurant) =>
+                            (
+                                <RestaurantCards
+                                    // key={restaurant.id}
+                                    // id={restaurant.id}
+                                    image={restaurant["image"]}
+                                    title={restaurant["name"]}
+                                    timing={restaurant["timing"]}
+                                    delivery={restaurant["delivery"]}
+                                    genre={restaurant["genre"]}
+                                    location={restaurant["location"]}
+                                    description={restaurant["description"]}
+                                    dishes={restaurant["dishes"]}
+                                    veg_nonveg={restaurant["Veg_NonVeg"]}
+                                    phone={restaurant["RestaurantPhone"]}
+                                    actualUser={actualUser} />
+                            ))
+                        }
+
+                        <View className='self-center mt-2 mb-2 shadow-md'
                             style={{
                                 width: imageWidth,
-                                height: imageHeight * 1.18,
-                                resizeMode: 'cover',
+                                height: imageHeight,
+                                overflow: 'hidden',
                                 borderRadius: 15,
-                                transform: [
-                                    {
-                                        translateY: scrollY.interpolate({
-                                            inputRange: [-200, 0, 200],
-                                            outputRange: [-height * 0.075, 0, height * 0.2]
-                                        })
-                                    }
-                                ]
-                            }} />
-                    </View>
-
-                    <View className='mt-5 border-t' style={[colorScheme == 'light' ? Styles.LightHomeAdlibBorder : Styles.DarkHomeAdlibBorder]}  >
-                        <Text
-                            className="text-center font-normal text-xs mx-28 mt-3 -top-5"
-                            style={[colorScheme == 'light' ? Styles.LightHomeAdlib : Styles.DarkHomeAdlib]}
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}
                         >
-                            WHAT'S ON YOUR MIND?
-                        </Text>
-                    </View>
-
-                    {/* Loading Skeleton */}
-                    {Fetching &&
-                        <View className='mb-3 mx-4 flex-row '>
-                            <Skeleton w='24' h='24' rounded='lg'
-                                startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                endColor={colorScheme == 'light' ? 'gray.300' : '#0c0c0f'}
-                                style={{ marginRight: 16 }}
-                            />
-                            <VStack flex="3" space="2">
-                                <Skeleton h='3' rounded='full' w='50%'
-                                    startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                    endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
-                                <HStack space="2" alignItems="center">
-                                    <Skeleton size="4" rounded="full"
-                                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
-                                    <Skeleton h='2' rounded='full' w='70%'
-                                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
-                                </HStack>
-                                <HStack space="1" alignItems="center">
-                                    <Skeleton size="4" rounded="full"
-                                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
-                                    <Skeleton h='2' rounded='full' w='70%'
-                                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
-                                </HStack>
-                                <HStack space="1" alignItems="center">
-                                    <Skeleton size="4" rounded="full"
-                                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
-                                    <Skeleton h='2' rounded='full' w='70%'
-                                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
-                                </HStack>
-                            </VStack>
+                            <Animated.Image source={HomeImage2}
+                                style={{
+                                    width: imageWidth,
+                                    height: imageHeight * 2.8,
+                                    resizeMode: 'cover',
+                                    borderRadius: 15,
+                                    transform: [
+                                        {
+                                            translateY: scrollY.interpolate({
+                                                inputRange: [525, 1000, 1475,],
+                                                outputRange: [-height * 0.4, 0, height * 0.4,]
+                                            })
+                                        }
+                                    ]
+                                }} />
                         </View>
-                    }
 
-                    {Fetching &&
-                        <View className='mb-3 mx-4 flex-row '>
-                            <Skeleton w='24' h='24' rounded='lg'
-                                startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'}
-                                style={{ marginRight: 16 }}
-                            />
-                            <VStack flex="3" space="2">
-                                <Skeleton h='3' rounded='full' w='50%'
-                                    startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                    endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
-                                <HStack space="2" alignItems="center">
-                                    <Skeleton size="4" rounded="full"
-                                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
-                                    <Skeleton h='2' rounded='full' w='70%'
-                                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
-                                </HStack>
-                                <HStack space="1" alignItems="center">
-                                    <Skeleton size="4" rounded="full"
-                                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
-                                    <Skeleton h='2' rounded='full' w='70%'
-                                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
-                                </HStack>
-                                <HStack space="1" alignItems="center">
-                                    <Skeleton size="4" rounded="full"
-                                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
-                                    <Skeleton h='2' rounded='full' w='70%'
-                                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
-                                </HStack>
-                            </VStack>
+                        <View className='mt-5 border-t' style={[colorScheme == 'light' ? Styles.LightHomeAdlibBorder : Styles.DarkHomeAdlibBorder]}  >
+                            <Text
+                                className="text-center font-normal text-xs mx-24 mt-3 -top-5"
+                                style={[colorScheme == 'light' ? Styles.LightHomeAdlib : Styles.DarkHomeAdlib]}
+                            >
+                                TAKE A LOOK AT THESE MENUS!
+                            </Text>
                         </View>
-                    }
 
-                    {Fetching &&
-                        <View className='mb-3 mx-4 flex-row '>
-                            <Skeleton w='24' h='24' rounded='lg'
-                                startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'}
-                                style={{ marginRight: 16 }}
-                            />
-                            <VStack flex="3" space="2">
-                                <Skeleton h='3' rounded='full' w='50%'
+                        {/* Loading Skeleton */}
+                        {Fetching &&
+                            <View className='mb-3 mx-4 flex-row '>
+                                <Skeleton w='24' h='24' rounded='lg'
                                     startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                    endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
-                                <HStack space="2" alignItems="center">
-                                    <Skeleton size="4" rounded="full"
+                                    endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'}
+                                    style={{ marginRight: 16 }}
+                                />
+                                <VStack flex="3" space="2">
+                                    <Skeleton h='3' rounded='full' w='50%'
                                         startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
                                         endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
-                                    <Skeleton h='2' rounded='full' w='70%'
-                                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
-                                </HStack>
-                                <HStack space="1" alignItems="center">
-                                    <Skeleton size="4" rounded="full"
-                                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
-                                    <Skeleton h='2' rounded='full' w='70%'
-                                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
-                                </HStack>
-                                <HStack space="1" alignItems="center">
-                                    <Skeleton size="4" rounded="full"
-                                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
-                                    <Skeleton h='2' rounded='full' w='70%'
-                                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
-                                </HStack>
-                            </VStack>
-                        </View>
-                    }
+                                    <HStack space="2" alignItems="center">
+                                        <Skeleton size="4" rounded="full"
+                                            startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                            endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                        <Skeleton h='2' rounded='full' w='70%'
+                                            startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                            endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                    </HStack>
+                                    <HStack space="1" alignItems="center">
+                                        <Skeleton size="4" rounded="full"
+                                            startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                            endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                        <Skeleton h='2' rounded='full' w='70%'
+                                            startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                            endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                    </HStack>
+                                    <HStack space="1" alignItems="center">
+                                        <Skeleton size="4" rounded="full"
+                                            startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                            endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                        <Skeleton h='2' rounded='full' w='70%'
+                                            startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                            endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                    </HStack>
+                                </VStack>
+                            </View>
+                        }
 
-                    {!Fetching &&
-                        DRestaurants.map((restaurant) =>
-                        (
-                            <RestaurantCards
-                                // key={restaurant.id}
-                                // id={restaurant.id}
-                                image={restaurant["image"]}
-                                title={restaurant["name"]}
-                                timing={restaurant["timing"]}
-                                delivery={restaurant["delivery"]}
-                                genre={restaurant["genre"]}
-                                location={restaurant["location"]}
-                                description={restaurant["description"]}
-                                dishes={restaurant["dishes"]}
-                                veg_nonveg={restaurant["Veg_NonVeg"]}
-                                phone={restaurant["RestaurantPhone"]}
-                                actualUser={actualUser} />
-                        ))
-                    }
-
-                    <View className='self-center mt-2 mb-2 shadow-md'
-                        style={{
-                            width: imageWidth,
-                            height: imageHeight,
-                            overflow: 'hidden',
-                            borderRadius: 15,
-                            alignItems: 'center',
-                            justifyContent: 'center'
-                        }}
-                    >
-                        <Animated.Image source={HomeImage2}
-                            style={{
-                                width: imageWidth,
-                                height: imageHeight * 2.8,
-                                resizeMode: 'cover',
-                                borderRadius: 15,
-                                transform: [
-                                    {
-                                        translateY: scrollY.interpolate({
-                                            inputRange: [525, 1000, 1475,],
-                                            outputRange: [-height * 0.4, 0, height * 0.4,]
-                                        })
-                                    }
-                                ]
-                            }} />
-                    </View>
-
-                    <View className='mt-5 border-t' style={[colorScheme == 'light' ? Styles.LightHomeAdlibBorder : Styles.DarkHomeAdlibBorder]}  >
-                        <Text
-                            className="text-center font-normal text-xs mx-24 mt-3 -top-5"
-                            style={[colorScheme == 'light' ? Styles.LightHomeAdlib : Styles.DarkHomeAdlib]}
-                        >
-                            TAKE A LOOK AT THESE MENUS!
-                        </Text>
-                    </View>
-
-                    {/* Loading Skeleton */}
-                    {Fetching &&
-                        <View className='mb-3 mx-4 flex-row '>
-                            <Skeleton w='24' h='24' rounded='lg'
-                                startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'}
-                                style={{ marginRight: 16 }}
-                            />
-                            <VStack flex="3" space="2">
-                                <Skeleton h='3' rounded='full' w='50%'
+                        {Fetching &&
+                            <View className='mb-3 mx-4 flex-row '>
+                                <Skeleton w='24' h='24' rounded='lg'
                                     startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                    endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
-                                <HStack space="2" alignItems="center">
-                                    <Skeleton size="4" rounded="full"
+                                    endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'}
+                                    style={{ marginRight: 16 }}
+                                />
+                                <VStack flex="3" space="2">
+                                    <Skeleton h='3' rounded='full' w='50%'
                                         startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
                                         endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
-                                    <Skeleton h='2' rounded='full' w='70%'
-                                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
-                                </HStack>
-                                <HStack space="1" alignItems="center">
-                                    <Skeleton size="4" rounded="full"
-                                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
-                                    <Skeleton h='2' rounded='full' w='70%'
-                                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
-                                </HStack>
-                                <HStack space="1" alignItems="center">
-                                    <Skeleton size="4" rounded="full"
-                                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
-                                    <Skeleton h='2' rounded='full' w='70%'
-                                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
-                                </HStack>
-                            </VStack>
-                        </View>
-                    }
+                                    <HStack space="2" alignItems="center">
+                                        <Skeleton size="4" rounded="full"
+                                            startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                            endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                        <Skeleton h='2' rounded='full' w='70%'
+                                            startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                            endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                    </HStack>
+                                    <HStack space="1" alignItems="center">
+                                        <Skeleton size="4" rounded="full"
+                                            startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                            endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                        <Skeleton h='2' rounded='full' w='70%'
+                                            startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                            endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                    </HStack>
+                                    <HStack space="1" alignItems="center">
+                                        <Skeleton size="4" rounded="full"
+                                            startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                            endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                        <Skeleton h='2' rounded='full' w='70%'
+                                            startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                            endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                    </HStack>
+                                </VStack>
+                            </View>
+                        }
 
-                    {Fetching &&
-                        <View className='mb-3 mx-4 flex-row '>
-                            <Skeleton w='24' h='24' rounded='lg'
-                                startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'}
-                                style={{ marginRight: 16 }}
-                            />
-                            <VStack flex="3" space="2">
-                                <Skeleton h='3' rounded='full' w='50%'
+                        {Fetching &&
+                            <View className='mb-3 mx-4 flex-row '>
+                                <Skeleton w='24' h='24' rounded='lg'
                                     startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                    endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
-                                <HStack space="2" alignItems="center">
-                                    <Skeleton size="4" rounded="full"
+                                    endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'}
+                                    style={{ marginRight: 16 }}
+                                />
+                                <VStack flex="3" space="2">
+                                    <Skeleton h='3' rounded='full' w='50%'
                                         startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
                                         endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
-                                    <Skeleton h='2' rounded='full' w='70%'
-                                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
-                                </HStack>
-                                <HStack space="1" alignItems="center">
-                                    <Skeleton size="4" rounded="full"
-                                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
-                                    <Skeleton h='2' rounded='full' w='70%'
-                                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
-                                </HStack>
-                                <HStack space="1" alignItems="center">
-                                    <Skeleton size="4" rounded="full"
-                                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
-                                    <Skeleton h='2' rounded='full' w='70%'
-                                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
-                                </HStack>
-                            </VStack>
-                        </View>
-                    }
+                                    <HStack space="2" alignItems="center">
+                                        <Skeleton size="4" rounded="full"
+                                            startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                            endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                        <Skeleton h='2' rounded='full' w='70%'
+                                            startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                            endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                    </HStack>
+                                    <HStack space="1" alignItems="center">
+                                        <Skeleton size="4" rounded="full"
+                                            startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                            endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                        <Skeleton h='2' rounded='full' w='70%'
+                                            startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                            endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                    </HStack>
+                                    <HStack space="1" alignItems="center">
+                                        <Skeleton size="4" rounded="full"
+                                            startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                            endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                        <Skeleton h='2' rounded='full' w='70%'
+                                            startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                            endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                    </HStack>
+                                </VStack>
+                            </View>
+                        }
 
-                    {Fetching &&
-                        <View className='mb-3 mx-4 flex-row '>
-                            <Skeleton w='24' h='24' rounded='lg'
-                                startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'}
-                                style={{ marginRight: 16 }}
-                            />
-                            <VStack flex="3" space="2">
-                                <Skeleton h='3' rounded='full' w='50%'
-                                    startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                    endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
-                                <HStack space="2" alignItems="center">
-                                    <Skeleton size="4" rounded="full"
-                                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
-                                    <Skeleton h='2' rounded='full' w='70%'
-                                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
-                                </HStack>
-                                <HStack space="1" alignItems="center">
-                                    <Skeleton size="4" rounded="full"
-                                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
-                                    <Skeleton h='2' rounded='full' w='70%'
-                                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
-                                </HStack>
-                                <HStack space="1" alignItems="center">
-                                    <Skeleton size="4" rounded="full"
-                                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
-                                    <Skeleton h='2' rounded='full' w='70%'
-                                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
-                                </HStack>
-                            </VStack>
-                        </View>
-                    }
+                        {!Fetching &&
+                            NDRestaurants.map((restaurant) =>
+                            (
+                                <RestaurantCards
+                                    key={restaurant._id}
+                                    id={restaurant._id}
+                                    image={restaurant["image"]}
+                                    title={restaurant["name"]}
+                                    timing={restaurant["timing"]}
+                                    delivery={restaurant["delivery"]}
+                                    genre={restaurant["genre"]}
+                                    location={restaurant["location"]}
+                                    description={restaurant["description"]}
+                                    dishes={restaurant["dishes"]}
+                                    veg_nonveg={restaurant["Veg_NonVeg"]}
+                                    phone={restaurant["RestaurantPhone"]}
+                                    actualUser={actualUser} />
+                            ))
+                        }
 
-                    {!Fetching &&
-                        NDRestaurants.map((restaurant) =>
-                        (
-                            <RestaurantCards
-                                key={restaurant._id}
-                                id={restaurant._id}
-                                image={restaurant["image"]}
-                                title={restaurant["name"]}
-                                timing={restaurant["timing"]}
-                                delivery={restaurant["delivery"]}
-                                genre={restaurant["genre"]}
-                                location={restaurant["location"]}
-                                description={restaurant["description"]}
-                                dishes={restaurant["dishes"]}
-                                veg_nonveg={restaurant["Veg_NonVeg"]}
-                                phone={restaurant["RestaurantPhone"]}
-                                actualUser={actualUser} />
-                        ))
-                    }
+                        <VStack>
+                            <Text
+                                allowFontScaling={false}
+                                className='self-center text-center font-semibold mt-8 text-md italic w-full'
+                                style={[colorScheme == 'light' ? Styles.LightHomeAdlib : Styles.DarkHomeAdlib]}
+                            >
+                                Brought to you by
+                            </Text>
+                            <Text
+                                allowFontScaling={false}
+                                className='self-center text-center font-semibold mb-6 text-md italic w-full'
+                                style={[colorScheme == 'light' ? Styles.LightHomeAdlib : Styles.DarkHomeAdlib]}
+                            >
+                                Aryan Yadav & Zahaan Shapoorjee
+                            </Text>
+                        </VStack>
 
-                    <Text
-                        allowFontScaling={false}
-                        className='self-center text-center font-semibold my-8 text-md italic w-11/12'
-                        style={[colorScheme == 'light' ? Styles.LightHomeAdlib : Styles.DarkHomeAdlib]}
-                    >
-                        By Aryan Yadav & Zahaan Shapoorjee
-                    </Text>
+                    </Animated.ScrollView>
 
-                </Animated.ScrollView>
+                    
+                </>
             }
             {Searched &&
                 <View className='h-screen' style={[colorScheme == 'light' ? { backgroundColor: '#F2F2F2' } : { backgroundColor: '#0c0c0f' }]}>
