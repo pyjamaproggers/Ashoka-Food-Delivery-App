@@ -112,7 +112,7 @@ const HomeScreen = () => {
                 <SafeAreaView>
                     <TouchableOpacity
                         onPress={() => {
-                            navigation.navigate('LiveOrders')
+                            navigation.navigate('LiveOrders', { actualUser })
                         }}
                         className=" w-7/12 self-center h-max py-3 my-0.5 px-3 flex-row items-center rounded-xl z-20"
                         style={{ backgroundColor: '#3E5896' }}

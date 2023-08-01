@@ -34,14 +34,21 @@ import COD from '../assets/cod.png'
 import BrokenHeart from '../assets/brokenheart.png'
 import PayAtRestaurant from '../assets/payatrestaurant.png'
 import Clock from '../assets/clockicon.png'
+import { IP } from '@dotenv'
+import io from 'socket.io-client';
 
 export default function LiveOrders() {
 
     const colorScheme = useColorScheme()
     const navigation = useNavigation();
-    const [actualUser, setActualUser] = useState()
+    const {
+        params: { actualUser },
+    } = useRoute();
     const scrollViewRef = useRef(null);
     const [loadingImage, setLoadingImage] = useState(true)
+    const [latestOrder, setLatestOrder] = useState(null)
+    const [ usersLiveOrders, setUsersLiveOrders] = useState([])
+    const [socket, setSocket] = useState(null)
 
     const RotiBoti = {
         phoneNumber: '+919896950018',
@@ -78,83 +85,54 @@ export default function LiveOrders() {
         image: Grey
     }
 
-    const usersLiveOrders = [
-        {
-            name: 'Aryan Yadav',
-            phone: '+918014213125',
-            email: 'aryan.yadav_asp24@ashoka.edu.in',
-            Restaurant: 'Roti Boti',
-            orderAmount: '399.00',
-            deliveryCharge: '0.00',
-            orderItems: [
-                {
-                    name: 'Butter Chicken',
-                    price: 200,
-                    quantity: 1
-                },
-                {
-                    name: 'Tandoori Chicken (half)',
-                    price: 180,
-                    quantity: 1
-                },
-            ],
-            orderDate: '22:33PM on 31 July 2023',
-            orderInstructions: 'Bhaiya mirchi thodi kam daalna...',
-            orderStatus: 'accepted',
-            orderType: 'Delivery',
-            payment: 'Pay At Outlet',
-            deliveryLocation: 'Sports Block',
-        },
-        {
-            name: 'Aryan Yadav',
-            phone: '+918014213125',
-            email: 'aryan.yadav_asp24@ashoka.edu.in',
-            Restaurant: 'Dhaba',
-            orderAmount: '217.00',
-            orderItems: [
-                {
-                    name: 'Dal Makhani',
-                    price: 69,
-                    quantity: 3
-                },
-            ],
-            orderDate: '18:06PM on 31 July 2023',
-            orderInstructions: 'Bhaiya thoda pyaar se banwana',
-            orderStatus: 'accepted',
-            orderType: 'Delivery',
-            payment: 'Pay On Delivery',
-            deliveryLocation: 'RH1',
-        },
-        {
-            name: 'Aryan Yadav',
-            phone: '+918014213125',
-            email: 'aryan.yadav_asp24@ashoka.edu.in',
-            Restaurant: 'The Hunger Cycle',
-            orderAmount: '255.00',
-            orderItems: [
-                {
-                    name: 'Cheesy Fries',
-                    price: 120,
-                    quantity: 2
-                },
-            ],
-            orderDate: '03:30PM on 31 July 2023',
-            orderInstructions: '',
-            orderStatus: 'placed',
-            orderType: 'Dine In',
-            payment: 'Pay At Outlet',
-            deliveryLocation: 'RH3',
-        },
-    ]
-
-    const getUser = async () => {
-        let user = await AsyncStorage.getItem("@user")
-        user = JSON.parse(user)
-        setActualUser(user)
-    }
-
     const updateImageLoader = (value) => {
         setLoadingImage(value)
+    }
+
+    const connectToSocket = () => {
+        const socket = io(`http://${IP}:8800`, {});
+    
+        socket.on('connect', () => {
+            console.log('Connected to WebSocket');
+        });
+    
+        socket.on('orderStatusChange', async (order) => {
+            console.log('Order Status Changed:', order);
+            if (actualUser && actualUser.email && order?.email === actualUser.email) {
+                setLatestOrder(order);
+            }
+        });
+    
+        socket.on('disconnect', () => {
+            console.log('WebSocket disconnected');
+        });
+    
+        setSocket(socket);
+    };
+
+    const getUserOrders = async () =>
+    {
+        try {
+            if (!actualUser) {
+                console.error('Actual user is undefined');
+                return;
+            }
+            const response = await fetch(`http://${IP}:8800/api/orders/${actualUser.email}`);
+            const data = await response.json();
+            let liveOrders = [];
+            data.map((order, index) => {
+                if (!(order.orderStatus == 'completed' || order.orderStatus.includes('Declined'))) {
+                    liveOrders.push(order)
+                }
+            })
+            // setRefreshing(false)
+            // setFetching(false)
+            setUsersLiveOrders(liveOrders)
+        } catch (error) {
+            console.error('Error fetching orders:', error);
+            // setRefreshing(false)
+            // setFetching(false)
+        }
     }
 
     const { width, height } = Dimensions.get('screen');
@@ -172,9 +150,21 @@ export default function LiveOrders() {
     }, []);
 
     useEffect(() => {
-        getUser();
+        const fetchData = async () => {
+            await getUserOrders();
+            connectToSocket();
+        };
+        fetchData();
+    }, []);
 
-    }, [])
+    useEffect(() => {
+        if (latestOrder) {
+            const fetchData = async () => {
+                await getUserOrders();
+            };
+            fetchData();
+        }
+    }, [latestOrder]);
 
     return (
         <View style={[colorScheme == 'light' ? Styles.LightBG : Styles.DarkBG]}>
