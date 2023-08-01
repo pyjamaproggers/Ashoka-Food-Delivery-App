@@ -182,7 +182,11 @@ export default function UserScreen() {
 
 
                     <View className="py-4" style={[colorScheme == 'light' ? Styles.LightUserDetailsBorder : Styles.DarkUserDetailsBorder]}>
-                        <TouchableOpacity>
+                        <TouchableOpacity 
+                            onPress={()=>{
+                                navigation.navigate('OrderHistory', { actualUser })
+                            }}
+                        >
                             <View className="flex-row gap-2 items-center justify-between">
                                 <HStack className="items-center flex-row" space={2}>
                                     <Image source={Orderhistory} style={{ width: 20, height: 20 }} />

@@ -49,7 +49,7 @@ function VendorLogin() {
         <SafeAreaView style={[colorScheme == 'light' ? styles.Lightcontainer : styles.Darkcontainer]}>
             {/* Go back button */}
             <TouchableOpacity style={styles.goBackButton} onPress={() => navigation.goBack()}>
-                <ArrowLeftIcon width={24} height={24} color="#fff" />
+                <ArrowLeftIcon width={24} height={24} style={[colorScheme=='light'? {color: '#000'}: {color: '#fff'}]} />
             </TouchableOpacity>
             <View style={styles.inputContainer}>
                 {/* Dropdown for selecting restaurant */}
@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
     },
     goBackButton: {
         position: 'absolute',
-        top: 20,
+        top: 50,
         left: 20,
         zIndex: 1,
         padding: 10,

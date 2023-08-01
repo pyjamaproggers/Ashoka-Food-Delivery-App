@@ -182,16 +182,32 @@ export default LiveOrders = () => {
                                     <VStack className='self-center items-center w-11/12 '>
 
                                         <HStack className='items-center' space={1}>
-                                            {usersLiveOrders.map((item, progressIndex) => (
+                                            {usersLiveOrders.length > 1 &&
                                                 <>
-                                                    {index == progressIndex &&
-                                                        <StopCircleIcon size={12} style={[colorScheme == 'light' ? { color: '#3E5896' } : { color: '#3E5896' }]} />
-                                                    }
-                                                    {index != progressIndex &&
-                                                        <StopCircleIcon size={12} style={[colorScheme == 'light' ? { color: 'rgb(209, 213, 219)' } : { color: 'rgb(107, 114, 128)' }]} />
-                                                    }
+                                                    {usersLiveOrders.map((order, progressIndex) => (
+                                                        <>
+                                                            {order.orderStatus == 'placed' &&
+                                                                <StopCircleIcon size={16} style={{ color: '#3b82f6' }} />
+                                                            }
+                                                            {order.orderStatus == 'accepted' &&
+                                                                <StopCircleIcon size={16} style={{ color: '#22c55e' }} />
+                                                            }
+                                                            {order.orderStatus == 'preparing' &&
+                                                                <StopCircleIcon size={16} style={{ color: '#eab308' }} />
+                                                            }
+                                                            {order.orderStatus == 'out for delivery' &&
+                                                                <StopCircleIcon size={16} style={{ color: '#3b82f6' }} />
+                                                            }
+                                                            {order.orderStatus == 'ready' &&
+                                                                <StopCircleIcon size={16} style={{ color: '#3b82f6' }} />
+                                                            }
+                                                            {order.orderStatus.slice(0, 8) == 'Declined' &&
+                                                                <StopCircleIcon size={16} style={{ color: '#f43f5e' }} />
+                                                            }
+                                                        </>
+                                                    ))}
                                                 </>
-                                            ))}
+                                            }
                                         </HStack>
 
                                         <HStack className='items-center -mb-4 justify-between w-11/12'>
