@@ -26,7 +26,7 @@ import VegIcon from '../assets/vegicon.png';
 import NonVegIcon from '../assets/nonvegicon.png';
 import { useNetInfo } from "@react-native-community/netinfo";
 import io from 'socket.io-client';
-import { ARYANIP, ZAHAANIP } from '@dotenv'
+import { IP } from '@dotenv'
 
 function VendorDashboard() {
     const route = useRoute();
@@ -71,10 +71,7 @@ function VendorDashboard() {
     }, []);
 
     const connectToSocket = () => {
-        // const socket = io('http://10.77.1.70:8800', {
-        // });
-
-        const socket = io('http://172.20.10.2:8800', {
+        const socket = io(`http://${IP}:8800`, {
         });
 
         socket.on('connect', () => {
@@ -110,7 +107,7 @@ function VendorDashboard() {
     const changeStatus = async (_id, orderStatus) => {
         try {
             if (orderStatus != 'Declined') {
-                const response = await fetch(`http://${ARYANIP}:8800/api/orders/${_id}/status`, {
+                const response = await fetch(`http://${IP}:8800/api/orders/${_id}/status`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -131,7 +128,7 @@ function VendorDashboard() {
 
             if (orderStatus == 'Declined') {
                 if (declineReason == 'Closing Time' || declineReason == 'Student Cancelled') {
-                    const response = await fetch(`http://${ARYANIP}:8800/api/orders/${_id}/status`, {
+                    const response = await fetch(`http://${IP}:8800/api/orders/${_id}/status`, {
                         method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json',
@@ -151,7 +148,7 @@ function VendorDashboard() {
                     }
                 }
                 else {
-                    const response = await fetch(`http://${ARYANIP}:8800/api/orders/${_id}/status`, {
+                    const response = await fetch(`http://${IP}:8800/api/orders/${_id}/status`, {
                         method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json',
@@ -182,8 +179,7 @@ function VendorDashboard() {
     const fetchOrders = async () => {
         setFetching(true)
         try {
-            // const response = await fetch(`http://10.77.1.70:8800/api/orders/${selectedRestaurant}`);
-            const response = await fetch(`http://${ARYANIP}:8800/api/orders/${selectedRestaurant}`);
+            const response = await fetch(`http://${IP}:8800/api/orders/${selectedRestaurant}`);
             const data = await response.json();
             let tempClosedOrders = []
             let tempOpenOrders = []
@@ -216,7 +212,7 @@ function VendorDashboard() {
         setFetching(true)
         try {
             // const response = await fetch(`http://10.77.1.70:8800/api/items/${selectedRestaurant}`);
-            const response = await fetch(`http://${ARYANIP}:8800/api/items/${selectedRestaurant}`);
+            const response = await fetch(`http://${IP}:8800/api/items/${selectedRestaurant}`);
             const data = await response.json();
             var TempFetchedUnavailableItems = []
             if (data) {
@@ -294,14 +290,10 @@ function VendorDashboard() {
                 itemsToRemove.push(fetchedUnavailableItems[i])
             }
         }
-        // console.log('*ASBASKASOU*')
-        // console.log(itemsToAdd)
-        // console.log(itemsToRemove)
         var flag = 0
 
         for (const item of itemsToAdd) {
-            // const url = "http://172.20.10.2:8800/api/items";
-            const url = `http://${ARYANIP}:8800/api/items`;
+            const url = `http://${IP}:8800/api/items`;
             try {
                 const response = await fetch(url, {
                     method: "POST",
@@ -320,8 +312,7 @@ function VendorDashboard() {
         }
 
         for (const item of itemsToRemove) {
-            // const url = "http://172.20.10.2:8800/api/items";
-            const url = `http://${ARYANIP}:8800/api/items`;
+            const url = `http://${IP}:8800/api/items`;
             try {
                 const response = await fetch(url, {
                     method: "DELETE",

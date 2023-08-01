@@ -8,7 +8,7 @@ import VegIcon from '../assets/vegicon.png';
 import NonVegIcon from '../assets/nonvegicon.png';
 import Styles from "../components/Styles";
 import { HStack, VStack } from "native-base";
-import { ARYANIP, ZAHAANIP } from '@dotenv'
+import { IP } from '@dotenv'
 
 const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant }) => {
     const colorScheme = useColorScheme();
@@ -72,8 +72,7 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant }) =
 
     const fetchUnavailableItems = async () => {
         try {
-            // const response = await fetch(`http://10.77.1.70:8800/api/items/${selectedRestaurant}`);
-            const response = await fetch(`http://${ARYANIP}:8800/api/items/${Restaurant}`);
+            const response = await fetch(`http://${IP}:8800/api/items/${Restaurant}`);
             const data = await response.json();
             var TempFetchedUnavailableItems = []
             if (data) {

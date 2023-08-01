@@ -30,7 +30,7 @@ import SportsBlock from '../assets/sportsblock.png'
 import Mess from '../assets/mess.png'
 import UPI from '../assets/upi.png'
 import COD from '../assets/cod.png'
-import { ARYANIP, ZAHAANIP } from '@dotenv'
+import { IP } from '@dotenv'
 import BrokenHeart from '../assets/brokenheart.png'
 import PayAtRestaurant from '../assets/payatrestaurant.png'
 
@@ -171,7 +171,7 @@ const BasketScreen = () => {
 
         for (const basketRestaurant of Basket) {
             try {
-                const response = await fetch(`http://${ARYANIP}:8800/api/items/${basketRestaurant.name}`)
+                const response = await fetch(`http://${IP}:8800/api/items/${basketRestaurant.name}`)
                 const data = await response.json()
                 var TempFetchedUnavailableItems = []
                 var unavailableItemsInCart = ''
@@ -369,8 +369,7 @@ const BasketScreen = () => {
     }, []);
 
     const sendOrderToDatabase = async (orderData) => {
-        // const url = "http://10.77.1.70:8800/api/orders";
-        const url = "http://172.20.10.2:8800/api/orders"; // Node Server (Our backend, put the IP address as ur local IPV4 address)
+        const url = `http://${IP}:8800/api/orders`; // Node Server (Our backend, put the IP address as ur local IPV4 address)
         try {
             const response = await fetch(url, {
                 method: "POST",
