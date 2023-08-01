@@ -500,7 +500,7 @@ const BasketScreen = () => {
             for (const item of items){
                 dispatch(removeFromCart({ id: item.id, name: item.name, Price: item.Price, image: item.image, Restaurant: item.Restaurant, Veg_NonVeg: item.Veg_NonVeg, quantity: 0 }))
             }
-            navigation.navigate('LiveOrders');
+            navigation.navigate('LiveOrders', { actualUser });
         }
         else {
             Alert.alert(itemsCheck)

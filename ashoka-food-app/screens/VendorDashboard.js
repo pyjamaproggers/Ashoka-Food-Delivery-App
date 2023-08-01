@@ -60,6 +60,7 @@ function VendorDashboard() {
     const [fetchedUnavailableItems, setFetchedUnavailableItems] = useState([])
     const [socket, setSocket] = useState(null);
     const [latestOrder, setLatestOrder] = useState(null);
+    const [latestCompletedOrder, setLatestCompletedOrder] = useState(null);
 
     const colorScheme = useColorScheme();
     const toast = useToast();
@@ -85,6 +86,13 @@ function VendorDashboard() {
             }
         });
 
+        socket.on('orderComplete', (order) => {
+            console.log('Order Complete:', order);
+            if (order.Restaurant === selectedRestaurant) {
+                setLatestCompletedOrder(order);
+            }
+        });
+
         socket.on('disconnect', () => {
             console.log('WebSocket disconnected');
         });
@@ -103,6 +111,18 @@ function VendorDashboard() {
             })
         }
     }, [latestOrder]);
+
+    useEffect(() => {
+        if (latestCompletedOrder) {
+            fetchOrders();
+            toast.show({
+                description: "Order Complete!",
+                placement: 'bottom',
+                backgroundColor: 'green.100',
+                _description: { color: 'green.600' },
+            })
+        }
+    }, [latestCompletedOrder]);
 
     const changeStatus = async (_id, orderStatus) => {
         try {
