@@ -117,12 +117,6 @@ export default LiveOrders = () => {
             headerShown: false,
             gestureEnabled: false,
         });
-        if (scrollViewRef.current) {
-            scrollViewRef.current.measure((x, y, width, height) => {
-                console.log(height)
-                setScrollViewHeight(height);
-            });
-        }
     }, []);
 
     useEffect(() => {
@@ -156,7 +150,7 @@ export default LiveOrders = () => {
                     const translateX = scrollX.interpolate({
                         inputRange,
                         outputRange: [
-                            -width * 0.9, 0, width * 0.9
+                            -width * 1, 0, width * 1
                         ]
                     })
 
@@ -186,24 +180,54 @@ export default LiveOrders = () => {
                                                 <>
                                                     {usersLiveOrders.map((order, progressIndex) => (
                                                         <>
-                                                            {order.orderStatus == 'placed' &&
-                                                                <StopCircleIcon size={16} style={{ color: '#3b82f6' }} />
+                                                            {index == progressIndex &&
+                                                                <>
+                                                                    {order.orderStatus == 'placed' &&
+                                                                        <StopCircleIcon size={20} style={{ color: '#3b82f6' }} />
+                                                                    }
+                                                                    {order.orderStatus == 'accepted' &&
+                                                                        <StopCircleIcon size={20} style={{ color: '#22c55e' }} />
+                                                                    }
+                                                                    {order.orderStatus == 'preparing' &&
+                                                                        <StopCircleIcon size={20} style={{ color: '#eab308' }} />
+                                                                    }
+                                                                    {order.orderStatus == 'out for delivery' &&
+                                                                        <StopCircleIcon size={20} style={{ color: '#3b82f6' }} />
+                                                                    }
+                                                                    {order.orderStatus == 'ready' &&
+                                                                        <StopCircleIcon size={20} style={{ color: '#3b82f6' }} />
+                                                                    }
+                                                                    {order.orderStatus.slice(0, 8) == 'Declined' &&
+                                                                        <StopCircleIcon size={20} style={{ color: '#f43f5e' }} />
+                                                                    }
+                                                                </>
                                                             }
-                                                            {order.orderStatus == 'accepted' &&
-                                                                <StopCircleIcon size={16} style={{ color: '#22c55e' }} />
+
+
+                                                            {index != progressIndex &&
+                                                                <>
+                                                                    {order.orderStatus == 'placed' &&
+                                                                        <StopCircleIcon size={12} style={{ color: '#3b82f6' }} />
+                                                                    }
+                                                                    {order.orderStatus == 'accepted' &&
+                                                                        <StopCircleIcon size={12} style={{ color: '#22c55e' }} />
+                                                                    }
+                                                                    {order.orderStatus == 'preparing' &&
+                                                                        <StopCircleIcon size={12} style={{ color: '#eab308' }} />
+                                                                    }
+                                                                    {order.orderStatus == 'out for delivery' &&
+                                                                        <StopCircleIcon size={12} style={{ color: '#3b82f6' }} />
+                                                                    }
+                                                                    {order.orderStatus == 'ready' &&
+                                                                        <StopCircleIcon size={12} style={{ color: '#3b82f6' }} />
+                                                                    }
+                                                                    {order.orderStatus.slice(0, 8) == 'Declined' &&
+                                                                        <StopCircleIcon size={12} style={{ color: '#f43f5e' }} />
+                                                                    }
+                                                                </>
                                                             }
-                                                            {order.orderStatus == 'preparing' &&
-                                                                <StopCircleIcon size={16} style={{ color: '#eab308' }} />
-                                                            }
-                                                            {order.orderStatus == 'out for delivery' &&
-                                                                <StopCircleIcon size={16} style={{ color: '#3b82f6' }} />
-                                                            }
-                                                            {order.orderStatus == 'ready' &&
-                                                                <StopCircleIcon size={16} style={{ color: '#3b82f6' }} />
-                                                            }
-                                                            {order.orderStatus.slice(0, 8) == 'Declined' &&
-                                                                <StopCircleIcon size={16} style={{ color: '#f43f5e' }} />
-                                                            }
+
+
                                                         </>
                                                     ))}
                                                 </>
