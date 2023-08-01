@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useMemo, useState, useCallback } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { SafeAreaView, useColorScheme, StyleSheet, TouchableOpacity, Text, View, Image, TextInput, ScrollView } from 'react-native';
 import { HStack, Skeleton, VStack } from 'native-base';
@@ -95,89 +95,90 @@ export default function OrderHistory() {
         image: Grey
     }
 
-    const segregateSearchedOrders = (searched) => {
-        setFetching(true)
-        let tempSearchedUserOrders = []
-        userOrders.map((order) => {
-            let flag = 0
-            if (order.Restaurant.includes(searched)) {
-                tempSearchedUserOrders.push(order)
-            }
-            if (order.orderStatus.includes(searched)) {
-                tempSearchedUserOrders.push(order)
-                console.log(order.orderStatus.includes(searched))
-            }
-            order.orderItems.map((item) => {
-                if (item.name.includes(searched)) {
-                    tempSearchedUserOrders.push(order)
+    const fetchOrders = async () => {
+        setFetching(true);
+        try {
+            const response = await fetch(`http://${IP}:8800/api/orders/${actualUser.name}`);
+            const data = await response.json();
+            data.forEach((order, index) => {
+                switch (order.Restaurant) {
+                    case 'Roti Boti':
+                        order['image'] = RotiBoti.image;
+                        order['restaurantPhone'] = RotiBoti.phoneNumber;
+                        break;
+                    case 'Dhaba':
+                        order['image'] = Dhaba.image;
+                        order['restaurantPhone'] = Dhaba.phoneNumber;
+                        break;
+                    case 'The Hunger Cycle':
+                        order['image'] = THC.image;
+                        order['restaurantPhone'] = THC.phoneNumber;
+                        break;
+                    case 'Chaat Stall':
+                        order['image'] = FoodVillage.image;
+                        order['restaurantPhone'] = FoodVillage.phoneNumber;
+                        break;
+                    case 'Chicago Pizza':
+                        order['image'] = ChicagoPizza.image;
+                        order['restaurantPhone'] = ChicagoPizza.phoneNumber;
+                        break;
+                    case 'Subway':
+                        order['image'] = Subway.image;
+                        order['restaurantPhone'] = Subway.phoneNumber;
+                        break;
+                    case 'Rasananda':
+                        order['image'] = Rasananda.image;
+                        order['restaurantPhone'] = Rasananda.phoneNumber;
+                        break;
+                    default:
+                        order['image'] = Grey; // Default image if restaurant not found
+                        order['restaurantPhone'] = ''; // Default phone number if restaurant not found
+                        break;
                 }
-            })
-            if (order.orderDate.includes(searched)) {
-                tempSearchedUserOrders.push(order)
+            });
+            const tempUserOrders = data.reverse();
+            setUserOrders(tempUserOrders);
+            setFetching(false);
+        } catch (error) {
+            console.error("Error while fetching orders on order history page", error);
+        }
+    };
+
+    const segregateSearchedOrders = useCallback((searched, orders) => {
+        if (!searched || !orders || orders.length === 0) {
+            // If searched is empty or orders are not available, reset the searchedUserOrders state to an empty array
+            setSearchedUserOrders([]);
+            return;
+        }
+        const tempSearchedUserOrders = [];
+        orders.forEach((order) => {
+            if (
+                order.Restaurant.includes(searched) ||
+                order.orderStatus.includes(searched) ||
+                order.orderDate.includes(searched) ||
+                order.orderItems.some((item) => item.name.includes(searched))
+            ) {
+                tempSearchedUserOrders.push(order);
             }
-        })
-        setSearchedUserOrders(tempSearchedUserOrders)
-        setFetching(false)
-    }
+        });
+        setSearchedUserOrders(tempSearchedUserOrders);
+    }, []);
 
-    // useMemo(() => {
-    //     if (searched) {
-    //         segregateSearchedOrders(searched)
-    //     }
-    // }, [searched])
+    useEffect(() => {
+        fetchOrders();
+    }, []);
 
-    useLayoutEffect(() => {
+    useEffect(() => {
+        if (searched && userOrders.length > 0) {
+            segregateSearchedOrders(searched, userOrders);
+        }
+    }, [searched, userOrders]);
+
+    useEffect(() => {
         navigation.setOptions({
             headerShown: false,
         });
     }, [searched]);
-
-    const fetchOrders = async () => {
-        setFetching(true)
-        try {
-            const response = await fetch(`http://${IP}:8800/api/orders/user/${actualUser.name}`);
-            const data = await response.json();
-            data.map((order, index) => {
-                if (order.Restaurant == 'Roti Boti') {
-                    order['image'] = RotiBoti.image
-                    order['restaurantPhone'] = RotiBoti.phoneNumber
-                }
-                else if (order.Restaurant == 'Dhaba') {
-                    order['image'] = Dhaba.image
-                    order['restaurantPhone'] = Dhaba.phoneNumber
-                }
-                else if (order.Restaurant == 'The Hunger Cycle') {
-                    order['image'] = THC.image
-                    order['restaurantPhone'] = THC.phoneNumber
-                }
-                else if (order.Restaurant == 'Chaat Stall') {
-                    order['image'] = FoodVillage.image
-                    order['restaurantPhone'] = FoodVillage.phoneNumber
-                }
-                else if (order.Restaurant == 'Chicago Pizza') {
-                    order['image'] = ChicagoPizza.image
-                    order['restaurantPhone'] = ChicagoPizza.phoneNumber
-                }
-                else if (order.Restaurant == 'Subway') {
-                    order['image'] = Subway.image
-                    order['restaurantPhone'] = Subway.phoneNumber
-                }
-                else if (order.Restaurant == 'Rasananda') {
-                    order['image'] = Rasananda.image
-                    order['restaurantPhone'] = Rasananda.phoneNumber
-                }
-            })
-            let tempUserOrders = data
-            setUserOrders(tempUserOrders.reverse())
-            setFetching(false)
-        } catch (error) {
-            console.error("Error while fetching orders on order history page", + error)
-        }
-    }
-
-    useEffect(() => {
-        fetchOrders();
-    }, [])
 
     return (
         <SafeAreaView style={[colorScheme == 'light' ? { backgroundColor: '#F2F2F2', flex: 1 } : { backgroundColor: '#0c0c0f', flex: 1 }]}>
