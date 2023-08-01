@@ -22,8 +22,10 @@ export default function CartIcon({ actualUser, image, outletName }) {
     const windowHeight = Dimensions.get('window').height;
     const [showCartSheet, setShowCartSheet] = useState(false)
     const dispatch = useDispatch();
-
+    
     const [Basket, setBasket] = useState();
+
+    const totalItemsInCart = items.reduce((total, item) => total + item.quantity, 0);
 
     const addItem = (id, name, Price, image, Restaurant, Veg_NonVeg) => {
         Price = parseFloat(Price)
@@ -45,7 +47,6 @@ export default function CartIcon({ actualUser, image, outletName }) {
             else {
                 items.map((item) => {
                     if (item.name == name) {
-                        console.log('coming here')
                         currentQuantity = item.quantity
                         additemQ = currentQuantity + 1
                         // dispatch(addToCart({ id, name, Price, image, Restaurant, Veg_NonVeg, quantity: additemQ }));
@@ -56,7 +57,6 @@ export default function CartIcon({ actualUser, image, outletName }) {
             }
         };
     };
-
     const removeItem = (id, name, Price, image, Restaurant, Veg_NonVeg) => {
         Price = parseFloat(Price)
         console.log('****')
@@ -140,18 +140,18 @@ export default function CartIcon({ actualUser, image, outletName }) {
                                     style={{ width: 20, height: 20, resizeMode: "contain", }}
                                     source={Cart}
                                 />
-                                {items.length == 1 &&
+                                {totalItemsInCart == 1 &&
                                     <Text className='text-md font-semibold text-black'
                                         style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
                                     >
-                                        {items.length} ITEM ADDED
+                                        {totalItemsInCart } ITEM ADDED
                                     </Text>
                                 }
-                                {items.length > 1 &&
+                                {totalItemsInCart  > 1 &&
                                     <Text className='text-md font-semibold text-black'
                                         style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
                                     >
-                                        {items.length} ITEMS ADDED
+                                        {totalItemsInCart } ITEMS ADDED
                                     </Text>
                                 }
                                 {showCartSheet &&
@@ -206,18 +206,18 @@ export default function CartIcon({ actualUser, image, outletName }) {
                                         style={{ width: 20, height: 20, resizeMode: "contain", }}
                                         source={Cart}
                                     />
-                                    {items.length == 1 &&
+                                    {totalItemsInCart == 1 &&
                                         <Text className='text-md font-semibold text-black'
                                             style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
                                         >
-                                            {items.length} ITEM ADDED
+                                            {items.reduce((total, item) => total + item.quantity, 0)} ITEM ADDED
                                         </Text>
                                     }
-                                    {items.length > 1 &&
+                                    {totalItemsInCart > 1 &&
                                         <Text className='text-md font-semibold text-black'
                                             style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
                                         >
-                                            {items.length} ITEMS ADDED
+                                            {items.reduce((total, item) => total + item.quantity, 0)} ITEMS ADDED
                                         </Text>
                                     }
                                     {showCartSheet &&
@@ -419,14 +419,14 @@ export default function CartIcon({ actualUser, image, outletName }) {
                                                 <Text className='text-md font-semibold text-black'
                                                     style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
                                                 >
-                                                    {items.length} ITEM ADDED
+                                                    {items.reduce((total, item) => total + item.quantity, 0)} ITEM ADDED
                                                 </Text>
                                             }
                                             {items.length > 1 &&
                                                 <Text className='text-md font-semibold text-black'
                                                     style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
                                                 >
-                                                    {items.length} ITEMS ADDED
+                                                    {items.reduce((total, item) => total + item.quantity, 0)} ITEMS ADDED
                                                 </Text>
                                             }
                                             {showCartSheet &&
