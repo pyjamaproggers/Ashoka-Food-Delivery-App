@@ -232,7 +232,7 @@ export default function UserScreen() {
                 </View>
 
                 {/* Log Out  */}
-                <View className='shadow-sm' style={colorScheme == 'light' ? styles.LightlogoutContainer : styles.DarklogoutContainer}>
+                <View className='shadow-sm mb-4' style={colorScheme == 'light' ? styles.LightlogoutContainer : styles.DarklogoutContainer}>
 
                     <View className="py-3 items-center" style={[colorScheme == 'light' ? Styles.LightUserDetailsBorderLast : Styles.DarkUserDetailsBorderLast]}>
                         <TouchableOpacity onPress={() => setShowLogoutModal(true)}>

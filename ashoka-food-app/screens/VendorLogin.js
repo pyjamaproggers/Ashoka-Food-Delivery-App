@@ -8,6 +8,7 @@ import { ArrowLeftIcon } from 'react-native-heroicons/outline'; // Import the go
 function VendorLogin() {
     const navigation = useNavigation();
     const [selectedRestaurant, setSelectedRestaurant] = useState('');
+    const [selectedPerson, setSelectedPerson] = useState('');
     const [password, setPassword] = useState('');
 
     const colorScheme = useColorScheme()
@@ -18,7 +19,9 @@ function VendorLogin() {
     }, []);
 
     const handleLogin = () => {
-       navigation.navigate('VendorDashboard', {selectedRestaurant} )
+        if(selectedRestaurant.length>0){
+            navigation.navigate('VendorDashboard', {selectedRestaurant, selectedPerson} )
+        }
     };
 
     // List of restaurant options
@@ -35,6 +38,11 @@ function VendorLogin() {
         { label: "Fuelzone", value: "Fuelzone" },
         { label: "Amul", value: "Amul" },
         { label: "Nescafe", value: "Nescafe" },
+    ];
+
+    const personOptions = [
+        { label: "Manager", value: "Manager" },
+        { label: "Delivery Bhaiya", value: "Delivery Bhaiya" },
     ];
 
     return (
@@ -57,13 +65,26 @@ function VendorLogin() {
                     />
                 </View>
 
+                <View style={styles.selectRestaurantBox}>
+                    <RNPickerSelect
+                        placeholder={{
+                            label: "Who are you?",
+                            value: null,
+                        }}
+                        onValueChange={(itemValue) => setSelectedPerson(itemValue)}
+                        items={personOptions}
+                        style={pickerSelectStyles}
+                    />
+                </View>
+
                 {/* Password input */}
                 <TextInput
                     placeholder="Password"
+                    placeholderTextColor='gray'
                     value={password}
                     onChangeText={(text) => setPassword(text)}
                     secureTextEntry={true}
-                    style={[colorScheme=='light'? styles.inputLight : styles.inputDark]}
+                    style={styles.inputLight}
                 />
 
                 {/* Login button */}

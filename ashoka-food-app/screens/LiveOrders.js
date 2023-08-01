@@ -1,21 +1,28 @@
 import { View, Text, TouchableOpacity, ScrollView, colorScheme, useColorScheme, TextInput, FlatList, Alert, Dimensions, Animated, Linking } from "react-native";
 import React, { useMemo, useState, useLayoutEffect, useRef, useEffect } from "react";
 import { SafeAreaView, StyleSheet, StatusBar, Image } from "react-native";
-import { CloseIcon, HStack, IconButton, Slide, VStack, Skeleton, Alert as NativeBaseAlert, Button as NativeBaseButton } from 'native-base';
+import { CloseIcon, HStack, IconButton, Slide, VStack, Skeleton, Alert as NativeBaseAlert, Button as NativeBaseButton, Progress } from 'native-base';
 import { useNavigation, useRoute } from "@react-navigation/native";
 import Styles from '../components/Styles.js'
 import Test1 from '../assets/testoutlet1.jpg'
 import Test2 from '../assets/testoutlet2.jpg'
+import Test3 from '../assets/testoutlet3.jpg'
 import Refresh from '../assets/refresh.png'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Phone from '../assets/phoneicon.png'
-import { ArrowLeftIcon, ClockIcon, MapPinIcon, BoltIcon, PhoneArrowUpRightIcon, XMarkIcon } from 'react-native-heroicons/solid';
+import { ArrowLeftIcon, StopCircleIcon } from 'react-native-heroicons/solid';
 
 export default LiveOrders = () => {
 
     const colorScheme = useColorScheme()
     const navigation = useNavigation();
     const [actualUser, setActualUser] = useState()
+    const scrollViewRef = useRef(null);
+    const [scrollViewHeight, setScrollViewHeight] = useState(0);
+
+    const phoneNumbers = {
+
+    }
 
     const usersLiveOrders = [
         {
@@ -24,8 +31,6 @@ export default LiveOrders = () => {
             email: 'aryan.yadav_asp24@ashoka.edu.in',
             Restaurant: 'Roti Boti',
             orderAmount: '399.00',
-            subtotal: '380.00',
-            tax: '19.00',
             deliveryCharge: '0.00',
             orderItems: [
                 {
@@ -70,6 +75,28 @@ export default LiveOrders = () => {
             image: Test2,
             restaurantPhone: 'restaurantPhone'
         },
+        {
+            name: 'Aryan Yadav',
+            phone: '+918014213125',
+            email: 'aryan.yadav_asp24@ashoka.edu.in',
+            Restaurant: 'The Hunger Cycle',
+            orderAmount: '255.00',
+            orderItems: [
+                {
+                    name: 'Cheesy Fries',
+                    price: 120,
+                    quantity: 2
+                },
+            ],
+            orderDate: '03:30PM on 31 July 2023',
+            orderInstructions: '',
+            orderStatus: 'placed',
+            orderType: 'Dine In',
+            payment: 'Pay At Outlet',
+            deliveryLocation: 'RH3',
+            image: Test3,
+            restaurantPhone: 'restaurantPhone'
+        },
     ]
 
     const getUser = async () => {
@@ -77,10 +104,10 @@ export default LiveOrders = () => {
         user = JSON.parse(user)
         setActualUser(user)
     }
-
     const { width, height } = Dimensions.get('screen');
     const ITEM_WIDTH = width;
-    const ITEM_HEIGHT = height
+    const ITEM_HEIGHT = height;
+    const ITEM_HEIGHT2 = (ITEM_HEIGHT * 0.5) + 700;
 
     const scrollX = useRef(new Animated.Value(0)).current;
     const scrollY = useRef(new Animated.Value(0)).current;
@@ -90,10 +117,17 @@ export default LiveOrders = () => {
             headerShown: false,
             gestureEnabled: false,
         });
+        if (scrollViewRef.current) {
+            scrollViewRef.current.measure((x, y, width, height) => {
+                console.log(height)
+                setScrollViewHeight(height);
+            });
+        }
     }, []);
 
     useEffect(() => {
-        getUser()
+        getUser();
+
     }, [])
 
     return (
@@ -108,8 +142,9 @@ export default LiveOrders = () => {
                 snapToAlignment="start"
                 onScroll={Animated.event(
                     [{ nativeEvent: { contentOffset: { x: scrollX, y: scrollY } } }],
-                    { useNativeDriver: true }
+                    { useNativeDriver: true },
                 )}
+
                 renderItem={({ item, index }) => {
 
                     const inputRange = [
@@ -121,31 +156,46 @@ export default LiveOrders = () => {
                     const translateX = scrollX.interpolate({
                         inputRange,
                         outputRange: [
-                            -width * 1, 0, width * 1
+                            -width * 0.9, 0, width * 0.9
                         ]
                     })
 
                     return (
                         <View
-                            style={Styles.DarkBG} >
+                            style={[colorScheme == 'light' ? Styles.LightBG : Styles.DarkBG]} >
 
-                            <View className='absolute top-0 z-20 w-screen'
+                            {/* {scrollY > (ITEM_HEIGHT*0.6) && */}
+                            <View className=' z-20 w-screen'
                                 style={[colorScheme == 'light' ?
                                     {
-                                        backgroundColor: 'rgba(255,255,255,0.8)',
+                                        backgroundColor: '#f2f2f2',
                                         padding: 8,
                                     }
                                     :
                                     {
-                                        backgroundColor: 'rgba(0,0,0,0.8)',
+                                        backgroundColor: '#0c0c0f',
                                         padding: 8
                                     }
                                 ]}
                             >
                                 <SafeAreaView >
                                     <VStack className='self-center items-center w-11/12 '>
-                                        <HStack className='items-center pb-2 justify-between w-11/12'>
-                                            <TouchableOpacity onPress={() => { navigation.navigate('Home', { actualUser }) }} className=" p-2 rounded-full" style={[colorScheme == 'light' ? { backgroundColor: 'white', borderRadius: 20 } : { backgroundColor: 'black', borderRadius: 20 }]}>
+
+                                        <HStack className='items-center' space={1}>
+                                            {usersLiveOrders.map((item, progressIndex) => (
+                                                <>
+                                                    {index == progressIndex &&
+                                                        <StopCircleIcon size={12} style={[colorScheme == 'light' ? { color: '#3E5896' } : { color: '#3E5896' }]} />
+                                                    }
+                                                    {index != progressIndex &&
+                                                        <StopCircleIcon size={12} style={[colorScheme == 'light' ? { color: 'rgb(209, 213, 219)' } : { color: 'rgb(107, 114, 128)' }]} />
+                                                    }
+                                                </>
+                                            ))}
+                                        </HStack>
+
+                                        <HStack className='items-center -mb-4 justify-between w-11/12'>
+                                            <TouchableOpacity onPress={() => { navigation.navigate('Home', { actualUser }) }} className=" p-2 rounded-full" style={[colorScheme == 'light' ? { backgroundColor: 'white', borderRadius: 20 } : { backgroundColor: '#262626', borderRadius: 20 }]}>
                                                 <ArrowLeftIcon size={20} style={[colorScheme == 'light' ? { color: 'black' } : { color: 'white' }]} />
                                             </TouchableOpacity>
 
@@ -168,78 +218,80 @@ export default LiveOrders = () => {
 
 
                                         {item.orderStatus == 'placed' &&
-                                            <View className='justify-center w-screen' >
+                                            <View className='justify-center w-screen top-6' >
                                                 <NativeBaseAlert className='self-center rounded-xl'
                                                     style={{
                                                         backgroundColor: '#bfdbfe'
                                                     }}
                                                 >
-                                                    <Text className='font-medium text-md text-center'>
-                                                        Order has been placed! Waiting for outlet to accept.
+                                                    <Text allowFontScaling={false} className='font-medium text-xs text-center'>
+                                                        Order placed! Waiting for outlet to accept.
                                                     </Text>
                                                 </NativeBaseAlert>
                                             </View>
                                         }
                                         {item.orderStatus == 'accepted' &&
-                                            <View className='justify-center w-screen' >
+                                            <View className='justify-center w-screen top-6' >
                                                 <NativeBaseAlert className='self-center rounded-xl' status='success'
                                                     style={{
                                                         backgroundColor: '#bbf7d0'
                                                     }}
                                                 >
-                                                    <Text className='font-medium text-md text-center'>
-                                                        Order has been accepted by the outlet.
+                                                    <Text allowFontScaling={false} className='font-medium text-xs text-center'>
+                                                        Order accepted by the outlet!
                                                     </Text>
                                                 </NativeBaseAlert>
                                             </View>
                                         }
                                         {item.orderStatus == 'preparing' &&
-                                            <View className='justify-center w-screen' >
+                                            <View className='justify-center w-screen top-6' >
                                                 <NativeBaseAlert className='self-center rounded-xl'
                                                     style={{
                                                         backgroundColor: '#fef08a'
                                                     }}
                                                 >
-                                                    <Text className='font-medium text-md text-center'>
-                                                        Food is being prepared
+                                                    <Text allowFontScaling={false} className='font-medium text-xs text-center'>
+                                                        Food is being prepared!
                                                     </Text>
                                                 </NativeBaseAlert>
                                             </View>
                                         }
                                         {item.orderStatus == 'out for delivery' &&
-                                            <View className='justify-center w-screen' >
+                                            <View className='justify-center w-screen top-6' >
                                                 <NativeBaseAlert className='self-center rounded-xl'
                                                     style={{
                                                         backgroundColor: '#bfdbfe'
                                                     }}
                                                 >
-                                                    <Text className='font-medium text-md text-center'>
-                                                        Your order is out for delivery!
+                                                    <Text allowFontScaling={false} className='font-medium text-xs text-center'>
+                                                        Your food is out for delivery!
                                                     </Text>
                                                 </NativeBaseAlert>
                                             </View>
                                         }
                                         {item.orderStatus == 'ready' &&
-                                            <View className='justify-center w-screen' >
+                                            <View className='justify-center w-screen top-6' >
                                                 <NativeBaseAlert className='self-center rounded-xl'
                                                     style={{
                                                         backgroundColor: '#bfdbfe'
                                                     }}
                                                 >
-                                                    <Text className='font-medium text-md text-center'>
+                                                    <Text allowFontScaling={false} className='font-medium text-xs text-center'>
                                                         Your food is ready at the outlet!
                                                     </Text>
                                                 </NativeBaseAlert>
                                             </View>
                                         }
                                         {item.orderStatus.slice(0, 8) == 'Declined' &&
-                                            <View className='justify-center w-screen' >
+                                            <View className='justify-center w-screen top-6' >
                                                 <NativeBaseAlert className='self-center rounded-xl'
                                                     style={{
-                                                        backgroundColor: '#fecaca'
+                                                        backgroundColor: '#fecaca',
+                                                        maxWidth: '80%'
                                                     }}
+
                                                 >
-                                                    <Text className='font-medium text-md text-center'>
+                                                    <Text allowFontScaling={false} className='font-medium text-xs text-center'>
                                                         Order {item.orderStatus}
                                                     </Text>
                                                 </NativeBaseAlert>
@@ -248,59 +300,75 @@ export default LiveOrders = () => {
                                     </VStack>
                                 </SafeAreaView>
                             </View>
+                            {/* } */}
+
 
                             <Animated.ScrollView
                                 onScroll={Animated.event(
                                     [{ nativeEvent: { contentOffset: { y: scrollY } } }],
-                                    { useNativeDriver: true }
+                                    { useNativeDriver: true },
                                 )}
                                 showsVerticalScrollIndicator={false}
                                 contentContainerStyle={{
                                     paddingBottom: 0
                                 }}
+                                scrollEventThrottle={16}
+                                bounces={false}
+                                decelerationRate={'normal'}
+                                ref={scrollViewRef}
                             >
-                                <View style={{
-                                    width: ITEM_WIDTH,
-                                    height: ITEM_HEIGHT * 0.6,
-                                    // overflow: 'hidden',
-                                    alignItems: 'center',
-                                }}>
-                                    <Animated.Image
-                                        source={item.image}
-                                        style={{
-                                            width: ITEM_WIDTH,
-                                            height: ITEM_HEIGHT,
-                                            resizeMode: 'cover',
-                                            opacity: 1,
-                                            transform: [
-                                                {
-                                                    translateX
-                                                },
-                                                // {
-                                                //     scale: scrollY.interpolate({
-                                                //         inputRange: [-ITEM_WIDTH + 1, 0, ITEM_HEIGHT, ITEM_HEIGHT + 1],
-                                                //         outputRange: [2, 1, 0.75, 0.75]
-                                                //     })
-                                                // },
-                                                {
-                                                    translateY: scrollY.interpolate({
-                                                        inputRange: [-ITEM_HEIGHT, 0, ITEM_HEIGHT, ITEM_HEIGHT + 1],
-                                                        outputRange: [-ITEM_HEIGHT * 0.01, 0, ITEM_HEIGHT * 1.0, ITEM_HEIGHT * 0.1]
-                                                    }),
-                                                },
-                                            ]
-                                        }}
-                                    />
+                                <View className='items-center shadow-sm'>
+                                    <View style={{
+                                        width: ITEM_WIDTH * 0.95,
+                                        height: ITEM_HEIGHT * 0.4,
+                                        overflow: 'hidden',
+                                        alignItems: 'center',
+                                        borderRadius: 15,
+                                    }}
+                                        className='shadow-sm'
+                                    >
+                                        <Animated.Image
+                                            className='shadow-sm'
+                                            source={item.image}
+                                            style={{
+                                                width: ITEM_WIDTH,
+                                                height: ITEM_HEIGHT * 0.4,
+                                                resizeMode: 'cover',
+                                                opacity: 1,
+                                                borderRadius: 15,
+                                                transform: [
+                                                    {
+                                                        translateX
+                                                    },
+                                                    // {
+                                                    //     scale: scrollY.interpolate({
+                                                    //         inputRange: [-ITEM_HEIGHT + 1, 0, ITEM_HEIGHT, ITEM_HEIGHT + 1],
+                                                    //         outputRange: [2, 1, 1, 1]
+                                                    //     })
+                                                    // },
+                                                    // {
+                                                    //     translateY: scrollY.interpolate({
+                                                    //         inputRange: [-ITEM_HEIGHT2, 0, ITEM_HEIGHT2, ITEM_HEIGHT2 + 1],
+                                                    //         outputRange: [-ITEM_HEIGHT2 * 1.0, 0, ITEM_HEIGHT2 * 1.0, ITEM_HEIGHT2 * 1.0]
+                                                    //     }),
+                                                    // },
+                                                ]
+                                            }}
+                                        />
+                                    </View>
+
                                 </View>
 
+
+
                                 <VStack className='w-screen items-center pb-12'
-                                    style={[colorScheme == 'light' ? { backgroundColor: 'rgba(255,255,255,0.8)' } : { backgroundColor: 'rgba(0,0,0,0.8)' }]}
+                                    style={[colorScheme == 'light' ? { backgroundColor: '#f2f2f2' } : { backgroundColor: 'rgba(0,0,0,0.8)' }]}
                                 >
                                     <Text className='font-medium text-md pt-4 pb-4' allowFontScaling={false}
                                         style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
                                         ITEMS
                                     </Text>
-                                    <VStack className='w-11/12 self-center py-1 rounded-lg'
+                                    <VStack className='w-11/12 self-center py-1 rounded-lg shadow-sm'
                                         style={[colorScheme == 'light' ? Styles.LightBGSec : Styles.DarkBGSec]}
                                     >
                                         {item.orderItems.map((orderItem, index) => (
@@ -366,11 +434,11 @@ export default LiveOrders = () => {
                                     }
 
                                     <VStack className='w-screen items-center'>
-                                        <Text className='text-center font-medium text-md pt-4 pb-2' allowFontScaling={false} style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
+                                        <Text className='text-center font-medium text-md pt-4 pb-4' allowFontScaling={false} style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
                                             DETAILS
                                         </Text>
 
-                                        <VStack className='w-11/12 self-center py-1 rounded-lg'
+                                        <VStack className='w-11/12 self-center py-1 rounded-lg shadow-sm'
                                             style={[colorScheme == 'light' ? Styles.LightBGSec : Styles.DarkBGSec]}
                                         >
                                             <HStack className='items-center self-center py-1 w-11/12 justify-between'>
@@ -447,14 +515,6 @@ export default LiveOrders = () => {
                                             </View>
                                         }
                                     </VStack>
-
-                                    <NativeBaseButton className='my-6' isDisabled={false} colorScheme='red' variant='subtle' style={{ borderRadius: 7.5 }}
-                                        onPress={() => {
-                                            //ask again before cancelling, then evoke cancel function
-                                        }}
-                                    >
-                                        Cancel Order
-                                    </NativeBaseButton>
 
                                 </VStack>
 
