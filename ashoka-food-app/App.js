@@ -16,7 +16,6 @@ import CartScreen from './screens/CartScreen';
 import {NativeBaseProvider} from 'native-base'
 import VendorDashboard from './screens/VendorDashboard';
 import LiveOrders from './screens/LiveOrders';
-import DeliveryGuyDashboard from './screens/DeliveryGuyDashboard';
 
 setupURLPolyfill()
 const Stack = createNativeStackNavigator();
