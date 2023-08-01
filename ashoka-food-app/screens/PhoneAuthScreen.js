@@ -23,7 +23,7 @@ const PhoneAuthScreen = () => {
     const colorScheme=useColorScheme();
 
     const {
-        params: { actualUser },
+        params: { actualUser, from },
     } = useRoute();
 
     const styles = StyleSheet.create({
@@ -95,11 +95,20 @@ const PhoneAuthScreen = () => {
         )
         firebase.auth().signInWithCredential(credential)
             .then(() => {
-                navigation.navigate('Login', {phone:phoneNumberFormatted})
-                setCode('');
-                Alert.alert(
-                    'Welcome to AshokaEats'
-                )
+                if(from=='Login'){
+                    navigation.navigate('Login', {phone:phoneNumberFormatted})
+                    setCode('');
+                    Alert.alert(
+                        'Welcome to AshokaEats'
+                    )
+                }
+                else{
+                    navigation.navigate('UserScreen', { actualUser })
+                    setCode('');
+                    Alert.alert(
+                        'Phone Number Updated'
+                    )
+                }
             })
             .catch((error) => {
                 console.log(error)

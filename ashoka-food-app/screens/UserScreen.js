@@ -206,7 +206,11 @@ export default function UserScreen() {
                     </View>
 
                     <View className="py-4" style={[colorScheme == 'light' ? Styles.LightUserDetailsBorder : Styles.DarkUserDetailsBorder]}>
-                        <TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={()=>{
+                                navigation.navigate('PhoneAuth', { actualUser, from: 'UserScreen' })
+                            }}
+                        >
                             <View className="flex-row gap-2 items-center justify-between">
                                 <HStack className="items-center flex-row" space={2}>
                                     <Image source={Phonechange} style={{ width: 20, height: 20 }} />

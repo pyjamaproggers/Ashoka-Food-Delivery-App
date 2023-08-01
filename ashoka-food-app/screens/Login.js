@@ -89,7 +89,7 @@ function Login() {
             }
             else if (!actualUser.phone && !phone) {
                 console.log("Time to get Phone")
-                navigation.navigate('PhoneAuth', { actualUser })
+                navigation.navigate('PhoneAuth', { actualUser, from: 'Login' })
             }
 
         }
@@ -116,7 +116,7 @@ function Login() {
             const storageUser = JSON.stringify(actualUser)
             AsyncStorage.setItem("@user", storageUser);
             console.log("User set to " + actualUser);
-            navigation.navigate('PhoneAuth', { actualUser })
+            navigation.navigate('PhoneAuth', { actualUser, from: 'Login' })
         } catch (error) {
             console.log(error)
         }
