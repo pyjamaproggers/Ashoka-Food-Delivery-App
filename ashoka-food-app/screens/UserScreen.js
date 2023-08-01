@@ -133,7 +133,6 @@ export default function UserScreen() {
         navigation.setOptions({
             headerShown: false,
         });
-        console.log(actualUser)
     }, []);
 
     const navigation = useNavigation();

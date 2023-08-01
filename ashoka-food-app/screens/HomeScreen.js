@@ -108,13 +108,13 @@ const HomeScreen = () => {
     return (
         <View className="" style={[colorScheme == 'light' ? { backgroundColor: '#F2F2F2' } : { backgroundColor: '#0c0c0f' }]}>
 
-            <View className='absolute bottom-32 w-screen z-20 shadow-sm'>
+            <View className='absolute w-screen bottom-32 z-50 shadow-sm'>
                 <SafeAreaView>
                     <TouchableOpacity
                         onPress={() => {
                             navigation.navigate('LiveOrders')
                         }}
-                        className=" w-max h-max py-2 my-0.5 px-3 flex-row items-center rounded-lg z-20"
+                        className=" w-7/12 self-center h-max py-3 my-0.5 px-3 flex-row items-center rounded-xl z-20"
                         style={{ backgroundColor: '#3E5896' }}
                     >
                         <HStack className='items-center justify-between w-full'>
@@ -172,8 +172,8 @@ const HomeScreen = () => {
                 </TouchableOpacity>
             </SafeAreaView> */}
 
-            <SafeAreaView>
-                <View className="flex-row pb-3 items-center mx-2 space-x-1 z-50 h-max w-10/12 justify-between self-center">
+            <SafeAreaView className='h-max'>
+                <View className="flex-row pb-3 pt-1.5 items-center mx-2 space-x-1 z-50 h-max w-10/12 justify-between self-center">
 
                     <Image source={AshokaLogo} className="p-4 rounded-full" style={{ height: 50, width: 50 }} />
 
@@ -323,8 +323,6 @@ const HomeScreen = () => {
                 {/* Body */}
                 <Restaurants searched={Searched} actualUser={actualUser} LoadJoke={LoadJoke} />
             </SafeAreaView>
-
-
 
 
         </View>

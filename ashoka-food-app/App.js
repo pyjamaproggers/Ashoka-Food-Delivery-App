@@ -16,6 +16,8 @@ import CartScreen from './screens/CartScreen';
 import {NativeBaseProvider} from 'native-base'
 import VendorDashboard from './screens/VendorDashboard';
 import LiveOrders from './screens/LiveOrders';
+import OrderHistory from './screens/OrderHistory';
+import EachOrder from './screens/EachOrder';
 
 setupURLPolyfill()
 const Stack = createNativeStackNavigator();
@@ -35,6 +37,8 @@ export default function App() {
 						<Stack.Screen name="UserScreen" component={UserScreen} />
 						<Stack.Screen name="Cart" component={CartScreen} />
                         <Stack.Screen name="LiveOrders" component={LiveOrders} />
+                        <Stack.Screen name="OrderHistory" component={OrderHistory} />
+                        <Stack.Screen name="EachOrder" component={EachOrder} />
 					</Stack.Navigator>
 				</Provider>
 			</NavigationContainer>

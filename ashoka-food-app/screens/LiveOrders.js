@@ -11,17 +11,71 @@ import Refresh from '../assets/refresh.png'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Phone from '../assets/phoneicon.png'
 import { ArrowLeftIcon, StopCircleIcon } from 'react-native-heroicons/solid';
+import Grey from '../assets/greysquare.jpeg'
+import Dish from '../assets/dish.png';
+import PenIcon from '../assets/pen.png';
+import { PlusIcon, MinusIcon } from 'react-native-heroicons/solid';
+import Subtotal from '../assets/subtotal.png';
+import Total from '../assets/total.png'
+import FinalTotal from '../assets/finaltotal.png'
+import Government from '../assets/government.png';
+import DeliveryBhaiya from '../assets/deliverybhaiya.png';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import Chevronup from '../assets/chevronupicon.png';
+import ChevronDown from '../assets/chevrondownicon.png';
+import FoodDelivery from '../assets/fooddelivery.png';
+import DineIn from '../assets/dinein.png';
+import RH from '../assets/rh.png'
+import AC04 from '../assets/ac04.png'
+import SportsBlock from '../assets/sportsblock.png'
+import Mess from '../assets/mess.png'
+import UPI from '../assets/upi.png'
+import COD from '../assets/cod.png'
+import BrokenHeart from '../assets/brokenheart.png'
+import PayAtRestaurant from '../assets/payatrestaurant.png'
+import Clock from '../assets/clockicon.png'
 
-export default LiveOrders = () => {
+export default function LiveOrders() {
 
     const colorScheme = useColorScheme()
     const navigation = useNavigation();
     const [actualUser, setActualUser] = useState()
     const scrollViewRef = useRef(null);
-    const [scrollViewHeight, setScrollViewHeight] = useState(0);
+    const [loadingImage, setLoadingImage] = useState(true)
 
-    const phoneNumbers = {
+    const RotiBoti = {
+        phoneNumber: '+919896950018',
+        image: Test1
+    }
 
+    const Dhaba = {
+        phoneNumber: '+918059410499',
+        image: Test2
+    }
+
+    const THC = {
+        phoneNumber: '+918199991183',
+        image: Test3
+    }
+
+    const ChicagoPizza = {
+        phoneNumber: '+919873102693',
+        image: Grey
+    }
+
+    const Rasananda = {
+        phoneNumber: '',
+        image: Grey
+    }
+
+    const FoodVillage = {
+        phoneNumber: '+918053202242',
+        image: Grey
+    }
+
+    const Subway = {
+        phoneNumber: '+918199989788',
+        image: Grey
     }
 
     const usersLiveOrders = [
@@ -46,12 +100,10 @@ export default LiveOrders = () => {
             ],
             orderDate: '22:33PM on 31 July 2023',
             orderInstructions: 'Bhaiya mirchi thodi kam daalna...',
-            orderStatus: 'preparing',
+            orderStatus: 'accepted',
             orderType: 'Delivery',
             payment: 'Pay At Outlet',
             deliveryLocation: 'Sports Block',
-            image: Test1,
-            restaurantPhone: 'restaurantPhone'
         },
         {
             name: 'Aryan Yadav',
@@ -70,10 +122,8 @@ export default LiveOrders = () => {
             orderInstructions: 'Bhaiya thoda pyaar se banwana',
             orderStatus: 'accepted',
             orderType: 'Delivery',
-            payment: 'Pay At Outlet',
+            payment: 'Pay On Delivery',
             deliveryLocation: 'RH1',
-            image: Test2,
-            restaurantPhone: 'restaurantPhone'
         },
         {
             name: 'Aryan Yadav',
@@ -94,8 +144,6 @@ export default LiveOrders = () => {
             orderType: 'Dine In',
             payment: 'Pay At Outlet',
             deliveryLocation: 'RH3',
-            image: Test3,
-            restaurantPhone: 'restaurantPhone'
         },
     ]
 
@@ -104,10 +152,14 @@ export default LiveOrders = () => {
         user = JSON.parse(user)
         setActualUser(user)
     }
+
+    const updateImageLoader = (value) => {
+        setLoadingImage(value)
+    }
+
     const { width, height } = Dimensions.get('screen');
     const ITEM_WIDTH = width;
     const ITEM_HEIGHT = height;
-    const ITEM_HEIGHT2 = (ITEM_HEIGHT * 0.5) + 700;
 
     const scrollX = useRef(new Animated.Value(0)).current;
     const scrollY = useRef(new Animated.Value(0)).current;
@@ -234,7 +286,7 @@ export default LiveOrders = () => {
                                             }
                                         </HStack>
 
-                                        <HStack className='items-center -mb-4 justify-between w-11/12'>
+                                        <HStack className='items-center -mb-4 justify-between w-full'>
                                             <TouchableOpacity onPress={() => { navigation.navigate('Home', { actualUser }) }} className=" p-2 rounded-full" style={[colorScheme == 'light' ? { backgroundColor: 'white', borderRadius: 20 } : { backgroundColor: '#262626', borderRadius: 20 }]}>
                                                 <ArrowLeftIcon size={20} style={[colorScheme == 'light' ? { color: 'black' } : { color: 'white' }]} />
                                             </TouchableOpacity>
@@ -245,15 +297,83 @@ export default LiveOrders = () => {
                                             >
                                                 {item.Restaurant}
                                             </Text>
-                                            <TouchableOpacity
-                                                onPress={() => {
-                                                    Linking.openURL(`tel:${item.restaurantPhone}`)
-                                                }}
-                                            >
-                                                <View className='m-1.5'>
-                                                    <Image style={{ width: 24, height: 24 }} source={Phone} />
-                                                </View>
-                                            </TouchableOpacity>
+                                            {item.Restaurant == 'Roti Boti' &&
+                                                <TouchableOpacity
+                                                    onPress={() => {
+                                                        Linking.openURL(`tel:${RotiBoti.phoneNumber}`)
+                                                    }}
+                                                >
+                                                    <View className='m-1.5'>
+                                                        <Image style={{ width: 24, height: 24 }} source={Phone} />
+                                                    </View>
+                                                </TouchableOpacity>
+                                            }
+                                            {item.Restaurant == 'Dhaba' &&
+                                                <TouchableOpacity
+                                                    onPress={() => {
+                                                        Linking.openURL(`tel:${Dhaba.phoneNumber}`)
+                                                    }}
+                                                >
+                                                    <View className='m-1.5'>
+                                                        <Image style={{ width: 24, height: 24 }} source={Phone} />
+                                                    </View>
+                                                </TouchableOpacity>
+                                            }
+                                            {item.Restaurant == 'Chaat Stall' &&
+                                                <TouchableOpacity
+                                                    onPress={() => {
+                                                        Linking.openURL(`tel:${FoodVillage.phoneNumber}`)
+                                                    }}
+                                                >
+                                                    <View className='m-1.5'>
+                                                        <Image style={{ width: 24, height: 24 }} source={Phone} />
+                                                    </View>
+                                                </TouchableOpacity>
+                                            }
+                                            {item.Restaurant == 'The Hunger Cycle' &&
+                                                <TouchableOpacity
+                                                    onPress={() => {
+                                                        Linking.openURL(`tel:${THC.phoneNumber}`)
+                                                    }}
+                                                >
+                                                    <View className='m-1.5'>
+                                                        <Image style={{ width: 24, height: 24 }} source={Phone} />
+                                                    </View>
+                                                </TouchableOpacity>
+                                            }
+                                            {item.Restaurant == 'Subway' &&
+                                                <TouchableOpacity
+                                                    onPress={() => {
+                                                        Linking.openURL(`tel:${Subway.phoneNumber}`)
+                                                    }}
+                                                >
+                                                    <View className='m-1.5'>
+                                                        <Image style={{ width: 24, height: 24 }} source={Phone} />
+                                                    </View>
+                                                </TouchableOpacity>
+                                            }
+                                            {item.Restaurant == 'Chicago Pizza' &&
+                                                <TouchableOpacity
+                                                    onPress={() => {
+                                                        Linking.openURL(`tel:${ChicagoPizza.phoneNumber}`)
+                                                    }}
+                                                >
+                                                    <View className='m-1.5'>
+                                                        <Image style={{ width: 24, height: 24 }} source={Phone} />
+                                                    </View>
+                                                </TouchableOpacity>
+                                            }
+                                            {item.Restaurant == 'Rasananda' &&
+                                                <TouchableOpacity
+                                                    onPress={() => {
+                                                        Linking.openURL(`tel:${Rasananda.phoneNumber}`)
+                                                    }}
+                                                >
+                                                    <View className='m-1.5'>
+                                                        <Image style={{ width: 24, height: 24 }} source={Phone} />
+                                                    </View>
+                                                </TouchableOpacity>
+                                            }
                                         </HStack>
 
 
@@ -353,7 +473,7 @@ export default LiveOrders = () => {
                                     paddingBottom: 0
                                 }}
                                 scrollEventThrottle={16}
-                                bounces={false}
+                                bounces={true}
                                 decelerationRate={'normal'}
                                 ref={scrollViewRef}
                             >
@@ -367,42 +487,246 @@ export default LiveOrders = () => {
                                     }}
                                         className='shadow-sm'
                                     >
-                                        <Animated.Image
-                                            className='shadow-sm'
-                                            source={item.image}
-                                            style={{
-                                                width: ITEM_WIDTH,
-                                                height: ITEM_HEIGHT * 0.4,
-                                                resizeMode: 'cover',
-                                                opacity: 1,
-                                                borderRadius: 15,
-                                                transform: [
-                                                    {
-                                                        translateX
-                                                    },
-                                                    // {
-                                                    //     scale: scrollY.interpolate({
-                                                    //         inputRange: [-ITEM_HEIGHT + 1, 0, ITEM_HEIGHT, ITEM_HEIGHT + 1],
-                                                    //         outputRange: [2, 1, 1, 1]
-                                                    //     })
-                                                    // },
-                                                    // {
-                                                    //     translateY: scrollY.interpolate({
-                                                    //         inputRange: [-ITEM_HEIGHT2, 0, ITEM_HEIGHT2, ITEM_HEIGHT2 + 1],
-                                                    //         outputRange: [-ITEM_HEIGHT2 * 1.0, 0, ITEM_HEIGHT2 * 1.0, ITEM_HEIGHT2 * 1.0]
-                                                    //     }),
-                                                    // },
-                                                ]
-                                            }}
-                                        />
+                                        {loadingImage &&
+                                            <Skeleton rounded='lg'
+                                                startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                                endColor={colorScheme == 'light' ? 'gray.300' : '#0c0c0f'}
+                                                style={{
+                                                    width: ITEM_WIDTH,
+                                                    height: ITEM_HEIGHT * 0.4
+                                                }}
+                                            />
+                                        }
+                                        {item.Restaurant == 'Roti Boti' &&
+                                            <Animated.Image
+                                                className='shadow-sm'
+                                                source={RotiBoti.image}
+                                                onLoadStart={() => updateImageLoader(true)}
+                                                onLoadEnd={() => updateImageLoader(false)}
+                                                style={{
+                                                    width: ITEM_WIDTH,
+                                                    height: ITEM_HEIGHT * 0.4,
+                                                    resizeMode: 'cover',
+                                                    opacity: 1,
+                                                    borderRadius: 15,
+                                                    transform: [
+                                                        {
+                                                            translateX
+                                                        },
+                                                        // {
+                                                        //     scale: scrollY.interpolate({
+                                                        //         inputRange: [-ITEM_HEIGHT + 1, 0, ITEM_HEIGHT, ITEM_HEIGHT + 1],
+                                                        //         outputRange: [2, 1, 1, 1]
+                                                        //     })
+                                                        // },
+                                                        // {
+                                                        //     translateY: scrollY.interpolate({
+                                                        //         inputRange: [-ITEM_HEIGHT2, 0, ITEM_HEIGHT2, ITEM_HEIGHT2 + 1],
+                                                        //         outputRange: [-ITEM_HEIGHT2 * 1.0, 0, ITEM_HEIGHT2 * 1.0, ITEM_HEIGHT2 * 1.0]
+                                                        //     }),
+                                                        // },
+                                                    ]
+                                                }}
+                                            />
+                                        }
+                                        {item.Restaurant == 'Dhaba' &&
+                                            <Animated.Image
+                                                className='shadow-sm'
+                                                source={Dhaba.image}
+                                                onLoadStart={() => updateImageLoader(true)}
+                                                onLoadEnd={() => updateImageLoader(false)}
+                                                style={{
+                                                    width: ITEM_WIDTH,
+                                                    height: ITEM_HEIGHT * 0.4,
+                                                    resizeMode: 'cover',
+                                                    opacity: 1,
+                                                    borderRadius: 15,
+                                                    transform: [
+                                                        {
+                                                            translateX
+                                                        },
+                                                        // {
+                                                        //     scale: scrollY.interpolate({
+                                                        //         inputRange: [-ITEM_HEIGHT + 1, 0, ITEM_HEIGHT, ITEM_HEIGHT + 1],
+                                                        //         outputRange: [2, 1, 1, 1]
+                                                        //     })
+                                                        // },
+                                                        // {
+                                                        //     translateY: scrollY.interpolate({
+                                                        //         inputRange: [-ITEM_HEIGHT2, 0, ITEM_HEIGHT2, ITEM_HEIGHT2 + 1],
+                                                        //         outputRange: [-ITEM_HEIGHT2 * 1.0, 0, ITEM_HEIGHT2 * 1.0, ITEM_HEIGHT2 * 1.0]
+                                                        //     }),
+                                                        // },
+                                                    ]
+                                                }}
+                                            />
+                                        }
+                                        {item.Restaurant == 'Chaat Stall' &&
+                                            <Animated.Image
+                                                className='shadow-sm'
+                                                source={FoodVillage.image}
+                                                onLoadStart={() => updateImageLoader(true)}
+                                                onLoadEnd={() => updateImageLoader(false)}
+                                                style={{
+                                                    width: ITEM_WIDTH,
+                                                    height: ITEM_HEIGHT * 0.4,
+                                                    resizeMode: 'cover',
+                                                    opacity: 1,
+                                                    borderRadius: 15,
+                                                    transform: [
+                                                        {
+                                                            translateX
+                                                        },
+                                                        // {
+                                                        //     scale: scrollY.interpolate({
+                                                        //         inputRange: [-ITEM_HEIGHT + 1, 0, ITEM_HEIGHT, ITEM_HEIGHT + 1],
+                                                        //         outputRange: [2, 1, 1, 1]
+                                                        //     })
+                                                        // },
+                                                        // {
+                                                        //     translateY: scrollY.interpolate({
+                                                        //         inputRange: [-ITEM_HEIGHT2, 0, ITEM_HEIGHT2, ITEM_HEIGHT2 + 1],
+                                                        //         outputRange: [-ITEM_HEIGHT2 * 1.0, 0, ITEM_HEIGHT2 * 1.0, ITEM_HEIGHT2 * 1.0]
+                                                        //     }),
+                                                        // },
+                                                    ]
+                                                }}
+                                            />
+                                        }
+                                        {item.Restaurant == 'Chicago Pizza' &&
+                                            <Animated.Image
+                                                className='shadow-sm'
+                                                source={ChicagoPizza.image}
+                                                onLoadStart={() => updateImageLoader(true)}
+                                                onLoadEnd={() => updateImageLoader(false)}
+                                                style={{
+                                                    width: ITEM_WIDTH,
+                                                    height: ITEM_HEIGHT * 0.4,
+                                                    resizeMode: 'cover',
+                                                    opacity: 1,
+                                                    borderRadius: 15,
+                                                    transform: [
+                                                        {
+                                                            translateX
+                                                        },
+                                                        // {
+                                                        //     scale: scrollY.interpolate({
+                                                        //         inputRange: [-ITEM_HEIGHT + 1, 0, ITEM_HEIGHT, ITEM_HEIGHT + 1],
+                                                        //         outputRange: [2, 1, 1, 1]
+                                                        //     })
+                                                        // },
+                                                        // {
+                                                        //     translateY: scrollY.interpolate({
+                                                        //         inputRange: [-ITEM_HEIGHT2, 0, ITEM_HEIGHT2, ITEM_HEIGHT2 + 1],
+                                                        //         outputRange: [-ITEM_HEIGHT2 * 1.0, 0, ITEM_HEIGHT2 * 1.0, ITEM_HEIGHT2 * 1.0]
+                                                        //     }),
+                                                        // },
+                                                    ]
+                                                }}
+                                            />
+                                        }
+                                        {item.Restaurant == 'Subway' &&
+                                            <Animated.Image
+                                                className='shadow-sm'
+                                                source={Subway.image}
+                                                onLoadStart={() => updateImageLoader(true)}
+                                                onLoadEnd={() => updateImageLoader(false)}
+                                                style={{
+                                                    width: ITEM_WIDTH,
+                                                    height: ITEM_HEIGHT * 0.4,
+                                                    resizeMode: 'cover',
+                                                    opacity: 1,
+                                                    borderRadius: 15,
+                                                    transform: [
+                                                        {
+                                                            translateX
+                                                        },
+                                                        // {
+                                                        //     scale: scrollY.interpolate({
+                                                        //         inputRange: [-ITEM_HEIGHT + 1, 0, ITEM_HEIGHT, ITEM_HEIGHT + 1],
+                                                        //         outputRange: [2, 1, 1, 1]
+                                                        //     })
+                                                        // },
+                                                        // {
+                                                        //     translateY: scrollY.interpolate({
+                                                        //         inputRange: [-ITEM_HEIGHT2, 0, ITEM_HEIGHT2, ITEM_HEIGHT2 + 1],
+                                                        //         outputRange: [-ITEM_HEIGHT2 * 1.0, 0, ITEM_HEIGHT2 * 1.0, ITEM_HEIGHT2 * 1.0]
+                                                        //     }),
+                                                        // },
+                                                    ]
+                                                }}
+                                            />
+                                        }
+                                        {item.Restaurant == 'The Hunger Cycle' &&
+                                            <Animated.Image
+                                                className='shadow-sm'
+                                                source={THC.image}
+                                                onLoadStart={() => updateImageLoader(true)}
+                                                onLoadEnd={() => updateImageLoader(false)}
+                                                style={{
+                                                    width: ITEM_WIDTH,
+                                                    height: ITEM_HEIGHT * 0.4,
+                                                    resizeMode: 'cover',
+                                                    opacity: 1,
+                                                    borderRadius: 15,
+                                                    transform: [
+                                                        {
+                                                            translateX
+                                                        },
+                                                        // {
+                                                        //     scale: scrollY.interpolate({
+                                                        //         inputRange: [-ITEM_HEIGHT + 1, 0, ITEM_HEIGHT, ITEM_HEIGHT + 1],
+                                                        //         outputRange: [2, 1, 1, 1]
+                                                        //     })
+                                                        // },
+                                                        // {
+                                                        //     translateY: scrollY.interpolate({
+                                                        //         inputRange: [-ITEM_HEIGHT2, 0, ITEM_HEIGHT2, ITEM_HEIGHT2 + 1],
+                                                        //         outputRange: [-ITEM_HEIGHT2 * 1.0, 0, ITEM_HEIGHT2 * 1.0, ITEM_HEIGHT2 * 1.0]
+                                                        //     }),
+                                                        // },
+                                                    ]
+                                                }}
+                                            />
+                                        }
+                                        {item.Restaurant == 'Rasananda' &&
+                                            <Animated.Image
+                                                className='shadow-sm'
+                                                source={Rasananda.image}
+                                                onLoadStart={() => updateImageLoader(true)}
+                                                onLoadEnd={() => updateImageLoader(false)}
+                                                style={{
+                                                    width: ITEM_WIDTH,
+                                                    height: ITEM_HEIGHT * 0.4,
+                                                    resizeMode: 'cover',
+                                                    opacity: 1,
+                                                    borderRadius: 15,
+                                                    transform: [
+                                                        {
+                                                            translateX
+                                                        },
+                                                        // {
+                                                        //     scale: scrollY.interpolate({
+                                                        //         inputRange: [-ITEM_HEIGHT + 1, 0, ITEM_HEIGHT, ITEM_HEIGHT + 1],
+                                                        //         outputRange: [2, 1, 1, 1]
+                                                        //     })
+                                                        // },
+                                                        // {
+                                                        //     translateY: scrollY.interpolate({
+                                                        //         inputRange: [-ITEM_HEIGHT2, 0, ITEM_HEIGHT2, ITEM_HEIGHT2 + 1],
+                                                        //         outputRange: [-ITEM_HEIGHT2 * 1.0, 0, ITEM_HEIGHT2 * 1.0, ITEM_HEIGHT2 * 1.0]
+                                                        //     }),
+                                                        // },
+                                                    ]
+                                                }}
+                                            />
+                                        }
                                     </View>
 
                                 </View>
 
-
-
                                 <VStack className='w-screen items-center pb-12'
-                                    style={[colorScheme == 'light' ? { backgroundColor: '#f2f2f2' } : { backgroundColor: 'rgba(0,0,0,0.8)' }]}
+                                    style={[colorScheme == 'light' ? Styles.LightBG : Styles.DarkBG]}
                                 >
                                     <Text className='font-medium text-md pt-4 pb-4' allowFontScaling={false}
                                         style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
@@ -414,10 +738,16 @@ export default LiveOrders = () => {
                                         {item.orderItems.map((orderItem, index) => (
                                             <>
                                                 <HStack className='items-center self-center py-1 w-11/12 justify-between'>
-                                                    <Text className='font-medium text-base'
-                                                        style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
-                                                        {orderItem.name}
-                                                    </Text>
+                                                    <HStack className='items-center space-x-2'>
+                                                        <Image
+                                                            style={{ width: 20, height: 20, resizeMode: "contain" }}
+                                                            source={Dish}
+                                                        />
+                                                        <Text className='font-medium text-base'
+                                                            style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
+                                                            {orderItem.name}
+                                                        </Text>
+                                                    </HStack>
                                                     <Text className='font-medium text-base'
                                                         style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
                                                         ₹{orderItem.price} x {orderItem.quantity}
@@ -426,7 +756,7 @@ export default LiveOrders = () => {
                                             </>
                                         ))}
 
-                                        <HStack className='items-center py-1 mt-1 w-11/12 self-center justify-between'
+                                        <HStack className='items-start py-1 mt-1 w-11/12 self-center justify-between'
                                             style={[colorScheme == 'light' ?
                                                 {
                                                     borderTopWidth: '1px',
@@ -440,10 +770,16 @@ export default LiveOrders = () => {
                                             ]}
                                         >
                                             <VStack>
-                                                <Text className='font-medium text-base'
-                                                    style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
-                                                    Grand Total
-                                                </Text>
+                                                <HStack className='items-center space-x-2'>
+                                                    <Image
+                                                        style={{ width: 20, height: 20, resizeMode: "contain" }}
+                                                        source={Total}
+                                                    />
+                                                    <Text className='font-medium text-base'
+                                                        style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
+                                                        Grand Total
+                                                    </Text>
+                                                </HStack>
                                                 <Text className='font-medium text-xs'
                                                     style={[colorScheme == 'light' ? { color: 'gray' } : { color: 'gray' }]}>
                                                     (including restaurant charges)
@@ -462,13 +798,19 @@ export default LiveOrders = () => {
                                                 style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
                                                 INSTRUCTIONS
                                             </Text>
-                                            <VStack className='w-11/12 self-center py-1 rounded-lg'
+                                            <VStack className='w-11/12 self-center py-2 rounded-lg'
                                                 style={[colorScheme == 'light' ? Styles.LightBGSec : Styles.DarkBGSec]}
                                             >
-                                                <Text className='font-medium px-3 py-1 text-base'
-                                                    style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
-                                                    "{item.orderInstructions}"
-                                                </Text>
+                                                <HStack className='items-center space-x-2 w-11/12 self-center'>
+                                                    <Image
+                                                        style={{ width: 20, height: 20, resizeMode: "contain" }}
+                                                        source={PenIcon}
+                                                    />
+                                                    <Text className='font-medium text-base'
+                                                        style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
+                                                        "{item.orderInstructions}"
+                                                    </Text>
+                                                </HStack>
                                             </VStack>
                                         </>
                                     }
@@ -482,10 +824,16 @@ export default LiveOrders = () => {
                                             style={[colorScheme == 'light' ? Styles.LightBGSec : Styles.DarkBGSec]}
                                         >
                                             <HStack className='items-center self-center py-1 w-11/12 justify-between'>
-                                                <Text className='font-medium text-base'
-                                                    style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
-                                                    Placed At
-                                                </Text>
+                                                <HStack className='items-center space-x-2'>
+                                                    <Image
+                                                        style={{ width: 20, height: 20, resizeMode: "contain" }}
+                                                        source={Clock}
+                                                    />
+                                                    <Text className='font-medium text-base'
+                                                        style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
+                                                        Placed At
+                                                    </Text>
+                                                </HStack>
                                                 <Text className='font-medium text-base'
                                                     style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
                                                     {item.orderDate.slice(0, 7)}
@@ -493,10 +841,24 @@ export default LiveOrders = () => {
                                             </HStack>
 
                                             <HStack className='items-center self-center py-1 w-11/12 justify-between'>
-                                                <Text className='font-medium text-base'
-                                                    style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
-                                                    Order Type
-                                                </Text>
+                                                <HStack className='items-center space-x-2'>
+                                                    {item.orderType == 'Delivery' &&
+                                                        <Image
+                                                            style={{ width: 20, height: 20, resizeMode: "contain" }}
+                                                            source={FoodDelivery}
+                                                        />
+                                                    }
+                                                    {item.orderType == 'Dine In' &&
+                                                        <Image
+                                                            style={{ width: 20, height: 20, resizeMode: "contain" }}
+                                                            source={DineIn}
+                                                        />
+                                                    }
+                                                    <Text className='font-medium text-base'
+                                                        style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
+                                                        Order Type
+                                                    </Text>
+                                                </HStack>
                                                 <Text className='font-medium text-base'
                                                     style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
                                                     {item.orderType}
@@ -506,10 +868,36 @@ export default LiveOrders = () => {
                                             {item.orderType == 'Delivery' &&
                                                 <>
                                                     <HStack className='items-center self-center py-1 w-11/12 justify-between'>
-                                                        <Text className='font-medium text-base'
-                                                            style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
-                                                            Delivery Location
-                                                        </Text>
+                                                        <HStack className='items-center space-x-2'>
+                                                            {(item.deliveryLocation == 'RH1' || item.deliveryLocation == 'RH2' || item.deliveryLocation == 'RH3' || item.deliveryLocation == 'RH4' || item.deliveryLocation == 'RH5') &&
+                                                                <Image
+                                                                    style={{ width: 20, height: 20, resizeMode: "contain" }}
+                                                                    source={RH}
+                                                                />
+                                                            }
+                                                            {item.deliveryLocation == 'Library AC04' &&
+                                                                <Image
+                                                                    style={{ width: 20, height: 20, resizeMode: "contain" }}
+                                                                    source={AC04}
+                                                                />
+                                                            }
+                                                            {item.deliveryLocation == 'Mess' &&
+                                                                <Image
+                                                                    style={{ width: 20, height: 20, resizeMode: "contain" }}
+                                                                    source={Mess}
+                                                                />
+                                                            }
+                                                            {item.deliveryLocation == 'Sports Block' &&
+                                                                <Image
+                                                                    style={{ width: 20, height: 20, resizeMode: "contain" }}
+                                                                    source={SportsBlock}
+                                                                />
+                                                            }
+                                                            <Text className='font-medium text-base'
+                                                                style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
+                                                                Location
+                                                            </Text>
+                                                        </HStack>
                                                         <Text className='font-medium text-base'
                                                             style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
                                                             {item.deliveryLocation}
@@ -517,6 +905,31 @@ export default LiveOrders = () => {
                                                     </HStack>
                                                 </>
                                             }
+
+                                            <HStack className='items-center self-center py-1 w-11/12 justify-between'>
+                                                <HStack className='items-center space-x-2'>
+                                                    {item.payment == 'Pay At Outlet' &&
+                                                        <Image
+                                                            style={{ width: 20, height: 20, resizeMode: "contain" }}
+                                                            source={UPI}
+                                                        />
+                                                    }
+                                                    {item.payment == 'Pay On Delivery' &&
+                                                        <Image
+                                                            style={{ width: 20, height: 20, resizeMode: "contain" }}
+                                                            source={COD}
+                                                        />
+                                                    }
+                                                    <Text className='font-medium text-base'
+                                                        style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
+                                                        Payment
+                                                    </Text>
+                                                </HStack>
+                                                <Text className='font-medium text-base'
+                                                    style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
+                                                    {item.payment}
+                                                </Text>
+                                            </HStack>
                                         </VStack>
 
                                     </VStack>
