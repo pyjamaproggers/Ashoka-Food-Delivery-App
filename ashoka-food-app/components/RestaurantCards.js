@@ -21,7 +21,7 @@ import ChicagoPizza from '../assets/chicagopizzaicon.png';
 import Fuelzone from '../assets/fuelzoneicon.png';
 import Chaishai from '../assets/chaishaiicon.png';
 
-const RestaurantCards = ({ id, image, title, genre, timing, delivery, location, description, dishes, veg_nonveg, phone, actualUser }) => {
+const RestaurantCards = ({ id, image, title, genre, timing, delivery, location, description, dishes, veg_nonveg, phone, actualUser, }) => {
     const navigation = useNavigation();
     const colorScheme = useColorScheme();
     return (

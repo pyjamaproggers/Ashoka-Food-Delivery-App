@@ -35,5 +35,11 @@ export default defineType({
         title: 'Genre of the Customization',
         validation: (Rule) => Rule.required(),
     },
+    {
+        name: "Required",
+        type: 'string',
+        title: 'Is it required?',
+        validation: (Rule) => Rule.required(),
+    },
   ]
 })

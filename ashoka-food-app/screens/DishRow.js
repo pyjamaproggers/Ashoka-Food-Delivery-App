@@ -7,15 +7,16 @@ import { useDispatch, useSelector } from "react-redux";
 import VegIcon from '../assets/vegicon.png';
 import NonVegIcon from '../assets/nonvegicon.png';
 import Styles from "../components/Styles";
-import { HStack, VStack } from "native-base";
+import { HStack, VStack, Actionsheet } from "native-base";
 import { IP } from '@dotenv'
 
-const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant }) => {
+const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Customizations }) => {
     const colorScheme = useColorScheme();
     const dispatch = useDispatch();
     const items = useSelector(selectCartItems);
     const [itemQuantity, setItemQuantity] = useState(0)
     const [FetchedUnavailableItems, setFetchedUnavailableItems] = useState([])
+    const [showCustomizationSheet, setShowCustomizationSheet] = useState()
 
     const addItem = () => {
         Price = parseFloat(Price)
@@ -103,6 +104,7 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant }) =
             }
         }
         fetchUnavailableItems()
+        // console.log(name + Customizations)
     }, [items])
 
     return (
@@ -136,7 +138,7 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant }) =
 
                 </VStack>
 
-                {FetchedUnavailableItems.includes(name) ? 
+                {FetchedUnavailableItems.includes(name) ?
                     <VStack className='w-max pr-8 items-center'>
                         <Text className='font-medium'
                             style={[colorScheme == 'light' ? Styles.LightTextSecondary : Styles.DarkTextSecondary]}
@@ -145,41 +147,99 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant }) =
                         </Text>
                         <Text className='font-medium'
                             style={[colorScheme == 'light' ? Styles.LightTextSecondary : Styles.DarkTextSecondary]}
-                        >  
-                           Unavailable 
+                        >
+                            Unavailable
                         </Text>
                     </VStack>
-                :
+                    :
                     <>
-                        {/* Add/Minus BUtton Block */}
-                        {(itemQuantity == 0 || itemQuantity == null) && delivery == 'Yes' &&
-                            <TouchableOpacity onPress={addItem}>
-                                <HStack
-                                    style={[colorScheme == 'light' ? Styles.LightAddButtonInitial : Styles.DarkAddButtonInitial]}
-                                >
-                                    <Text className='text-xl font-medium ' style={{ color: '#3E5896', marginLeft: 4 }}>
-                                        ADD
-                                    </Text>
-                                    <PlusSmallIcon size={16} color='#3E5896' />
-                                </HStack>
-                            </TouchableOpacity>
-                        }
-                        {itemQuantity > 0 && delivery == 'Yes' &&
-                            <HStack
-                                style={[colorScheme == 'light' ? Styles.LightAddButtonFinal : Styles.DarkAddButtonFinal]}
-                            >
-                                <TouchableOpacity onPress={removeItem} className='p-3 px-2'>
-                                    <MinusIcon size={16} color='white' />
-                                </TouchableOpacity>
+                        {Customizations == null ?
+                            <>
+                                {/* Add/Minus BUtton Block */}
+                                {(itemQuantity == 0 || itemQuantity == null) && delivery == 'Yes' &&
+                                    <TouchableOpacity onPress={addItem}
+                                        className='items-center'
+                                    >
+                                        <HStack
+                                            style={[colorScheme == 'light' ? Styles.LightAddButtonInitial : Styles.DarkAddButtonInitial]}
+                                        >
+                                            <Text className='text-xl font-medium ' style={{ color: '#3E5896', marginLeft: 4 }}>
+                                                ADD
+                                            </Text>
+                                            <PlusSmallIcon size={16} color='#3E5896' />
+                                        </HStack>
+                                    </TouchableOpacity>
+                                }
+                                {itemQuantity > 0 && delivery == 'Yes' &&
+                                    <View className='justify-center items-center'>
+                                        <HStack
+                                            style={[colorScheme == 'light' ? Styles.LightAddButtonFinal : Styles.DarkAddButtonFinal]}
+                                        >
+                                            <TouchableOpacity onPress={removeItem} className='p-3 px-2'>
+                                                <MinusIcon size={16} color='white' />
+                                            </TouchableOpacity>
 
-                                <Text className='text-xl font-medium' style={{ color: 'white' }}>
-                                    {itemQuantity}
-                                </Text>
+                                            <Text className='text-xl font-medium' style={{ color: 'white' }}>
+                                                {itemQuantity}
+                                            </Text>
 
-                                <TouchableOpacity onPress={addItem} className='p-3 px-2'>
-                                    <PlusIcon size={16} color='white' />
-                                </TouchableOpacity>
-                            </HStack>
+                                            <TouchableOpacity onPress={addItem} className='p-3 px-2'>
+                                                <PlusIcon size={16} color='white' />
+                                            </TouchableOpacity>
+                                        </HStack>
+
+                                    </View>
+                                }
+
+                            </>
+                            :
+                            <>
+                                {/* Add/Minus BUtton Block */}
+                                {(itemQuantity == 0 || itemQuantity == null) && delivery == 'Yes' &&
+                                    <TouchableOpacity onPress={() => setShowCustomizationSheet(true)}>
+                                        <VStack className=' items-center' >
+                                            <HStack
+                                                style={[colorScheme == 'light' ? Styles.LightAddButtonInitial : Styles.DarkAddButtonInitial]}
+                                            >
+                                                <Text className='text-xl font-medium ' style={{ color: '#3E5896', marginLeft: 4 }}>
+                                                    ADD
+                                                </Text>
+                                                <PlusSmallIcon size={16} color='#3E5896' />
+                                            </HStack>
+                                            <Text allowFontScaling={false} className='mt-1 text-xs font-normal'
+                                                style={[colorScheme == 'light' ? { color: 'rgb(156, 163, 175)' } : { color: 'rgb(107, 114, 128)' }]}
+                                            >
+                                                Customisable
+                                            </Text>
+                                        </VStack>
+                                    </TouchableOpacity>
+                                }
+                                {itemQuantity > 0 && delivery == 'Yes' &&
+                                    <VStack className='items-center'>
+                                        <HStack
+                                            style={[colorScheme == 'light' ? Styles.LightAddButtonFinal : Styles.DarkAddButtonFinal]}
+                                        >
+                                            <TouchableOpacity onPress={removeItem} className='p-3 px-2'>
+                                                <MinusIcon size={16} color='white' />
+                                            </TouchableOpacity>
+
+                                            <Text className='text-xl font-medium' style={{ color: 'white' }}>
+                                                {itemQuantity}
+                                            </Text>
+
+                                            <TouchableOpacity onPress={addItem} className='p-3 px-2'>
+                                                <PlusIcon size={16} color='white' />
+                                            </TouchableOpacity>
+                                        </HStack>
+                                        <Text allowFontScaling={false} className='mt-1 text-xs font-normal'
+                                            style={[colorScheme == 'light' ? { color: 'rgb(156, 163, 175)' } : { color: 'rgb(107, 114, 128)' }]}
+                                        >
+                                            Customisable
+                                        </Text>
+                                    </VStack>
+                                }
+                            </>
+
                         }
                     </>
                 }

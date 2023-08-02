@@ -28,9 +28,9 @@ const Restaurants = (props) => {
     const imageHeight = imageWidth * 0.7
 
     const query = `*[_type == "restaurant"]
-        {description, location, delivery,
-        name, image, genre, timing, Veg_NonVeg, CostForTwo, RestaurantPhone,
-        dishes[]->{name, Veg_NonVeg, Price, image, Menu_category, Restaurant ,_id, }}`;
+    {description, location, delivery,
+    name, image, genre, timing, Veg_NonVeg, CostForTwo, RestaurantPhone,
+    dishes[]->{name, Veg_NonVeg, Price, image, Menu_category, Restaurant ,_id, Customizations[]->{name, Price, Veg_NonVeg, ofDish, Genre}}}`;
 
     useLayoutEffect(() => {
     }, [colorScheme])
