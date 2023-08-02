@@ -9,6 +9,7 @@ import PhoneInput from 'react-native-phone-number-input';
 import { ArrowLeftIcon } from 'react-native-heroicons/solid';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import Styles from '../components/Styles';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const PhoneAuthScreen = () => {
     const [phoneNumber, setPhoneNumber] = useState('')
@@ -25,7 +26,7 @@ const PhoneAuthScreen = () => {
     const {
         params: { actualUser, from },
     } = useRoute();
-
+    
     const styles = StyleSheet.create({
         backButton: {
             width: "10%",
@@ -96,7 +97,9 @@ const PhoneAuthScreen = () => {
         firebase.auth().signInWithCredential(credential)
             .then(() => {
                 if(from=='Login'){
-                    navigation.navigate('Login', {phone:phoneNumberFormatted})
+                    actualUser['phone'] = phoneNumberFormatted;
+                    AsyncStorage.setItem("@user", JSON.stringify(actualUser))
+                    navigation.navigate('Home', {actualUser})
                     setCode('');
                     Alert.alert(
                         'Welcome to AshokaEats'
