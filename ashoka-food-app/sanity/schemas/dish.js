@@ -40,5 +40,11 @@ export default defineType({
       title: 'Which restaurant is the dish from?',
       validation: (Rule) => Rule.required(),
     },
+    {
+      name: "Customizations",
+      type: 'array',
+      title: 'Customizations of dish',
+      of: [{type: 'reference', to: [{type: 'Customization'}] }],
+    },
   ]
 })
