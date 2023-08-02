@@ -16,6 +16,7 @@ import { Alert, CloseIcon, HStack, IconButton, Slide, VStack, Skeleton } from 'n
 import { useNetInfo } from "@react-native-community/netinfo";
 import axios from 'axios';
 import Tracking from '../assets/tracking.png'
+import {IP} from "@dotenv"
 
 const HomeScreen = () => {
     const navigation = useNavigation();
@@ -27,6 +28,7 @@ const HomeScreen = () => {
     const [GetJoke, setGetJoke] = useState(false)
     const [LoadingJoke, setLoadingJoke] = useState(false)
     const [showDropDown, setShowDropDown] = useState(false)
+    const [userHasLiveOrders, setUserHasLiveOrders] = useState(false)
 
     const colorScheme = useColorScheme();
 
@@ -103,10 +105,53 @@ const HomeScreen = () => {
         return () => clearInterval(interval);
     }, [])
 
+    const getUserOrders = async () => {
+        try {
+            if (!actualUser) {
+                console.error('Actual user is undefined');
+                return;
+            }
+            const response = await fetch(`http://${IP}:8800/api/orders/users/${actualUser.email}`);
+            const data = await response.json();
+            let liveOrders = [];
+            let flag = 1
+            data.map((order, index) => {
+                if (!(order.orderStatus == 'completed' || order.orderStatus.includes('Declined'))) {
+                    liveOrders.push(order)
+                    flag = 0
+                }
+            })
+            if(flag==1){
+                setUserHasLiveOrders(false)
+            }
+            else
+            {
+                setUserHasLiveOrders(true)
+            }
+        } catch (error) {
+            console.error('Error fetching orders:', error);
+            // setRefreshing(false)
+            setFetching(false)
+        }
+    }
+
+    useEffect(() => {
+        const checkLiveOrders = async () => {
+            await getUserOrders();
+        };
+        checkLiveOrders();
+        const onFocus = navigation.addListener('focus', () => {
+            checkLiveOrders();
+        });
+        return onFocus;
+    }, []);
+
 
     return (
         <View className="" style={[colorScheme == 'light' ? { backgroundColor: '#F2F2F2' } : { backgroundColor: '#0c0c0f' }]}>
 
+            {userHasLiveOrders && 
+            
             <View className='absolute w-screen bottom-32 z-50 shadow-sm'>
                 <SafeAreaView>
                     <TouchableOpacity
@@ -138,7 +183,7 @@ const HomeScreen = () => {
                         </HStack>
                     </TouchableOpacity>
                 </SafeAreaView>
-            </View>
+            </View>}
 
             {/* <SafeAreaView className="absolute bottom-32 w-7/12 self-center z-50 shadow-sm">
                 <TouchableOpacity
