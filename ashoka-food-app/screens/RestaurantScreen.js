@@ -69,283 +69,428 @@ const RestaurantScreen = () => {
         },
     } = useRoute();
 
-    const segregateDishes = (dishes) => {
-        var TempVegDishes = []
-        var TempVegMenuCategories = []
-        var TempNonVegDishes = []
-        var TempNonVegMenuCategories = []
-        var i, j
-        var TempMenuCategories = []
+    // const segregateDishes = (dishes) => {
+    //     var TempVegDishes = []
+    //     var TempVegMenuCategories = []
+    //     var TempNonVegDishes = []
+    //     var TempNonVegMenuCategories = []
+    //     var i, j
+    //     var TempMenuCategories = []
 
-        for (i = 0; i < dishes.length; i++) {
+    //     for (i = 0; i < dishes.length; i++) {
 
-            if (TempMenuCategories.length == 0) {
-                TempMenuCategories.push(dishes[i].Menu_category)
+    //         if (TempMenuCategories.length == 0) {
+    //             TempMenuCategories.push(dishes[i].Menu_category)
+    //         }
+    //         else if (TempMenuCategories.length > 0) {
+    //             var flag = 0
+    //             for (j = 0; j < TempMenuCategories.length; j++) {
+
+    //                 if (TempMenuCategories.filter((x) => (x === dishes[i].Menu_category)).length == 0) {
+    //                     TempMenuCategories.push(dishes[i].Menu_category)
+    //                 }
+    //             }
+    //         }
+
+    //         if (dishes[i].Veg_NonVeg == 'Veg') {
+    //             TempVegDishes.push(dishes[i])
+    //             TempVegMenuCategories.push(dishes[i].Menu_category)
+    //         }
+    //         else {
+    //             TempNonVegDishes.push(dishes[i])
+    //             TempNonVegMenuCategories.push(dishes[i].Menu_category)
+    //         }
+
+    //     }
+    //     var UniqueVegMenuCategories = [... new Set(TempVegMenuCategories)]
+    //     var UniqueNonVegMenuCategories = [... new Set(TempNonVegMenuCategories)]
+
+    //     setVegDishes(TempVegDishes);
+    //     setNonVegDishes(TempNonVegDishes);
+
+    //     var TempCategoriesArray = []
+    //     var TempVegMenu = []
+    //     var TempNonVegMenu = []
+
+    //     for (i = 0; i < TempMenuCategories.length; i++) {
+    //         let section = {
+    //             title: '',
+    //             content: []
+    //         }
+    //         TempCategoriesArray.push(section)
+    //     }
+    //     for (i = 0; i < TempMenuCategories.length; i++) {
+    //         TempCategoriesArray[i]['title'] = TempMenuCategories[i]
+    //     }
+    //     for (i = 0; i < dishes.length; i++) {
+    //         for (j = 0; j < TempCategoriesArray.length; j++) {
+    //             if (dishes[i].Menu_category == TempCategoriesArray[j].title) {
+    //                 TempCategoriesArray[j].content.push(dishes[i])
+    //             }
+    //         }
+    //     }
+    //     setCategories(TempCategoriesArray)
+
+    //     for (i = 0; i < UniqueVegMenuCategories.length; i++) {
+    //         let section = {
+    //             title: '',
+    //             content: []
+    //         }
+    //         TempVegMenu.push(section)
+    //     }
+    //     for (i = 0; i < UniqueVegMenuCategories.length; i++) {
+    //         TempVegMenu[i]['title'] = UniqueVegMenuCategories[i]
+    //     }
+    //     for (i = 0; i < dishes.length; i++) {
+    //         for (j = 0; j < TempVegMenu.length; j++) {
+    //             if (dishes[i].Veg_NonVeg == 'Veg' && dishes[i].Menu_category == TempVegMenu[j].title) {
+    //                 TempVegMenu[j].content.push(dishes[i])
+    //             }
+    //         }
+    //     }
+    //     setVegMenu(TempVegMenu)
+
+    //     for (i = 0; i < UniqueNonVegMenuCategories.length; i++) {
+    //         let section = {
+    //             title: '',
+    //             content: []
+    //         }
+    //         TempNonVegMenu.push(section)
+    //     }
+    //     for (i = 0; i < UniqueNonVegMenuCategories.length; i++) {
+    //         TempNonVegMenu[i]['title'] = UniqueNonVegMenuCategories[i]
+    //     }
+    //     for (i = 0; i < dishes.length; i++) {
+    //         for (j = 0; j < TempNonVegMenu.length; j++) {
+    //             if (dishes[i].Veg_NonVeg == 'Non Veg' && dishes[i].Menu_category == TempNonVegMenu[j].title) {
+    //                 TempNonVegMenu[j].content.push(dishes[i])
+    //             }
+    //         }
+    //     }
+    //     setNonVegMenu(TempNonVegMenu)
+    // }
+
+    const segregateDishes = (dishes) => { //ChatGPT Optimised
+        const TempMenuCategories = [];
+        const TempVegDishes = [];
+        const TempNonVegDishes = [];
+
+        dishes.forEach((dish) => {
+            if (!TempMenuCategories.includes(dish.Menu_category)) {
+                TempMenuCategories.push(dish.Menu_category);
             }
-            else if (TempMenuCategories.length > 0) {
-                var flag = 0
-                for (j = 0; j < TempMenuCategories.length; j++) {
 
-                    if (TempMenuCategories.filter((x) => (x === dishes[i].Menu_category)).length == 0) {
-                        TempMenuCategories.push(dishes[i].Menu_category)
-                    }
+            if (dish.Veg_NonVeg === 'Veg') {
+                TempVegDishes.push(dish);
+            } else {
+                TempNonVegDishes.push(dish);
+            }
+        });
+
+        const TempCategoriesArray = TempMenuCategories.map((category) => ({
+            title: category,
+            content: []
+        }));
+
+        TempCategoriesArray.forEach((category) => {
+            dishes.forEach((dish) => {
+                if (dish.Menu_category === category.title) {
+                    category.content.push(dish);
                 }
-            }
+            });
+        });
 
-            if (dishes[i].Veg_NonVeg == 'Veg') {
-                TempVegDishes.push(dishes[i])
-                TempVegMenuCategories.push(dishes[i].Menu_category)
-            }
-            else {
-                TempNonVegDishes.push(dishes[i])
-                TempNonVegMenuCategories.push(dishes[i].Menu_category)
-            }
+        const UniqueVegMenuCategories = [...new Set(TempVegDishes.map((dish) => dish.Menu_category))];
+        const UniqueNonVegMenuCategories = [...new Set(TempNonVegDishes.map((dish) => dish.Menu_category))];
 
-        }
-        var UniqueVegMenuCategories = [... new Set(TempVegMenuCategories)]
-        var UniqueNonVegMenuCategories = [... new Set(TempNonVegMenuCategories)]
+        const TempVegMenu = UniqueVegMenuCategories.map((category) => ({
+            title: category,
+            content: []
+        }));
 
+        TempVegMenu.forEach((category) => {
+            TempVegDishes.forEach((dish) => {
+                if (dish.Veg_NonVeg === 'Veg' && dish.Menu_category === category.title) {
+                    category.content.push(dish);
+                }
+            });
+        });
+
+        const TempNonVegMenu = UniqueNonVegMenuCategories.map((category) => ({
+            title: category,
+            content: []
+        }));
+
+        TempNonVegMenu.forEach((category) => {
+            TempNonVegDishes.forEach((dish) => {
+                if (dish.Veg_NonVeg === 'Non Veg' && dish.Menu_category === category.title) {
+                    category.content.push(dish);
+                }
+            });
+        });
+
+        setCategories(TempCategoriesArray);
         setVegDishes(TempVegDishes);
         setNonVegDishes(TempNonVegDishes);
+        setVegMenu(TempVegMenu);
+        setNonVegMenu(TempNonVegMenu);
+    };
 
-        var TempCategoriesArray = []
-        var TempVegMenu = []
-        var TempNonVegMenu = []
+    // const segregateSearchedDishes = (searched) => {
+    //     var TempMenuCategories = []
+    //     var TempVegMenuCategories = []
+    //     var TempNonVegMenuCategories = []
+    //     var i, j
 
-        for (i = 0; i < TempMenuCategories.length; i++) {
-            let section = {
-                title: '',
-                content: []
+    //     for (i = 0; i < AllDishes.length; i++) {
+
+    //         if (TempMenuCategories.length == 0) {
+    //             TempMenuCategories.push(AllDishes[i].Menu_category)
+    //         }
+    //         else if (TempMenuCategories.length > 0) {
+    //             var flag = 0
+    //             for (j = 0; j < TempMenuCategories.length; j++) {
+
+    //                 if (TempMenuCategories.filter((x) => (x === AllDishes[i].Menu_category)).length == 0) {
+    //                     TempMenuCategories.push(AllDishes[i].Menu_category)
+    //                 }
+    //             }
+    //         }
+
+    //         if (AllDishes[i].Veg_NonVeg == 'Veg') {
+    //             TempVegMenuCategories.push(AllDishes[i].Menu_category)
+    //         }
+    //         else {
+    //             TempNonVegMenuCategories.push(AllDishes[i].Menu_category)
+    //         }
+
+    //     }
+    //     var UniqueVegMenuCategories = [... new Set(TempVegMenuCategories)]
+    //     var UniqueNonVegMenuCategories = [... new Set(TempNonVegMenuCategories)]
+
+
+    //     var TempCategoriesArray = []
+    //     var TempVegMenu = []
+    //     var TempNonVegMenu = []
+
+    //     for (i = 0; i < TempMenuCategories.length; i++) {
+    //         let section = {
+    //             title: '',
+    //             content: []
+    //         }
+    //         TempCategoriesArray.push(section)
+    //     }
+    //     for (i = 0; i < TempMenuCategories.length; i++) {
+    //         TempCategoriesArray[i]['title'] = TempMenuCategories[i]
+    //     }
+    //     for (i = 0; i < AllDishes.length; i++) {
+    //         for (j = 0; j < TempCategoriesArray.length; j++) {
+    //             if (AllDishes[i].Menu_category == TempCategoriesArray[j].title) {
+    //                 TempCategoriesArray[j].content.push(AllDishes[i])
+    //             }
+    //         }
+    //     }
+
+    //     for (i = 0; i < UniqueVegMenuCategories.length; i++) {
+    //         let section = {
+    //             title: '',
+    //             content: []
+    //         }
+    //         TempVegMenu.push(section)
+    //     }
+    //     for (i = 0; i < UniqueVegMenuCategories.length; i++) {
+    //         TempVegMenu[i]['title'] = UniqueVegMenuCategories[i]
+    //     }
+    //     for (i = 0; i < AllDishes.length; i++) {
+    //         for (j = 0; j < TempVegMenu.length; j++) {
+    //             if (AllDishes[i].Veg_NonVeg == 'Veg' && AllDishes[i].Menu_category == TempVegMenu[j].title) {
+    //                 TempVegMenu[j].content.push(AllDishes[i])
+    //             }
+    //         }
+    //     }
+
+    //     for (i = 0; i < UniqueNonVegMenuCategories.length; i++) {
+    //         let section = {
+    //             title: '',
+    //             content: []
+    //         }
+    //         TempNonVegMenu.push(section)
+    //     }
+    //     for (i = 0; i < UniqueNonVegMenuCategories.length; i++) {
+    //         TempNonVegMenu[i]['title'] = UniqueNonVegMenuCategories[i]
+    //     }
+    //     for (i = 0; i < AllDishes.length; i++) {
+    //         for (j = 0; j < TempNonVegMenu.length; j++) {
+    //             if (AllDishes[i].Veg_NonVeg == 'Non Veg' && AllDishes[i].Menu_category == TempNonVegMenu[j].title) {
+    //                 TempNonVegMenu[j].content.push(AllDishes[i])
+    //             }
+    //         }
+    //     }
+
+    //     var TempSearchedMenu = []
+    //     var FinalSearchedMenu = []
+    //     var TempSearchedVegMenu = []
+    //     var FinalSearchedVegMenu = []
+    //     var TempSearchedNonVegMenu = []
+    //     var FinalSearchedNonVegMenu = []
+
+    //     for (i = 0; i < TempCategoriesArray.length; i++) {
+    //         let section = {
+    //             title: '',
+    //             content: []
+    //         }
+    //         TempSearchedMenu.push(section)
+    //     }
+    //     for (i = 0; i < TempCategoriesArray.length; i++) {
+    //         TempSearchedMenu[i]['title'] = TempCategoriesArray[i].title
+    //     }
+    //     for (i = 0; i < TempCategoriesArray.length; i++) {
+    //         for (j = 0; j < TempCategoriesArray[i].content.length; j++) {
+    //             if (TempCategoriesArray[i].content[j].Menu_category.includes(searched) || TempCategoriesArray[i].content[j].name.includes(searched)) {
+    //                 TempSearchedMenu[i].content.push(TempCategoriesArray[i].content[j])
+    //             }
+    //         }
+    //     }
+    //     for (i = 0; i < TempSearchedMenu.length; i++) {
+    //         if (TempSearchedMenu[i].content.length != 0) {
+    //             FinalSearchedMenu.push(TempSearchedMenu[i])
+    //         }
+    //     }
+    //     // console.log(FinalSearchedMenu) //Finally searched menu
+    //     setSearchedMenu(FinalSearchedMenu)
+
+
+    //     for (i = 0; i < TempVegMenu.length; i++) {
+    //         let section = {
+    //             title: '',
+    //             content: []
+    //         }
+    //         TempSearchedVegMenu.push(section)
+    //     }
+    //     for (i = 0; i < TempVegMenu.length; i++) {
+    //         TempSearchedVegMenu[i]['title'] = TempVegMenu[i].title
+    //     }
+    //     for (i = 0; i < TempVegMenu.length; i++) {
+    //         for (j = 0; j < TempVegMenu[i].content.length; j++) {
+    //             if (TempVegMenu[i].content[j].Menu_category.includes(searched) || TempVegMenu[i].content[j].name.includes(searched)) {
+    //                 TempSearchedVegMenu[i].content.push(TempVegMenu[i].content[j])
+    //             }
+    //         }
+    //     }
+    //     for (i = 0; i < TempSearchedVegMenu.length; i++) {
+    //         if (TempSearchedVegMenu[i].content.length != 0) {
+    //             FinalSearchedVegMenu.push(TempSearchedVegMenu[i])
+    //         }
+    //     }
+    //     // console.log(FinalSearchedVegMenu) //Finally searched veg menu
+    //     setSearchedVegMenu(FinalSearchedVegMenu)
+
+
+    //     for (i = 0; i < TempNonVegMenu.length; i++) {
+    //         let section = {
+    //             title: '',
+    //             content: []
+    //         }
+    //         TempSearchedNonVegMenu.push(section)
+    //     }
+    //     for (i = 0; i < TempNonVegMenu.length; i++) {
+    //         TempSearchedNonVegMenu[i]['title'] = TempNonVegMenu[i].title
+    //     }
+    //     for (i = 0; i < TempNonVegMenu.length; i++) {
+    //         for (j = 0; j < TempNonVegMenu[i].content.length; j++) {
+    //             if (TempNonVegMenu[i].content[j].Menu_category.includes(searched) || TempNonVegMenu[i].content[j].name.includes(searched)) {
+    //                 TempSearchedNonVegMenu[i].content.push(TempNonVegMenu[i].content[j])
+    //             }
+    //         }
+    //     }
+    //     for (i = 0; i < TempSearchedNonVegMenu.length; i++) {
+    //         if (TempSearchedNonVegMenu[i].content.length != 0) {
+    //             FinalSearchedNonVegMenu.push(TempSearchedNonVegMenu[i])
+    //         }
+    //     }
+    //     // console.log(FinalSearchedNonVegMenu) //Finally searched NonVeg menu
+    //     setSearchedNonVegMenu(FinalSearchedNonVegMenu)
+
+    // }
+
+    const segregateSearchedDishes = (searched) => { //ChatGPT Optimised
+        const TempMenuCategories = [];
+        const TempVegMenuCategories = [];
+        const TempNonVegMenuCategories = [];
+
+        AllDishes.forEach((dish) => {
+            if (!TempMenuCategories.includes(dish.Menu_category)) {
+                TempMenuCategories.push(dish.Menu_category);
             }
-            TempCategoriesArray.push(section)
-        }
-        for (i = 0; i < TempMenuCategories.length; i++) {
-            TempCategoriesArray[i]['title'] = TempMenuCategories[i]
-        }
-        for (i = 0; i < dishes.length; i++) {
-            for (j = 0; j < TempCategoriesArray.length; j++) {
-                if (dishes[i].Menu_category == TempCategoriesArray[j].title) {
-                    TempCategoriesArray[j].content.push(dishes[i])
+
+            if (dish.Veg_NonVeg === 'Veg') {
+                TempVegMenuCategories.push(dish.Menu_category);
+            } else {
+                TempNonVegMenuCategories.push(dish.Menu_category);
+            }
+        });
+
+        const TempCategoriesArray = TempMenuCategories.map((category) => ({
+            title: category,
+            content: []
+        }));
+
+        TempCategoriesArray.forEach((category) => {
+            AllDishes.forEach((dish) => {
+                if (dish.Menu_category === category.title) {
+                    category.content.push(dish);
                 }
-            }
-        }
-        setCategories(TempCategoriesArray)
+            });
+        });
 
-        for (i = 0; i < UniqueVegMenuCategories.length; i++) {
-            let section = {
-                title: '',
-                content: []
-            }
-            TempVegMenu.push(section)
-        }
-        for (i = 0; i < UniqueVegMenuCategories.length; i++) {
-            TempVegMenu[i]['title'] = UniqueVegMenuCategories[i]
-        }
-        for (i = 0; i < dishes.length; i++) {
-            for (j = 0; j < TempVegMenu.length; j++) {
-                if (dishes[i].Veg_NonVeg == 'Veg' && dishes[i].Menu_category == TempVegMenu[j].title) {
-                    TempVegMenu[j].content.push(dishes[i])
+        const UniqueVegMenuCategories = [...new Set(TempVegMenuCategories)];
+        const UniqueNonVegMenuCategories = [...new Set(TempNonVegMenuCategories)];
+
+        const TempVegMenu = UniqueVegMenuCategories.map((category) => ({
+            title: category,
+            content: []
+        }));
+
+        TempVegMenu.forEach((category) => {
+            AllDishes.forEach((dish) => {
+                if (dish.Veg_NonVeg === 'Veg' && dish.Menu_category === category.title) {
+                    category.content.push(dish);
                 }
-            }
-        }
-        setVegMenu(TempVegMenu)
+            });
+        });
 
-        for (i = 0; i < UniqueNonVegMenuCategories.length; i++) {
-            let section = {
-                title: '',
-                content: []
-            }
-            TempNonVegMenu.push(section)
-        }
-        for (i = 0; i < UniqueNonVegMenuCategories.length; i++) {
-            TempNonVegMenu[i]['title'] = UniqueNonVegMenuCategories[i]
-        }
-        for (i = 0; i < dishes.length; i++) {
-            for (j = 0; j < TempNonVegMenu.length; j++) {
-                if (dishes[i].Veg_NonVeg == 'Non Veg' && dishes[i].Menu_category == TempNonVegMenu[j].title) {
-                    TempNonVegMenu[j].content.push(dishes[i])
+        const TempNonVegMenu = UniqueNonVegMenuCategories.map((category) => ({
+            title: category,
+            content: []
+        }));
+
+        TempNonVegMenu.forEach((category) => {
+            AllDishes.forEach((dish) => {
+                if (dish.Veg_NonVeg === 'Non Veg' && dish.Menu_category === category.title) {
+                    category.content.push(dish);
                 }
-            }
-        }
-        setNonVegMenu(TempNonVegMenu)
-    }
+            });
+        });
 
-    const segregateSearchedDishes = (searched) => {
-        var TempMenuCategories = []
-        var TempVegMenuCategories = []
-        var TempNonVegMenuCategories = []
-        var i, j
+        const filterAndSetSearchedMenu = (menu, setMenuFunction) => {
+            const TempSearchedMenu = menu.map((category) => ({
+                title: category.title,
+                content: category.content.filter(
+                    (dish) =>
+                        dish.Menu_category.includes(searched) || dish.name.includes(searched)
+                )
+            }));
 
-        for (i = 0; i < AllDishes.length; i++) {
+            const FinalSearchedMenu = TempSearchedMenu.filter((category) => category.content.length > 0);
 
-            if (TempMenuCategories.length == 0) {
-                TempMenuCategories.push(AllDishes[i].Menu_category)
-            }
-            else if (TempMenuCategories.length > 0) {
-                var flag = 0
-                for (j = 0; j < TempMenuCategories.length; j++) {
+            setMenuFunction(FinalSearchedMenu);
+        };
 
-                    if (TempMenuCategories.filter((x) => (x === AllDishes[i].Menu_category)).length == 0) {
-                        TempMenuCategories.push(AllDishes[i].Menu_category)
-                    }
-                }
-            }
+        filterAndSetSearchedMenu(TempCategoriesArray, setSearchedMenu);
+        filterAndSetSearchedMenu(TempVegMenu, setSearchedVegMenu);
+        filterAndSetSearchedMenu(TempNonVegMenu, setSearchedNonVegMenu);
+    };
 
-            if (AllDishes[i].Veg_NonVeg == 'Veg') {
-                TempVegMenuCategories.push(AllDishes[i].Menu_category)
-            }
-            else {
-                TempNonVegMenuCategories.push(AllDishes[i].Menu_category)
-            }
-
-        }
-        var UniqueVegMenuCategories = [... new Set(TempVegMenuCategories)]
-        var UniqueNonVegMenuCategories = [... new Set(TempNonVegMenuCategories)]
-
-
-        var TempCategoriesArray = []
-        var TempVegMenu = []
-        var TempNonVegMenu = []
-
-        for (i = 0; i < TempMenuCategories.length; i++) {
-            let section = {
-                title: '',
-                content: []
-            }
-            TempCategoriesArray.push(section)
-        }
-        for (i = 0; i < TempMenuCategories.length; i++) {
-            TempCategoriesArray[i]['title'] = TempMenuCategories[i]
-        }
-        for (i = 0; i < AllDishes.length; i++) {
-            for (j = 0; j < TempCategoriesArray.length; j++) {
-                if (AllDishes[i].Menu_category == TempCategoriesArray[j].title) {
-                    TempCategoriesArray[j].content.push(AllDishes[i])
-                }
-            }
-        }
-
-        for (i = 0; i < UniqueVegMenuCategories.length; i++) {
-            let section = {
-                title: '',
-                content: []
-            }
-            TempVegMenu.push(section)
-        }
-        for (i = 0; i < UniqueVegMenuCategories.length; i++) {
-            TempVegMenu[i]['title'] = UniqueVegMenuCategories[i]
-        }
-        for (i = 0; i < AllDishes.length; i++) {
-            for (j = 0; j < TempVegMenu.length; j++) {
-                if (AllDishes[i].Veg_NonVeg == 'Veg' && AllDishes[i].Menu_category == TempVegMenu[j].title) {
-                    TempVegMenu[j].content.push(AllDishes[i])
-                }
-            }
-        }
-
-        for (i = 0; i < UniqueNonVegMenuCategories.length; i++) {
-            let section = {
-                title: '',
-                content: []
-            }
-            TempNonVegMenu.push(section)
-        }
-        for (i = 0; i < UniqueNonVegMenuCategories.length; i++) {
-            TempNonVegMenu[i]['title'] = UniqueNonVegMenuCategories[i]
-        }
-        for (i = 0; i < AllDishes.length; i++) {
-            for (j = 0; j < TempNonVegMenu.length; j++) {
-                if (AllDishes[i].Veg_NonVeg == 'Non Veg' && AllDishes[i].Menu_category == TempNonVegMenu[j].title) {
-                    TempNonVegMenu[j].content.push(AllDishes[i])
-                }
-            }
-        }
-
-        var TempSearchedMenu = []
-        var FinalSearchedMenu = []
-        var TempSearchedVegMenu = []
-        var FinalSearchedVegMenu = []
-        var TempSearchedNonVegMenu = []
-        var FinalSearchedNonVegMenu = []
-
-        for (i = 0; i < TempCategoriesArray.length; i++) {
-            let section = {
-                title: '',
-                content: []
-            }
-            TempSearchedMenu.push(section)
-        }
-        for (i = 0; i < TempCategoriesArray.length; i++) {
-            TempSearchedMenu[i]['title'] = TempCategoriesArray[i].title
-        }
-        for (i = 0; i < TempCategoriesArray.length; i++) {
-            for (j = 0; j < TempCategoriesArray[i].content.length; j++) {
-                if (TempCategoriesArray[i].content[j].Menu_category.includes(searched) || TempCategoriesArray[i].content[j].name.includes(searched)) {
-                    TempSearchedMenu[i].content.push(TempCategoriesArray[i].content[j])
-                }
-            }
-        }
-        for (i = 0; i < TempSearchedMenu.length; i++) {
-            if (TempSearchedMenu[i].content.length != 0) {
-                FinalSearchedMenu.push(TempSearchedMenu[i])
-            }
-        }
-        // console.log(FinalSearchedMenu) //Finally searched menu
-        setSearchedMenu(FinalSearchedMenu)
-
-
-        for (i = 0; i < TempVegMenu.length; i++) {
-            let section = {
-                title: '',
-                content: []
-            }
-            TempSearchedVegMenu.push(section)
-        }
-        for (i = 0; i < TempVegMenu.length; i++) {
-            TempSearchedVegMenu[i]['title'] = TempVegMenu[i].title
-        }
-        for (i = 0; i < TempVegMenu.length; i++) {
-            for (j = 0; j < TempVegMenu[i].content.length; j++) {
-                if (TempVegMenu[i].content[j].Menu_category.includes(searched) || TempVegMenu[i].content[j].name.includes(searched)) {
-                    TempSearchedVegMenu[i].content.push(TempVegMenu[i].content[j])
-                }
-            }
-        }
-        for (i = 0; i < TempSearchedVegMenu.length; i++) {
-            if (TempSearchedVegMenu[i].content.length != 0) {
-                FinalSearchedVegMenu.push(TempSearchedVegMenu[i])
-            }
-        }
-        // console.log(FinalSearchedVegMenu) //Finally searched veg menu
-        setSearchedVegMenu(FinalSearchedVegMenu)
-
-
-        for (i = 0; i < TempNonVegMenu.length; i++) {
-            let section = {
-                title: '',
-                content: []
-            }
-            TempSearchedNonVegMenu.push(section)
-        }
-        for (i = 0; i < TempNonVegMenu.length; i++) {
-            TempSearchedNonVegMenu[i]['title'] = TempNonVegMenu[i].title
-        }
-        for (i = 0; i < TempNonVegMenu.length; i++) {
-            for (j = 0; j < TempNonVegMenu[i].content.length; j++) {
-                if (TempNonVegMenu[i].content[j].Menu_category.includes(searched) || TempNonVegMenu[i].content[j].name.includes(searched)) {
-                    TempSearchedNonVegMenu[i].content.push(TempNonVegMenu[i].content[j])
-                }
-            }
-        }
-        for (i = 0; i < TempSearchedNonVegMenu.length; i++) {
-            if (TempSearchedNonVegMenu[i].content.length != 0) {
-                FinalSearchedNonVegMenu.push(TempSearchedNonVegMenu[i])
-            }
-        }
-        // console.log(FinalSearchedNonVegMenu) //Finally searched NonVeg menu
-        setSearchedNonVegMenu(FinalSearchedNonVegMenu)
-
-    }
 
     _renderHeader = (section, _, isActive) => {
         return (
@@ -355,7 +500,7 @@ const RestaurantScreen = () => {
                 <Text className='font-semibold pl-2 text-lg py-3'
                     style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
                 >
-                    {section.title}
+                    {section.title} ({section.content.length})
                 </Text>
                 {isActive ?
                     <Image
@@ -405,6 +550,7 @@ const RestaurantScreen = () => {
             })
             // Menu_category, Price, Veg_NonVeg, image, name
         )
+        console.log(dishes)
         segregateDishes(dishes)
         setAllDishes(dishes)
     }, [dispatch, SearchedText, items])
@@ -505,7 +651,7 @@ const RestaurantScreen = () => {
                                             setShowVegMenu(!showVegMenu)
                                         }
                                     }}
-                                    style={[colorScheme == 'light' ? [showVegMenu == true || ShowSearchedVegMenu == true ? Styles.LightSelectedVegButton : Styles.LightUnselectedVegButton] : [showVegMenu == true ? Styles.DarkSelectedVegButton : Styles.DarkUnselectedVegButton]]}>
+                                    style={[colorScheme == 'light' ? [showVegMenu == true || ShowSearchedVegMenu == true ? Styles.LightSelectedVegButton : Styles.LightUnselectedVegButton] : [showVegMenu == true || ShowSearchedVegMenu == true ? Styles.DarkSelectedVegButton : Styles.DarkUnselectedVegButton]]}>
                                     <Image
                                         style={{ width: 15, height: 15, resizeMode: "contain" }}
                                         source={VegIcon}
@@ -515,7 +661,6 @@ const RestaurantScreen = () => {
                                     >
                                         Veg
                                     </Text>
-                                    {console.log(showVegMenu)}
                                     {(showVegMenu || ShowSearchedVegMenu) &&
                                         <XMarkIcon size={17} style={[colorScheme == 'light' ? { color: '#000000' } : { color: '#ffffff' }]} />
                                     }
@@ -530,7 +675,7 @@ const RestaurantScreen = () => {
                                             setShowNonVegMenu(!showNonVegMenu)
                                         }
                                     }}
-                                    style={[colorScheme == 'light' ? [showNonVegMenu == true || ShowSearchedNonVegMenu == true ? Styles.LightSelectedNonVegButton : Styles.LightUnselectedNonVegButton] : [showNonVegMenu == true ? Styles.DarkSelectedNonVegButton : Styles.DarkUnselectedNonVegButton]]}>
+                                    style={[colorScheme == 'light' ? [showNonVegMenu == true || ShowSearchedNonVegMenu == true ? Styles.LightSelectedNonVegButton : Styles.LightUnselectedNonVegButton] : [showNonVegMenu == true || ShowSearchedNonVegMenu == true ? Styles.DarkSelectedNonVegButton : Styles.DarkUnselectedNonVegButton]]}>
 
                                     <Image
                                         style={{ width: 15, height: 15, resizeMode: "contain" }}

@@ -557,7 +557,7 @@ export default function EachOrder() {
                                                     </View>
                                                     <View className='flex-col space-y-1 pl-0.5'>
                                                         <Text allowFontScaling={false} style={colorScheme == 'light' ? styles.LightnameText : styles.DarknameText}>
-                                                            {item.actualUser.name} 
+                                                            {item.name} 
                                                         </Text>
 
                                                         {/* user.phone */}

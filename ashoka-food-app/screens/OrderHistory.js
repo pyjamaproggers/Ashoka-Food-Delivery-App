@@ -98,7 +98,7 @@ export default function OrderHistory() {
     const fetchOrders = async () => {
         setFetching(true);
         try {
-            const response = await fetch(`http://${IP}:8800/api/orders/${actualUser.name}`);
+            const response = await fetch(`http://${IP}:8800/api/orders/${actualUser.email}`);
             const data = await response.json();
             data.forEach((order, index) => {
                 switch (order.Restaurant) {

@@ -166,47 +166,86 @@ const BasketScreen = () => {
         })
     };
 
-    const checkUnavailableItems = async () => {
-        var checkArray = 'The following items were removed from your cart as they became unavailable: '
+    // const checkUnavailableItems = async () => {
+    //     var checkArray = 'The following items were removed from your cart as they became unavailable: '
 
+    //     for (const basketRestaurant of Basket) {
+    //         try {
+    //             const response = await fetch(`http://${IP}:8800/api/items/${basketRestaurant.name}`)
+    //             const data = await response.json()
+    //             var TempFetchedUnavailableItems = []
+    //             var unavailableItemsInCart = ''
+    //             var flag = 0
+    //             if (data) {
+    //                 data.map((item, index) => {
+    //                     TempFetchedUnavailableItems.push(item.name)
+    //                 })
+    //                 items.map((item, index) => {
+    //                     if (TempFetchedUnavailableItems.includes(item.name)) {
+    //                         flag = 1
+    //                         if (unavailableItemsInCart.length == 0) {
+    //                             unavailableItemsInCart = unavailableItemsInCart.concat('', item.name)
+    //                         } else {
+    //                             unavailableItemsInCart = unavailableItemsInCart.concat(', ', item.name)
+    //                         }
+    //                         dispatch(removeFromCart({ id: item.id, name: item.name, Price: item.Price, image: item.image, Restaurant: item.Restaurant, Veg_NonVeg: item.Veg_NonVeg, quantity: 0 }))
+    //                     }
+    //                 })
+    //                 if (flag == 1) {
+    //                     unavailableItemsInCart = unavailableItemsInCart.concat(' from ', basketRestaurant.name)
+    //                 }
+    //             }
+    //             if (unavailableItemsInCart.length > 0) {
+    //                 checkArray = checkArray.concat('\n', `${unavailableItemsInCart}`)
+    //             } else {
+    //                 checkArray.concat('', '')
+    //             }
+    //         } catch (error) {
+    //             console.error('Error while fetching unavailable items on cart screen' + error)
+    //         }
+    //     }
+
+    //     return checkArray
+    // }
+
+    const checkUnavailableItems = async () => { //ChatGPT Optimised
+        let checkArray = 'The following items were removed from your cart as they became unavailable:\n';
+    
         for (const basketRestaurant of Basket) {
             try {
-                const response = await fetch(`http://${IP}:8800/api/items/${basketRestaurant.name}`)
-                const data = await response.json()
-                var TempFetchedUnavailableItems = []
-                var unavailableItemsInCart = ''
-                var flag = 0
-                if (data) {
-                    data.map((item, index) => {
-                        TempFetchedUnavailableItems.push(item.name)
-                    })
-                    items.map((item, index) => {
-                        if (TempFetchedUnavailableItems.includes(item.name)) {
-                            flag = 1
-                            if (unavailableItemsInCart.length == 0) {
-                                unavailableItemsInCart = unavailableItemsInCart.concat('', item.name)
-                            } else {
-                                unavailableItemsInCart = unavailableItemsInCart.concat(', ', item.name)
-                            }
-                            dispatch(removeFromCart({ id: item.id, name: item.name, Price: item.Price, image: item.image, Restaurant: item.Restaurant, Veg_NonVeg: item.Veg_NonVeg, quantity: 0 }))
-                        }
-                    })
-                    if (flag == 1) {
-                        unavailableItemsInCart = unavailableItemsInCart.concat(' from ', basketRestaurant.name)
-                    }
+                const response = await fetch(`http://${IP}:8800/api/items/${basketRestaurant.name}`);
+                const data = await response.json();
+                const fetchedUnavailableItems = data.map((item) => item.name);
+    
+                const unavailableItemsInCart = items
+                    .filter((item) => fetchedUnavailableItems.includes(item.name))
+                    .map((item) => item.name);
+    
+                for (const unavailableItem of unavailableItemsInCart) {
+                    dispatch(
+                        removeFromCart({
+                            id: item.id,
+                            name: item.name,
+                            Price: item.Price,
+                            image: item.image,
+                            Restaurant: item.Restaurant,
+                            Veg_NonVeg: item.Veg_NonVeg,
+                            quantity: 0
+                        })
+                    );
                 }
+    
                 if (unavailableItemsInCart.length > 0) {
-                    checkArray = checkArray.concat('\n', `${unavailableItemsInCart}`)
-                } else {
-                    checkArray.concat('', '')
+                    checkArray += `${unavailableItemsInCart.join(', ')} from ${basketRestaurant.name}\n`;
                 }
             } catch (error) {
-                console.error('Error while fetching unavailable items on cart screen' + error)
+                console.error('Error while fetching unavailable items on cart screen: ' + error);
             }
         }
-
-        return checkArray
-    }
+    
+        return checkArray;
+    };
+    
 
     const updateInstructions = (instruction, restaurant) => {
         var TempFinalBasket = FinalBasket
@@ -229,136 +268,253 @@ const BasketScreen = () => {
         return null; // Return null or any default value if the restaurant is not found
     };
 
-    useMemo(async () => {
-        console.log('MEMO RUNNING AGAIN YAY')
-        setFetching(true)
+    // useMemo(async () => {
+    //     console.log('MEMO RUNNING AGAIN YAY')
+    //     setFetching(true)
 
-        var UniqueRestaurantsInCart = []
+    //     var UniqueRestaurantsInCart = []
 
-        for (i = 0; i < items.length; i++) {
-            if (UniqueRestaurantsInCart.length == 0) {
-                UniqueRestaurantsInCart.push(items[i]["Restaurant"])
-            }
-            else {
-                for (j = 0; j < UniqueRestaurantsInCart.length; j++) {
-                    if (UniqueRestaurantsInCart.filter((x) => (x === items[i]["Restaurant"])).length == 0) {
-                        UniqueRestaurantsInCart.push(items[i]["Restaurant"])
+    //     for (i = 0; i < items.length; i++) {
+    //         if (UniqueRestaurantsInCart.length == 0) {
+    //             UniqueRestaurantsInCart.push(items[i]["Restaurant"])
+    //         }
+    //         else {
+    //             for (j = 0; j < UniqueRestaurantsInCart.length; j++) {
+    //                 if (UniqueRestaurantsInCart.filter((x) => (x === items[i]["Restaurant"])).length == 0) {
+    //                     UniqueRestaurantsInCart.push(items[i]["Restaurant"])
+    //                 }
+    //             }
+    //         }
+    //     }
+
+    //     var TempBasket = []
+
+    //     for (i = 0; i < UniqueRestaurantsInCart.length; i++) {
+    //         let UniqueRestaurantMiniCart = {
+    //             name: UniqueRestaurantsInCart[i],
+    //             items: [],
+    //             instructions: '',
+    //             restaurantTotal: 0
+    //         }
+    //         TempBasket.push(UniqueRestaurantMiniCart)
+    //     }
+
+    //     TempBasket.map((RestaurantMiniCart, index) => {
+    //         items.map((item, index) => {
+    //             if (item['Restaurant'] == RestaurantMiniCart.name) {
+    //                 if (RestaurantMiniCart.items.length == 0) {
+    //                     RestaurantMiniCart.items.push(item)
+    //                 }
+    //                 else {
+    //                     for (j = 0; j < RestaurantMiniCart.items.length; j++) {
+    //                         if (RestaurantMiniCart.items.filter((x) => (x.name === item.name)).length === 0) {
+    //                             RestaurantMiniCart.items.push(item)
+    //                         }
+    //                     }
+    //                 }
+    //                 RestaurantMiniCart['restaurantTotal'] += (item.Price * item.quantity)
+    //             }
+    //         })
+    //     })
+
+    //     var TempCartTotal = 0
+    //     TempBasket.map((BasketRestaurant, index) => {
+    //         // console.log(BasketRestaurant.name)
+    //         var Subtotal = 0
+    //         var FinalTotal = 0
+    //         BasketRestaurant.items.map((item, index) => {
+    //             Subtotal = Subtotal + (item.Price * item.quantity)
+    //         })
+    //         if (BasketRestaurant.name == 'Roti Boti') {
+    //             var GSTtotal = (Math.round(Subtotal * (1.05) * 100) / 100).toFixed(2)
+    //             FinalTotal = ((Math.round(GSTtotal * 100) / 100) + (Math.round(deliveryCharges[BasketRestaurant.name] * 100) / 100)).toFixed(2)
+    //             // console.log((Math.round(FinalTotal * 100) / 100).toFixed(2))
+    //         }
+    //         else {
+    //             FinalTotal = ((Math.round(Subtotal * 100) / 100) + (Math.round(deliveryCharges[BasketRestaurant.name] * 100) / 100))
+    //             // console.log((Math.round(FinalTotal * 100) / 100).toFixed(2))
+    //         }
+    //         TempCartTotal = ((Math.round(TempCartTotal * 100) / 100) + (Math.round(FinalTotal * 100) / 100)).toFixed(2)
+    //         BasketRestaurant.restaurantTotal = Subtotal
+    //     })
+    //     setCartTotal(TempCartTotal)
+
+    //     client
+    //         .fetch(query)
+    //         .then((data) => {
+    //             var TempFinalBasket = []
+    //             TempFinalBasket = TempBasket
+    //             let FoodVillageInCart = false
+    //             data.map((restaurant, index) => {
+    //                 TempFinalBasket.map((basketRestaurant, index) => {
+    //                     if (restaurant.name == basketRestaurant.name) {
+    //                         basketRestaurant['image'] = restaurant.image
+    //                     }
+    //                     if (basketRestaurant.name == 'Chaat Stall') {
+    //                         FoodVillageInCart = true
+    //                     }
+    //                 })
+    //             })
+    //             if (FoodVillageInCart) {
+    //                 setDeliveryOptions([
+    //                     { location: 'RH1', icon: RH },
+    //                     { location: 'RH2', icon: RH },
+    //                     { location: 'RH3', icon: RH },
+    //                     { location: 'RH4', icon: RH },
+    //                     { location: 'RH5', icon: RH },
+    //                 ])
+    //             }
+    //             else {
+    //                 setDeliveryOptions([
+    //                     { location: 'RH1', icon: RH },
+    //                     { location: 'RH2', icon: RH },
+    //                     { location: 'RH3', icon: RH },
+    //                     { location: 'RH4', icon: RH },
+    //                     { location: 'RH5', icon: RH },
+    //                     { location: 'Library AC04', icon: AC04 },
+    //                     { location: 'Sports Block', icon: SportsBlock },
+    //                     { location: 'Mess', icon: Mess },
+    //                 ])
+    //             }
+    //             setOrderTypeOptions([
+    //                 { option: 'Delivery', icon: FoodDelivery },
+    //                 { option: 'Dine In', icon: DineIn },
+    //             ])
+    //             setPaymentOptions([
+    //                 { option: 'Pay On Delivery', icon: COD },
+    //                 { option: 'Pay At Outlet', icon: PayAtRestaurant },
+    //             ])
+    //             setFinalBasket(TempFinalBasket)
+    //             setFinalBasketReady(true)
+    //             setFetching(false)
+    //         })
+    //         .catch((error) => {
+    //             console.log('Error:', error); // Log any errors that occur
+    //         });
+
+    //     // let itemsCheck = await checkUnavailableItems();
+    //     // if (itemsCheck != 'The following items were removed from your cart as they became unavailable: ') {
+    //     //     Alert.alert(itemsCheck)
+    //     // }
+
+    // }, [items]);
+
+    useMemo(async () => { //ChatGPT Optimised
+        console.log('MEMO RUNNING AGAIN YAY');
+        setFetching(true);
+    
+        const uniqueRestaurantSet = new Set(); // Use Set for efficient uniqueness check
+    
+        items.forEach((item) => {
+            uniqueRestaurantSet.add(item.Restaurant);
+        });
+    
+        const uniqueRestaurantsInCart = Array.from(uniqueRestaurantSet);
+    
+        const tempBasket = uniqueRestaurantsInCart.map((restaurantName) => ({
+            name: restaurantName,
+            items: [],
+            instructions: '',
+            restaurantTotal: 0
+        }));
+    
+        tempBasket.forEach((restaurantMiniCart) => {
+            items.forEach((item) => {
+                if (item.Restaurant === restaurantMiniCart.name) {
+                    if (!restaurantMiniCart.items.some((existingItem) => existingItem.name === item.name)) {
+                        restaurantMiniCart.items.push(item);
                     }
+                    restaurantMiniCart.restaurantTotal += item.Price * item.quantity;
                 }
-            }
-        }
-
-        var TempBasket = []
-
-        for (i = 0; i < UniqueRestaurantsInCart.length; i++) {
-            let UniqueRestaurantMiniCart = {
-                name: UniqueRestaurantsInCart[i],
-                items: [],
-                instructions: '',
-                restaurantTotal: 0
-            }
-            TempBasket.push(UniqueRestaurantMiniCart)
-        }
-
-        TempBasket.map((RestaurantMiniCart, index) => {
-            items.map((item, index) => {
-                if (item['Restaurant'] == RestaurantMiniCart.name) {
-                    if (RestaurantMiniCart.items.length == 0) {
-                        RestaurantMiniCart.items.push(item)
-                    }
-                    else {
-                        for (j = 0; j < RestaurantMiniCart.items.length; j++) {
-                            if (RestaurantMiniCart.items.filter((x) => (x.name === item.name)).length === 0) {
-                                RestaurantMiniCart.items.push(item)
-                            }
-                        }
-                    }
-                    RestaurantMiniCart['restaurantTotal'] += (item.Price * item.quantity)
-                }
-            })
-        })
-
-        var TempCartTotal = 0
-        TempBasket.map((BasketRestaurant, index) => {
-            // console.log(BasketRestaurant.name)
-            var Subtotal = 0
-            var FinalTotal = 0
-            BasketRestaurant.items.map((item, index) => {
-                Subtotal = Subtotal + (item.Price * item.quantity)
-            })
-            if (BasketRestaurant.name == 'Roti Boti') {
-                var GSTtotal = (Math.round(Subtotal * (1.05) * 100) / 100).toFixed(2)
-                FinalTotal = ((Math.round(GSTtotal * 100) / 100) + (Math.round(deliveryCharges[BasketRestaurant.name] * 100) / 100)).toFixed(2)
-                // console.log((Math.round(FinalTotal * 100) / 100).toFixed(2))
-            }
-            else {
-                FinalTotal = ((Math.round(Subtotal * 100) / 100) + (Math.round(deliveryCharges[BasketRestaurant.name] * 100) / 100))
-                // console.log((Math.round(FinalTotal * 100) / 100).toFixed(2))
-            }
-            TempCartTotal = ((Math.round(TempCartTotal * 100) / 100) + (Math.round(FinalTotal * 100) / 100)).toFixed(2)
-            BasketRestaurant.restaurantTotal = Subtotal
-        })
-        setCartTotal(TempCartTotal)
-
-        client
-            .fetch(query)
-            .then((data) => {
-                var TempFinalBasket = []
-                TempFinalBasket = TempBasket
-                let FoodVillageInCart = false
-                data.map((restaurant, index) => {
-                    TempFinalBasket.map((basketRestaurant, index) => {
-                        if (restaurant.name == basketRestaurant.name) {
-                            basketRestaurant['image'] = restaurant.image
-                        }
-                        if (basketRestaurant.name == 'Chaat Stall') {
-                            FoodVillageInCart = true
-                        }
-                    })
-                })
-                if (FoodVillageInCart) {
-                    setDeliveryOptions([
-                        { location: 'RH1', icon: RH },
-                        { location: 'RH2', icon: RH },
-                        { location: 'RH3', icon: RH },
-                        { location: 'RH4', icon: RH },
-                        { location: 'RH5', icon: RH },
-                    ])
-                }
-                else {
-                    setDeliveryOptions([
-                        { location: 'RH1', icon: RH },
-                        { location: 'RH2', icon: RH },
-                        { location: 'RH3', icon: RH },
-                        { location: 'RH4', icon: RH },
-                        { location: 'RH5', icon: RH },
-                        { location: 'Library AC04', icon: AC04 },
-                        { location: 'Sports Block', icon: SportsBlock },
-                        { location: 'Mess', icon: Mess },
-                    ])
-                }
-                setOrderTypeOptions([
-                    { option: 'Delivery', icon: FoodDelivery },
-                    { option: 'Dine In', icon: DineIn },
-                ])
-                setPaymentOptions([
-                    { option: 'Pay On Delivery', icon: COD },
-                    { option: 'Pay At Outlet', icon: PayAtRestaurant },
-                ])
-                setFinalBasket(TempFinalBasket)
-                setFinalBasketReady(true)
-                setFetching(false)
-            })
-            .catch((error) => {
-                console.log('Error:', error); // Log any errors that occur
             });
-
+        });
+    
+        let tempCartTotal = 0;
+    
+        tempBasket.forEach((basketRestaurant) => {
+            let subTotal = 0;
+    
+            basketRestaurant.items.forEach((item) => {
+                subTotal += item.Price * item.quantity;
+            });
+    
+            let finalTotal = subTotal + deliveryCharges[basketRestaurant.name];
+    
+            if (basketRestaurant.name === 'Roti Boti') {
+                finalTotal = (Math.round(finalTotal * 1.05 * 100) / 100).toFixed(2);
+            }
+    
+            tempCartTotal = (Math.round((tempCartTotal + finalTotal) * 100) / 100).toFixed(2);
+    
+            basketRestaurant.restaurantTotal = subTotal;
+        });
+    
+        setCartTotal(tempCartTotal);
+    
+        try {
+            const data = await client.fetch(query);
+    
+            const tempFinalBasket = [...tempBasket]; // Avoid modifying the same object
+    
+            let foodVillageInCart = false;
+    
+            data.forEach((restaurant) => {
+                tempFinalBasket.forEach((basketRestaurant) => {
+                    if (restaurant.name === basketRestaurant.name) {
+                        basketRestaurant.image = restaurant.image;
+                    }
+                    if (basketRestaurant.name === 'Chaat Stall') {
+                        foodVillageInCart = true;
+                    }
+                });
+            });
+    
+            setDeliveryOptions(
+                foodVillageInCart
+                    ? [
+                          { location: 'RH1', icon: RH },
+                          { location: 'RH2', icon: RH },
+                          { location: 'RH3', icon: RH },
+                          { location: 'RH4', icon: RH },
+                          { location: 'RH5', icon: RH }
+                      ]
+                    : [
+                          { location: 'RH1', icon: RH },
+                          { location: 'RH2', icon: RH },
+                          { location: 'RH3', icon: RH },
+                          { location: 'RH4', icon: RH },
+                          { location: 'RH5', icon: RH },
+                          { location: 'Library AC04', icon: AC04 },
+                          { location: 'Sports Block', icon: SportsBlock },
+                          { location: 'Mess', icon: Mess }
+                      ]
+            );
+    
+            setOrderTypeOptions([
+                { option: 'Delivery', icon: FoodDelivery },
+                { option: 'Dine In', icon: DineIn }
+            ]);
+    
+            setPaymentOptions([
+                { option: 'Pay On Delivery', icon: COD },
+                { option: 'Pay At Outlet', icon: PayAtRestaurant }
+            ]);
+    
+            setFinalBasket(tempFinalBasket);
+            setFinalBasketReady(true);
+        } catch (error) {
+            console.log('Error:', error);
+        }
+    
+        setFetching(false);
+    
+        // Uncomment and modify your checkUnavailableItems logic if needed
         // let itemsCheck = await checkUnavailableItems();
-        // if (itemsCheck != 'The following items were removed from your cart as they became unavailable: ') {
-        //     Alert.alert(itemsCheck)
+        // if (itemsCheck !== 'The following items were removed from your cart as they became unavailable: ') {
+        //     Alert.alert(itemsCheck);
         // }
-
     }, [items]);
+    
 
     if (items.length == 0) { navigation.goBack() }
 
@@ -385,18 +541,20 @@ const BasketScreen = () => {
                 // Perform any actions after a successful order submission if needed
             } else {
                 console.error("Failed to send order!");
+                Alert.alert('Something failed while placing your order, please try again.')
                 // Handle error scenarios if needed
             }
         } catch (error) {
             console.error("Error occurred while sending order:", error);
+            Alert.alert('Something failed while placing your order, please try again.')
             // Handle error scenarios if needed
         }
     };
 
     // Function to calculate GST for a restaurant
     const calculateGST = (subtotal, restaurantName) => {
-        if (restaurantName === 'Roti Boti' || restaurantName === 'Subway' || restaurantName === 'Chicago Pizza') {
-            return (Math.round(subtotal * 0.18 * 100) / 100);
+        if (restaurantName === 'Roti Boti') {
+            return (Math.round(subtotal * 0.05 * 100) / 100);
         } else {
             return 0;
         }
