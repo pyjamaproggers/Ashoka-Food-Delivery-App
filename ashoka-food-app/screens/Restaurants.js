@@ -53,9 +53,6 @@ const Restaurants = (props) => {
                     else {
                         totalND += 1
                     }
-                    if (data[i].name == 'Roti Boti') {
-                        console.log(data[i].dishes)
-                    }
                 }
 
                 if (DRestaurants.length != totalD) {
@@ -110,6 +107,9 @@ const Restaurants = (props) => {
     useEffect(() => {
         setFetching(true)
         fetchRestaurants(query)
+    }, []);
+
+    useEffect(() => {
         if (Searched) {
             handleSearchedRestaurants(Searched)
         }
