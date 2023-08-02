@@ -199,7 +199,7 @@ function VendorDashboard() {
     const fetchOrders = async () => {
         setFetching(true)
         try {
-            const response = await fetch(`http://${IP}:8800/api/orders/${selectedRestaurant}`);
+            const response = await fetch(`http://${IP}:8800/api/orders/restaurants/${selectedRestaurant}`);
             const data = await response.json();
             let tempClosedOrders = []
             let tempOpenOrders = []

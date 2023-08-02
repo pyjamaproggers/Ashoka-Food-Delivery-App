@@ -118,7 +118,7 @@ export default function LiveOrders() {
                 console.error('Actual user is undefined');
                 return;
             }
-            const response = await fetch(`http://${IP}:8800/api/orders/${actualUser.email}`);
+            const response = await fetch(`http://${IP}:8800/api/orders/users/${actualUser.name}`);
             const data = await response.json();
             let liveOrders = [];
             data.map((order, index) => {
