@@ -1,13 +1,13 @@
-import { View, Text, TouchableOpacity, Image, useColorScheme } from "react-native";
+import { View, Text, TouchableOpacity, Image, useColorScheme, ScrollView, ActivityIndicator } from "react-native";
 import React, { useEffect, useMemo, useState } from "react";
 import { urlFor } from "../sanity";
-import { MinusCircleIcon, PlusCircleIcon, PlusSmallIcon, PlusIcon, MinusIcon } from "react-native-heroicons/solid";
+import { MinusCircleIcon, PlusCircleIcon, PlusSmallIcon, PlusIcon, MinusIcon, XMarkIcon } from "react-native-heroicons/solid";
 import { addToCart, removeFromCart, selectCartItems } from "../reduxslices/cartslice";
 import { useDispatch, useSelector } from "react-redux";
 import VegIcon from '../assets/vegicon.png';
 import NonVegIcon from '../assets/nonvegicon.png';
 import Styles from "../components/Styles";
-import { HStack, VStack, Actionsheet } from "native-base";
+import { HStack, VStack, Actionsheet, Radio, Checkbox, Skeleton } from "native-base";
 import { IP } from '@dotenv'
 
 const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Customizations }) => {
@@ -17,6 +17,9 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
     const [itemQuantity, setItemQuantity] = useState(0)
     const [FetchedUnavailableItems, setFetchedUnavailableItems] = useState([])
     const [showCustomizationSheet, setShowCustomizationSheet] = useState()
+    const [dishCustomizations, setDishCustomizations] = useState([])
+    const [userCustomizations, setUserCustomizations] = useState([])
+    const [sheetLoading, setSheetLoading] = useState(false)
 
     const addItem = () => {
         Price = parseFloat(Price)
@@ -87,6 +90,53 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
         }
     }
 
+    const segregateCustomizations = () => {
+        setShowCustomizationSheet(true)
+        setSheetLoading(true)
+
+        window.setTimeout(() => {
+            if (Customizations !== null) {
+                const genresMap = new Map(); // Using a map for better lookup efficiency
+
+                Customizations.forEach((customization) => {
+                    if (!genresMap.has(customization.Genre)) {
+                        genresMap.set(customization.Genre, {
+                            genre: customization.Genre,
+                            items: [],
+                            required: 'No'
+                        });
+                    }
+
+                    const genreInfo = genresMap.get(customization.Genre);
+                    genreInfo.items.push(customization);
+                    genreInfo.items = genreInfo.items.reverse();
+
+                    if (customization.Required === 'Yes') {
+                        genreInfo.required = 'Yes';
+                    }
+                });
+
+                const tempCustomizations = Array.from(genresMap.values());
+
+                setDishCustomizations(tempCustomizations)
+
+                let tempUserCustomizations = []
+                tempCustomizations.forEach(item => {
+                    tempUserCustomizations.push({
+                        genre: item.genre,
+                        selected: item.required === 'Yes' ? item.items[0].name : []
+                    })
+                })
+                console.log(tempUserCustomizations)
+                setUserCustomizations(tempUserCustomizations)
+                setSheetLoading(false)
+            }
+            setSheetLoading(false)
+        }, 1000)
+
+    };
+
+
     useEffect(() => {
         if (items.length == 0) {
             setItemQuantity(0)
@@ -109,9 +159,9 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
 
     return (
         <>
-            <HStack className='items-center justify-between w-full py-4' style={[colorScheme == 'light' ? Styles.LightBGSec : Styles.DarkBGSec]}>
+            <HStack className='items-center justify-between px-2 w-full py-4' style={[colorScheme == 'light' ? Styles.LightBGSec : Styles.DarkBGSec]}>
                 {/* Dish Details Block */}
-                <VStack className='justify-start' style={{ marginLeft: '2%' }}>
+                <VStack className='justify-start' style={{}}>
                     {Veg_NonVeg === "Veg" ? (
                         <Image
                             style={{ width: 15, height: 15, resizeMode: "contain" }}
@@ -196,8 +246,8 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
                             <>
                                 {/* Add/Minus BUtton Block */}
                                 {(itemQuantity == 0 || itemQuantity == null) && delivery == 'Yes' &&
-                                    <TouchableOpacity onPress={() => setShowCustomizationSheet(true)}>
-                                        <VStack className=' items-center' >
+                                    <TouchableOpacity onPress={() => { segregateCustomizations() }}>
+                                        <VStack className='self-center items-center' >
                                             <HStack
                                                 style={[colorScheme == 'light' ? Styles.LightAddButtonInitial : Styles.DarkAddButtonInitial]}
                                             >
@@ -209,7 +259,7 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
                                             <Text allowFontScaling={false} className='mt-1 text-xs font-normal'
                                                 style={[colorScheme == 'light' ? { color: 'rgb(156, 163, 175)' } : { color: 'rgb(107, 114, 128)' }]}
                                             >
-                                                Customisable
+                                                Customizable
                                             </Text>
                                         </VStack>
                                     </TouchableOpacity>
@@ -227,25 +277,312 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
                                                 {itemQuantity}
                                             </Text>
 
-                                            <TouchableOpacity onPress={addItem} className='p-3 px-2'>
+                                            <TouchableOpacity onPress={() => setShowCustomizationSheet(true)} className='p-3 px-2'>
                                                 <PlusIcon size={16} color='white' />
                                             </TouchableOpacity>
                                         </HStack>
                                         <Text allowFontScaling={false} className='mt-1 text-xs font-normal'
                                             style={[colorScheme == 'light' ? { color: 'rgb(156, 163, 175)' } : { color: 'rgb(107, 114, 128)' }]}
                                         >
-                                            Customisable
+                                            Customizable
                                         </Text>
                                     </VStack>
                                 }
                             </>
-
                         }
                     </>
                 }
 
 
+
             </HStack>
+
+
+            {showCustomizationSheet &&
+
+                <Actionsheet hideDragIndicator={true}
+                    isOpen={showCustomizationSheet}
+                    onClose={() => { setShowCustomizationSheet(!showCustomizationSheet) }}
+                    size='full'
+                    disableOverlay={true}
+                >
+                    <TouchableOpacity className='p-3 rounded-full m-3' style={[colorScheme == 'light' ? Styles.LightBG : Styles.DarkBG]}
+                        onPress={() => setShowCustomizationSheet(false)}
+                    >
+                        <XMarkIcon size={20} style={[colorScheme == 'light' ? { color: 'black' } : { color: 'white' }]} />
+                    </TouchableOpacity>
+                    <Actionsheet.Content bgColor={colorScheme == 'light' ? "f2f2f2" : "#0c0c0f"} >
+                        <View className='w-full' style={[colorScheme == 'light' ? Styles.LightBG : Styles.DarkBG]}>
+                            <Text className='self-center pt-2 pb-3 text-lg font-medium'
+                                style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
+                                Customize {name}
+                            </Text>
+                        </View>
+
+                        {!sheetLoading &&
+
+                            <ScrollView
+                                className='w-screen'
+                                showsVerticalScrollIndicator={false}>
+
+                                {dishCustomizations.length > 0 &&
+
+                                    <VStack className='w-full space-y-4'>
+
+
+                                        {dishCustomizations.map((item) => (
+
+                                            <>
+
+                                                {item.required === 'Yes' ?
+
+                                                    <VStack className=' self-center rounded-md px-2 my-2'
+                                                        style={[colorScheme == 'light' ? { backgroundColor: '#fffffff', width: '95%' } : { backgroundColor: '#262626', width: '95%' }]}
+                                                    >
+
+                                                        <HStack className='items-center py-0.5 justify-between border-b-gray'>
+                                                            <VStack className=''>
+                                                                <Text className='p-0.5 text-base font-medium'
+                                                                    style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                                                >
+                                                                    {item.genre}
+                                                                </Text>
+                                                                <Text className='p-0.5 font-medium'
+                                                                    style={[colorScheme == 'light' ? { color: 'rgb(156, 163, 175)' } : { color: 'rgb(107, 114, 128)' }]}
+                                                                >
+                                                                    Select any 1 option
+                                                                </Text>
+
+                                                            </VStack>
+                                                            <Text
+                                                                className='p-1 text-red-200'
+                                                            >
+                                                                Required
+                                                            </Text>
+                                                        </HStack>
+
+                                                        <Radio.Group>
+
+                                                            {item.items.map((element) => (
+
+                                                                <Radio size='sm' colorScheme='danger' value="Closing Time" my={2}>
+
+                                                                    <HStack className='justify-between w-11/12 items-center'>
+
+                                                                        <HStack className='p-2 items-center space-x-2'>
+                                                                            {element.Veg_NonVeg === "Veg" &&
+                                                                                <Image
+                                                                                    style={{ width: 15, height: 15, resizeMode: "contain" }}
+                                                                                    source={VegIcon}
+                                                                                />
+                                                                            }
+                                                                            {element.Veg_NonVeg === 'Non Veg' &&
+                                                                                <Image
+                                                                                    style={{ width: 15, height: 15, resizeMode: "contain" }}
+                                                                                    source={NonVegIcon}
+                                                                                />
+                                                                            }
+                                                                            <Text className='font-medium text-md'
+                                                                                style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                                                            >
+                                                                                {element.name.replace(name, '').trim()}
+                                                                            </Text>
+                                                                        </HStack>
+
+                                                                        {element.Price > 0 &&
+
+                                                                            <Text className='font-medium text-md'
+                                                                                style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                                                            >
+                                                                                ₹{element.Price}
+                                                                            </Text>
+
+                                                                        }
+
+
+                                                                    </HStack>
+
+                                                                </Radio>
+
+                                                            ))}
+                                                        </Radio.Group>
+
+                                                    </VStack>
+
+                                                    :
+
+                                                    <VStack className=' self-center rounded-md px-2 my-2'
+                                                        style={[colorScheme == 'light' ? { backgroundColor: '#fffffff', width: '95%' } : { backgroundColor: '#262626', width: '95%' }]}
+                                                    >
+                                                        <HStack className='items-center py-0.5 justify-between border-b-gray'>
+                                                            <VStack className=''>
+                                                                <Text className='p-0.5 text-base'
+                                                                    style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                                                >
+                                                                    {item.genre}
+                                                                </Text>
+                                                                <Text className='p-0.5'
+                                                                    style={[colorScheme == 'light' ? { color: 'rgb(156, 163, 175)' } : { color: 'rgb(107, 114, 128)' }]}
+                                                                >
+                                                                    Select upto {item.items.length} option
+                                                                </Text>
+
+                                                            </VStack>
+                                                        </HStack>
+
+                                                        <Checkbox.Group>
+
+                                                            {item.items.map(element => (
+
+                                                                <Checkbox colorScheme="danger" my={2}
+                                                                    style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                                                    size='sm'
+                                                                >
+                                                                    <HStack className='items-center justify-between w-11/12'>
+
+                                                                        <HStack className='ml-2 items-center space-x-2'>
+                                                                            {element.Veg_NonVeg === "Veg" &&
+                                                                                <Image
+                                                                                    style={{ width: 15, height: 15, resizeMode: "contain" }}
+                                                                                    source={VegIcon}
+                                                                                />
+                                                                            }
+                                                                            {element.Veg_NonVeg === 'Non Veg' &&
+                                                                                <Image
+                                                                                    style={{ width: 15, height: 15, resizeMode: "contain" }}
+                                                                                    source={NonVegIcon}
+                                                                                />
+                                                                            }
+                                                                            <Text className='font-medium text-md'
+                                                                                style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                                                            >
+                                                                                {element.name.replace(name, '').trim()}
+                                                                            </Text>
+                                                                        </HStack>
+
+                                                                        {element.Price > 0 &&
+
+                                                                            <Text className='font-medium text-base'
+                                                                                style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                                                            >
+                                                                                ₹{element.Price}
+                                                                            </Text>
+
+                                                                        }
+
+                                                                    </HStack>
+                                                                </Checkbox>
+
+                                                            ))}
+
+                                                        </Checkbox.Group>
+
+                                                    </VStack>
+
+                                                }
+                                            </>
+                                        ))}
+
+
+                                    </VStack>
+
+                                }
+
+
+                            </ScrollView>
+
+                        }
+
+                        {sheetLoading &&
+                            <VStack className='w-full py-3 space-y-1'>
+                                <VStack className='w-full py-3 space-y-2'>
+                                    <Skeleton h='10' rounded='md' className='w-11/12 self-center '
+                                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                    <Skeleton rounded='md' className='w-11/12 h-28 self-center '
+                                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                </VStack>
+                                <HStack className='w-11/12 self-center justify-between py-2 space-x-2 items-center'>
+                                    <Skeleton h='12' rounded='md' className='w-2/6 self-center '
+                                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                    <Skeleton rounded='md' className='w-7/12 h-12 self-center '
+                                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                </HStack>
+                            </VStack>
+                        }
+
+
+                        {/* <View className="bottom-0 w-screen"
+                        >
+                            <HStack className='justify-evenly mt-2'>
+
+                                <TouchableOpacity
+                                    onPress={() => setShowCartSheet(!showCartSheet)}
+                                    className="py-2.5 flex-row items-center space-x-1"
+                                    style={Styles.ShowCartButton}
+                                >
+                                    <HStack className='items-center space-x-2'>
+                                        <Image
+                                            style={{ width: 20, height: 20, resizeMode: "contain", }}
+                                            source={Cart}
+                                        />
+                                        {items.length == 1 &&
+                                            <Text className='text-md font-semibold text-black'
+                                                style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                            >
+                                                {items.reduce((total, item) => total + item.quantity, 0)} ITEM ADDED
+                                            </Text>
+                                        }
+                                        {items.length > 1 &&
+                                            <Text className='text-md font-semibold text-black'
+                                                style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                            >
+                                                {items.reduce((total, item) => total + item.quantity, 0)} ITEMS ADDED
+                                            </Text>
+                                        }
+                                        {showCartSheet &&
+                                            <Image
+                                                style={{ width: 12, height: 12, resizeMode: "contain", }}
+                                                source={Chevrondown}
+                                            />
+                                        }
+                                        {!showCartSheet &&
+                                            <Image
+                                                style={{ width: 12, height: 12, resizeMode: "contain", }}
+                                                source={Chevronup}
+                                            />
+                                        }
+                                    </HStack>
+                                </TouchableOpacity>
+
+                                <TouchableOpacity
+                                    onPress={() => { navigation.navigate('Cart', { actualUser, Basket }); setShowCartSheet(false) }}
+                                    className="bg-[#3E5896] py-2.5 flex-row items-center space-x-1"
+                                    style={Styles.NextButton}
+                                >
+                                    <HStack className='items-center space-x-2'>
+                                        <Text className='text-xl font-semibold text-white' >
+                                            Next
+                                        </Text>
+                                        <View style={{ transform: [{ rotate: '90deg' }] }}>
+                                            <Image
+                                                style={{ width: 12, height: 12, resizeMode: "contain", }}
+                                                source={Chevronup}
+                                            />
+                                        </View>
+                                    </HStack>
+                                </TouchableOpacity>
+
+                            </HStack >
+
+                        </View > */}
+
+                    </Actionsheet.Content>
+                </Actionsheet>
+            }
         </>
     );
 };

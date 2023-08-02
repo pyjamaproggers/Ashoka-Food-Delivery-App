@@ -118,14 +118,19 @@ export default function LiveOrders() {
                 console.error('Actual user is undefined');
                 return;
             }
-            const response = await fetch(`http://${IP}:8800/api/orders/users/${actualUser.name}`);
+            const response = await fetch(`http://${IP}:8800/api/orders/users/${actualUser.email}`);
             const data = await response.json();
             let liveOrders = [];
+            let flag = 1
             data.map((order, index) => {
                 if (!(order.orderStatus == 'completed' || order.orderStatus.includes('Declined'))) {
                     liveOrders.push(order)
+                    flag = 0
                 }
             })
+            if(flag==1){
+                navigation.navigate('OrderHistory', { actualUser })
+            }
             setUsersLiveOrders(liveOrders)
             setFetching(false)
         } catch (error) {

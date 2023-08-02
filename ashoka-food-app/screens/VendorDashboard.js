@@ -204,16 +204,20 @@ function VendorDashboard() {
             let tempClosedOrders = []
             let tempOpenOrders = []
             let tempDeliveryOrders = []
+            let flag = 1
             data.map((order, index) => {
                 if (order.orderStatus == 'completed' || order.orderStatus.includes('Declined')) {
                     tempClosedOrders.push(order)
+                    flag = 0
                 }
                 else if (order.orderStatus == 'out for delivery') {
                     tempDeliveryOrders.push(order)
                     tempOpenOrders.push(order)
+                    flag = 1
                 }
                 else {
                     tempOpenOrders.push(order)
+                    flag = 1
                 }
             })
             setOpenOrders(tempOpenOrders.reverse())
@@ -659,7 +663,9 @@ function VendorDashboard() {
                         {section.orderStatus == 'accepted' && //change to -> orderStatus ==  accepted by restaurant
                             <VStack>
 
-                                <Text className='self-center py-1 font-medium text-base'>
+                                <Text className='self-center py-1 font-medium text-base' 
+                                    style={[colorScheme=='light'? Styles.LightTextPrimary: Styles.DarkTextPrimary]}
+                                    >
                                     Status / स्थिति : Accepted
                                 </Text>
 
@@ -684,7 +690,8 @@ function VendorDashboard() {
                         {section.orderStatus == 'preparing' && section.orderType == 'Delivery' && // change to -> orderStatus ==  preparing
                             <VStack>
 
-                                <Text className='self-center py-1 font-medium text-base'>
+                                <Text className='self-center py-1 font-medium text-base'
+                                    style={[colorScheme=='light'? Styles.LightTextPrimary: Styles.DarkTextPrimary]}>
                                     Status / स्थिति : Preparing / बना रहे हैं
                                 </Text>
 
@@ -714,7 +721,9 @@ function VendorDashboard() {
                         {section.orderStatus == 'preparing' && section.orderType == 'Dine In' && // change to-> orderStatus ==  preparing
                             <VStack>
 
-                                <Text className='self-center py-1 font-medium text-base'>
+                                <Text className='self-center py-1 font-medium text-base'
+                                    style={[colorScheme=='light'? Styles.LightTextPrimary: Styles.DarkTextPrimary]}
+                                >
                                     Status / स्थिति : Preparing / बना रहे हैं
                                 </Text>
 
@@ -744,7 +753,9 @@ function VendorDashboard() {
                         {section.orderStatus == 'out for delivery' && section.orderType == 'Delivery' && // change to -> orderStatus ==  out for delivery
                             <VStack>
 
-                                <Text className='self-center py-1 font-medium text-base'>
+                                <Text className='self-center py-1 font-medium text-base'
+                                    style={[colorScheme=='light'? Styles.LightTextPrimary: Styles.DarkTextPrimary]}
+                                >
                                     Status / स्थिति : Out for delivery / बना रहे हैं
                                 </Text>
 

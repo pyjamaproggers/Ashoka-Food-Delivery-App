@@ -30,7 +30,7 @@ const Restaurants = (props) => {
     const query = `*[_type == "restaurant"]
     {description, location, delivery,
     name, image, genre, timing, Veg_NonVeg, CostForTwo, RestaurantPhone,
-    dishes[]->{name, Veg_NonVeg, Price, image, Menu_category, Restaurant ,_id, Customizations[]->{name, Price, Veg_NonVeg, ofDish, Genre}}}`;
+    dishes[]->{name, Veg_NonVeg, Price, image, Menu_category, Restaurant ,_id, Customizations[]->{name, Price, Veg_NonVeg, ofDish, Genre, Required}}}`;
 
     useLayoutEffect(() => {
     }, [colorScheme])
