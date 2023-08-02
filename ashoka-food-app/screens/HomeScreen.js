@@ -82,7 +82,6 @@ const HomeScreen = () => {
     const {
         params: { actualUser },
     } = useRoute();
-    console.log(actualUser)
 
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -254,7 +253,6 @@ const HomeScreen = () => {
 
                     <View className=''>
                         <TouchableOpacity onPress={() => {
-                            console.log(actualUser);
                             navigation.navigate('UserScreen', { actualUser })
                             setIsOpen(false)
                         }}>
