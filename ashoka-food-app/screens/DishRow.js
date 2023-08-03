@@ -125,6 +125,8 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
                     tempUserCustomizations[customization.genre] = []
                 })
 
+                console.log(tempUserCustomizations)
+
                 setUserCustomizations(tempUserCustomizations)
                 setSheetLoading(false)
             }
@@ -134,6 +136,8 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
     };
 
     const addCustomizations = (currentCustomizations, genre, customization, required,) => {
+        
+        console.log(currentCustomizations)
 
         let tempUserCustomizations = {}
 
@@ -163,7 +167,7 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
                 }
             }
         }
-        // console.log(tempUserCustomizations)
+        console.log(tempUserCustomizations)
 
         setUserCustomizations(tempUserCustomizations)
     }
