@@ -169,23 +169,24 @@ export default function OrderHistory() {
         fetchOrders();
     }, []);
 
-    useEffect(() => {
+    const searchedMemo = useMemo(() => {
         if (searched && userOrders.length > 0) {
-            segregateSearchedOrders(searched, userOrders);
+            return segregateSearchedOrders(searched, userOrders);
         }
-    }, [searched, userOrders]);
+        return [];
+    }, [searched, userOrders, segregateSearchedOrders]);
 
     useEffect(() => {
         navigation.setOptions({
             headerShown: false,
         });
-    }, [searched]);
+    }, []);
 
     return (
         <SafeAreaView style={[colorScheme == 'light' ? { backgroundColor: '#F2F2F2', flex: 1 } : { backgroundColor: '#0c0c0f', flex: 1 }]}>
 
             <HStack className='items-center h-9 w-full justify-center'>
-                <TouchableOpacity onPress={navigation.goBack} className="p-2 rounded-full items-center shadow-lg" style={[colorScheme == 'light' ? styles.LightbackButton : styles.DarkbackButton]}>
+                <TouchableOpacity onPress={()=>{navigation.navigate('UserScreen', {actualUser})}} className="p-2 rounded-full items-center shadow-lg" style={[colorScheme == 'light' ? styles.LightbackButton : styles.DarkbackButton]}>
                     <ArrowLeftIcon size={20} style={[colorScheme == 'light' ? { color: 'black' } : { color: 'white' }]} />
                 </TouchableOpacity>
 
@@ -207,12 +208,12 @@ export default function OrderHistory() {
                             style={{ color: '#000' }}
                             onChangeText={(text) => {
                                 setSearched(text)
-                                if(!text){
-                                    segregateSearchedOrders('')
-                                }
-                                if (text) {
-                                    segregateSearchedOrders(text)
-                                }
+                                // if(!text){
+                                //     segregateSearchedOrders('')
+                                // }
+                                // if (text) {
+                                //     segregateSearchedOrders(text)
+                                // }
                             }}
                             autoComplete='off'
                             autoCorrect={false}
@@ -225,15 +226,15 @@ export default function OrderHistory() {
                             style={{ color: '#fff' }}
                             onChangeText={(text) => {
                                 setSearched(text)
-                                if (text) {
-                                    segregateSearchedOrders(text)
-                                }
-                                if(!text){
-                                    segregateSearchedOrders('')
-                                }
+                                // if (text) {
+                                //     segregateSearchedOrders(text)
+                                // }
+                                // if(!text){
+                                //     segregateSearchedOrders('')
+                                // }
                             }}
                             autoComplete='off'
-                            autoCorrect={false}
+                            autoCorrect={true}
                             enterKeyHint='done'
                             readOnly={Fetching}
                         />

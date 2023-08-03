@@ -18,7 +18,7 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
     const [FetchedUnavailableItems, setFetchedUnavailableItems] = useState([])
     const [showCustomizationSheet, setShowCustomizationSheet] = useState()
     const [dishCustomizations, setDishCustomizations] = useState([])
-    const [userCustomizations, setUserCustomizations] = useState([])
+    const [userCustomizations, setUserCustomizations] = useState(new Map())
     const [sheetLoading, setSheetLoading] = useState(false)
 
     const addItem = () => {
@@ -120,21 +120,61 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
 
                 setDishCustomizations(tempCustomizations)
 
-                let tempUserCustomizations = []
-                tempCustomizations.forEach(item => {
-                    tempUserCustomizations.push({
-                        genre: item.genre,
-                        selected: item.required === 'Yes' ? item.items[0].name : []
-                    })
+                const tempUserCustomizations = new Map();
+
+                tempCustomizations.forEach((customization) => {
+                    if (!tempUserCustomizations.has(customization.genre)) {
+                        if (customization.required === 'Yes') {
+                            tempUserCustomizations.set(customization.genre, {
+                                genre: customization.genre,
+                                selectedItems: customization.items[0].name.replace(name, '').trim(),
+                            })
+                        }
+                        else {
+                            tempUserCustomizations.set(customization.genre, {
+                                genre: customization.genre,
+                                selectedItems: [],
+                            })
+                        }
+                    }
                 })
-                console.log(tempUserCustomizations)
+
                 setUserCustomizations(tempUserCustomizations)
                 setSheetLoading(false)
             }
             setSheetLoading(false)
-        }, 1000)
+        }, 200)
 
     };
+
+    const addCustomizations = (genre, customization, required,) => {
+        const tempUserCustomizations = userCustomizations
+        if(required){
+            tempUserCustomizations.set(genre, {
+                genre: genre,
+                selectedItems: customization
+            })
+        }
+        else{
+            if(genre==='Sauces'){
+                tempUserCustomizations.set(genre, {
+                    genre: genre,
+                    selectedItems: (customization.length>3) ? 
+                    tempUserCustomizations.get(genre).selectedItems
+                    :
+                    customization
+                })
+            }
+            else{
+                tempUserCustomizations.set(genre, {
+                    genre: genre,
+                    selectedItems: customization
+                })
+            }
+        }
+        console.log(tempUserCustomizations)
+        setUserCustomizations(tempUserCustomizations)
+    }
 
 
     useEffect(() => {
@@ -155,7 +195,7 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
         }
         fetchUnavailableItems()
         // console.log(name + Customizations)
-    }, [items])
+    }, [items,userCustomizations])
 
     return (
         <>
@@ -297,6 +337,8 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
 
             </HStack>
 
+            {console.log('****')}
+
 
             {showCustomizationSheet &&
 
@@ -306,12 +348,12 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
                     size='full'
                     disableOverlay={true}
                 >
-                    <TouchableOpacity className='p-3 rounded-full m-3' style={[colorScheme == 'light' ? Styles.LightBG : Styles.DarkBG]}
+                    <TouchableOpacity className='p-3 rounded-full m-3' style={[colorScheme == 'light' ? Styles.LightBGSec : Styles.DarkBGSec]}
                         onPress={() => setShowCustomizationSheet(false)}
                     >
                         <XMarkIcon size={20} style={[colorScheme == 'light' ? { color: 'black' } : { color: 'white' }]} />
                     </TouchableOpacity>
-                    <Actionsheet.Content bgColor={colorScheme == 'light' ? "f2f2f2" : "#0c0c0f"} >
+                    <Actionsheet.Content bgColor={colorScheme == 'light' ? "#f2f2f2" : "#0c0c0f"} >
                         <View className='w-full' style={[colorScheme == 'light' ? Styles.LightBG : Styles.DarkBG]}>
                             <Text className='self-center pt-2 pb-3 text-lg font-medium'
                                 style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
@@ -325,7 +367,7 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
                                 className='w-screen'
                                 showsVerticalScrollIndicator={false}>
 
-                                {dishCustomizations.length > 0 &&
+                                {dishCustomizations.length > 0 && userCustomizations &&
 
                                     <VStack className='w-full space-y-4'>
 
@@ -334,10 +376,12 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
 
                                             <>
 
+                                            
+
                                                 {item.required === 'Yes' ?
 
                                                     <VStack className=' self-center rounded-md px-2 my-2'
-                                                        style={[colorScheme == 'light' ? { backgroundColor: '#fffffff', width: '95%' } : { backgroundColor: '#262626', width: '95%' }]}
+                                                        style={[colorScheme == 'light' ? { backgroundColor: '#ffffff', width: '95%' } : { backgroundColor: '#262626', width: '95%' }]}
                                                     >
 
                                                         <HStack className='items-center py-0.5 justify-between border-b-gray'>
@@ -355,17 +399,28 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
 
                                                             </VStack>
                                                             <Text
-                                                                className='p-1 text-red-200'
+                                                                className='p-1 text-red-500'
                                                             >
                                                                 Required
                                                             </Text>
                                                         </HStack>
 
-                                                        <Radio.Group>
+                                                        <Radio.Group
+                                                            defaultValue={userCustomizations.get(item.genre).selectedItems}
+                                                            onChange={nextValue => {
+                                                                console.log(nextValue)
+                                                                addCustomizations(item.genre, nextValue, true);
+                                                            }}
+                                                        >
 
                                                             {item.items.map((element) => (
 
-                                                                <Radio size='sm' colorScheme='danger' value="Closing Time" my={2}>
+                                                                <Radio
+                                                                    size='sm'
+                                                                    colorScheme='rose'
+                                                                    value={element.name.replace(name, '').trim()}
+                                                                    my={2}
+                                                                >
 
                                                                     <HStack className='justify-between w-11/12 items-center'>
 
@@ -412,7 +467,7 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
                                                     :
 
                                                     <VStack className=' self-center rounded-md px-2 my-2'
-                                                        style={[colorScheme == 'light' ? { backgroundColor: '#fffffff', width: '95%' } : { backgroundColor: '#262626', width: '95%' }]}
+                                                        style={[colorScheme == 'light' ? { backgroundColor: '#ffffff', width: '95%' } : { backgroundColor: '#262626', width: '95%' }]}
                                                     >
                                                         <HStack className='items-center py-0.5 justify-between border-b-gray'>
                                                             <VStack className=''>
@@ -430,11 +485,18 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
                                                             </VStack>
                                                         </HStack>
 
-                                                        <Checkbox.Group>
+                                                        <Checkbox.Group
+                                                            onChange={(selectedArray) => {
+                                                                addCustomizations(item.genre, selectedArray, false);
+                                                            }}
+                                                        >
 
                                                             {item.items.map(element => (
 
-                                                                <Checkbox colorScheme="danger" my={2}
+                                                                <Checkbox
+                                                                    value={element.name.replace(name, '').trim()}
+                                                                    colorScheme="danger"
+                                                                    my={2}
                                                                     style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
                                                                     size='sm'
                                                                 >
@@ -462,7 +524,7 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
 
                                                                         {element.Price > 0 &&
 
-                                                                            <Text className='font-medium text-base'
+                                                                            <Text className='font-medium text-md'
                                                                                 style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
                                                                             >
                                                                                 ₹{element.Price}
