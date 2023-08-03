@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Image, useColorScheme, ScrollView, ActivityIndicator , Button} from "react-native";
+import { View, Text, TouchableOpacity, Image, useColorScheme, ScrollView, ActivityIndicator, Button } from "react-native";
 import React, { useEffect, useMemo, useState } from "react";
 import { urlFor } from "../sanity";
 import { MinusCircleIcon, PlusCircleIcon, PlusSmallIcon, PlusIcon, MinusIcon, XMarkIcon } from "react-native-heroicons/solid";
@@ -9,17 +9,25 @@ import NonVegIcon from '../assets/nonvegicon.png';
 import Styles from "../components/Styles";
 import { HStack, VStack, Actionsheet, Radio, Checkbox, Skeleton } from "native-base";
 import { IP } from '@dotenv'
+import Cart from '../assets/carticon.png';
 
 const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Customizations }) => {
     const colorScheme = useColorScheme();
+
     const dispatch = useDispatch();
     const items = useSelector(selectCartItems);
     const [itemQuantity, setItemQuantity] = useState(0)
+
     const [FetchedUnavailableItems, setFetchedUnavailableItems] = useState([])
+
+    //Data structures for customizable dishes
     const [showCustomizationSheet, setShowCustomizationSheet] = useState()
+    const [sheetLoading, setSheetLoading] = useState(false)
+
     const [dishCustomizations, setDishCustomizations] = useState([])
     const [userCustomizations, setUserCustomizations] = useState(new Map())
-    const [sheetLoading, setSheetLoading] = useState(false)
+    const [CDishPrice, setCDishPrice] = useState(Price)
+    const [CDishQuantity, setCDishQuantity] = useState(1)
 
     const addItem = () => {
         Price = parseFloat(Price)
@@ -52,38 +60,39 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
             }
         };
     }
+
     const addWithCustomizations = () => {
         Price = parseFloat(Price);
-        
+
         var currentQuantity;
         var additemQ;
-    
+
         const userCustomizationsObject = {};
         userCustomizations.forEach((value, key) => {
             userCustomizationsObject[key] = value.selectedItems;
         });
-    
+
         var additionalPrice = 0;
-    for (const key in userCustomizationsObject) {
-        if (Array.isArray(userCustomizationsObject[key])) {
-            userCustomizationsObject[key].forEach(itemName => {
+        for (const key in userCustomizationsObject) {
+            if (Array.isArray(userCustomizationsObject[key])) {
+                userCustomizationsObject[key].forEach(itemName => {
+                    const selectedCustomization = Customizations.find(c => c.name === itemName);
+                    if (selectedCustomization) {
+                        additionalPrice += selectedCustomization.Price;
+                    }
+                });
+            } else {
+                console.log(typeof (userCustomizationsObject[key]))
+                const itemName = userCustomizationsObject[key];
+                console.log(itemName)
                 const selectedCustomization = Customizations.find(c => c.name === itemName);
                 if (selectedCustomization) {
                     additionalPrice += selectedCustomization.Price;
+                    console.log(selectedCustomization.Price)
                 }
-            });
-        } else {
-            console.log(typeof(userCustomizationsObject[key]))
-            const itemName = userCustomizationsObject[key];
-            console.log(itemName)
-            const selectedCustomization = Customizations.find(c => c.name === itemName);
-            if (selectedCustomization) {
-                additionalPrice += selectedCustomization.Price;
-                console.log(selectedCustomization.Price)
             }
         }
-    }
-    
+
         if (items.length === 0) {
             currentQuantity = 0;
             additemQ = currentQuantity + 1;
@@ -110,8 +119,6 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
         console.log({ id, name, Price, image, Restaurant, Veg_NonVeg, quantity: currentQuantity, customizations: userCustomizationsObject })
         setShowCustomizationSheet(false);
     }
-    
-    
 
     const removeItem = () => {
         Price = parseFloat(Price)
@@ -186,7 +193,7 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
                         if (customization.required === 'Yes') {
                             tempUserCustomizations.set(customization.genre, {
                                 genre: customization.genre,
-                                selectedItems: customization.items[0].name.replace(name, '').trim(),
+                                selectedItems: customization.items[0],
                             })
                         }
                         else {
@@ -197,7 +204,6 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
                         }
                     }
                 })
-
                 setUserCustomizations(tempUserCustomizations)
                 setSheetLoading(false)
             }
@@ -207,34 +213,53 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
     };
 
     const addCustomizations = (genre, customization, required,) => {
+
         const tempUserCustomizations = userCustomizations
-        if(required){
+
+        if (required) {
             tempUserCustomizations.set(genre, {
                 genre: genre,
                 selectedItems: customization
             })
         }
-        else{
-            if(genre==='Sauces'){
+        else {
+            if (genre === 'Sauces') {
                 tempUserCustomizations.set(genre, {
                     genre: genre,
-                    selectedItems: (customization.length>3) ? 
-                    tempUserCustomizations.get(genre).selectedItems
-                    :
-                    customization
+                    selectedItems: (customization.length > 3) ?
+                        tempUserCustomizations.get(genre).selectedItems
+                        :
+                        customization
                 })
             }
-            else{
+            else {
                 tempUserCustomizations.set(genre, {
                     genre: genre,
                     selectedItems: customization
                 })
             }
         }
-        
+
+        let tempCDIshPrice = 0
+
+        for (const [genre, value] of tempUserCustomizations) {
+            if (value.selectedItems.length > 0) {
+                value.selectedItems.forEach((selectedItem) => {
+                    // console.log('in IF ' + genre + selectedItem.Price)
+                    tempCDIshPrice += selectedItem.Price
+                })
+            }
+            else {
+                if (value.selectedItems.Price != undefined) {
+                    // console.log('in ELSE' + genre + value.selectedItems.Price)
+                    tempCDIshPrice += value.selectedItems.Price
+                }
+            }
+        }
+        setCDishPrice(tempCDIshPrice)
+
         setUserCustomizations(tempUserCustomizations)
     }
-    
 
     useEffect(() => {
         if (items.length == 0) {
@@ -253,10 +278,11 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
             }
         }
         fetchUnavailableItems()
-    }, [items,userCustomizations])
+    }, [items, userCustomizations])
 
     return (
         <>
+
             <HStack className='items-center justify-between px-2 w-full py-4' style={[colorScheme == 'light' ? Styles.LightBGSec : Styles.DarkBGSec]}>
                 {/* Dish Details Block */}
                 <VStack className='justify-start' style={{}}>
@@ -395,8 +421,6 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
 
             </HStack>
 
-
-
             {showCustomizationSheet &&
 
                 <Actionsheet hideDragIndicator={true}
@@ -406,7 +430,11 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
                     disableOverlay={true}
                 >
                     <TouchableOpacity className='p-3 rounded-full m-3' style={[colorScheme == 'light' ? Styles.LightBGSec : Styles.DarkBGSec]}
-                        onPress={() => setShowCustomizationSheet(false)}
+                        onPress={() => {
+                            setShowCustomizationSheet(false)
+                            setCDishPrice(Price)
+                            setCDishQuantity(1)
+                        }}
                     >
                         <XMarkIcon size={20} style={[colorScheme == 'light' ? { color: 'black' } : { color: 'white' }]} />
                     </TouchableOpacity>
@@ -433,7 +461,7 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
 
                                             <>
 
-                                            
+
 
                                                 {item.required === 'Yes' ?
 
@@ -476,7 +504,7 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
                                                                 <Radio
                                                                     size='sm'
                                                                     colorScheme='rose'
-                                                                    value={element.name.replace(name, '').trim()}
+                                                                    value={element}
                                                                     my={2}
                                                                 >
 
@@ -552,7 +580,7 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
                                                             {item.items.map(element => (
 
                                                                 <Checkbox
-                                                                    value={element.name.replace(name, '').trim()}
+                                                                    value={element}
                                                                     colorScheme="danger"
                                                                     my={2}
                                                                     style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
@@ -634,13 +662,71 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
                             </VStack>
                         }
 
-                        {
-                            !sheetLoading &&
-                            <View className='w-full py-4' style={[colorScheme == 'light' ? Styles.LightBG : Styles.DarkBG]}>
-                        <Button title="Add Item" onPress={addWithCustomizations} colorScheme='primary' size='lg' w='full'>
-                            Add
-                        </Button>
-                    </View>
+                        {!sheetLoading &&
+                            <HStack className='pt-3 w-11/12 px-2 justify-between'>
+
+                                {/* Add/Minus Button for customized dish */}
+                                <View className='justify-center items-center w-3/12'>
+                                    <HStack
+                                        style={[colorScheme == 'light' ? Styles.LightAddButtonFinal : Styles.DarkAddButtonFinal]}
+                                    >
+                                        <TouchableOpacity onPress={() => {
+                                            if (CDishQuantity == 1) {
+                                                setShowCustomizationSheet(false)
+                                                setCDishPrice(Price)
+                                            }
+                                            else {
+                                                setCDishQuantity(CDishQuantity - 1)
+                                            }
+                                        }} className='p-3 px-2'>
+                                            <MinusIcon size={16} color='white' />
+                                        </TouchableOpacity>
+
+                                        <Text className='text-xl font-medium' style={{ color: 'white' }}>
+                                            {CDishQuantity}
+                                        </Text>
+
+                                        <TouchableOpacity onPress={() => {
+                                            setCDishQuantity(CDishQuantity + 1)
+                                        }} className='p-3 px-2'>
+                                            <PlusIcon size={16} color='white' />
+                                        </TouchableOpacity>
+                                    </HStack>
+
+                                </View>
+
+                                {/* Add item to cart button */}
+                                <View className='justify-center items-center w-4/6'>
+                                    <HStack className='bg-[#3E5896] py-2 rounded-md w-full items-center justify-center'
+                                    >
+                                        <TouchableOpacity onPress={() => {
+                                            // addWithCustomizations invocation
+                                        }} className='px-0.5 py-0.5 flex-row items-center justify-evenly w-11/12'>
+                                            <Image
+                                                style={{ width: 20, height: 20, resizeMode: "contain", }}
+                                                source={Cart}
+                                            />
+                                            {CDishQuantity == 1 &&
+                                                <Text allowFontScaling={false} className='font-medium text-base'
+                                                    style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                                >
+                                                    Add Item (₹{CDishPrice * CDishQuantity})
+                                                </Text>
+                                            }
+                                            {CDishQuantity > 1 &&
+                                                <Text allowFontScaling={false} className='font-medium text-base'
+                                                    style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                                >
+                                                    Add Items (₹{CDishPrice * CDishQuantity})
+                                                </Text>
+                                            }
+                                        </TouchableOpacity>
+                                    </HStack>
+
+                                </View>
+
+
+                            </HStack>
 
                         }
 

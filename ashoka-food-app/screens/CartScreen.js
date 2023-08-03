@@ -662,7 +662,7 @@ const BasketScreen = () => {
         }
 
         let itemsCheck = await checkUnavailableItems()
-        if (itemsCheck == 'The following items were removed from your cart as they became unavailable: ') {
+        if (itemsCheck == 'The following items were removed from your cart as they became unavailable:\n') {
             // Now, you have an array of order objects, each representing an order for a different restaurant
             // Call the sendOrderToDatabase function to send the orders to the API
             for (const orderData of orders) {
@@ -1600,12 +1600,19 @@ const BasketScreen = () => {
                                     <Image style={styles.userPic} source={{ uri: `https://api.multiavatar.com/${actualUser.name}.png?apikey=Bvjs0QyHcCxZNe` }} />
                                 </View>
                                 <View className='flex-col space-y-1 pl-0.5'>
-                                    <Text allowFontScaling={false} style={colorScheme == 'light' ? styles.LightnameText : styles.DarknameText}>{actualUser.given_name} {actualUser.family_name}</Text>
+                                    <Text allowFontScaling={false} style={colorScheme == 'light' ? styles.LightnameText : styles.DarknameText}>
+                                        {actualUser.given_name} {actualUser.family_name}
+                                    </Text>
 
                                     {/* user.phone */}
                                     <View className='flex-row items-center space-x-1 '>
                                         <Text allowFontScaling={false} style={colorScheme == 'light' ? styles.LightphoneText : styles.DarkphoneText}>{actualUser.phone}</Text>
                                     </View>
+                                    <Text className='font-medium text-xs w-10/12'
+                                        allowFontScaling={false} style={[colorScheme == 'light' ? { color: 'gray' } : { color: 'gray' }]}
+                                    >
+                                        The delivery bhaiya will call you on this number
+                                    </Text>
                                 </View>
 
                             </View>
@@ -1789,8 +1796,8 @@ const BasketScreen = () => {
                                 <Text className='text-xs' allowFontScaling={false}
                                     style={[colorScheme == 'light' ? Styles.LightTextSecondary : Styles.DarkTextSecondary]}
                                 >
-                                    If you decide to cancel the order anytime after order placement we will take note and my be forced to suspend you from the app, if done often.
-                                    Please try to avoid cancellation as it leads to food wastage.
+                                    You will not have the option to cancel the order through the app once placed. 
+                                    You can directly call the outlet to ask them to decline the order from their end if do wish to cancel.
                                 </Text>
                             </View>
                         </VStack>

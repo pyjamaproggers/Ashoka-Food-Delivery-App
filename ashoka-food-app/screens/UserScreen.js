@@ -155,7 +155,7 @@ export default function UserScreen() {
     return (
         <SafeAreaView className="h-screen" style={[colorScheme == 'light' ? { backgroundColor: '#F2F2F2', flex: 1 } : { backgroundColor: '#0c0c0f', flex: 1 }]}>
             {/* Go back Button */}
-            <TouchableOpacity onPress={navigation.goBack} className="p-2 bg-white rounded-full items-center shadow-lg" style={[colorScheme == 'light' ? styles.LightbackButton : styles.DarkbackButton]}>
+            <TouchableOpacity onPress={()=>{navigation.navigate('Home',{actualUser})}} className="p-2 bg-white rounded-full items-center shadow-lg" style={[colorScheme == 'light' ? styles.LightbackButton : styles.DarkbackButton]}>
                 <ArrowLeftIcon size={20} style={[colorScheme == 'light' ? { color: 'black' } : { color: 'white' }]} />
             </TouchableOpacity>
 

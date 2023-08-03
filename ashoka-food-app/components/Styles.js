@@ -362,7 +362,7 @@ const Styles = StyleSheet.create({
         shadowOpacity: 0.1,
     },
     DarkAddButtonFinal:{
-        justifyContent: 'space-evenly',
+        justifyContent: 'space-between',
         alignContent: 'center',
         alignItems: 'center',
         color: '#f87c7c',

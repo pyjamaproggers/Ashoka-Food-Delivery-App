@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity, ScrollView, colorScheme, useColorScheme, TextInput, FlatList, Alert, Dimensions, Animated, Linking } from "react-native";
 import React, { useMemo, useState, useLayoutEffect, useRef, useEffect } from "react";
 import { SafeAreaView, StyleSheet, StatusBar, Image } from "react-native";
-import { CloseIcon, HStack, IconButton, Slide, VStack, Skeleton, Alert as NativeBaseAlert, Button as NativeBaseButton, Progress } from 'native-base';
+import { CloseIcon, HStack, IconButton, Slide, VStack, Skeleton, Alert as NativeBaseAlert, Button as NativeBaseButton, Progress, useToast } from 'native-base';
 import { useNavigation, useRoute } from "@react-navigation/native";
 import Styles from '../components/Styles.js'
 import Test1 from '../assets/testoutlet1.jpg'
@@ -50,6 +50,7 @@ export default function LiveOrders() {
     const [usersLiveOrders, setUsersLiveOrders] = useState([])
     const [socket, setSocket] = useState(null)
     const [Fetching, setFetching] = useState(true)
+    const toast = useToast();
 
     const RotiBoti = {
         phoneNumber: '+919896950018',
@@ -100,6 +101,12 @@ export default function LiveOrders() {
         socket.on('orderStatusChange', async (order) => {
             console.log('Order Status Changed:', order);
             if (actualUser && actualUser.email && order?.email === actualUser.email) {
+                toast.show({
+                    description: "Order status updated!",
+                    placement: 'bottom',
+                    backgroundColor: 'green.100',
+                    _description: { color: 'black' },
+                })
                 setLatestOrder(order);
             }
         });
@@ -164,6 +171,7 @@ export default function LiveOrders() {
 
     useEffect(() => {
         if (latestOrder) {
+            
             const fetchData = async () => {
                 await getUserOrders();
             };
