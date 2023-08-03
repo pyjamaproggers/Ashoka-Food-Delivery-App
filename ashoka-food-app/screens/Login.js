@@ -10,6 +10,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Styles from '../components/Styles';
 import { HStack, VStack } from 'native-base';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Notifications } from 'expo';
+import * as Permissions from 'expo-permissions';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -94,6 +96,7 @@ function Login() {
 
         }
     }
+
     useLayoutEffect(() => {
         navigation.setOptions({
             headerShown: false,

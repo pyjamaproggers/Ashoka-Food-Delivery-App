@@ -18,12 +18,11 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
     const [FetchedUnavailableItems, setFetchedUnavailableItems] = useState([])
     const [showCustomizationSheet, setShowCustomizationSheet] = useState()
     const [dishCustomizations, setDishCustomizations] = useState([])
-    const [userCustomizations, setUserCustomizations] = useState(new Map())
+    const [userCustomizations, setUserCustomizations] = useState()
     const [sheetLoading, setSheetLoading] = useState(false)
 
     const addItem = () => {
         Price = parseFloat(Price)
-        console.log('****')
         var currentQuantity
         var additemQ
 
@@ -120,23 +119,10 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
 
                 setDishCustomizations(tempCustomizations)
 
-                const tempUserCustomizations = new Map();
+                const tempUserCustomizations = {}
 
-                tempCustomizations.forEach((customization) => {
-                    if (!tempUserCustomizations.has(customization.genre)) {
-                        if (customization.required === 'Yes') {
-                            tempUserCustomizations.set(customization.genre, {
-                                genre: customization.genre,
-                                selectedItems: customization.items[0].name.replace(name, '').trim(),
-                            })
-                        }
-                        else {
-                            tempUserCustomizations.set(customization.genre, {
-                                genre: customization.genre,
-                                selectedItems: [],
-                            })
-                        }
-                    }
+                tempCustomizations.forEach(customization => {
+                    tempUserCustomizations[customization.genre] = []
                 })
 
                 setUserCustomizations(tempUserCustomizations)
@@ -147,32 +133,38 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
 
     };
 
-    const addCustomizations = (genre, customization, required,) => {
-        const tempUserCustomizations = userCustomizations
-        if(required){
-            tempUserCustomizations.set(genre, {
-                genre: genre,
-                selectedItems: customization
-            })
+    const addCustomizations = (currentCustomizations, genre, customization, required,) => {
+
+        let tempUserCustomizations = {}
+
+        if (required) {
+            tempUserCustomizations = {
+                ...currentCustomizations,
+                [genre]: customization
+            }
         }
-        else{
-            if(genre==='Sauces'){
-                tempUserCustomizations.set(genre, {
-                    genre: genre,
-                    selectedItems: (customization.length>3) ? 
-                    tempUserCustomizations.get(genre).selectedItems
+
+        else {
+            if (genre === 'Sauces') {
+                customization.length > 3 ?
+                    tempUserCustomizations = {
+                        ...currentCustomizations,
+                    }
                     :
-                    customization
-                })
+                    tempUserCustomizations = {
+                        ...currentCustomizations,
+                        [genre]: customization
+                    }
             }
-            else{
-                tempUserCustomizations.set(genre, {
-                    genre: genre,
-                    selectedItems: customization
-                })
+            else {
+                tempUserCustomizations = {
+                    ...currentCustomizations,
+                    [genre]: customization
+                }
             }
         }
-        console.log(tempUserCustomizations)
+        // console.log(tempUserCustomizations)
+
         setUserCustomizations(tempUserCustomizations)
     }
 
@@ -195,7 +187,7 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
         }
         fetchUnavailableItems()
         // console.log(name + Customizations)
-    }, [items,userCustomizations])
+    }, [items])
 
     return (
         <>
@@ -337,7 +329,6 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
 
             </HStack>
 
-            {console.log('****')}
 
 
             {showCustomizationSheet &&
@@ -376,7 +367,7 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
 
                                             <>
 
-                                            
+
 
                                                 {item.required === 'Yes' ?
 
@@ -406,10 +397,10 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
                                                         </HStack>
 
                                                         <Radio.Group
-                                                            defaultValue={userCustomizations.get(item.genre).selectedItems}
+                                                            // defaultValue={userCustomizations.get(item.genre).selectedItems[0]}
+                                                            defaultValue={userCustomizations[item.genre]}
                                                             onChange={nextValue => {
-                                                                console.log(nextValue)
-                                                                addCustomizations(item.genre, nextValue, true);
+                                                                addCustomizations(userCustomizations, item.genre, nextValue, true);
                                                             }}
                                                         >
 
@@ -485,9 +476,11 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
                                                             </VStack>
                                                         </HStack>
 
+
                                                         <Checkbox.Group
+                                                            value={userCustomizations[item.genre]}
                                                             onChange={(selectedArray) => {
-                                                                addCustomizations(item.genre, selectedArray, false);
+                                                                addCustomizations(userCustomizations, item.genre, selectedArray, false);
                                                             }}
                                                         >
 
