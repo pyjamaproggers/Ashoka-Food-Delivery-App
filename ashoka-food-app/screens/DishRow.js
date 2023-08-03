@@ -1,5 +1,5 @@
-import { View, Text, TouchableOpacity, Image, useColorScheme, ScrollView, ActivityIndicator } from "react-native";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { View, Text, TouchableOpacity, Image, useColorScheme, ScrollView, ActivityIndicator , Button} from "react-native";
+import React, { useEffect, useMemo, useState } from "react";
 import { urlFor } from "../sanity";
 import { MinusCircleIcon, PlusCircleIcon, PlusSmallIcon, PlusIcon, MinusIcon, XMarkIcon } from "react-native-heroicons/solid";
 import { addToCart, removeFromCart, selectCartItems } from "../reduxslices/cartslice";
@@ -18,7 +18,7 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
     const [FetchedUnavailableItems, setFetchedUnavailableItems] = useState([])
     const [showCustomizationSheet, setShowCustomizationSheet] = useState()
     const [dishCustomizations, setDishCustomizations] = useState([])
-    const [userCustomizations, setUserCustomizations] = useState()
+    const [userCustomizations, setUserCustomizations] = useState(new Map())
     const [sheetLoading, setSheetLoading] = useState(false)
 
     const addItem = () => {
@@ -52,6 +52,66 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
             }
         };
     }
+    const addWithCustomizations = () => {
+        Price = parseFloat(Price);
+        
+        var currentQuantity;
+        var additemQ;
+    
+        const userCustomizationsObject = {};
+        userCustomizations.forEach((value, key) => {
+            userCustomizationsObject[key] = value.selectedItems;
+        });
+    
+        var additionalPrice = 0;
+    for (const key in userCustomizationsObject) {
+        if (Array.isArray(userCustomizationsObject[key])) {
+            userCustomizationsObject[key].forEach(itemName => {
+                const selectedCustomization = Customizations.find(c => c.name === itemName);
+                if (selectedCustomization) {
+                    additionalPrice += selectedCustomization.Price;
+                }
+            });
+        } else {
+            console.log(typeof(userCustomizationsObject[key]))
+            const itemName = userCustomizationsObject[key];
+            console.log(itemName)
+            const selectedCustomization = Customizations.find(c => c.name === itemName);
+            if (selectedCustomization) {
+                additionalPrice += selectedCustomization.Price;
+                console.log(selectedCustomization.Price)
+            }
+        }
+    }
+    
+        if (items.length === 0) {
+            currentQuantity = 0;
+            additemQ = currentQuantity + 1;
+            setItemQuantity(currentQuantity + 1);
+            dispatch(addToCart({ id, name, Price: Price + additionalPrice, image, Restaurant, Veg_NonVeg, quantity: additemQ, customizations: userCustomizationsObject }));
+        } else {
+            if (items.filter((x) => (x.name === name)).length === 0) {
+                currentQuantity = 0;
+                additemQ = currentQuantity + 1;
+                setItemQuantity(currentQuantity + 1);
+                dispatch(addToCart({ id, name, Price: Price + additionalPrice, image, Restaurant, Veg_NonVeg, quantity: additemQ, customizations: userCustomizationsObject }));
+            } else {
+                items.forEach((item) => {
+                    if (item.name === name) {
+                        currentQuantity = item.quantity;
+                        additemQ = currentQuantity + 1;
+                        setItemQuantity(currentQuantity + 1);
+                        dispatch(addToCart({ id, name, Price: Price + additionalPrice, image, Restaurant, Veg_NonVeg, quantity: additemQ, customizations: userCustomizationsObject }));
+                        dispatch(removeFromCart({ id, name, Price, image, Restaurant, Veg_NonVeg, quantity: currentQuantity, customizations: userCustomizationsObject }));
+                    }
+                });
+            }
+        }
+        console.log({ id, name, Price, image, Restaurant, Veg_NonVeg, quantity: currentQuantity, customizations: userCustomizationsObject })
+        setShowCustomizationSheet(false);
+    }
+    
+    
 
     const removeItem = () => {
         Price = parseFloat(Price)
@@ -119,13 +179,24 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
 
                 setDishCustomizations(tempCustomizations)
 
-                const tempUserCustomizations = {}
+                const tempUserCustomizations = new Map();
 
-                tempCustomizations.forEach(customization => {
-                    tempUserCustomizations[customization.genre] = []
+                tempCustomizations.forEach((customization) => {
+                    if (!tempUserCustomizations.has(customization.genre)) {
+                        if (customization.required === 'Yes') {
+                            tempUserCustomizations.set(customization.genre, {
+                                genre: customization.genre,
+                                selectedItems: customization.items[0].name.replace(name, '').trim(),
+                            })
+                        }
+                        else {
+                            tempUserCustomizations.set(customization.genre, {
+                                genre: customization.genre,
+                                selectedItems: [],
+                            })
+                        }
+                    }
                 })
-
-                console.log(tempUserCustomizations)
 
                 setUserCustomizations(tempUserCustomizations)
                 setSheetLoading(false)
@@ -135,43 +206,32 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
 
     };
 
-    const addCustomizations = (currentCustomizations, genre, customization, required,) => {
-
-        console.log(currentCustomizations)
-        console.log(genre)
-        console.log(customization)
-        console.log(required)
-
-        let tempUserCustomizations = {...currentCustomizations}
-
-        if (required) {
-            tempUserCustomizations = {
-                ...userCustomizations,
-                [genre]: customization
-            }
+    const addCustomizations = (genre, customization, required,) => {
+        const tempUserCustomizations = userCustomizations
+        if(required){
+            tempUserCustomizations.set(genre, {
+                genre: genre,
+                selectedItems: customization
+            })
         }
-
-        else {
-            if (genre === 'Sauces') {
-                customization.length > 3 ?
-                    tempUserCustomizations = {
-                        ...userCustomizations,
-                    }
+        else{
+            if(genre==='Sauces'){
+                tempUserCustomizations.set(genre, {
+                    genre: genre,
+                    selectedItems: (customization.length>3) ? 
+                    tempUserCustomizations.get(genre).selectedItems
                     :
-                    tempUserCustomizations = {
-                        ...userCustomizations,
-                        [genre]: customization
-                    }
+                    customization
+                })
             }
-            else {
-                tempUserCustomizations = {
-                    ...userCustomizations,
-                    [genre]: customization
-                }
+            else{
+                tempUserCustomizations.set(genre, {
+                    genre: genre,
+                    selectedItems: customization
+                })
             }
         }
-        console.log(tempUserCustomizations);
-
+        
         setUserCustomizations(tempUserCustomizations)
     }
     
@@ -193,8 +253,7 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
             }
         }
         fetchUnavailableItems()
-        // console.log(name + Customizations)
-    }, [items])
+    }, [items,userCustomizations])
 
     return (
         <>
@@ -374,7 +433,7 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
 
                                             <>
 
-                                                {/* {console.log(userCustomizations)} */}
+                                            
 
                                                 {item.required === 'Yes' ?
 
@@ -404,11 +463,9 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
                                                         </HStack>
 
                                                         <Radio.Group
-                                                            // defaultValue={userCustomizations.get(item.genre).selectedItems[0]}
-                                                            defaultValue={userCustomizations[item.genre]}
+                                                            defaultValue={userCustomizations.get(item.genre).selectedItems}
                                                             onChange={nextValue => {
-                                                                addCustomizations(userCustomizations, item.genre, nextValue, true);
-                                                                // setUserCustomizations({...userCustomizations, [item.genre]: nextValue})
+                                                                addCustomizations(item.genre, nextValue, true);
                                                             }}
                                                         >
 
@@ -486,12 +543,9 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
                                                             </VStack>
                                                         </HStack>
 
-
                                                         <Checkbox.Group
-                                                            value={userCustomizations[item.genre]}
                                                             onChange={(selectedArray) => {
-                                                                addCustomizations(userCustomizations, item.genre, selectedArray, false);
-                                                                // setUserCustomizations({...userCustomizations, [item.genre]: selectedArray})
+                                                                addCustomizations(item.genre, selectedArray, false);
                                                             }}
                                                         >
 
@@ -580,71 +634,15 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
                             </VStack>
                         }
 
+                        {
+                            !sheetLoading &&
+                            <View className='w-full py-4' style={[colorScheme == 'light' ? Styles.LightBG : Styles.DarkBG]}>
+                        <Button title="Add Item" onPress={addWithCustomizations} colorScheme='primary' size='lg' w='full'>
+                            Add
+                        </Button>
+                    </View>
 
-                        {/* <View className="bottom-0 w-screen"
-                        >
-                            <HStack className='justify-evenly mt-2'>
-
-                                <TouchableOpacity
-                                    onPress={() => setShowCartSheet(!showCartSheet)}
-                                    className="py-2.5 flex-row items-center space-x-1"
-                                    style={Styles.ShowCartButton}
-                                >
-                                    <HStack className='items-center space-x-2'>
-                                        <Image
-                                            style={{ width: 20, height: 20, resizeMode: "contain", }}
-                                            source={Cart}
-                                        />
-                                        {items.length == 1 &&
-                                            <Text className='text-md font-semibold text-black'
-                                                style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
-                                            >
-                                                {items.reduce((total, item) => total + item.quantity, 0)} ITEM ADDED
-                                            </Text>
-                                        }
-                                        {items.length > 1 &&
-                                            <Text className='text-md font-semibold text-black'
-                                                style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
-                                            >
-                                                {items.reduce((total, item) => total + item.quantity, 0)} ITEMS ADDED
-                                            </Text>
-                                        }
-                                        {showCartSheet &&
-                                            <Image
-                                                style={{ width: 12, height: 12, resizeMode: "contain", }}
-                                                source={Chevrondown}
-                                            />
-                                        }
-                                        {!showCartSheet &&
-                                            <Image
-                                                style={{ width: 12, height: 12, resizeMode: "contain", }}
-                                                source={Chevronup}
-                                            />
-                                        }
-                                    </HStack>
-                                </TouchableOpacity>
-
-                                <TouchableOpacity
-                                    onPress={() => { navigation.navigate('Cart', { actualUser, Basket }); setShowCartSheet(false) }}
-                                    className="bg-[#3E5896] py-2.5 flex-row items-center space-x-1"
-                                    style={Styles.NextButton}
-                                >
-                                    <HStack className='items-center space-x-2'>
-                                        <Text className='text-xl font-semibold text-white' >
-                                            Next
-                                        </Text>
-                                        <View style={{ transform: [{ rotate: '90deg' }] }}>
-                                            <Image
-                                                style={{ width: 12, height: 12, resizeMode: "contain", }}
-                                                source={Chevronup}
-                                            />
-                                        </View>
-                                    </HStack>
-                                </TouchableOpacity>
-
-                            </HStack >
-
-                        </View > */}
+                        }
 
                     </Actionsheet.Content>
                 </Actionsheet>
