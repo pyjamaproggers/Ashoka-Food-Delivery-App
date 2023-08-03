@@ -1,6 +1,7 @@
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
+// import firebase from 'expo-firebase-core'
 
 export const firebaseConfig = {
     apiKey: "AIzaSyBLkmEHFyostvGy7kXgK-AjWb8MRSm7bnk",

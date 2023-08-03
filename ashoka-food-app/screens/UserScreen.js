@@ -12,13 +12,26 @@ import Phonechange from '../assets/phoneicon.png';
 import Credits from '../assets/creditsicon.png';
 import Logout from '../assets/logouticon.png'
 import RightArrow from '../assets/chevronrighticon.png';
-import { Button, HStack, Modal, PresenceTransition, VStack } from 'native-base';
+import { Button, HStack, Modal, PresenceTransition, VStack, Avatar } from 'native-base';
 
 export default function UserScreen() {
     const { params: { actualUser } } = useRoute();
     const [showLogoutModal, setShowLogoutModal] = useState(false)
 
     const colorScheme = useColorScheme();
+
+    // const colors = [
+    //     'amber.400',
+    //     'lightBlue.400',
+    //     'secondary.400',
+    //     'pink.400',
+    //     'purple.400',
+    //     'violet.400',
+    //     'indigo.400',
+    //     'teal.500',
+    // ]
+
+    // const [userColor, setUserColor] = useState(colors[Math.floor(Math.random() * colors.length)])
 
     const styles = StyleSheet.create({
         container: {
@@ -135,6 +148,8 @@ export default function UserScreen() {
         });
     }, []);
 
+    console.log(actualUser)
+
     const navigation = useNavigation();
 
     return (
@@ -149,15 +164,13 @@ export default function UserScreen() {
                 <View style={colorScheme == 'light' ? styles.LightnameEmailPhotoContainer : styles.DarknameEmailPhotoContainer} className='shadow-sm'>
 
                     <View className='px-3'>
-                        {actualUser.hasOwnProperty('picture') ? (
-                            <Image style={styles.userPic} source={{ uri: actualUser.picture }} />
-                        ) : (
-                            <Image style={styles.userPic} source={userPic} />
-                        )}
+                        <Image style={styles.userPic} source={{ uri: `https://api.multiavatar.com/${actualUser.name}.png?apikey=Bvjs0QyHcCxZNe` }} />
                     </View>
 
                     <View className='flex-col space-y-1 pl-0.5'>
-                        <Text allowFontScaling={false} style={colorScheme == 'light' ? styles.LightnameText : styles.DarknameText}>{actualUser.given_name} {actualUser.family_name}</Text>
+                        <Text allowFontScaling={false} style={colorScheme == 'light' ? styles.LightnameText : styles.DarknameText}>
+                            {actualUser.name}
+                        </Text>
 
                         {/* user.phone */}
                         <View className='flex-row items-center space-x-1 '>
@@ -166,7 +179,7 @@ export default function UserScreen() {
                         </View>
 
                         <View className='flex-row items-center space-x-1 '>
-                            <Text allowFontScaling={false} style={colorScheme == 'light' ? styles.LightemailText : styles.DarkemailText}>@{actualUser.email.replace('@ashoka.edu.in','')}</Text>
+                            <Text allowFontScaling={false} style={colorScheme == 'light' ? styles.LightemailText : styles.DarkemailText}>@{actualUser.email.replace('@ashoka.edu.in', '')}</Text>
                             {actualUser.verified_email == true &&
                                 <Image source={Verified} style={{ width: 16, height: 16 }} />
                             }
@@ -181,8 +194,8 @@ export default function UserScreen() {
 
 
                     <View className="py-4" style={[colorScheme == 'light' ? Styles.LightUserDetailsBorder : Styles.DarkUserDetailsBorder]}>
-                        <TouchableOpacity 
-                            onPress={()=>{
+                        <TouchableOpacity
+                            onPress={() => {
                                 navigation.navigate('OrderHistory', { actualUser })
                             }}
                         >
@@ -197,7 +210,10 @@ export default function UserScreen() {
                     </View>
 
                     <View className="py-4" style={[colorScheme == 'light' ? Styles.LightUserDetailsBorder : Styles.DarkUserDetailsBorder]}>
-                        <TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => {
+                                navigation.navigate('ManageSpendings', { actualUser })
+                            }}>
                             <View className="flex-row gap-2 items-center justify-between">
                                 <HStack className="items-center flex-row" space={2}>
                                     <Image source={Userspending} style={{ width: 20, height: 20 }} />
@@ -210,7 +226,7 @@ export default function UserScreen() {
 
                     <View className="py-4" style={[colorScheme == 'light' ? Styles.LightUserDetailsBorder : Styles.DarkUserDetailsBorder]}>
                         <TouchableOpacity
-                            onPress={()=>{
+                            onPress={() => {
                                 navigation.navigate('PhoneAuth', { actualUser, from: 'UserScreen' })
                             }}
                         >
@@ -225,11 +241,13 @@ export default function UserScreen() {
                     </View>
 
                     <View className="py-4" style={[colorScheme == 'light' ? Styles.LightUserDetailsBorderLast : Styles.DarkUserDetailsBorderLast]}>
-                    <TouchableOpacity>
+                        <TouchableOpacity>
                             <View className="flex-row gap-2 items-center justify-between">
                                 <HStack className="items-center flex-row" space={2}>
                                     <Image source={Credits} style={{ width: 20, height: 20 }} />
-                                    <Text style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>Credits</Text>
+                                    <Text style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
+                                        Credits & Disclaimer
+                                    </Text>
                                 </HStack>
                                 <ChevronRightIcon size={16} style={[colorScheme == 'light' ? { color: 'black' } : { color: 'white' }]} />
                             </View>
@@ -238,14 +256,19 @@ export default function UserScreen() {
 
                 </View>
 
-                {/* Log Out  */}
-                <View className='shadow-sm mb-4' style={colorScheme == 'light' ? styles.LightlogoutContainer : styles.DarklogoutContainer}>
+                <View style={colorScheme == 'light' ? styles.LightuserDetailsContainer : styles.DarkuserDetailsContainer} className='shadow-sm'>
 
-                    <View className="py-3 items-center" style={[colorScheme == 'light' ? Styles.LightUserDetailsBorderLast : Styles.DarkUserDetailsBorderLast]}>
-                        <TouchableOpacity onPress={() => setShowLogoutModal(true)}>
-                            <View className="flex-row gap-1 items-center justify-center">
-                                <Image source={Logout} style={{ width: 20, height: 20 }} />
-                                <Text className='text-red-600 font-semibold text-sm'>LOGOUT</Text>
+                    <View className="py-4" style={[colorScheme == 'light' ? Styles.LightUserDetailsBorderLast : Styles.DarkUserDetailsBorderlast]}>
+                        <TouchableOpacity
+                            onPress={() => setShowLogoutModal(true)}
+                        >
+                            <View className="flex-row gap-2 items-center justify-between">
+                                <HStack className="items-center flex-row" space={2}>
+                                    <Image source={Logout} style={{ width: 20, height: 20 }} />
+                                    <Text className='text-red-600 font-semibold text-sm'>
+                                        Log out
+                                    </Text>
+                                </HStack>
                             </View>
                         </TouchableOpacity>
                     </View>

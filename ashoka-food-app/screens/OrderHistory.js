@@ -4,34 +4,13 @@ import { SafeAreaView, useColorScheme, StyleSheet, TouchableOpacity, Text, View,
 import { HStack, Skeleton, VStack } from 'native-base';
 import { ArrowLeftIcon } from 'react-native-heroicons/solid';
 import Styles from '../components/Styles';
-import ChevronUp from '../assets/chevronupicon.png';
 import Search from '../assets/searchicon.png';
 import { IP } from '@dotenv'
 import Test1 from '../assets/testoutlet1.jpg'
 import Test2 from '../assets/testoutlet2.jpg'
 import Test3 from '../assets/testoutlet3.jpg'
 import Grey from '../assets/greysquare.jpeg'
-import Dish from '../assets/dish.png';
-import PenIcon from '../assets/pen.png';
-import { PlusIcon, MinusIcon } from 'react-native-heroicons/solid';
-import Subtotal from '../assets/subtotal.png';
-import Total from '../assets/total.png'
-import FinalTotal from '../assets/finaltotal.png'
-import Government from '../assets/government.png';
-import DeliveryBhaiya from '../assets/deliverybhaiya.png';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Chevronup from '../assets/chevronupicon.png';
-import ChevronDown from '../assets/chevrondownicon.png';
-import FoodDelivery from '../assets/fooddelivery.png';
-import DineIn from '../assets/dinein.png';
-import RH from '../assets/rh.png'
-import AC04 from '../assets/ac04.png'
-import SportsBlock from '../assets/sportsblock.png'
-import Mess from '../assets/mess.png'
-import UPI from '../assets/upi.png'
-import COD from '../assets/cod.png'
-import BrokenHeart from '../assets/brokenheart.png'
-import PayAtRestaurant from '../assets/payatrestaurant.png'
 import Clock from '../assets/clockicon.png'
 import RestaurantIcon from '../assets/shopmapicon.png'
 import DeliveryIcon from '../assets/deliverybhaiya.png';
@@ -39,10 +18,7 @@ import Chef from '../assets/chef.png';
 import Siren from '../assets/siren.png';
 import Tick from '../assets/verified.png';
 import FoodReady from '../assets/foodready.png';
-import Phone from '../assets/phoneicon.png';
-import TickCross from '../assets/tickcross.png';
 import Cross from '../assets/cross.png';
-import { ExclamationCircleIcon, } from "react-native-heroicons/solid";
 import Placed from '../assets/cloud.png';
 
 export default function OrderHistory() {
@@ -55,6 +31,7 @@ export default function OrderHistory() {
     const [searchedUserOrders, setSearchedUserOrders] = useState([])
 
     const [Fetching, setFetching] = useState(true)
+    const [loadingImage, setLoadingImage] = useState()
 
     const {
         params: { actualUser },
@@ -95,12 +72,15 @@ export default function OrderHistory() {
         image: Grey
     }
 
+    const updateImageLoader = (value) => {
+        setLoadingImage(value)
+    }
+
     const fetchOrders = async () => {
         setFetching(true);
         try {
             const response = await fetch(`http://${IP}:8800/api/orders/users/${actualUser.email}`);
             const data = await response.json();
-            console.log(data)
             data.forEach((order, index) => {
                 switch (order.Restaurant) {
                     case 'Roti Boti':
@@ -166,7 +146,10 @@ export default function OrderHistory() {
     }, []);
 
     useEffect(() => {
-        fetchOrders();
+        window.setTimeout(() => {
+
+            fetchOrders();
+        }, 500)
     }, []);
 
     const searchedMemo = useMemo(() => {
@@ -186,7 +169,7 @@ export default function OrderHistory() {
         <SafeAreaView style={[colorScheme == 'light' ? { backgroundColor: '#F2F2F2', flex: 1 } : { backgroundColor: '#0c0c0f', flex: 1 }]}>
 
             <HStack className='items-center h-9 w-full justify-center'>
-                <TouchableOpacity onPress={()=>{navigation.navigate('UserScreen', {actualUser})}} className="p-2 rounded-full items-center shadow-lg" style={[colorScheme == 'light' ? styles.LightbackButton : styles.DarkbackButton]}>
+                <TouchableOpacity onPress={() => { navigation.navigate('UserScreen', { actualUser }) }} className="p-2 rounded-full items-center shadow-lg" style={[colorScheme == 'light' ? styles.LightbackButton : styles.DarkbackButton]}>
                     <ArrowLeftIcon size={20} style={[colorScheme == 'light' ? { color: 'black' } : { color: 'white' }]} />
                 </TouchableOpacity>
 
@@ -247,7 +230,7 @@ export default function OrderHistory() {
 
                 <VStack className='w-11/12 space-y-2 self-center '>
 
-                    {userOrders && !Fetching && searched.length==0 &&
+                    {userOrders && !Fetching && searched.length == 0 &&
                         <>
                             {userOrders.map((order, index) => (
                                 <TouchableOpacity
@@ -281,10 +264,22 @@ export default function OrderHistory() {
                                             <HStack className='items-center justify-between w-10/12'>
 
                                                 <VStack>
-                                                    <HStack className='py-1 space-x-2 px-2 items-center'>
+                                                    <HStack className='py-1  space-x-2 px-2 items-center'>
+                                                        {loadingImage &&
+                                                            <Skeleton rounded='lg'
+                                                                startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                                                endColor={colorScheme == 'light' ? 'gray.300' : '#0c0c0f'}
+                                                                style={{
+                                                                    width: 15,
+                                                                    height: 15
+                                                                }}
+                                                            />
+                                                        }
                                                         <Image
                                                             style={{ width: 15, height: 15, resizeMode: "contain" }}
                                                             source={RestaurantIcon}
+                                                            onLoadStart={() => updateImageLoader(true)}
+                                                            onLoadEnd={() => updateImageLoader(false)}
                                                         />
                                                         <Text className='font-medium text-md'
                                                             style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
@@ -301,7 +296,7 @@ export default function OrderHistory() {
                                                             {order.orderDate}
                                                         </Text>
                                                     </HStack>
-                                                    <HStack className='py-1 space-x-2 px-2 items-center'>
+                                                    <HStack className='py-1  space-x-2 px-2 items-center'>
                                                         {order.orderStatus == 'placed' &&
                                                             <HStack className='items-center space-x-2'>
                                                                 <Image
@@ -410,7 +405,7 @@ export default function OrderHistory() {
                         </>
                     }
 
-                    {searchedUserOrders && !Fetching && searched.length>0 &&
+                    {searchedUserOrders && !Fetching && searched.length > 0 &&
                         <>
                             {searchedUserOrders.map((order, index) => (
                                 <TouchableOpacity
@@ -445,9 +440,21 @@ export default function OrderHistory() {
 
                                                 <VStack>
                                                     <HStack className='py-1 space-x-2 px-2 items-center'>
+                                                        {loadingImage &&
+                                                            <Skeleton rounded='lg'
+                                                                startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                                                endColor={colorScheme == 'light' ? 'gray.300' : '#0c0c0f'}
+                                                                style={{
+                                                                    width: 15,
+                                                                    height: 15
+                                                                }}
+                                                            />
+                                                        }
                                                         <Image
                                                             style={{ width: 15, height: 15, resizeMode: "contain" }}
                                                             source={RestaurantIcon}
+                                                            onLoadStart={() => updateImageLoader(true)}
+                                                            onLoadEnd={() => updateImageLoader(false)}
                                                         />
                                                         <Text className='font-medium text-md'
                                                             style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
@@ -574,16 +581,12 @@ export default function OrderHistory() {
                     }
 
                     {Fetching &&
-                        <View className='mb-3 flex-row w-full pt-1'>
-                            <Skeleton w='24' h='24' rounded='lg'
+                        <View className='mb-3 flex-row w-full pt-1 items-center'>
+                            <Skeleton h='20' w='20' rounded='lg' className='mr-3'
                                 startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'}
-                                style={{ marginRight: 16 }}
+                                endColor={colorScheme == 'light' ? 'gray.300' : '#0c0c0f'}
                             />
-                            <VStack flex="3" space="2" className='pt-2'>
-                                <Skeleton h='3' rounded='full' w='50%'
-                                    startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                    endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                            <VStack flex="3" space="2" className=''>
                                 <HStack space="2" alignItems="center">
                                     <Skeleton size="4" rounded="full"
                                         startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
@@ -613,16 +616,12 @@ export default function OrderHistory() {
                     }
 
                     {Fetching &&
-                        <View className='mb-3 flex-row w-full pt-1'>
-                            <Skeleton w='24' h='24' rounded='lg'
+                        <View className='mb-3 flex-row w-full pt-1 items-center'>
+                            <Skeleton h='20' w='20' rounded='lg' className='mr-3'
                                 startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'}
-                                style={{ marginRight: 16 }}
+                                endColor={colorScheme == 'light' ? 'gray.300' : '#0c0c0f'}
                             />
-                            <VStack flex="3" space="2" className='pt-2'>
-                                <Skeleton h='3' rounded='full' w='50%'
-                                    startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                    endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                            <VStack flex="3" space="2" className=''>
                                 <HStack space="2" alignItems="center">
                                     <Skeleton size="4" rounded="full"
                                         startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
@@ -652,16 +651,12 @@ export default function OrderHistory() {
                     }
 
                     {Fetching &&
-                        <View className='mb-3 flex-row w-full pt-1'>
-                            <Skeleton w='24' h='24' rounded='lg'
+                        <View className='mb-3 flex-row w-full pt-1 items-center'>
+                            <Skeleton h='20' w='20' rounded='lg' className='mr-3'
                                 startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'}
-                                style={{ marginRight: 16 }}
+                                endColor={colorScheme == 'light' ? 'gray.300' : '#0c0c0f'}
                             />
-                            <VStack flex="3" space="2" className='pt-2'>
-                                <Skeleton h='3' rounded='full' w='50%'
-                                    startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                    endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                            <VStack flex="3" space="2" className=''>
                                 <HStack space="2" alignItems="center">
                                     <Skeleton size="4" rounded="full"
                                         startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
@@ -691,16 +686,12 @@ export default function OrderHistory() {
                     }
 
                     {Fetching &&
-                        <View className='mb-3 flex-row w-full pt-1'>
-                            <Skeleton w='24' h='24' rounded='lg'
+                        <View className='mb-3 flex-row w-full pt-1 items-center'>
+                            <Skeleton h='20' w='20' rounded='lg' className='mr-3'
                                 startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'}
-                                style={{ marginRight: 16 }}
+                                endColor={colorScheme == 'light' ? 'gray.300' : '#0c0c0f'}
                             />
-                            <VStack flex="3" space="2" className='pt-2'>
-                                <Skeleton h='3' rounded='full' w='50%'
-                                    startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                    endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                            <VStack flex="3" space="2" className=''>
                                 <HStack space="2" alignItems="center">
                                     <Skeleton size="4" rounded="full"
                                         startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
@@ -730,16 +721,12 @@ export default function OrderHistory() {
                     }
 
                     {Fetching &&
-                        <View className='mb-3 flex-row w-full pt-1'>
-                            <Skeleton w='24' h='24' rounded='lg'
+                        <View className='mb-3 flex-row w-full pt-1 items-center'>
+                            <Skeleton h='20' w='20' rounded='lg' className='mr-3'
                                 startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'}
-                                style={{ marginRight: 16 }}
+                                endColor={colorScheme == 'light' ? 'gray.300' : '#0c0c0f'}
                             />
-                            <VStack flex="3" space="2" className='pt-2'>
-                                <Skeleton h='3' rounded='full' w='50%'
-                                    startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                    endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                            <VStack flex="3" space="2" className=''>
                                 <HStack space="2" alignItems="center">
                                     <Skeleton size="4" rounded="full"
                                         startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
@@ -769,16 +756,12 @@ export default function OrderHistory() {
                     }
 
                     {Fetching &&
-                        <View className='mb-3 flex-row w-full pt-1'>
-                            <Skeleton w='24' h='24' rounded='lg'
+                        <View className='mb-3 flex-row w-full pt-1 items-center'>
+                            <Skeleton h='20' w='20' rounded='lg' className='mr-3'
                                 startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'}
-                                style={{ marginRight: 16 }}
+                                endColor={colorScheme == 'light' ? 'gray.300' : '#0c0c0f'}
                             />
-                            <VStack flex="3" space="2" className='pt-2'>
-                                <Skeleton h='3' rounded='full' w='50%'
-                                    startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                    endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                            <VStack flex="3" space="2" className=''>
                                 <HStack space="2" alignItems="center">
                                     <Skeleton size="4" rounded="full"
                                         startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
@@ -807,44 +790,7 @@ export default function OrderHistory() {
                         </View>
                     }
 
-                    {Fetching &&
-                        <View className='mb-3 flex-row w-full pt-1'>
-                            <Skeleton w='24' h='24' rounded='lg'
-                                startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'}
-                                style={{ marginRight: 16 }}
-                            />
-                            <VStack flex="3" space="2" className='pt-2'>
-                                <Skeleton h='3' rounded='full' w='50%'
-                                    startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                    endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
-                                <HStack space="2" alignItems="center">
-                                    <Skeleton size="4" rounded="full"
-                                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
-                                    <Skeleton h='2' rounded='full' w='70%'
-                                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
-                                </HStack>
-                                <HStack space="2" alignItems="center">
-                                    <Skeleton size="4" rounded="full"
-                                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
-                                    <Skeleton h='2' rounded='full' w='70%'
-                                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
-                                </HStack>
-                                <HStack space="2" alignItems="center">
-                                    <Skeleton size="4" rounded="full"
-                                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
-                                    <Skeleton h='2' rounded='full' w='70%'
-                                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
-                                </HStack>
-                            </VStack>
-                        </View>
-                    }
+
 
 
 

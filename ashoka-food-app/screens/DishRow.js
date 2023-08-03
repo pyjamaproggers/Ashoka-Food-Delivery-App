@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, Image, useColorScheme, ScrollView, ActivityIndicator } from "react-native";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { urlFor } from "../sanity";
 import { MinusCircleIcon, PlusCircleIcon, PlusSmallIcon, PlusIcon, MinusIcon, XMarkIcon } from "react-native-heroicons/solid";
 import { addToCart, removeFromCart, selectCartItems } from "../reduxslices/cartslice";
@@ -136,14 +136,17 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
     };
 
     const addCustomizations = (currentCustomizations, genre, customization, required,) => {
-        
-        console.log(currentCustomizations)
 
-        let tempUserCustomizations = {}
+        console.log(currentCustomizations)
+        console.log(genre)
+        console.log(customization)
+        console.log(required)
+
+        let tempUserCustomizations = {...currentCustomizations}
 
         if (required) {
             tempUserCustomizations = {
-                ...currentCustomizations,
+                ...userCustomizations,
                 [genre]: customization
             }
         }
@@ -152,26 +155,26 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
             if (genre === 'Sauces') {
                 customization.length > 3 ?
                     tempUserCustomizations = {
-                        ...currentCustomizations,
+                        ...userCustomizations,
                     }
                     :
                     tempUserCustomizations = {
-                        ...currentCustomizations,
+                        ...userCustomizations,
                         [genre]: customization
                     }
             }
             else {
                 tempUserCustomizations = {
-                    ...currentCustomizations,
+                    ...userCustomizations,
                     [genre]: customization
                 }
             }
         }
-        console.log(tempUserCustomizations)
+        console.log(tempUserCustomizations);
 
         setUserCustomizations(tempUserCustomizations)
     }
-
+    
 
     useEffect(() => {
         if (items.length == 0) {
@@ -371,7 +374,7 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
 
                                             <>
 
-
+                                                {/* {console.log(userCustomizations)} */}
 
                                                 {item.required === 'Yes' ?
 
@@ -405,8 +408,11 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
                                                             defaultValue={userCustomizations[item.genre]}
                                                             onChange={nextValue => {
                                                                 addCustomizations(userCustomizations, item.genre, nextValue, true);
+                                                                // setUserCustomizations({...userCustomizations, [item.genre]: nextValue})
                                                             }}
                                                         >
+
+                                                            {/* {console.log(userCustomizations)} */}
 
                                                             {item.items.map((element) => (
 
@@ -485,6 +491,7 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
                                                             value={userCustomizations[item.genre]}
                                                             onChange={(selectedArray) => {
                                                                 addCustomizations(userCustomizations, item.genre, selectedArray, false);
+                                                                // setUserCustomizations({...userCustomizations, [item.genre]: selectedArray})
                                                             }}
                                                         >
 

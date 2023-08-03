@@ -320,8 +320,8 @@ export default function EachOrder() {
                                                         // },
                                                         {
                                                             translateY: scrollY.interpolate({
-                                                                inputRange: [-ITEM_HEIGHT, 0, ITEM_HEIGHT, ],
-                                                                outputRange: [ITEM_HEIGHT * 0, 0, ITEM_HEIGHT * 1.0, ]
+                                                                inputRange: [-ITEM_HEIGHT, 0, ITEM_HEIGHT,],
+                                                                outputRange: [ITEM_HEIGHT * 0, 0, ITEM_HEIGHT * 1.0,]
                                                             }),
                                                         },
                                                     ]
@@ -546,32 +546,28 @@ export default function EachOrder() {
                                                 CONTACT
                                             </Text>
 
-                                                <View style={colorScheme == 'light' ? styles.LightnameEmailPhotoContainer : styles.DarknameEmailPhotoContainer} className='shadow-sm'>
+                                            <View style={colorScheme == 'light' ? styles.LightnameEmailPhotoContainer : styles.DarknameEmailPhotoContainer} className='shadow-sm'>
 
-                                                    <View className='px-3'>
-                                                        {item.actualUser.hasOwnProperty('picture') ? (
-                                                            <Image style={styles.userPic} source={{ uri: item.actualUser.picture }} />
-                                                        ) : (
-                                                            <Image style={styles.userPic} source={userPic} />
-                                                        )}
-                                                    </View>
-                                                    <View className='flex-col space-y-1 pl-0.5'>
-                                                        <Text allowFontScaling={false} style={colorScheme == 'light' ? styles.LightnameText : styles.DarknameText}>
-                                                            {item.name} 
-                                                        </Text>
-
-                                                        {/* user.phone */}
-                                                        <View className='flex-row items-center space-x-1 '>
-                                                            <Text allowFontScaling={false} style={colorScheme == 'light' ? styles.LightphoneText : styles.DarkphoneText}>{item.phone}</Text>
-                                                        </View>
-                                                        <Text className='font-medium text-xs w-10/12'
-                                                            allowFontScaling={false} style={[colorScheme == 'light' ? { color: 'gray' } : { color: 'gray' }]}
-                                                        >
-                                                            The delivery bhaiya will call you on this number
-                                                        </Text>
-                                                    </View>
-
+                                                <View className='px-3'>
+                                                    <Image style={styles.userPic} source={{ uri: `https://api.multiavatar.com/${actualUser.name}.png?apikey=Bvjs0QyHcCxZNe` }} />
                                                 </View>
+                                                <View className='flex-col space-y-1 pl-0.5'>
+                                                    <Text allowFontScaling={false} style={colorScheme == 'light' ? styles.LightnameText : styles.DarknameText}>
+                                                        {item.name}
+                                                    </Text>
+
+                                                    {/* user.phone */}
+                                                    <View className='flex-row items-center space-x-1 '>
+                                                        <Text allowFontScaling={false} style={colorScheme == 'light' ? styles.LightphoneText : styles.DarkphoneText}>{item.phone}</Text>
+                                                    </View>
+                                                    <Text className='font-medium text-xs w-10/12'
+                                                        allowFontScaling={false} style={[colorScheme == 'light' ? { color: 'gray' } : { color: 'gray' }]}
+                                                    >
+                                                        The delivery bhaiya will call you on this number
+                                                    </Text>
+                                                </View>
+
+                                            </View>
                                         </VStack>
 
                                     </VStack>

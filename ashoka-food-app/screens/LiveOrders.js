@@ -128,7 +128,7 @@ export default function LiveOrders() {
                     flag = 0
                 }
             })
-            if(flag==1){
+            if (flag == 1) {
                 navigation.navigate('OrderHistory', { actualUser })
             }
             setUsersLiveOrders(liveOrders)
@@ -173,7 +173,7 @@ export default function LiveOrders() {
 
     return (
         <>
-            {!Fetching && 
+            {!Fetching &&
                 <View style={[colorScheme == 'light' ? Styles.LightBG : Styles.DarkBG]}>
                     <Animated.FlatList
                         data={usersLiveOrders}
@@ -940,11 +940,7 @@ export default function LiveOrders() {
                                                     <View style={colorScheme == 'light' ? styles.LightnameEmailPhotoContainer : styles.DarknameEmailPhotoContainer} className='shadow-sm'>
 
                                                         <View className='px-3'>
-                                                            {actualUser.hasOwnProperty('picture') ? (
-                                                                <Image style={styles.userPic} source={{ uri: actualUser.picture }} />
-                                                            ) : (
-                                                                <Image style={styles.userPic} source={userPic} />
-                                                            )}
+                                                            <Image style={styles.userPic} source={{ uri: `https://api.multiavatar.com/${actualUser.name}.png?apikey=Bvjs0QyHcCxZNe` }} />
                                                         </View>
                                                         <View className='flex-col space-y-1 pl-0.5'>
                                                             <Text allowFontScaling={false} style={colorScheme == 'light' ? styles.LightnameText : styles.DarknameText}>

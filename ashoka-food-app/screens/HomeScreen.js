@@ -12,11 +12,11 @@ import Styles from '../components/Styles';
 import ChevronUp from '../assets/chevronupicon.png'
 import ChevronDown from '../assets/chevrondownicon.png'
 import Search from '../assets/searchicon.png'
-import { Alert, CloseIcon, HStack, IconButton, Slide, VStack, Skeleton } from 'native-base';
+import { Alert, CloseIcon, HStack, IconButton, Slide, VStack, Skeleton, Avatar } from 'native-base';
 import { useNetInfo } from "@react-native-community/netinfo";
 import axios from 'axios';
 import Tracking from '../assets/tracking.png'
-import {IP} from "@dotenv"
+import { IP } from "@dotenv"
 
 const HomeScreen = () => {
     const navigation = useNavigation();
@@ -29,6 +29,8 @@ const HomeScreen = () => {
     const [LoadingJoke, setLoadingJoke] = useState(false)
     const [showDropDown, setShowDropDown] = useState(false)
     const [userHasLiveOrders, setUserHasLiveOrders] = useState(false)
+    const [userImage, setUserImage] = useState()
+
 
     const colorScheme = useColorScheme();
 
@@ -42,6 +44,18 @@ const HomeScreen = () => {
         { location: 'Sports Block' },
         { location: 'Mess' },
     ]
+    // const colors = [
+    //     'amber.400',
+    //     'lightBlue.400',
+    //     'secondary.400',
+    //     'pink.400',
+    //     'purple.400',
+    //     'violet.400',
+    //     'indigo.400',
+    //     'teal.500',
+    // ]
+
+    // const [userColor, setUserColor] = useState(colors[Math.floor(Math.random() * colors.length)])
 
     const LoadJoke = (data) => {
         console.log('Reloading')
@@ -81,9 +95,20 @@ const HomeScreen = () => {
         }
     }
 
+    const fetchUserAvatar = async () => {
+        try {
+            const response = await fetch(`https://api.multiavatar.com/${actualUser.name}.png?apikey=Bvjs0QyHcCxZNe`)
+            setUserImage(response.json())
+        } catch (error) {
+            console.log('Error in fetching avatar'+error)
+        }
+    }   
+
     const {
         params: { actualUser },
     } = useRoute();
+
+    console.log(actualUser)
 
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -97,6 +122,7 @@ const HomeScreen = () => {
     useEffect(() => {
         setLoadingJoke(true)
         fetchJokes()
+        fetchUserAvatar()
         const interval = setInterval(() => {
             setLoadingJoke(true)
             fetchJokes()
@@ -121,11 +147,10 @@ const HomeScreen = () => {
                     flag = 0
                 }
             })
-            if(flag==1){
+            if (flag == 1) {
                 setUserHasLiveOrders(false)
             }
-            else
-            {
+            else {
                 setUserHasLiveOrders(true)
             }
         } catch (error) {
@@ -150,40 +175,40 @@ const HomeScreen = () => {
     return (
         <View className="" style={[colorScheme == 'light' ? { backgroundColor: '#F2F2F2' } : { backgroundColor: '#0c0c0f' }]}>
 
-            {userHasLiveOrders && 
-            
-            <View className='absolute w-screen bottom-32 z-50 shadow-sm'>
-                <SafeAreaView>
-                    <TouchableOpacity
-                        onPress={() => {
-                            navigation.navigate('LiveOrders', { actualUser })
-                        }}
-                        className=" w-7/12 self-center h-max py-3 my-0.5 px-3 flex-row items-center rounded-xl z-20"
-                        style={{ backgroundColor: '#3E5896' }}
-                    >
-                        <HStack className='items-center justify-between w-full'>
-                            <>
-                                <HStack className='items-center' space={2}>
-                                    <Image
-                                        style={{ width: 20, height: 20, resizeMode: "contain" }}
-                                        source={Tracking}
-                                    />
-                                    <Text className='text-base font-medium text-white'
-                                    >
-                                        Track My Order
-                                    </Text>
-                                </HStack>
-                                <View style={{ transform: [{ rotate: '90deg' }] }}>
-                                    <Image
-                                        style={{ width: 12, height: 12, resizeMode: "contain" }}
-                                        source={ChevronUp}
-                                    />
-                                </View>
-                            </>
-                        </HStack>
-                    </TouchableOpacity>
-                </SafeAreaView>
-            </View>}
+            {userHasLiveOrders &&
+
+                <View className='absolute w-screen bottom-32 z-50 shadow-sm'>
+                    <SafeAreaView>
+                        <TouchableOpacity
+                            onPress={() => {
+                                navigation.navigate('LiveOrders', { actualUser })
+                            }}
+                            className=" w-7/12 self-center h-max py-3 my-0.5 px-3 flex-row items-center rounded-xl z-20"
+                            style={{ backgroundColor: '#3E5896' }}
+                        >
+                            <HStack className='items-center justify-between w-full'>
+                                <>
+                                    <HStack className='items-center' space={2}>
+                                        <Image
+                                            style={{ width: 20, height: 20, resizeMode: "contain" }}
+                                            source={Tracking}
+                                        />
+                                        <Text className='text-base font-medium text-white'
+                                        >
+                                            Track My Order
+                                        </Text>
+                                    </HStack>
+                                    <View style={{ transform: [{ rotate: '90deg' }] }}>
+                                        <Image
+                                            style={{ width: 12, height: 12, resizeMode: "contain" }}
+                                            source={ChevronUp}
+                                        />
+                                    </View>
+                                </>
+                            </HStack>
+                        </TouchableOpacity>
+                    </SafeAreaView>
+                </View>}
 
             {/* <SafeAreaView className="absolute bottom-32 w-7/12 self-center z-50 shadow-sm">
                 <TouchableOpacity
@@ -301,11 +326,7 @@ const HomeScreen = () => {
                             navigation.navigate('UserScreen', { actualUser })
                             setIsOpen(false)
                         }}>
-                            {actualUser.hasOwnProperty('picture') ?
-                                <Image style={styles.userPic} source={{ uri: actualUser.picture }} />
-                                :
-                                <Image style={styles.userPic} source={userPic} />
-                            }
+                            <Image style={styles.userPic} source={{ uri: `https://api.multiavatar.com/${actualUser.name}.png?apikey=Bvjs0QyHcCxZNe`}} />
                         </TouchableOpacity>
                     </View>
 

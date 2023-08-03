@@ -8,7 +8,7 @@ import { ArrowLeftIcon, ChevronRightIcon } from 'react-native-heroicons/solid';
 import { SafeAreaView, StyleSheet, StatusBar, Image } from "react-native";
 import { urlFor } from "../sanity";
 import Styles from '../components/Styles.js'
-import { HStack, TextArea, VStack, Alert as NativeBaseAlert, Skeleton, Spinner } from "native-base";
+import { HStack, TextArea, VStack, Alert as NativeBaseAlert, Skeleton, Spinner, Avatar } from "native-base";
 import VegIcon from '../assets/vegicon.png';
 import client from '../sanity';
 import NonVegIcon from '../assets/nonvegicon.png';
@@ -62,6 +62,19 @@ const BasketScreen = () => {
     const [Fetching, setFetching] = useState()
 
     const [showSpinner, setShowSpinner] = useState(false)
+
+    const colors = [
+        'amber.400',
+        'lightBlue.400',
+        'secondary.400',
+        'pink.400',
+        'purple.400',
+        'violet.400',
+        'indigo.400',
+        'teal.500',
+    ]
+
+    const [userColor, setUserColor] = useState(colors[Math.floor(Math.random() * colors.length)])
 
     // const Locations = [
     //     { location: 'RH1', icon: RH },
@@ -210,17 +223,17 @@ const BasketScreen = () => {
 
     const checkUnavailableItems = async () => { //ChatGPT Optimised
         let checkArray = 'The following items were removed from your cart as they became unavailable:\n';
-    
+
         for (const basketRestaurant of Basket) {
             try {
                 const response = await fetch(`http://${IP}:8800/api/items/${basketRestaurant.name}`);
                 const data = await response.json();
                 const fetchedUnavailableItems = data.map((item) => item.name);
-    
+
                 const unavailableItemsInCart = items
                     .filter((item) => fetchedUnavailableItems.includes(item.name))
                     .map((item) => item.name);
-    
+
                 for (const unavailableItem of unavailableItemsInCart) {
                     dispatch(
                         removeFromCart({
@@ -234,7 +247,7 @@ const BasketScreen = () => {
                         })
                     );
                 }
-    
+
                 if (unavailableItemsInCart.length > 0) {
                     checkArray += `${unavailableItemsInCart.join(', ')} from ${basketRestaurant.name}\n`;
                 }
@@ -242,10 +255,10 @@ const BasketScreen = () => {
                 console.error('Error while fetching unavailable items on cart screen: ' + error);
             }
         }
-    
+
         return checkArray;
     };
-    
+
 
     const updateInstructions = (instruction, restaurant) => {
         var TempFinalBasket = FinalBasket
@@ -402,22 +415,22 @@ const BasketScreen = () => {
     useMemo(async () => { //ChatGPT Optimised
         console.log('MEMO RUNNING AGAIN YAY');
         setFetching(true);
-    
+
         const uniqueRestaurantSet = new Set(); // Use Set for efficient uniqueness check
-    
+
         items.forEach((item) => {
             uniqueRestaurantSet.add(item.Restaurant);
         });
-    
+
         const uniqueRestaurantsInCart = Array.from(uniqueRestaurantSet);
-    
+
         const tempBasket = uniqueRestaurantsInCart.map((restaurantName) => ({
             name: restaurantName,
             items: [],
             instructions: '',
             restaurantTotal: 0
         }));
-    
+
         tempBasket.forEach((restaurantMiniCart) => {
             items.forEach((item) => {
                 if (item.Restaurant === restaurantMiniCart.name) {
@@ -428,36 +441,36 @@ const BasketScreen = () => {
                 }
             });
         });
-    
+
         let tempCartTotal = 0;
-    
+
         tempBasket.forEach((basketRestaurant) => {
             let subTotal = 0;
-    
+
             basketRestaurant.items.forEach((item) => {
                 subTotal += item.Price * item.quantity;
             });
-    
+
             let finalTotal = subTotal + deliveryCharges[basketRestaurant.name];
-    
+
             if (basketRestaurant.name === 'Roti Boti') {
                 finalTotal = (Math.round(finalTotal * 1.05 * 100) / 100).toFixed(2);
             }
-    
+
             tempCartTotal = (Math.round((tempCartTotal + finalTotal) * 100) / 100).toFixed(2);
-    
+
             basketRestaurant.restaurantTotal = subTotal;
         });
-    
+
         setCartTotal(tempCartTotal);
-    
+
         try {
             const data = await client.fetch(query);
-    
+
             const tempFinalBasket = [...tempBasket]; // Avoid modifying the same object
-    
+
             let foodVillageInCart = false;
-    
+
             data.forEach((restaurant) => {
                 tempFinalBasket.forEach((basketRestaurant) => {
                     if (restaurant.name === basketRestaurant.name) {
@@ -468,53 +481,53 @@ const BasketScreen = () => {
                     }
                 });
             });
-    
+
             setDeliveryOptions(
                 foodVillageInCart
                     ? [
-                          { location: 'RH1', icon: RH },
-                          { location: 'RH2', icon: RH },
-                          { location: 'RH3', icon: RH },
-                          { location: 'RH4', icon: RH },
-                          { location: 'RH5', icon: RH }
-                      ]
+                        { location: 'RH1', icon: RH },
+                        { location: 'RH2', icon: RH },
+                        { location: 'RH3', icon: RH },
+                        { location: 'RH4', icon: RH },
+                        { location: 'RH5', icon: RH }
+                    ]
                     : [
-                          { location: 'RH1', icon: RH },
-                          { location: 'RH2', icon: RH },
-                          { location: 'RH3', icon: RH },
-                          { location: 'RH4', icon: RH },
-                          { location: 'RH5', icon: RH },
-                          { location: 'Library AC04', icon: AC04 },
-                          { location: 'Sports Block', icon: SportsBlock },
-                          { location: 'Mess', icon: Mess }
-                      ]
+                        { location: 'RH1', icon: RH },
+                        { location: 'RH2', icon: RH },
+                        { location: 'RH3', icon: RH },
+                        { location: 'RH4', icon: RH },
+                        { location: 'RH5', icon: RH },
+                        { location: 'Library AC04', icon: AC04 },
+                        { location: 'Sports Block', icon: SportsBlock },
+                        { location: 'Mess', icon: Mess }
+                    ]
             );
-    
+
             setOrderTypeOptions([
                 { option: 'Delivery', icon: FoodDelivery },
                 { option: 'Dine In', icon: DineIn }
             ]);
-    
+
             setPaymentOptions([
                 { option: 'Pay On Delivery', icon: COD },
                 { option: 'Pay At Outlet', icon: PayAtRestaurant }
             ]);
-    
+
             setFinalBasket(tempFinalBasket);
             setFinalBasketReady(true);
         } catch (error) {
             console.log('Error:', error);
         }
-    
+
         setFetching(false);
-    
+
         // Uncomment and modify your checkUnavailableItems logic if needed
         // let itemsCheck = await checkUnavailableItems();
         // if (itemsCheck !== 'The following items were removed from your cart as they became unavailable: ') {
         //     Alert.alert(itemsCheck);
         // }
     }, [items]);
-    
+
 
     if (items.length == 0) { navigation.goBack() }
 
@@ -655,7 +668,7 @@ const BasketScreen = () => {
             for (const orderData of orders) {
                 sendOrderToDatabase(orderData);
             }
-            for (const item of items){
+            for (const item of items) {
                 dispatch(removeFromCart({ id: item.id, name: item.name, Price: item.Price, image: item.image, Restaurant: item.Restaurant, Veg_NonVeg: item.Veg_NonVeg, quantity: 0 }))
             }
             navigation.navigate('LiveOrders', { actualUser });
@@ -1159,7 +1172,7 @@ const BasketScreen = () => {
                             </VStack>
 
                             <TouchableOpacity
-                                onPress={()=>{
+                                onPress={() => {
                                     setShowSpinner(true)
                                     placeOrder()
                                 }}
@@ -1584,11 +1597,7 @@ const BasketScreen = () => {
                             <View style={colorScheme == 'light' ? styles.LightnameEmailPhotoContainer : styles.DarknameEmailPhotoContainer} className='shadow-sm'>
 
                                 <View className='px-3'>
-                                    {actualUser.hasOwnProperty('picture') ? (
-                                        <Image style={styles.userPic} source={{ uri: actualUser.picture }} />
-                                    ) : (
-                                        <Image style={styles.userPic} source={userPic} />
-                                    )}
+                                    <Image style={styles.userPic} source={{ uri: `https://api.multiavatar.com/${actualUser.name}.png?apikey=Bvjs0QyHcCxZNe` }} />
                                 </View>
                                 <View className='flex-col space-y-1 pl-0.5'>
                                     <Text allowFontScaling={false} style={colorScheme == 'light' ? styles.LightnameText : styles.DarknameText}>{actualUser.given_name} {actualUser.family_name}</Text>
