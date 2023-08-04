@@ -27,8 +27,8 @@ const Stack = createNativeStackNavigator();
 export default function App() {
     return (
         <NativeBaseProvider>
-            <NavigationContainer>
-                <Provider store={store}>
+            <Provider store={store}>
+                <NavigationContainer>
                     <Stack.Navigator >
                         <Stack.Screen name="Login" component={Login} initialParams={{ logout: null }} />
                         <Stack.Screen name="VendorLogin" component={VendorLogin} />
@@ -41,11 +41,11 @@ export default function App() {
                         <Stack.Screen name="LiveOrders" component={LiveOrders} />
                         <Stack.Screen name="OrderHistory" component={OrderHistory} />
                         <Stack.Screen name="EachOrder" component={EachOrder} />
-                        {/* <Stack.Screen name="ManageSpendings" component={ManageSpendings}  /> */} 
+                        {/* <Stack.Screen name="ManageSpendings" component={ManageSpendings}  /> */}
                         {/* We'll work on manage spendings after we've got enough data to work with */}
                     </Stack.Navigator>
-                </Provider>
-            </NavigationContainer>
+                </NavigationContainer>
+            </Provider>
         </NativeBaseProvider>
     );
 }

@@ -29,6 +29,9 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
     const [CDishPrice, setCDishPrice] = useState(Price)
     const [CDishQuantity, setCDishQuantity] = useState(1)
 
+    const [CDishVersionsInCart, setCDishVersionsInCart] = useState([])
+    const [showCRemoveSheet, setShowCRemoveSheet] = useState(false)
+
     const addItem = () => {
         Price = parseFloat(Price)
         var currentQuantity
@@ -61,27 +64,30 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
     };
 
     const removeItem = () => {
-        console.log(name)
         Price = parseFloat(Price)
         var currentQuantity
         var additemQ
-        console.log('cominghere')
-        items.map((item) => {
-            if (item.name == name && item.quantity == 1) {
-                currentQuantity = 1
+        for (let i = 0; i < items.length; i++) {
+            const item = items[i];
+            let removedDish = false;
+
+            if (item.name === name && item.quantity === 1) {
+                currentQuantity = 1;
                 dispatch(removeFromCart({ id, name, Price, image, Restaurant, Veg_NonVeg, quantity: currentQuantity }));
+                break; // Exit the loop completely
             }
-            if (item.name == name && item.quantity >= 1) {
-                console.log('coming here')
-                currentQuantity = item.quantity
-                additemQ = currentQuantity - 1
-                // dispatch(addToCart({ id, name, Price, image, Restaurant, Veg_NonVeg, quantity: additemQ }));
-                // dispatch(removeFromCart({ id, name, Price, image, Restaurant, Veg_NonVeg, quantity: currentQuantity }));
-                dispatch(updateCartRemove({ newQuantity: additemQ, dishName: item.name }))
+
+            if (item.name === name && item.quantity >= 1) {
+                console.log('coming here');
+                currentQuantity = item.quantity;
+                additemQ = currentQuantity - 1;
+                dispatch(updateCartRemove({ newQuantity: additemQ, dishName: item.name }));
+                removedDish = true;
+                break; // Exit the loop completely
             }
-        })
+        }
     };
-    
+
     const addWithCustomizations = () => {
         Price = parseFloat(Price);
 
@@ -146,7 +152,7 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
                 })
                 if (!foundSameCustomizations) {
                     console.log('NOT FOUND')
-                    setItemQuantity(itemQuantity+CDishQuantity);
+                    setItemQuantity(itemQuantity + CDishQuantity);
                     dispatch(addToCart({ id, name, Price: CDishPrice, image, Restaurant, Veg_NonVeg, quantity: CDishQuantity, customizations: userCustomizationsObject }));
                     setCDishQuantity(1)
                     setShowCustomizationSheet(false);
@@ -159,59 +165,9 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
 
     }
 
-    const removeWithCustomizations = () => {
-        console.log(name)
-        Price = parseFloat(Price)
-        var currentQuantity
-        var additemQ
-
-
-        const tempUserCustomizationsObject = {};
-        userCustomizations.forEach((value, key) => {
-            tempUserCustomizationsObject[key] = value.selectedItems;
-        });
-
-        let userCustomizationsObject = {};
-        for (const genre in tempUserCustomizationsObject) {
-            const items = tempUserCustomizationsObject[genre];
-
-            if (Array.isArray(items)) {
-                let customizationString = '';
-                items.forEach((itemObject, index) => {
-                    if (index === 0) {
-                        customizationString = itemObject.name;
-                    } else {
-                        customizationString += ', ' + itemObject.name;
-                    }
-                });
-                userCustomizationsObject[genre] = customizationString;
-            } else {
-                userCustomizationsObject[genre] = items.name;
-            }
-        }
-
-
-        let removedItem = false
-        items.map((item) => {
-            if (item.name == name && item.quantity == 1) {
-                currentQuantity = 1
-                dispatch(removeFromCart({ id, name, Price, image, Restaurant, Veg_NonVeg, quantity: currentQuantity }));
-                removedItem = true
-            }
-            if (item.name == name && item.quantity >= 1) {
-                console.log('coming here')
-                currentQuantity = item.quantity
-                additemQ = currentQuantity - 1
-                // dispatch(addToCart({ id, name, Price, image, Restaurant, Veg_NonVeg, quantity: additemQ }));
-                // dispatch(removeFromCart({ id, name, Price, image, Restaurant, Veg_NonVeg, quantity: currentQuantity }));
-                dispatch(updateCartRemoveCustomized({ newQuantity: additemQ, dishName: item.name, customizations: userCustomizationsObject }))
-                removedItem = true
-            }
-            if(removedItem){
-
-            }
-        })
-
+    const removeWithCustomizations = (quantity, customizations, name) => {
+        dispatch(updateCartRemoveCustomized({dishName: name, customizations}))
+        setShowCRemoveSheet(false)
     };
 
     function objectsAreEqual(obj1, obj2) {
@@ -352,35 +308,40 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
         // setUserCustomizations(tempUserCustomizations)
     }
 
+    const askWhichCustomizationToRemove = () => {
+        console.log('YES IM HERE')
+        setShowCRemoveSheet(true)
+        setSheetLoading(true)
+
+        let dishVersionsInCart = []
+        window.setTimeout(() => {
+            for (const item of items) {
+                if (item.name === name) {
+                    dishVersionsInCart.push(item)
+                }
+            }
+            setCDishVersionsInCart(dishVersionsInCart)
+            setShowCRemoveSheet(true)
+            setSheetLoading(false)
+        }, 200)
+    }
+
     console.log(items)
 
     useEffect(() => {
+
+
         if (items.length == 0) {
             setItemQuantity(0)
         }
         if (items.length != 0) {
-            let dishNotFound = true
-            items.map((item) => {
-                if (item.name == name) {
-                    if (item.hasOwnProperty('customizations')) {
-                        dishNotFound = false
-                        let cItemQ = 0
-                        items.map(item => {
-                            if (item.hasOwnProperty('customizations')) {
-                                cItemQ = cItemQ + item.quantity
-                            }
-                        })
-                        setItemQuantity(cItemQ)
-                    }
-                    else {
-                        dishNotFound = false
-                        setItemQuantity(item.quantity)
-                    }
+            let itemQ = 0
+            for (const item of items) {
+                if (item.name === name) {
+                    itemQ += item.quantity
                 }
-            });
-            if (dishNotFound) {
-                setItemQuantity(0)
             }
+            setItemQuantity(itemQ)
         }
         fetchUnavailableItems()
     }, [items, userCustomizations])
@@ -498,7 +459,7 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
                                         <HStack
                                             style={[colorScheme == 'light' ? Styles.LightAddButtonFinal : Styles.DarkAddButtonFinal]}
                                         >
-                                            <TouchableOpacity onPress={removeWithCustomizations} className='p-3 px-2'>
+                                            <TouchableOpacity onPress={() => askWhichCustomizationToRemove()} className='p-3 px-2'>
                                                 <MinusIcon size={16} color='white' />
                                             </TouchableOpacity>
 
@@ -506,7 +467,7 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
                                                 {itemQuantity}
                                             </Text>
 
-                                            <TouchableOpacity onPress={() => segregateCustomizations() } className='p-3 px-2'>
+                                            <TouchableOpacity onPress={() => segregateCustomizations()} className='p-3 px-2'>
                                                 <PlusIcon size={16} color='white' />
                                             </TouchableOpacity>
                                         </HStack>
@@ -561,12 +522,9 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
 
                                     <VStack className='w-full space-y-4'>
 
-
                                         {dishCustomizations.map((item) => (
 
                                             <>
-
-
 
                                                 {item.required === 'Yes' ?
 
@@ -838,6 +796,158 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
 
                     </Actionsheet.Content>
                 </Actionsheet>
+
+            }
+
+            {showCRemoveSheet &&
+
+                <Actionsheet hideDragIndicator={true}
+                    isOpen={showCRemoveSheet}
+                    onClose={() => { setShowCRemoveSheet(false) }}
+                    disableOverlay={true}
+                >
+                    <TouchableOpacity className='p-3 rounded-full m-3' style={[colorScheme == 'light' ? Styles.LightBGSec : Styles.DarkBGSec]}
+                        onPress={() => {
+                            setShowCRemoveSheet(false)
+                        }}
+                    >
+                        <XMarkIcon size={20} style={[colorScheme == 'light' ? { color: 'black' } : { color: 'white' }]} />
+                    </TouchableOpacity>
+                    <Actionsheet.Content bgColor={colorScheme == 'light' ? "#f2f2f2" : "#0c0c0f"} >
+                        <View className='w-full text-center' style={[colorScheme == 'light' ? Styles.LightBG : Styles.DarkBG]}>
+                            <Text className='self-center pt-2 pb-3 text-lg font-medium text-center'
+                                style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
+                                Choose {name} To Remove
+                            </Text>
+                        </View>
+
+                        {!sheetLoading &&
+
+                            <ScrollView
+                                className='w-screen'
+                                showsVerticalScrollIndicator={false}>
+
+                                {CDishVersionsInCart.length > 0 &&
+
+                                    <VStack className='w-full space-y-4'>
+
+                                        {console.log('CDISHVERSION HERE NIGGAA ' + CDishVersionsInCart)}
+
+
+                                        {CDishVersionsInCart.map((item) => (
+
+                                            <>
+                                                <HStack className='items-center justify-between px-2 w-full py-4 my-3 rounded-lg w-11/12 self-center' style={[colorScheme == 'light' ? Styles.LightBGSec : Styles.DarkBGSec]}>
+                                                    {/* Dish Details Block */}
+                                                    <VStack className='justify-start w-7/12' style={{}}>
+                                                        {Veg_NonVeg === "Veg" ? (
+                                                            <Image
+                                                                style={{ width: 15, height: 15, resizeMode: "contain" }}
+                                                                source={VegIcon}
+                                                            />
+                                                        ) : (
+                                                            <Image
+                                                                style={{ width: 15, height: 15, resizeMode: "contain" }}
+                                                                source={NonVegIcon}
+                                                            />
+                                                        )}
+
+                                                        <Text className='text-base font-medium py-1.5'
+                                                            style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                                        >
+                                                            {name}
+                                                        </Text>
+
+                                                        <Text className='pb-1 font-medium text-xs'
+                                                            style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                                        >
+                                                            ₹{Price}
+                                                        </Text>
+
+                                                        <VStack className='py-1'>
+                                                            {item.customizations && Object.keys(item.customizations).map(key => (
+                                                                <VStack>
+                                                                    {item.customizations[key].length > 0 &&
+                                                                        <>
+                                                                            <Text className='text-xs font-medium pt-0.5 text-gray-400'
+                                                                            // style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                                                            >
+                                                                                {key}
+                                                                            </Text>
+                                                                            <Text className='text-xs font-medium pb-0.5'
+                                                                                style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                                                            >
+                                                                                {item.customizations[key]}
+                                                                            </Text>
+                                                                        </>
+                                                                    }
+
+                                                                </VStack>
+                                                            ))}
+                                                        </VStack>
+
+
+                                                    </VStack>
+
+                                                    <>
+                                                        <VStack className='items-center'>
+                                                            <TouchableOpacity onPress={() => removeWithCustomizations(item.quantity, item.customizations, item.name)} className=''>
+                                                                <HStack className='p-2'
+                                                                    style={[colorScheme == 'light' ? Styles.LightAddButtonFinal : Styles.DarkAddButtonFinal]}
+                                                                >
+                                                                    <Text className='text-md font-medium text-center self-center w-full' style={{ color: 'white' }}>
+                                                                        Remove x{item.quantity}
+                                                                    </Text>
+                                                                </HStack>
+                                                            </TouchableOpacity>
+                                                            <Text allowFontScaling={false} className='mt-1 text-xs font-normal'
+                                                                style={[colorScheme == 'light' ? { color: 'rgb(156, 163, 175)' } : { color: 'rgb(107, 114, 128)' }]}
+                                                            >
+                                                                Customizable
+                                                            </Text>
+                                                        </VStack>
+                                                    </>
+
+
+
+                                                </HStack>
+                                            </>
+                                        ))}
+
+
+                                    </VStack>
+
+                                }
+
+
+                            </ScrollView>
+
+                        }
+
+                        {sheetLoading &&
+                            <VStack className='w-full py-3 space-y-1'>
+                                <VStack className='w-full py-3 space-y-2'>
+                                    <Skeleton h='10' rounded='md' className='w-11/12 self-center '
+                                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                    <Skeleton rounded='md' className='w-11/12 h-28 self-center '
+                                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                </VStack>
+                                <HStack className='w-11/12 self-center justify-between py-2 space-x-2 items-center'>
+                                    <Skeleton h='12' rounded='md' className='w-2/6 self-center '
+                                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                    <Skeleton rounded='md' className='w-7/12 h-12 self-center '
+                                        startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                                        endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
+                                </HStack>
+                            </VStack>
+                        }
+
+                    </Actionsheet.Content>
+                </Actionsheet>
+
             }
         </>
     );

@@ -179,48 +179,6 @@ const BasketScreen = () => {
         })
     };
 
-    // const checkUnavailableItems = async () => {
-    //     var checkArray = 'The following items were removed from your cart as they became unavailable: '
-
-    //     for (const basketRestaurant of Basket) {
-    //         try {
-    //             const response = await fetch(`http://${IP}:8800/api/items/${basketRestaurant.name}`)
-    //             const data = await response.json()
-    //             var TempFetchedUnavailableItems = []
-    //             var unavailableItemsInCart = ''
-    //             var flag = 0
-    //             if (data) {
-    //                 data.map((item, index) => {
-    //                     TempFetchedUnavailableItems.push(item.name)
-    //                 })
-    //                 items.map((item, index) => {
-    //                     if (TempFetchedUnavailableItems.includes(item.name)) {
-    //                         flag = 1
-    //                         if (unavailableItemsInCart.length == 0) {
-    //                             unavailableItemsInCart = unavailableItemsInCart.concat('', item.name)
-    //                         } else {
-    //                             unavailableItemsInCart = unavailableItemsInCart.concat(', ', item.name)
-    //                         }
-    //                         dispatch(removeFromCart({ id: item.id, name: item.name, Price: item.Price, image: item.image, Restaurant: item.Restaurant, Veg_NonVeg: item.Veg_NonVeg, quantity: 0 }))
-    //                     }
-    //                 })
-    //                 if (flag == 1) {
-    //                     unavailableItemsInCart = unavailableItemsInCart.concat(' from ', basketRestaurant.name)
-    //                 }
-    //             }
-    //             if (unavailableItemsInCart.length > 0) {
-    //                 checkArray = checkArray.concat('\n', `${unavailableItemsInCart}`)
-    //             } else {
-    //                 checkArray.concat('', '')
-    //             }
-    //         } catch (error) {
-    //             console.error('Error while fetching unavailable items on cart screen' + error)
-    //         }
-    //     }
-
-    //     return checkArray
-    // }
-
     const checkUnavailableItems = async () => { //ChatGPT Optimised
         let checkArray = 'The following items were removed from your cart as they became unavailable:\n';
 
@@ -234,7 +192,7 @@ const BasketScreen = () => {
                     .filter((item) => fetchedUnavailableItems.includes(item.name))
                     .map((item) => item.name);
 
-                for (const unavailableItem of unavailableItemsInCart) {
+                for (const item of unavailableItemsInCart) {
                     dispatch(
                         removeFromCart({
                             id: item.id,
@@ -281,137 +239,6 @@ const BasketScreen = () => {
         return null; // Return null or any default value if the restaurant is not found
     };
 
-    // useMemo(async () => {
-    //     console.log('MEMO RUNNING AGAIN YAY')
-    //     setFetching(true)
-
-    //     var UniqueRestaurantsInCart = []
-
-    //     for (i = 0; i < items.length; i++) {
-    //         if (UniqueRestaurantsInCart.length == 0) {
-    //             UniqueRestaurantsInCart.push(items[i]["Restaurant"])
-    //         }
-    //         else {
-    //             for (j = 0; j < UniqueRestaurantsInCart.length; j++) {
-    //                 if (UniqueRestaurantsInCart.filter((x) => (x === items[i]["Restaurant"])).length == 0) {
-    //                     UniqueRestaurantsInCart.push(items[i]["Restaurant"])
-    //                 }
-    //             }
-    //         }
-    //     }
-
-    //     var TempBasket = []
-
-    //     for (i = 0; i < UniqueRestaurantsInCart.length; i++) {
-    //         let UniqueRestaurantMiniCart = {
-    //             name: UniqueRestaurantsInCart[i],
-    //             items: [],
-    //             instructions: '',
-    //             restaurantTotal: 0
-    //         }
-    //         TempBasket.push(UniqueRestaurantMiniCart)
-    //     }
-
-    //     TempBasket.map((RestaurantMiniCart, index) => {
-    //         items.map((item, index) => {
-    //             if (item['Restaurant'] == RestaurantMiniCart.name) {
-    //                 if (RestaurantMiniCart.items.length == 0) {
-    //                     RestaurantMiniCart.items.push(item)
-    //                 }
-    //                 else {
-    //                     for (j = 0; j < RestaurantMiniCart.items.length; j++) {
-    //                         if (RestaurantMiniCart.items.filter((x) => (x.name === item.name)).length === 0) {
-    //                             RestaurantMiniCart.items.push(item)
-    //                         }
-    //                     }
-    //                 }
-    //                 RestaurantMiniCart['restaurantTotal'] += (item.Price * item.quantity)
-    //             }
-    //         })
-    //     })
-
-    //     var TempCartTotal = 0
-    //     TempBasket.map((BasketRestaurant, index) => {
-    //         // console.log(BasketRestaurant.name)
-    //         var Subtotal = 0
-    //         var FinalTotal = 0
-    //         BasketRestaurant.items.map((item, index) => {
-    //             Subtotal = Subtotal + (item.Price * item.quantity)
-    //         })
-    //         if (BasketRestaurant.name == 'Roti Boti') {
-    //             var GSTtotal = (Math.round(Subtotal * (1.05) * 100) / 100).toFixed(2)
-    //             FinalTotal = ((Math.round(GSTtotal * 100) / 100) + (Math.round(deliveryCharges[BasketRestaurant.name] * 100) / 100)).toFixed(2)
-    //             // console.log((Math.round(FinalTotal * 100) / 100).toFixed(2))
-    //         }
-    //         else {
-    //             FinalTotal = ((Math.round(Subtotal * 100) / 100) + (Math.round(deliveryCharges[BasketRestaurant.name] * 100) / 100))
-    //             // console.log((Math.round(FinalTotal * 100) / 100).toFixed(2))
-    //         }
-    //         TempCartTotal = ((Math.round(TempCartTotal * 100) / 100) + (Math.round(FinalTotal * 100) / 100)).toFixed(2)
-    //         BasketRestaurant.restaurantTotal = Subtotal
-    //     })
-    //     setCartTotal(TempCartTotal)
-
-    //     client
-    //         .fetch(query)
-    //         .then((data) => {
-    //             var TempFinalBasket = []
-    //             TempFinalBasket = TempBasket
-    //             let FoodVillageInCart = false
-    //             data.map((restaurant, index) => {
-    //                 TempFinalBasket.map((basketRestaurant, index) => {
-    //                     if (restaurant.name == basketRestaurant.name) {
-    //                         basketRestaurant['image'] = restaurant.image
-    //                     }
-    //                     if (basketRestaurant.name == 'Chaat Stall') {
-    //                         FoodVillageInCart = true
-    //                     }
-    //                 })
-    //             })
-    //             if (FoodVillageInCart) {
-    //                 setDeliveryOptions([
-    //                     { location: 'RH1', icon: RH },
-    //                     { location: 'RH2', icon: RH },
-    //                     { location: 'RH3', icon: RH },
-    //                     { location: 'RH4', icon: RH },
-    //                     { location: 'RH5', icon: RH },
-    //                 ])
-    //             }
-    //             else {
-    //                 setDeliveryOptions([
-    //                     { location: 'RH1', icon: RH },
-    //                     { location: 'RH2', icon: RH },
-    //                     { location: 'RH3', icon: RH },
-    //                     { location: 'RH4', icon: RH },
-    //                     { location: 'RH5', icon: RH },
-    //                     { location: 'Library AC04', icon: AC04 },
-    //                     { location: 'Sports Block', icon: SportsBlock },
-    //                     { location: 'Mess', icon: Mess },
-    //                 ])
-    //             }
-    //             setOrderTypeOptions([
-    //                 { option: 'Delivery', icon: FoodDelivery },
-    //                 { option: 'Dine In', icon: DineIn },
-    //             ])
-    //             setPaymentOptions([
-    //                 { option: 'Pay On Delivery', icon: COD },
-    //                 { option: 'Pay At Outlet', icon: PayAtRestaurant },
-    //             ])
-    //             setFinalBasket(TempFinalBasket)
-    //             setFinalBasketReady(true)
-    //             setFetching(false)
-    //         })
-    //         .catch((error) => {
-    //             console.log('Error:', error); // Log any errors that occur
-    //         });
-
-    //     // let itemsCheck = await checkUnavailableItems();
-    //     // if (itemsCheck != 'The following items were removed from your cart as they became unavailable: ') {
-    //     //     Alert.alert(itemsCheck)
-    //     // }
-
-    // }, [items]);
-
     useMemo(async () => { //ChatGPT Optimised
         console.log('MEMO RUNNING AGAIN YAY');
         setFetching(true);
@@ -434,9 +261,7 @@ const BasketScreen = () => {
         tempBasket.forEach((restaurantMiniCart) => {
             items.forEach((item) => {
                 if (item.Restaurant === restaurantMiniCart.name) {
-                    if (!restaurantMiniCart.items.some((existingItem) => existingItem.name === item.name)) {
-                        restaurantMiniCart.items.push(item);
-                    }
+                    restaurantMiniCart.items.push(item);
                     restaurantMiniCart.restaurantTotal += item.Price * item.quantity;
                 }
             });
@@ -1255,64 +1080,141 @@ const BasketScreen = () => {
                                             {
                                                 BasketRestaurant.items.map((dish, index) => (
                                                     <>
+                                                        {dish.hasOwnProperty('customizations') ?
+                                                            <>
+                                                                <HStack className='items-center w-11/12 justify-between py-2 rounded-lg' style={[colorScheme == 'light' ? Styles.LightBGSec : Styles.DarkBGSec]}>
+
+                                                                    <VStack style={{ marginLeft: '2%' }} className='w-8/12'>
+                                                                        <HStack className='items-center space-x-1'>
+                                                                            {dish.Veg_NonVeg === "Veg" ? (
+                                                                                <Image
+                                                                                    style={{ width: 15, height: 15, resizeMode: "contain" }}
+                                                                                    source={VegIcon}
+                                                                                />
+                                                                            ) : (
+                                                                                <Image
+                                                                                    style={{ width: 15, height: 15, resizeMode: "contain" }}
+                                                                                    source={NonVegIcon}
+                                                                                />
+                                                                            )}
+                                                                            <Text className='text-md font-normal py-1.5' allowFontScaling={false}
+                                                                                style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                                                            >
+                                                                                {dish.name}
+                                                                            </Text>
+
+                                                                        </HStack>
+                                                                        {dish.quantity > 1 ?
+                                                                            <Text className='pl-4 text-sm font-normal' allowFontScaling={false}
+                                                                                style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                                                            >
+                                                                                ₹{(dish.Price).toFixed(2) * dish.quantity} (₹{(dish.Price).toFixed(2)}x{dish.quantity})
+                                                                            </Text>
+                                                                            :
+                                                                            <Text className='pl-4 text-sm font-normal' allowFontScaling={false}
+                                                                                style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                                                            >
+                                                                                ₹{(dish.Price).toFixed(2)}
+                                                                            </Text>
+                                                                        }
+
+                                                                        <VStack className='py-1 pl-4'>
+                                                                            {dish.customizations && Object.keys(dish.customizations).map(key => (
+                                                                                <VStack>
+                                                                                    {dish.customizations[key].length > 0 &&
+                                                                                        <>
+                                                                                            <Text className='text-xs font-medium pt-0.5 text-gray-400'
+                                                                                            // style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                                                                            >
+                                                                                                {key}
+                                                                                            </Text>
+                                                                                            <Text className='text-xs font-medium pb-0.5'
+                                                                                                style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                                                                            >
+                                                                                                {dish.customizations[key].replace(dish.name, '').trim()}
+                                                                                            </Text>
+                                                                                        </>
+                                                                                    }
+
+                                                                                </VStack>
+                                                                            ))}
+                                                                        </VStack>
+
+                                                                    </VStack>
+
+                                                                    {
+
+                                                                        <Text allowFontScaling={false} className='text-xs font-normal w-24 text-center'
+                                                                            style={[colorScheme == 'light' ? { color: 'rgb(156, 163, 175)' } : { color: 'rgb(107, 114, 128)' }]}
+                                                                        >
+                                                                            Customizable from outlet screen
+                                                                        </Text>
+
+                                                                    }
+
+                                                                </HStack>
+                                                            </>
+                                                            :
+                                                            <>
+                                                                <HStack className='items-center justify-between py-2 rounded-lg' style={[colorScheme == 'light' ? Styles.LightBGSec : Styles.DarkBGSec]}>
+
+                                                                    <VStack style={{ marginLeft: '2%' }}>
+                                                                        <HStack className='items-center space-x-1'>
+                                                                            {dish.Veg_NonVeg === "Veg" ? (
+                                                                                <Image
+                                                                                    style={{ width: 15, height: 15, resizeMode: "contain" }}
+                                                                                    source={VegIcon}
+                                                                                />
+                                                                            ) : (
+                                                                                <Image
+                                                                                    style={{ width: 15, height: 15, resizeMode: "contain" }}
+                                                                                    source={NonVegIcon}
+                                                                                />
+                                                                            )}
+                                                                            <Text className='text-md font-normal py-1.5' allowFontScaling={false}
+                                                                                style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                                                            >
+                                                                                {dish.name}
+                                                                            </Text>
+
+                                                                        </HStack>
+                                                                        {dish.quantity > 1 ?
+                                                                            <Text className='pl-4 text-sm font-normal' allowFontScaling={false}
+                                                                                style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                                                            >
+                                                                                ₹{(dish.Price).toFixed(2) * dish.quantity} (₹{(dish.Price).toFixed(2)}x{dish.quantity})
+                                                                            </Text>
+                                                                            :
+                                                                            <Text className='pl-4 text-sm font-normal' allowFontScaling={false}
+                                                                                style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                                                            >
+                                                                                ₹{(dish.Price).toFixed(2)}
+                                                                            </Text>
+                                                                        }
+                                                                    </VStack>
+
+                                                                    {
+                                                                        <HStack
+                                                                            style={[colorScheme == 'light' ? Styles.LightAddButtonFinalOrder : Styles.DarkAddButtonFinalOrder]}
+                                                                        >
+                                                                            <TouchableOpacity onPress={() => { removeItem(dish.id, dish.name, dish.Price, dish.image, dish.Restaurant, dish.Veg_NonVeg) }} className='p-3 px-2'>
+                                                                                <MinusIcon size={16} color='white' />
+                                                                            </TouchableOpacity>
+
+                                                                            <Text allowFontScaling={false} className='text-base font-medium' style={{ color: 'white' }}>
+                                                                                {dish.quantity}
+                                                                            </Text>
+
+                                                                            <TouchableOpacity onPress={() => { addItem(dish.id, dish.name, dish.Price, dish.image, dish.Restaurant, dish.Veg_NonVeg) }} className='p-3 px-2'>
+                                                                                <PlusIcon size={16} color='white' />
+                                                                            </TouchableOpacity>
+                                                                        </HStack>
+                                                                    }
+
+                                                                </HStack>
+                                                            </>
+                                                        }
                                                         {/* <DishRow name={dish.name} Price={dish.Price} Veg_NonVeg={dish.Veg_NonVeg} key={dish._id} id={dish._id} Restaurant={dish.Restaurant} delivery='Yes'/> */}
-                                                        <HStack className='items-center justify-between py-2 rounded-lg' style={[colorScheme == 'light' ? Styles.LightBGSec : Styles.DarkBGSec]}>
-
-                                                            <VStack style={{ marginLeft: '2%' }}>
-                                                                <HStack className='items-center space-x-1'>
-                                                                    {dish.Veg_NonVeg === "Veg" ? (
-                                                                        <Image
-                                                                            style={{ width: 15, height: 15, resizeMode: "contain" }}
-                                                                            source={VegIcon}
-                                                                        />
-                                                                    ) : (
-                                                                        <Image
-                                                                            style={{ width: 15, height: 15, resizeMode: "contain" }}
-                                                                            source={NonVegIcon}
-                                                                        />
-                                                                    )}
-                                                                    <Text className='text-md font-normal py-1.5' allowFontScaling={false}
-                                                                        style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
-                                                                    >
-                                                                        {dish.name}
-                                                                    </Text>
-
-                                                                </HStack>
-                                                                {dish.quantity > 1 ?
-                                                                    <Text className='pl-4 text-sm font-normal' allowFontScaling={false}
-                                                                        style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
-                                                                    >
-                                                                        ₹{dish.Price * dish.quantity} (₹{dish.Price}x{dish.quantity})
-                                                                    </Text>
-                                                                    :
-                                                                    <Text className='pl-4 text-sm font-normal' allowFontScaling={false}
-                                                                        style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
-                                                                    >
-                                                                        ₹{dish.Price}
-                                                                    </Text>
-                                                                }
-                                                            </VStack>
-
-
-                                                            {
-                                                                <HStack
-                                                                    style={[colorScheme == 'light' ? Styles.LightAddButtonFinalOrder : Styles.DarkAddButtonFinalOrder]}
-                                                                >
-                                                                    <TouchableOpacity onPress={() => { removeItem(dish.id, dish.name, dish.Price, dish.image, dish.Restaurant, dish.Veg_NonVeg) }} className='p-3 px-2'>
-                                                                        <MinusIcon size={16} color='white' />
-                                                                    </TouchableOpacity>
-
-                                                                    <Text allowFontScaling={false} className='text-base font-medium' style={{ color: 'white' }}>
-                                                                        {dish.quantity}
-                                                                    </Text>
-
-                                                                    <TouchableOpacity onPress={() => { addItem(dish.id, dish.name, dish.Price, dish.image, dish.Restaurant, dish.Veg_NonVeg) }} className='p-3 px-2'>
-                                                                        <PlusIcon size={16} color='white' />
-                                                                    </TouchableOpacity>
-                                                                </HStack>
-                                                            }
-
-                                                        </HStack>
                                                     </>
                                                 ))
                                             }
@@ -1566,7 +1468,7 @@ const BasketScreen = () => {
                                                                     Total Amount
                                                                 </Text>
                                                             </HStack>
-                                                            {(BasketRestaurant.name == 'Roti Boti' || BasketRestaurant.name == 'Subway' || BasketRestaurant.name == 'Chicago Pizza') ?
+                                                            {(BasketRestaurant.name == 'Roti Boti') ?
                                                                 <Text allowFontScaling={false} className='font-semibold text-md'
                                                                     style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
                                                                 >
@@ -1642,7 +1544,7 @@ const BasketScreen = () => {
                                                             {BasketRestaurant.name}
                                                         </Text>
                                                     </HStack>
-                                                    {(BasketRestaurant.name == 'Roti Boti' || BasketRestaurant.name == 'Subway' || BasketRestaurant.name == 'Chicago Pizza') ?
+                                                    {(BasketRestaurant.name == 'Roti Boti') ?
                                                         <Text allowFontScaling={false} className='font-normal text-sm'
                                                             style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
                                                         >
@@ -1766,7 +1668,7 @@ const BasketScreen = () => {
                                                             Grand Total
                                                         </Text>
                                                     </HStack>
-                                                    {(BasketRestaurant.name == 'Roti Boti' || BasketRestaurant.name == 'Subway' || BasketRestaurant.name == 'Chicago Pizza') ?
+                                                    {(BasketRestaurant.name == 'Roti Boti') ?
                                                         <Text allowFontScaling={false} className='font-semibold text-md'
                                                             style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
                                                         >
@@ -1796,7 +1698,7 @@ const BasketScreen = () => {
                                 <Text className='text-xs' allowFontScaling={false}
                                     style={[colorScheme == 'light' ? Styles.LightTextSecondary : Styles.DarkTextSecondary]}
                                 >
-                                    You will not have the option to cancel the order through the app once placed. 
+                                    You will not have the option to cancel the order through the app once placed.
                                     You can directly call the outlet to ask them to decline the order from their end if do wish to cancel.
                                 </Text>
                             </View>

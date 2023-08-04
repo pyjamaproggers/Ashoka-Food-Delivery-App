@@ -22,7 +22,7 @@ export const cartSlice = createSlice({
         },
         updateCartAddCustomized: (state, action) => {
             const stateUpdated = state.items.map((item) => {
-                if (item.name === action.payload.dishName && objectsAreEqual(item.customizations,action.payload.customizations)) {
+                if (item.name === action.payload.dishName && objectsAreEqual(item.customizations, action.payload.customizations)) {
                     return {
                         ...item,
                         quantity: action.payload.newQuantity,
@@ -47,18 +47,29 @@ export const cartSlice = createSlice({
             state.items = [...stateUpdated]
         },
         updateCartRemoveCustomized: (state, action) => {
-            console.log('HERERE NIGA')
+            console.log(action.payload)
             const stateUpdated = state.items.map((item) => {
-                if (item.name === action.payload.dishName && objectsAreEqual(item.customizations,action.payload.customizations)) {
-                    return {
-                        ...item,
-                        quantity: --item.quantity,
-                    };
-                } else {
-                    return item;
+                console.log('state item: ' + item)
+                if ((item.name === action.payload.dishName)) {
+                    if (item.customizations && objectsAreEqual(item.customizations, action.payload.customizations) == false) {
+                        if (item !== undefined) {
+                            return item
+                        }
+                    }
+                }
+                else {
+                    if (item !== undefined) {
+                        return item
+                    }
                 }
             });
-            state.items = [...stateUpdated]
+            let finalState = stateUpdated.filter(e=>e!==undefined)
+            if (finalState) {
+                state.items = [...finalState]
+            }
+            else {
+                state.items = []
+            }
         },
         addToCart: (state, action) => {
             state.items = [...state.items, action.payload];
