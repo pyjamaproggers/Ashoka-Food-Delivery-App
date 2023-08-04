@@ -2,7 +2,7 @@ import { View, Text, TouchableOpacity, Image, useColorScheme, ScrollView, Activi
 import React, { useEffect, useMemo, useState } from "react";
 import { urlFor } from "../sanity";
 import { MinusCircleIcon, PlusCircleIcon, PlusSmallIcon, PlusIcon, MinusIcon, XMarkIcon } from "react-native-heroicons/solid";
-import { addToCart, removeFromCart, selectCartItems } from "../reduxslices/cartslice";
+import { addToCart, removeFromCart, selectCartItems, updateCartAdd, updateCartRemove, updateCartAddCustomized, updateCartRemoveCustomized } from "../reduxslices/cartslice";
 import { useDispatch, useSelector } from "react-redux";
 import VegIcon from '../assets/vegicon.png';
 import NonVegIcon from '../assets/nonvegicon.png';
@@ -37,108 +37,199 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
         if (items.length == 0) {
             currentQuantity = 0
             additemQ = currentQuantity + 1
-            setItemQuantity(currentQuantity + 1)
             dispatch(addToCart({ id, name, Price, image, Restaurant, Veg_NonVeg, quantity: additemQ }));
         }
         else {
             if (items.filter((x) => (x.name == name)).length == 0) {
                 currentQuantity = 0
                 additemQ = currentQuantity + 1
-                setItemQuantity(currentQuantity + 1)
                 dispatch(addToCart({ id, name, Price, image, Restaurant, Veg_NonVeg, quantity: additemQ }));
             }
             else {
                 items.map((item) => {
                     if (item.name == name) {
+                        console.log('coming here')
                         currentQuantity = item.quantity
                         additemQ = currentQuantity + 1
-                        setItemQuantity(currentQuantity + 1)
-                        dispatch(addToCart({ id, name, Price, image, Restaurant, Veg_NonVeg, quantity: additemQ }));
-                        dispatch(removeFromCart({ id, name, Price, image, Restaurant, Veg_NonVeg, quantity: currentQuantity }));
+                        // dispatch(addToCart({ id, name, Price, image, Restaurant, Veg_NonVeg, quantity: additemQ }));
+                        // dispatch(removeFromCart({ id, name, Price, image, Restaurant, Veg_NonVeg, quantity: currentQuantity }));
+                        dispatch(updateCartAdd({ newQuantity: additemQ, dishName: item.name }))
                     }
                 })
             }
         };
-    }
+    };
 
+    const removeItem = () => {
+        console.log(name)
+        Price = parseFloat(Price)
+        var currentQuantity
+        var additemQ
+        console.log('cominghere')
+        items.map((item) => {
+            if (item.name == name && item.quantity == 1) {
+                currentQuantity = 1
+                dispatch(removeFromCart({ id, name, Price, image, Restaurant, Veg_NonVeg, quantity: currentQuantity }));
+            }
+            if (item.name == name && item.quantity >= 1) {
+                console.log('coming here')
+                currentQuantity = item.quantity
+                additemQ = currentQuantity - 1
+                // dispatch(addToCart({ id, name, Price, image, Restaurant, Veg_NonVeg, quantity: additemQ }));
+                // dispatch(removeFromCart({ id, name, Price, image, Restaurant, Veg_NonVeg, quantity: currentQuantity }));
+                dispatch(updateCartRemove({ newQuantity: additemQ, dishName: item.name }))
+            }
+        })
+    };
+    
     const addWithCustomizations = () => {
         Price = parseFloat(Price);
 
         var currentQuantity;
         var additemQ;
 
-        const userCustomizationsObject = {};
+        const tempUserCustomizationsObject = {};
         userCustomizations.forEach((value, key) => {
-            userCustomizationsObject[key] = value.selectedItems;
+            tempUserCustomizationsObject[key] = value.selectedItems;
         });
 
-        var additionalPrice = 0;
-        for (const key in userCustomizationsObject) {
-            if (Array.isArray(userCustomizationsObject[key])) {
-                userCustomizationsObject[key].forEach(itemName => {
-                    const selectedCustomization = Customizations.find(c => c.name === itemName);
-                    if (selectedCustomization) {
-                        additionalPrice += selectedCustomization.Price;
+        let userCustomizationsObject = {};
+        for (const genre in tempUserCustomizationsObject) {
+            const items = tempUserCustomizationsObject[genre];
+
+            if (Array.isArray(items)) {
+                let customizationString = '';
+                items.forEach((itemObject, index) => {
+                    if (index === 0) {
+                        customizationString = itemObject.name;
+                    } else {
+                        customizationString += ', ' + itemObject.name;
                     }
                 });
+                userCustomizationsObject[genre] = customizationString;
             } else {
-                console.log(typeof (userCustomizationsObject[key]))
-                const itemName = userCustomizationsObject[key];
-                console.log(itemName)
-                const selectedCustomization = Customizations.find(c => c.name === itemName);
-                if (selectedCustomization) {
-                    additionalPrice += selectedCustomization.Price;
-                    console.log(selectedCustomization.Price)
+                userCustomizationsObject[genre] = items.name;
+            }
+        }
+
+
+        if (items.length === 0) {
+            setItemQuantity(CDishQuantity);
+            dispatch(addToCart({ id, name, Price: CDishPrice, image, Restaurant, Veg_NonVeg, quantity: CDishQuantity, customizations: userCustomizationsObject }));
+            setCDishQuantity(1)
+            setShowCustomizationSheet(false);
+            setUserCustomizations(new Map())
+        } else {
+            if (items.filter((x) => (x.name === name)).length === 0) {
+                setItemQuantity(CDishQuantity);
+                dispatch(addToCart({ id, name, Price: CDishPrice, image, Restaurant, Veg_NonVeg, quantity: CDishQuantity, customizations: userCustomizationsObject }));
+                setCDishQuantity(1)
+                setShowCustomizationSheet(false);
+                setUserCustomizations(new Map())
+            } else {
+                let foundSameCustomizations = false
+                items.forEach((item) => {
+                    if (item.name === name) {
+                        console.log(objectsAreEqual(item.customizations, userCustomizationsObject))
+                        if (objectsAreEqual(item.customizations, userCustomizationsObject)) {
+                            console.log('FOUND EXACT SAME DISH W C ')
+                            foundSameCustomizations = true
+                            currentQuantity = item.quantity
+                            additemQ = currentQuantity + CDishQuantity
+                            setItemQuantity(additemQ)
+                            dispatch(updateCartAddCustomized({ newQuantity: additemQ, dishName: item.name, customizations: userCustomizationsObject }))
+                            setCDishQuantity(1)
+                            setShowCustomizationSheet(false);
+                            setUserCustomizations(new Map())
+                        }
+                    }
+                })
+                if (!foundSameCustomizations) {
+                    console.log('NOT FOUND')
+                    setItemQuantity(itemQuantity+CDishQuantity);
+                    dispatch(addToCart({ id, name, Price: CDishPrice, image, Restaurant, Veg_NonVeg, quantity: CDishQuantity, customizations: userCustomizationsObject }));
+                    setCDishQuantity(1)
+                    setShowCustomizationSheet(false);
+                    setUserCustomizations(new Map())
                 }
             }
         }
 
-        if (items.length === 0) {
-            currentQuantity = 0;
-            additemQ = currentQuantity + 1;
-            setItemQuantity(currentQuantity + 1);
-            dispatch(addToCart({ id, name, Price: Price + additionalPrice, image, Restaurant, Veg_NonVeg, quantity: additemQ, customizations: userCustomizationsObject }));
-        } else {
-            if (items.filter((x) => (x.name === name)).length === 0) {
-                currentQuantity = 0;
-                additemQ = currentQuantity + 1;
-                setItemQuantity(currentQuantity + 1);
-                dispatch(addToCart({ id, name, Price: Price + additionalPrice, image, Restaurant, Veg_NonVeg, quantity: additemQ, customizations: userCustomizationsObject }));
-            } else {
-                items.forEach((item) => {
-                    if (item.name === name) {
-                        currentQuantity = item.quantity;
-                        additemQ = currentQuantity + 1;
-                        setItemQuantity(currentQuantity + 1);
-                        dispatch(addToCart({ id, name, Price: Price + additionalPrice, image, Restaurant, Veg_NonVeg, quantity: additemQ, customizations: userCustomizationsObject }));
-                        dispatch(removeFromCart({ id, name, Price, image, Restaurant, Veg_NonVeg, quantity: currentQuantity, customizations: userCustomizationsObject }));
-                    }
-                });
-            }
-        }
-        console.log({ id, name, Price, image, Restaurant, Veg_NonVeg, quantity: currentQuantity, customizations: userCustomizationsObject })
-        setShowCustomizationSheet(false);
+        // console.log({ id, name, Price: CDishPrice, image, Restaurant, Veg_NonVeg, quantity: CDishQuantity, customizations: userCustomizationsObject })
+
     }
 
-    const removeItem = () => {
+    const removeWithCustomizations = () => {
+        console.log(name)
         Price = parseFloat(Price)
         var currentQuantity
         var additemQ
+
+
+        const tempUserCustomizationsObject = {};
+        userCustomizations.forEach((value, key) => {
+            tempUserCustomizationsObject[key] = value.selectedItems;
+        });
+
+        let userCustomizationsObject = {};
+        for (const genre in tempUserCustomizationsObject) {
+            const items = tempUserCustomizationsObject[genre];
+
+            if (Array.isArray(items)) {
+                let customizationString = '';
+                items.forEach((itemObject, index) => {
+                    if (index === 0) {
+                        customizationString = itemObject.name;
+                    } else {
+                        customizationString += ', ' + itemObject.name;
+                    }
+                });
+                userCustomizationsObject[genre] = customizationString;
+            } else {
+                userCustomizationsObject[genre] = items.name;
+            }
+        }
+
+
+        let removedItem = false
         items.map((item) => {
             if (item.name == name && item.quantity == 1) {
                 currentQuantity = 1
-                setItemQuantity(currentQuantity - 1)
                 dispatch(removeFromCart({ id, name, Price, image, Restaurant, Veg_NonVeg, quantity: currentQuantity }));
+                removedItem = true
             }
             if (item.name == name && item.quantity >= 1) {
+                console.log('coming here')
                 currentQuantity = item.quantity
                 additemQ = currentQuantity - 1
-                setItemQuantity(currentQuantity - 1)
-                dispatch(addToCart({ id, name, Price, image, Restaurant, Veg_NonVeg, quantity: additemQ }));
-                dispatch(removeFromCart({ id, name, Price, image, Restaurant, Veg_NonVeg, quantity: currentQuantity }));
+                // dispatch(addToCart({ id, name, Price, image, Restaurant, Veg_NonVeg, quantity: additemQ }));
+                // dispatch(removeFromCart({ id, name, Price, image, Restaurant, Veg_NonVeg, quantity: currentQuantity }));
+                dispatch(updateCartRemoveCustomized({ newQuantity: additemQ, dishName: item.name, customizations: userCustomizationsObject }))
+                removedItem = true
+            }
+            if(removedItem){
+
             }
         })
+
     };
+
+    function objectsAreEqual(obj1, obj2) {
+        const keys1 = Object.keys(obj1);
+        const keys2 = Object.keys(obj2);
+
+        if (keys1.length !== keys2.length) {
+            return false;
+        }
+
+        for (const key of keys1) {
+            if (obj1[key] !== obj2[key]) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 
     const fetchUnavailableItems = async () => {
         try {
@@ -226,7 +317,7 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
             if (genre === 'Sauces') {
                 tempUserCustomizations.set(genre, {
                     genre: genre,
-                    selectedItems: (customization.length > 3) ?
+                    selectedItems: (customization.length > 5) ?
                         tempUserCustomizations.get(genre).selectedItems
                         :
                         customization
@@ -258,8 +349,10 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
         }
         setCDishPrice(tempCDIshPrice)
 
-        setUserCustomizations(tempUserCustomizations)
+        // setUserCustomizations(tempUserCustomizations)
     }
+
+    console.log(items)
 
     useEffect(() => {
         if (items.length == 0) {
@@ -269,8 +362,20 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
             let dishNotFound = true
             items.map((item) => {
                 if (item.name == name) {
-                    dishNotFound = false
-                    setItemQuantity(item.quantity)
+                    if (item.hasOwnProperty('customizations')) {
+                        dishNotFound = false
+                        let cItemQ = 0
+                        items.map(item => {
+                            if (item.hasOwnProperty('customizations')) {
+                                cItemQ = cItemQ + item.quantity
+                            }
+                        })
+                        setItemQuantity(cItemQ)
+                    }
+                    else {
+                        dishNotFound = false
+                        setItemQuantity(item.quantity)
+                    }
                 }
             });
             if (dishNotFound) {
@@ -393,7 +498,7 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
                                         <HStack
                                             style={[colorScheme == 'light' ? Styles.LightAddButtonFinal : Styles.DarkAddButtonFinal]}
                                         >
-                                            <TouchableOpacity onPress={removeItem} className='p-3 px-2'>
+                                            <TouchableOpacity onPress={removeWithCustomizations} className='p-3 px-2'>
                                                 <MinusIcon size={16} color='white' />
                                             </TouchableOpacity>
 
@@ -401,7 +506,7 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
                                                 {itemQuantity}
                                             </Text>
 
-                                            <TouchableOpacity onPress={() => setShowCustomizationSheet(true)} className='p-3 px-2'>
+                                            <TouchableOpacity onPress={() => segregateCustomizations() } className='p-3 px-2'>
                                                 <PlusIcon size={16} color='white' />
                                             </TouchableOpacity>
                                         </HStack>
@@ -701,6 +806,7 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
                                     >
                                         <TouchableOpacity onPress={() => {
                                             // addWithCustomizations invocation
+                                            addWithCustomizations()
                                         }} className='px-0.5 py-0.5 flex-row items-center justify-evenly w-11/12'>
                                             <Image
                                                 style={{ width: 20, height: 20, resizeMode: "contain", }}
@@ -710,14 +816,14 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
                                                 <Text allowFontScaling={false} className='font-medium text-base'
                                                     style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
                                                 >
-                                                    Add Item (₹{CDishPrice * CDishQuantity})
+                                                    Add Item (₹{(CDishPrice * CDishQuantity).toFixed(2)})
                                                 </Text>
                                             }
                                             {CDishQuantity > 1 &&
                                                 <Text allowFontScaling={false} className='font-medium text-base'
                                                     style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
                                                 >
-                                                    Add Items (₹{CDishPrice * CDishQuantity})
+                                                    Add Items (₹{(CDishPrice * CDishQuantity).toFixed(2)})
                                                 </Text>
                                             }
                                         </TouchableOpacity>

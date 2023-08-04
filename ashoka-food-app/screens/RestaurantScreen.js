@@ -23,6 +23,8 @@ import { useNetInfo } from "@react-native-community/netinfo";
 import { Alert, CloseIcon, HStack, IconButton, PresenceTransition, Slide, VStack } from 'native-base';
 import Warning from '../assets/warning.png'
 import { addToCart, removeFromCart, selectCartItems, selectCartTotal } from "../reduxslices/cartslice";
+import { Provider } from 'react-redux';
+import { store } from '../store.js';
 
 const RestaurantScreen = () => {
     const [Transitions, setTransitions] = useState(true)
@@ -557,7 +559,8 @@ const RestaurantScreen = () => {
 
     return (
         <>
-            <CartIcon actualUser={actualUser}  />
+
+            <CartIcon actualUser={actualUser} store={store}/>
             <Slide in={!netInfo.isConnected} placement="top">
                 <Alert justifyContent="center" status="error" safeAreaTop={10}>
                     <HStack space={3}>

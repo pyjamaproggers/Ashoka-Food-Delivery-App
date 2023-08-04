@@ -18,7 +18,20 @@ export const cartSlice = createSlice({
                     return item;
                 }
             });
-            state.items=[...stateUpdated]
+            state.items = [...stateUpdated]
+        },
+        updateCartAddCustomized: (state, action) => {
+            const stateUpdated = state.items.map((item) => {
+                if (item.name === action.payload.dishName && objectsAreEqual(item.customizations,action.payload.customizations)) {
+                    return {
+                        ...item,
+                        quantity: action.payload.newQuantity,
+                    };
+                } else {
+                    return item;
+                }
+            });
+            state.items = [...stateUpdated]
         },
         updateCartRemove: (state, action) => {
             const stateUpdated = state.items.map((item) => {
@@ -31,7 +44,21 @@ export const cartSlice = createSlice({
                     return item;
                 }
             });
-            state.items=[...stateUpdated]
+            state.items = [...stateUpdated]
+        },
+        updateCartRemoveCustomized: (state, action) => {
+            console.log('HERERE NIGA')
+            const stateUpdated = state.items.map((item) => {
+                if (item.name === action.payload.dishName && objectsAreEqual(item.customizations,action.payload.customizations)) {
+                    return {
+                        ...item,
+                        quantity: --item.quantity,
+                    };
+                } else {
+                    return item;
+                }
+            });
+            state.items = [...stateUpdated]
         },
         addToCart: (state, action) => {
             state.items = [...state.items, action.payload];
@@ -51,7 +78,24 @@ export const cartSlice = createSlice({
     }
 })
 
-export const { addToCart, removeFromCart, updateCartAdd, updateCartRemove } = cartSlice.actions;
+function objectsAreEqual(obj1, obj2) {
+    const keys1 = Object.keys(obj1);
+    const keys2 = Object.keys(obj2);
+
+    if (keys1.length !== keys2.length) {
+        return false;
+    }
+
+    for (const key of keys1) {
+        if (obj1[key] !== obj2[key]) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+export const { addToCart, removeFromCart, updateCartAdd, updateCartRemove, updateCartAddCustomized, updateCartRemoveCustomized } = cartSlice.actions;
 
 export const selectCartItems = (state) => state.cart.items;
 

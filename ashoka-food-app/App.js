@@ -19,6 +19,7 @@ import LiveOrders from './screens/LiveOrders';
 import OrderHistory from './screens/OrderHistory';
 import EachOrder from './screens/EachOrder';
 import ManageSpendings from './screens/ManageSpendings';
+import DishRow from './screens/DishRow';
 
 setupURLPolyfill()
 const Stack = createNativeStackNavigator();

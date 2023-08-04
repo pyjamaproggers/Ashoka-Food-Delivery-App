@@ -13,15 +13,14 @@ import DishRow from '../screens/DishRow';
 import VegIcon from '../assets/vegicon.png';
 import NonVegIcon from '../assets/nonvegicon.png';
 import { XMarkIcon, PlusSmallIcon, PlusIcon, MinusIcon } from 'react-native-heroicons/solid';
+import { Provider } from 'react-redux';
 
-export default function CartIcon({ actualUser, }) {
+export default function CartIcon({ actualUser, store}) {
     const items = useSelector(selectCartItems)
-    const cartTotal = useSelector(selectCartTotal)
     const navigation = useNavigation()
     const colorScheme = useColorScheme()
     const windowHeight = Dimensions.get('window').height;
     const [showCartSheet, setShowCartSheet] = useState(false)
-    const dispatch = useDispatch();
 
     const [Basket, setBasket] = useState();
 
@@ -122,10 +121,11 @@ export default function CartIcon({ actualUser, }) {
 
         setBasket(TempBasket)
     }, [items]);
+    
     if (items.length === 0) return null
 
     return (
-        <>
+        <Provider store={store}>
             <SafeAreaView className="absolute bottom-0 w-screen z-20 " style={[colorScheme == 'light' ? Styles.LightCartButton : Styles.DarkCartButton]}>
                 <HStack className='justify-evenly items-center my-2' >
 
@@ -191,7 +191,7 @@ export default function CartIcon({ actualUser, }) {
             </SafeAreaView>
             {showCartSheet == true &&
                 <View>
-                    <SafeAreaView className="absolute bottom-0 w-screen z-20 " style={[colorScheme == 'light' ? Styles.LightCartButton : Styles.DarkCartButton]}>
+                    {/* <SafeAreaView className="absolute bottom-0 w-screen z-20 " style={[colorScheme == 'light' ? Styles.LightCartButton : Styles.DarkCartButton]}>
                         <HStack className='justify-evenly items-center my-2' >
 
                             <TouchableOpacity
@@ -253,7 +253,8 @@ export default function CartIcon({ actualUser, }) {
                             </TouchableOpacity>
 
                         </HStack >
-                    </SafeAreaView>
+                    </SafeAreaView> */}
+
                     <Actionsheet hideDragIndicator={true} isOpen={showCartSheet} onClose={() => { setShowCartSheet(!showCartSheet) }} size='full'
                     >
                         <TouchableOpacity className='p-3 rounded-full m-3' style={[colorScheme == 'light' ? Styles.LightBG : Styles.DarkBG]}
@@ -261,6 +262,7 @@ export default function CartIcon({ actualUser, }) {
                         >
                             <XMarkIcon size={20} style={[colorScheme == 'light' ? { color: '#0c0c0f' } : { color: '#f2f2f2' }]} />
                         </TouchableOpacity>
+
                         <Actionsheet.Content bgColor={colorScheme == 'light' ? "f2f2f2" : "#0c0c0f"} >
                             <View className='w-full' style={[colorScheme == 'light' ? Styles.LightBG : Styles.DarkBG]}>
                                 <Text className='self-center py-2 pl-2 text-lg font-medium'
@@ -342,222 +344,10 @@ export default function CartIcon({ actualUser, }) {
                                                 {
                                                     BasketRestaurant.items.map((dish, index) => (
                                                         <>
-                                                            {BasketRestaurant.items.length == 1 &&
-                                                                <HStack className='items-center rounded-lg justify-between w-full pt-2 pb-2 ' style={[colorScheme == 'light' ? Styles.LightBGSec : Styles.DarkBGSec]}>
-                                                                    {/* Dish Details Block */}
-                                                                    <VStack style={{ marginLeft: '2%' }}>
-                                                                        {dish.Veg_NonVeg === "Veg" ? (
-                                                                            <Image
-                                                                                style={{ width: 15, height: 15, resizeMode: "contain" }}
-                                                                                source={VegIcon}
-                                                                            />
-                                                                        ) : (
-                                                                            <Image
-                                                                                style={{ width: 15, height: 15, resizeMode: "contain" }}
-                                                                                source={NonVegIcon}
-                                                                            />
-                                                                        )}
+                                                            {console.log(dish)}
+                                                            {/* <DishRow name={dish.name} Price={dish.Price} Veg_NonVeg={dish.Veg_NonVeg} delivery={delivery} key={dish._id} id={dish._id} Restaurant={dish.Restaurant} Customizations={dish.Customizations} /> */}
+                                                            <DishRow name={dish.name} Price={dish.Price} Veg_NonVeg={dish.Veg_NonVeg} key={dish.id} id={dish.id} Restaurant={dish.Restaurant} Customizations={dish.customizations} />
 
-                                                                        <Text className='text-base font-medium py-1'
-                                                                            style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
-                                                                        >
-                                                                            {dish.name}
-                                                                        </Text>
-
-                                                                        <Text className='text-md'
-                                                                            style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
-                                                                        >
-                                                                            ₹{dish.Price}
-                                                                        </Text>
-
-                                                                    </VStack>
-
-                                                                    {/* Add/Minus BUtton Block */}
-
-                                                                    {
-                                                                        <HStack
-                                                                            style={[colorScheme == 'light' ? Styles.LightAddButtonFinal : Styles.DarkAddButtonFinal]}
-                                                                        >
-                                                                            <TouchableOpacity onPress={() => { removeItem(dish.id, dish.name, dish.Price, dish.image, dish.Restaurant, dish.Veg_NonVeg) }} className='p-3 px-2'>
-                                                                                <MinusIcon size={16} color='white' />
-                                                                            </TouchableOpacity>
-
-                                                                            <Text className='text-xl font-medium' style={{ color: 'white' }}>
-                                                                                {dish.quantity}
-                                                                            </Text>
-
-                                                                            <TouchableOpacity onPress={() => { addItem(dish.id, dish.name, dish.Price, dish.image, dish.Restaurant, dish.Veg_NonVeg) }} className='p-3 px-2'>
-                                                                                <PlusIcon size={16} color='white' />
-                                                                            </TouchableOpacity>
-                                                                        </HStack>
-                                                                    }
-
-                                                                </HStack>
-
-                                                            }
-
-                                                            {BasketRestaurant.items.length > 1 &&
-                                                                <>
-                                                                    {index == 0 &&
-                                                                        <HStack className='items-center justify-between w-full pt-2 pb-2 ' style={[colorScheme == 'light' ? { backgroundColor: '#f2f2f2', borderTopLeftRadius: 10, borderTopRightRadius: 10 } : { backgroundColor: '#262626', borderTopLeftRadius: 10, borderTopRightRadius: 10 }]}>
-                                                                            {/* Dish Details Block */}
-                                                                            <VStack style={{ marginLeft: '2%' }}>
-                                                                                {dish.Veg_NonVeg === "Veg" ? (
-                                                                                    <Image
-                                                                                        style={{ width: 15, height: 15, resizeMode: "contain" }}
-                                                                                        source={VegIcon}
-                                                                                    />
-                                                                                ) : (
-                                                                                    <Image
-                                                                                        style={{ width: 15, height: 15, resizeMode: "contain" }}
-                                                                                        source={NonVegIcon}
-                                                                                    />
-                                                                                )}
-
-                                                                                <Text className='text-base font-medium py-1'
-                                                                                    style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
-                                                                                >
-                                                                                    {dish.name}
-                                                                                </Text>
-
-                                                                                <Text className='text-md'
-                                                                                    style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
-                                                                                >
-                                                                                    ₹{dish.Price}
-                                                                                </Text>
-
-                                                                            </VStack>
-
-                                                                            {/* Add/Minus BUtton Block */}
-
-                                                                            {
-                                                                                <HStack
-                                                                                    style={[colorScheme == 'light' ? Styles.LightAddButtonFinal : Styles.DarkAddButtonFinal]}
-                                                                                >
-                                                                                    <TouchableOpacity onPress={() => { removeItem(dish.id, dish.name, dish.Price, dish.image, dish.Restaurant, dish.Veg_NonVeg) }} className='p-3 px-2'>
-                                                                                        <MinusIcon size={16} color='white' />
-                                                                                    </TouchableOpacity>
-
-                                                                                    <Text className='text-xl font-medium' style={{ color: 'white' }}>
-                                                                                        {dish.quantity}
-                                                                                    </Text>
-
-                                                                                    <TouchableOpacity onPress={() => { addItem(dish.id, dish.name, dish.Price, dish.image, dish.Restaurant, dish.Veg_NonVeg) }} className='p-3 px-2'>
-                                                                                        <PlusIcon size={16} color='white' />
-                                                                                    </TouchableOpacity>
-                                                                                </HStack>
-                                                                            }
-
-                                                                        </HStack>
-                                                                    }
-
-                                                                    {index != 0 && index != BasketRestaurant.items.length-1 &&
-                                                                        <HStack className='items-center justify-between w-full pt-2 pb-2 ' style={[colorScheme == 'light' ? { backgroundColor: '#f2f2f2' } : { backgroundColor: '#262626' }]}>
-                                                                            {/* Dish Details Block */}
-                                                                            <VStack style={{ marginLeft: '2%' }}>
-                                                                                {dish.Veg_NonVeg === "Veg" ? (
-                                                                                    <Image
-                                                                                        style={{ width: 15, height: 15, resizeMode: "contain" }}
-                                                                                        source={VegIcon}
-                                                                                    />
-                                                                                ) : (
-                                                                                    <Image
-                                                                                        style={{ width: 15, height: 15, resizeMode: "contain" }}
-                                                                                        source={NonVegIcon}
-                                                                                    />
-                                                                                )}
-
-                                                                                <Text className='text-base font-medium py-1'
-                                                                                    style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
-                                                                                >
-                                                                                    {dish.name}
-                                                                                </Text>
-
-                                                                                <Text className='text-md'
-                                                                                    style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
-                                                                                >
-                                                                                    ₹{dish.Price}
-                                                                                </Text>
-
-                                                                            </VStack>
-
-                                                                            {/* Add/Minus BUtton Block */}
-
-                                                                            {
-                                                                                <HStack
-                                                                                    style={[colorScheme == 'light' ? Styles.LightAddButtonFinal : Styles.DarkAddButtonFinal]}
-                                                                                >
-                                                                                    <TouchableOpacity onPress={() => { removeItem(dish.id, dish.name, dish.Price, dish.image, dish.Restaurant, dish.Veg_NonVeg) }} className='p-3 px-2'>
-                                                                                        <MinusIcon size={16} color='white' />
-                                                                                    </TouchableOpacity>
-
-                                                                                    <Text className='text-xl font-medium' style={{ color: 'white' }}>
-                                                                                        {dish.quantity}
-                                                                                    </Text>
-
-                                                                                    <TouchableOpacity onPress={() => { addItem(dish.id, dish.name, dish.Price, dish.image, dish.Restaurant, dish.Veg_NonVeg) }} className='p-3 px-2'>
-                                                                                        <PlusIcon size={16} color='white' />
-                                                                                    </TouchableOpacity>
-                                                                                </HStack>
-                                                                            }
-
-                                                                        </HStack>
-                                                                    }
-
-                                                                    {index == (BasketRestaurant.items.length-1) &&
-                                                                        <HStack className='items-center justify-between w-full pt-2 pb-2 ' style={[colorScheme == 'light' ? { backgroundColor: '#f2f2f2', borderBottomLeftRadius: 10, borderBottomRightRadius: 10 } : { backgroundColor: '#262626', borderBottomLeftRadius: 10, borderBottomRightRadius: 10 }]}>
-                                                                            {/* Dish Details Block */}
-                                                                            <VStack style={{ marginLeft: '2%' }}>
-                                                                                {dish.Veg_NonVeg === "Veg" ? (
-                                                                                    <Image
-                                                                                        style={{ width: 15, height: 15, resizeMode: "contain" }}
-                                                                                        source={VegIcon}
-                                                                                    />
-                                                                                ) : (
-                                                                                    <Image
-                                                                                        style={{ width: 15, height: 15, resizeMode: "contain" }}
-                                                                                        source={NonVegIcon}
-                                                                                    />
-                                                                                )}
-
-                                                                                <Text className='text-base font-medium py-1'
-                                                                                    style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
-                                                                                >
-                                                                                    {dish.name}
-                                                                                </Text>
-
-                                                                                <Text className='text-md'
-                                                                                    style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
-                                                                                >
-                                                                                    ₹{dish.Price}
-                                                                                </Text>
-
-                                                                            </VStack>
-
-                                                                            {/* Add/Minus BUtton Block */}
-
-                                                                            {
-                                                                                <HStack
-                                                                                    style={[colorScheme == 'light' ? Styles.LightAddButtonFinal : Styles.DarkAddButtonFinal]}
-                                                                                >
-                                                                                    <TouchableOpacity onPress={() => { removeItem(dish.id, dish.name, dish.Price, dish.image, dish.Restaurant, dish.Veg_NonVeg) }} className='p-3 px-2'>
-                                                                                        <MinusIcon size={16} color='white' />
-                                                                                    </TouchableOpacity>
-
-                                                                                    <Text className='text-xl font-medium' style={{ color: 'white' }}>
-                                                                                        {dish.quantity}
-                                                                                    </Text>
-
-                                                                                    <TouchableOpacity onPress={() => { addItem(dish.id, dish.name, dish.Price, dish.image, dish.Restaurant, dish.Veg_NonVeg) }} className='p-3 px-2'>
-                                                                                        <PlusIcon size={16} color='white' />
-                                                                                    </TouchableOpacity>
-                                                                                </HStack>
-                                                                            }
-
-                                                                        </HStack>
-                                                                    }
-                                                                </>
-                                                            }
                                                         </>
                                                     ))
                                                 }
@@ -567,7 +357,12 @@ export default function CartIcon({ actualUser, }) {
                                 </ScrollView>
                             }
 
+
+                        </Actionsheet.Content>
+
+                        {/* <SafeAreaView style={[colorScheme == 'light' ? Styles.LightBGSec : Styles.DarkBGSec]}>
                             <View className="bottom-0 w-screen"
+                                
                             >
                                 <HStack className='justify-evenly mt-2'>
 
@@ -631,12 +426,75 @@ export default function CartIcon({ actualUser, }) {
                                 </HStack >
 
                             </View >
+                        </SafeAreaView> */}
 
-                        </Actionsheet.Content>
+                        <SafeAreaView className=" bottom-0 w-screen z-20 " style={[colorScheme == 'light' ? Styles.LightCartButton : Styles.DarkCartButton]}>
+                            <HStack className='justify-evenly items-center my-2' >
+
+                                <TouchableOpacity
+                                    onPress={() => setShowCartSheet(!showCartSheet)}
+                                    className="py-2.5 flex-row items-center space-x-1"
+                                    style={Styles.ShowCartButton}
+                                >
+                                    <HStack className='items-center space-x-2'>
+                                        <Image
+                                            style={{ width: 20, height: 20, resizeMode: "contain", }}
+                                            source={Cart}
+                                        />
+                                        {totalItemsInCart == 1 &&
+                                            <Text className='text-md font-semibold text-black'
+                                                style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                            >
+                                                {totalItemsInCart} ITEM ADDED
+                                            </Text>
+                                        }
+                                        {totalItemsInCart > 1 &&
+                                            <Text className='text-md font-semibold text-black'
+                                                style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                            >
+                                                {totalItemsInCart} ITEMS ADDED
+                                            </Text>
+                                        }
+                                        {showCartSheet &&
+                                            <Image
+                                                style={{ width: 12, height: 12, resizeMode: "contain", }}
+                                                source={Chevrondown}
+                                            />
+                                        }
+                                        {!showCartSheet &&
+                                            <Image
+                                                style={{ width: 12, height: 12, resizeMode: "contain", }}
+                                                source={Chevronup}
+                                            />
+                                        }
+                                    </HStack>
+                                </TouchableOpacity>
+
+                                <TouchableOpacity
+                                    onPress={() => navigation.navigate('Cart', { actualUser, Basket })}
+                                    className="bg-[#3E5896] py-2.5 flex-row items-center space-x-1"
+                                    style={Styles.NextButton}
+                                >
+                                    <HStack className='items-center space-x-2'>
+                                        <Text className='text-xl font-semibold text-white' >
+                                            Next
+                                        </Text>
+                                        <View style={{ transform: [{ rotate: '90deg' }] }}>
+                                            <Image
+                                                style={{ width: 12, height: 12, resizeMode: "contain" }}
+                                                source={Chevronup}
+                                            />
+
+                                        </View>
+                                    </HStack>
+                                </TouchableOpacity>
+
+                            </HStack >
+                        </SafeAreaView>
                     </Actionsheet>
                 </View>
             }
 
-        </>
+        </Provider>
     )
 }
