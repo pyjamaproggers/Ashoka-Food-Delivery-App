@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, ScrollView, colorScheme, useColorScheme, TextInput, FlatList, Alert } from "react-native";
-import React, { useMemo, useState, useLayoutEffect, useRef } from "react";
+import React, { useMemo, useState, useLayoutEffect, useRef, useEffect } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { useSelector, useDispatch } from "react-redux";
 import { selectRestaurant } from "../reduxslices/restaurantSlice";
@@ -33,7 +33,7 @@ import COD from '../assets/cod.png'
 import { IP } from '@dotenv'
 import BrokenHeart from '../assets/brokenheart.png'
 import PayAtRestaurant from '../assets/payatrestaurant.png'
-
+import io from 'socket.io-client';
 
 const BasketScreen = () => {
     const colorScheme = useColorScheme()
@@ -62,6 +62,9 @@ const BasketScreen = () => {
     const [Fetching, setFetching] = useState()
 
     const [showSpinner, setShowSpinner] = useState(false)
+
+    const [latestItem, setLatestItem] = useState(null)
+    const [socket, setSocket] = useState(null)
 
     const colors = [
         'amber.400',
@@ -177,6 +180,25 @@ const BasketScreen = () => {
                 dispatch(updateCartRemove({ newQuantity: additemQ, dishName: item.name }))
             }
         })
+    };
+
+    const connectToSocket = () => {
+        const socket = io(`http://${IP}:8800`, {});
+
+        socket.on('connect', () => {
+            console.log('Connected to WebSocket');
+        });
+
+        socket.on('unavailableItemsListUpdated', async (item) => {
+            console.log("Unavailable Item List Updated")
+            setLatestItem(item)
+        });
+
+        socket.on('disconnect', () => {
+            console.log('WebSocket disconnected');
+        });
+
+        setSocket(socket);
     };
 
     const checkUnavailableItems = async () => { //ChatGPT Optimised
@@ -351,7 +373,7 @@ const BasketScreen = () => {
         // if (itemsCheck !== 'The following items were removed from your cart as they became unavailable: ') {
         //     Alert.alert(itemsCheck);
         // }
-    }, [items]);
+    }, [items, latestItem]);
 
 
     if (items.length == 0) { navigation.goBack() }

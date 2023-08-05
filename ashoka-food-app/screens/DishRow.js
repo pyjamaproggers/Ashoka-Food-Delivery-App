@@ -10,6 +10,7 @@ import Styles from "../components/Styles";
 import { HStack, VStack, Actionsheet, Radio, Checkbox, Skeleton } from "native-base";
 import { IP } from '@dotenv'
 import Cart from '../assets/carticon.png';
+import io from 'socket.io-client';
 
 const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Customizations }) => {
     const colorScheme = useColorScheme();
@@ -31,6 +32,8 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
 
     const [CDishVersionsInCart, setCDishVersionsInCart] = useState([])
     const [showCRemoveSheet, setShowCRemoveSheet] = useState(false)
+    const [latestItem, setLatestItem] = useState(null)
+    const [socket, setSocket] = useState(null)
 
     const addItem = () => {
         Price = parseFloat(Price)
@@ -203,6 +206,27 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
         }
     }
 
+    const connectToSocket = () => {
+        const socket = io(`http://${IP}:8800`, {});
+
+        socket.on('connect', () => {
+            console.log('Connected to WebSocket');
+        });
+
+        socket.on('unavailableItemsListUpdated', async (item) => {
+            console.log("Unavailable Item List Updated")
+            setLatestItem(item)
+        });
+
+        socket.on('disconnect', () => {
+            console.log('WebSocket disconnected');
+        });
+
+        setSocket(socket);
+    };
+
+    
+
     const segregateCustomizations = () => {
         setShowCustomizationSheet(true)
         setSheetLoading(true)
@@ -329,8 +353,6 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
     console.log(items)
 
     useEffect(() => {
-
-
         if (items.length == 0) {
             setItemQuantity(0)
         }
@@ -344,7 +366,14 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
             setItemQuantity(itemQ)
         }
         fetchUnavailableItems()
-    }, [items, userCustomizations])
+    }, [items, userCustomizations, latestItem])
+
+    useEffect(() => {
+        const fetchData = async () => {
+            connectToSocket();
+        };
+        fetchData();
+    }, []);
 
     return (
         <>
