@@ -1,6 +1,6 @@
 import React, { useLayoutEffect, useState } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { View, Text, Image, TouchableOpacity, StyleSheet, Touchable, useColorScheme } from 'react-native';
+import { View, Text, Image, TouchableOpacity, StyleSheet, Touchable, useColorScheme, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ArrowLeftIcon, ChartBarIcon, DocumentTextIcon, PowerIcon, PhoneIcon, ArrowRightIcon, ChevronRightIcon } from 'react-native-heroicons/solid';
 import Verified from '../assets/verified.png';
@@ -212,7 +212,8 @@ export default function UserScreen() {
                     <View className="py-4" style={[colorScheme == 'light' ? Styles.LightUserDetailsBorder : Styles.DarkUserDetailsBorder]}>
                         <TouchableOpacity
                             onPress={() => {
-                                navigation.navigate('ManageSpendings', { actualUser })
+                                // navigation.navigate('ManageSpendings', { actualUser })
+                                Alert.alert('This feature will be available soon. We first need some order data to work with.')
                             }}>
                             <View className="flex-row gap-2 items-center justify-between">
                                 <HStack className="items-center flex-row" space={2}>

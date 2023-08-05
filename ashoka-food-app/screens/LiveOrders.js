@@ -136,7 +136,7 @@ export default function LiveOrders() {
                 }
             })
             if (flag == 1) {
-                navigation.navigate('OrderHistory', { actualUser })
+                navigation.navigate('Home', { actualUser })
             }
             setUsersLiveOrders(liveOrders)
             setFetching(false)

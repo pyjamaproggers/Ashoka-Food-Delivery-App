@@ -471,7 +471,7 @@ const BasketScreen = () => {
 
         // Iterate over the FinalBasket array
         for (const BasketRestaurant of FinalBasket) {
-            console.log('Still coming here')
+            console.log(BasketRestaurant.items)
             // Calculate the subtotal and GST for the current restaurant
             const subtotal = BasketRestaurant.restaurantTotal;
             const gst = calculateGST(subtotal, BasketRestaurant.name);

@@ -132,12 +132,13 @@ export default function OrderHistory() {
             return;
         }
         const tempSearchedUserOrders = [];
+        let searchedLC = searched.toLowerCase()
         orders.forEach((order) => {
             if (
-                order.Restaurant.includes(searched) ||
-                order.orderStatus.includes(searched) ||
-                order.orderDate.includes(searched) ||
-                order.orderItems.some((item) => item.name.includes(searched))
+                order.Restaurant.includes(searchedLC) ||
+                order.orderStatus.includes(searchedLC) ||
+                order.orderDate.includes(searchedLC) ||
+                order.orderItems.some((item) => item.name.includes(searchedLC))
             ) {
                 tempSearchedUserOrders.push(order);
             }
@@ -265,21 +266,9 @@ export default function OrderHistory() {
 
                                                 <VStack>
                                                     <HStack className='py-1  space-x-2 px-2 items-center'>
-                                                        {loadingImage &&
-                                                            <Skeleton rounded='lg'
-                                                                startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                                                endColor={colorScheme == 'light' ? 'gray.300' : '#0c0c0f'}
-                                                                style={{
-                                                                    width: 15,
-                                                                    height: 15
-                                                                }}
-                                                            />
-                                                        }
                                                         <Image
                                                             style={{ width: 15, height: 15, resizeMode: "contain" }}
                                                             source={RestaurantIcon}
-                                                            onLoadStart={() => updateImageLoader(true)}
-                                                            onLoadEnd={() => updateImageLoader(false)}
                                                         />
                                                         <Text className='font-medium text-md'
                                                             style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
@@ -440,16 +429,6 @@ export default function OrderHistory() {
 
                                                 <VStack>
                                                     <HStack className='py-1 space-x-2 px-2 items-center'>
-                                                        {loadingImage &&
-                                                            <Skeleton rounded='lg'
-                                                                startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
-                                                                endColor={colorScheme == 'light' ? 'gray.300' : '#0c0c0f'}
-                                                                style={{
-                                                                    width: 15,
-                                                                    height: 15
-                                                                }}
-                                                            />
-                                                        }
                                                         <Image
                                                             style={{ width: 15, height: 15, resizeMode: "contain" }}
                                                             source={RestaurantIcon}
