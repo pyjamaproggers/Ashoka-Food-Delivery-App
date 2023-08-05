@@ -61,6 +61,7 @@ function VendorDashboard() {
     const [socket, setSocket] = useState(null);
     const [latestOrder, setLatestOrder] = useState(null);
     const [latestCompletedOrder, setLatestCompletedOrder] = useState(null);
+    const [latestOFDOrder, setLatestOFDOrder] = useState(null);
 
     const colorScheme = useColorScheme();
     const toast = useToast();
@@ -93,6 +94,12 @@ function VendorDashboard() {
             }
         });
 
+        socket.on('orderOutForDelivery', (order)=>{
+            if (order.Restaurant === selectedRestaurant) {
+                setLatestOFDOrder(order);
+            }
+        })
+
         socket.on('disconnect', () => {
             console.log('WebSocket disconnected');
         });
@@ -123,6 +130,18 @@ function VendorDashboard() {
             })
         }
     }, [latestCompletedOrder]);
+
+    useEffect(() => {
+        if (latestOFDOrder) {
+            fetchOrders();
+            toast.show({
+                description: "An Order is ready for delivery!",
+                placement: 'bottom',
+                backgroundColor: 'yellow.100',
+                _description: { color: 'yellow.600' },
+            })
+        }
+    }, [latestOFDOrder]);
 
     const changeStatus = async (_id, orderStatus) => {
         try {
