@@ -94,7 +94,7 @@ function VendorDashboard() {
             }
         });
 
-        socket.on('orderOutForDelivery', (order)=>{
+        socket.on('orderOutForDelivery', (order) => {
             if (order.Restaurant === selectedRestaurant) {
                 setLatestOFDOrder(order);
             }
@@ -135,7 +135,7 @@ function VendorDashboard() {
         if (latestOFDOrder) {
             fetchOrders();
             toast.show({
-                description: "An Order is ready for delivery!",
+                description: "Order is ready for delivery!",
                 placement: 'bottom',
                 backgroundColor: 'yellow.100',
                 _description: { color: 'yellow.600' },
@@ -225,6 +225,8 @@ function VendorDashboard() {
             let tempDeliveryOrders = []
             let flag = 1
             data.map((order, index) => {
+                console.log('EACH ORDER')
+                console.log(order)
                 if (order.orderStatus == 'completed' || order.orderStatus.includes('Declined')) {
                     tempClosedOrders.push(order)
                     flag = 0
@@ -421,10 +423,10 @@ function VendorDashboard() {
                 style={[colorScheme == 'light' ? [isActive == true ? Styles.LightActiveAccordionButton : Styles.LightInactiveAccordionButton] : [isActive == true ? Styles.DarkActiveAccordionButton : Styles.DarkInactiveAccordionButton]]}
             >
                 <HStack className='items-center space-x-3'>
-                    {section.orderStatus == 'placed' &&
+                    {section.orderStatus == 'accepted' &&
                         <ExclamationCircleIcon size={20} />
                     }
-                    {section.orderStatus == 'accepted' &&
+                    {section.orderStatus == 'placed' &&
                         <Image
                             style={{ width: 20, height: 20, resizeMode: "contain" }}
                             source={Siren}
@@ -519,10 +521,31 @@ function VendorDashboard() {
                         </Text>
                         {section.orderItems.map((item, index) => (
                             <View key={index} style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                                <Text className='font-semibold text-base' style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
-                                >
-                                    {item.name} x{item.quantity}
-                                </Text>
+                                <VStack className='w-8/12'>
+                                    <Text className='font-semibold text-base' style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                    >
+                                        {item.name} x{item.quantity}
+                                    </Text>
+                                    { item.customizations && Object.keys(item.customizations).length > 0 && Object.keys(item.customizations).map(key => (
+                                        <VStack className='pl-2'>
+                                            {item.customizations[key].length > 0 &&
+                                                <>
+                                                    <Text className='text-xs font-medium pt-0.5 text-gray-400'
+                                                    // style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                                    >
+                                                        {key}
+                                                    </Text>
+                                                    <Text className='text-xs font-medium pb-0.5'
+                                                        style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                                    >
+                                                        {item.customizations[key].replace(item.name, '').trim()}
+                                                    </Text>
+                                                </>
+                                            }
+
+                                        </VStack>
+                                    ))}
+                                </VStack>
                                 <Text className='font-semibold text-base' style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
                                 >
                                     ₹{item.price} (x{item.quantity})
@@ -622,7 +645,10 @@ function VendorDashboard() {
                                         {(declineReason == 'Closing Time' || declineReason == 'Student Cancelled') &&
                                             <View className='w-4/6 self-center mt-2'>
                                                 <NativeBaseButton colorScheme='red' variant='subtle' style={{ borderRadius: 7.5 }}
-                                                    onPress={() => changeStatus(section._id, "Declined")}
+                                                    onPress={() => {
+                                                        changeStatus(section._id, "Declined")
+                                                        setShowDeclineModal(!showDeclineModal)
+                                                    }}
                                                 >
                                                     Decline/अस्वीकार
                                                 </NativeBaseButton>
@@ -652,7 +678,10 @@ function VendorDashboard() {
                                                     </Checkbox.Group>
                                                     <View className='w-4/6 self-center mt-2'>
                                                         <NativeBaseButton disabled={declineItems.length == 0} colorScheme='red' variant='subtle' style={{ borderRadius: 7.5 }}
-                                                            onPress={() => changeStatus(section._id, "Declined")}
+                                                            onPress={() => {
+                                                                changeStatus(section._id, "Declined")
+                                                                setShowDeclineModal(!showDeclineModal)
+                                                            }}
                                                         >
                                                             Decline/अस्वीकार
                                                         </NativeBaseButton>
@@ -682,9 +711,9 @@ function VendorDashboard() {
                         {section.orderStatus == 'accepted' && //change to -> orderStatus ==  accepted by restaurant
                             <VStack>
 
-                                <Text className='self-center py-1 font-medium text-base' 
-                                    style={[colorScheme=='light'? Styles.LightTextPrimary: Styles.DarkTextPrimary]}
-                                    >
+                                <Text className='self-center py-1 font-medium text-base'
+                                    style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                >
                                     Status / स्थिति : Accepted
                                 </Text>
 
@@ -710,7 +739,7 @@ function VendorDashboard() {
                             <VStack>
 
                                 <Text className='self-center py-1 font-medium text-base'
-                                    style={[colorScheme=='light'? Styles.LightTextPrimary: Styles.DarkTextPrimary]}>
+                                    style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
                                     Status / स्थिति : Preparing / बना रहे हैं
                                 </Text>
 
@@ -741,7 +770,7 @@ function VendorDashboard() {
                             <VStack>
 
                                 <Text className='self-center py-1 font-medium text-base'
-                                    style={[colorScheme=='light'? Styles.LightTextPrimary: Styles.DarkTextPrimary]}
+                                    style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
                                 >
                                     Status / स्थिति : Preparing / बना रहे हैं
                                 </Text>
@@ -773,7 +802,7 @@ function VendorDashboard() {
                             <VStack>
 
                                 <Text className='self-center py-1 font-medium text-base'
-                                    style={[colorScheme=='light'? Styles.LightTextPrimary: Styles.DarkTextPrimary]}
+                                    style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
                                 >
                                     Status / स्थिति : Out for delivery / बना रहे हैं
                                 </Text>

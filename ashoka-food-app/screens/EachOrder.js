@@ -344,18 +344,41 @@ export default function EachOrder() {
                                         >
                                             {item.orderItems.map((orderItem, index) => (
                                                 <>
-                                                    <HStack className='items-center self-center py-1 w-11/12 justify-between'>
-                                                        <HStack className='items-center space-x-2'>
+                                                    <HStack className='items-start self-center py-1 w-11/12 justify-between'>
+                                                        <HStack className='items-start space-x-2'>
                                                             <Image
                                                                 style={{ width: 20, height: 20, resizeMode: "contain" }}
                                                                 source={Dish}
                                                             />
-                                                            <Text className='font-medium text-base'
-                                                                style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
-                                                                {orderItem.name}
-                                                            </Text>
+                                                            <VStack className='py-1 w-8/12'>
+                                                                <Text className='font-medium text-md pb-1'
+                                                                    style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
+                                                                    {orderItem.name}
+                                                                </Text>
+                                                                {orderItem.customizations && Object.keys(orderItem.customizations).length > 0 && Object.keys(orderItem.customizations).map(key => (
+                                                                    <VStack>
+                                                                        {orderItem.customizations[key].length > 0 &&
+                                                                            <>
+                                                                                <Text className='text-xs font-medium pt-0.5 text-gray-400'
+                                                                                // style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                                                                >
+                                                                                    {key}
+                                                                                </Text>
+                                                                                <Text className='text-xs font-medium pb-0.5'
+                                                                                    style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                                                                >
+                                                                                    {orderItem.customizations[key].replace(orderItem.name, '').trim()}
+                                                                                </Text>
+                                                                            </>
+                                                                        }
+
+                                                                    </VStack>
+                                                                ))}
+                                                            </VStack>
+
+
                                                         </HStack>
-                                                        <Text className='font-medium text-base'
+                                                        <Text className='font-medium text-md pt-1'
                                                             style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
                                                             ₹{orderItem.price} x {orderItem.quantity}
                                                         </Text>
@@ -382,7 +405,7 @@ export default function EachOrder() {
                                                             style={{ width: 20, height: 20, resizeMode: "contain" }}
                                                             source={Total}
                                                         />
-                                                        <Text className='font-medium text-base'
+                                                        <Text className='font-medium text-md'
                                                             style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
                                                             Grand Total
                                                         </Text>
@@ -392,7 +415,7 @@ export default function EachOrder() {
                                                         (including restaurant charges)
                                                     </Text>
                                                 </VStack>
-                                                <Text className='font-medium text-base'
+                                                <Text className='font-medium text-md'
                                                     style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
                                                     ₹{item.orderAmount}
                                                 </Text>
@@ -413,7 +436,7 @@ export default function EachOrder() {
                                                             style={{ width: 20, height: 20, resizeMode: "contain" }}
                                                             source={PenIcon}
                                                         />
-                                                        <Text className='font-medium text-base'
+                                                        <Text className='font-medium text-md'
                                                             style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
                                                             "{item.orderInstructions}"
                                                         </Text>
@@ -436,12 +459,12 @@ export default function EachOrder() {
                                                             style={{ width: 20, height: 20, resizeMode: "contain" }}
                                                             source={Clock}
                                                         />
-                                                        <Text className='font-medium text-base'
+                                                        <Text className='font-medium text-md'
                                                             style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
                                                             Placed At
                                                         </Text>
                                                     </HStack>
-                                                    <Text className='font-medium text-base'
+                                                    <Text className='font-medium text-md'
                                                         style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
                                                         {item.orderDate.slice(0, 7)}
                                                     </Text>
@@ -461,12 +484,12 @@ export default function EachOrder() {
                                                                 source={DineIn}
                                                             />
                                                         }
-                                                        <Text className='font-medium text-base'
+                                                        <Text className='font-medium text-md'
                                                             style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
                                                             Order Type
                                                         </Text>
                                                     </HStack>
-                                                    <Text className='font-medium text-base'
+                                                    <Text className='font-medium text-md'
                                                         style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
                                                         {item.orderType}
                                                     </Text>
@@ -500,12 +523,12 @@ export default function EachOrder() {
                                                                         source={SportsBlock}
                                                                     />
                                                                 }
-                                                                <Text className='font-medium text-base'
+                                                                <Text className='font-medium text-md'
                                                                     style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
                                                                     Location
                                                                 </Text>
                                                             </HStack>
-                                                            <Text className='font-medium text-base'
+                                                            <Text className='font-medium text-md'
                                                                 style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
                                                                 {item.deliveryLocation}
                                                             </Text>
@@ -527,12 +550,12 @@ export default function EachOrder() {
                                                                 source={COD}
                                                             />
                                                         }
-                                                        <Text className='font-medium text-base'
+                                                        <Text className='font-medium text-md'
                                                             style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
                                                             Payment
                                                         </Text>
                                                     </HStack>
-                                                    <Text className='font-medium text-base'
+                                                    <Text className='font-medium text-md'
                                                         style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
                                                         {item.payment}
                                                     </Text>

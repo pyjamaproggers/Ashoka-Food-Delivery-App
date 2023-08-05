@@ -171,7 +171,7 @@ export default function LiveOrders() {
 
     useEffect(() => {
         if (latestOrder) {
-            
+
             const fetchData = async () => {
                 await getUserOrders();
             };
@@ -742,19 +742,42 @@ export default function LiveOrders() {
                                             >
                                                 {item.orderItems.map((orderItem, index) => (
                                                     <>
-                                                        <HStack className='items-center self-center py-1 w-11/12 justify-between'>
-                                                            <HStack className='items-center space-x-2'>
+
+                                                        <HStack className='items-start self-center py-1 w-11/12 justify-between'>
+                                                            <HStack className='items-start space-x-2'>
                                                                 <Image
                                                                     style={{ width: 20, height: 20, resizeMode: "contain" }}
                                                                     source={Dish}
                                                                 />
-                                                                {console.log(orderItem)}
-                                                                <Text className='font-medium text-md'
+
+                                                                <VStack className='py-1 w-8/12'>
+                                                                <Text className='font-medium text-md pb-1'
                                                                     style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
                                                                     {orderItem.name}
                                                                 </Text>
+                                                                    {orderItem.customizations && Object.keys(orderItem.customizations).length>0 && Object.keys(orderItem.customizations).map(key => (
+                                                                        <VStack>
+                                                                            {orderItem.customizations[key].length > 0 &&
+                                                                                <>
+                                                                                    <Text className='text-xs font-medium pt-0.5 text-gray-400'
+                                                                                    // style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                                                                    >
+                                                                                        {key}
+                                                                                    </Text>
+                                                                                    <Text className='text-xs font-medium pb-0.5'
+                                                                                        style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                                                                    >
+                                                                                        {orderItem.customizations[key].replace(orderItem.name, '').trim()}
+                                                                                    </Text>
+                                                                                </>
+                                                                            }
+
+                                                                        </VStack>
+                                                                    ))}
+                                                                </VStack>
+
                                                             </HStack>
-                                                            <Text className='font-medium text-md'
+                                                            <Text className='font-medium text-md pt-1'
                                                                 style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
                                                                 ₹{orderItem.price} x {orderItem.quantity}
                                                             </Text>

@@ -469,15 +469,24 @@ const BasketScreen = () => {
             return
         }
 
+        let canPlaceOrder = true
         // Iterate over the FinalBasket array
         for (const BasketRestaurant of FinalBasket) {
-            console.log(BasketRestaurant.items)
+            // console.log(BasketRestaurant.items)
             // Calculate the subtotal and GST for the current restaurant
             const subtotal = BasketRestaurant.restaurantTotal;
             const gst = calculateGST(subtotal, BasketRestaurant.name);
 
             // Calculate the total amount with GST and delivery charges
             const totalAmount = (subtotal + gst + deliveryCharges[BasketRestaurant.name]).toFixed(2);
+
+            if(BasketRestaurant.name==='Chaat Stall' && totalAmount<150 && OrderTypeOption === 'Delivery'){
+                Alert.alert(
+                    'Unable to place order. Chaat Stall requires an order of more than ₹150 for delivery.'
+                )
+                setShowSpinner(false)
+                canPlaceOrder = false
+            }
 
             // Extract item names and prices from the BasketRestaurant items
             const orderItems = BasketRestaurant.items.map(item => ({
@@ -507,6 +516,10 @@ const BasketScreen = () => {
 
             // Push the order object to the orders array
             orders.push(orderData);
+        }
+
+        if(canPlaceOrder===false){
+            return
         }
 
         let itemsCheck = await checkUnavailableItems()

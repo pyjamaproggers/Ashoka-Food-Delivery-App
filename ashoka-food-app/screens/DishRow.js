@@ -793,6 +793,8 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
                                         <TouchableOpacity onPress={() => {
                                             // addWithCustomizations invocation
                                             addWithCustomizations()
+                                            setCDishPrice(Price)
+                                            setCDishQuantity(1)
                                         }} className='px-0.5 py-0.5 flex-row items-center justify-evenly w-11/12'>
                                             <Image
                                                 style={{ width: 20, height: 20, resizeMode: "contain", }}
