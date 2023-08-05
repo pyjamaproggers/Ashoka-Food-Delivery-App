@@ -492,7 +492,6 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
                 <Actionsheet hideDragIndicator={true}
                     isOpen={showCustomizationSheet}
                     onClose={() => { setShowCustomizationSheet(!showCustomizationSheet) }}
-                    size='full'
                     disableOverlay={true}
                 >
                     <TouchableOpacity className='p-3 rounded-full m-3' style={[colorScheme == 'light' ? Styles.LightBGSec : Styles.DarkBGSec]}
@@ -771,15 +770,13 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
                                                 source={Cart}
                                             />
                                             {CDishQuantity == 1 &&
-                                                <Text allowFontScaling={false} className='font-medium text-base'
-                                                    style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                                <Text allowFontScaling={false} className='font-medium text-base text-white'
                                                 >
                                                     Add Item (₹{(CDishPrice * CDishQuantity).toFixed(2)})
                                                 </Text>
                                             }
                                             {CDishQuantity > 1 &&
-                                                <Text allowFontScaling={false} className='font-medium text-base'
-                                                    style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                                <Text allowFontScaling={false} className='font-medium text-base text-white'
                                                 >
                                                     Add Items (₹{(CDishPrice * CDishQuantity).toFixed(2)})
                                                 </Text>

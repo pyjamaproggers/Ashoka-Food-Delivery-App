@@ -748,12 +748,13 @@ export default function LiveOrders() {
                                                                     style={{ width: 20, height: 20, resizeMode: "contain" }}
                                                                     source={Dish}
                                                                 />
-                                                                <Text className='font-medium text-base'
+                                                                {console.log(orderItem)}
+                                                                <Text className='font-medium text-md'
                                                                     style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
                                                                     {orderItem.name}
                                                                 </Text>
                                                             </HStack>
-                                                            <Text className='font-medium text-base'
+                                                            <Text className='font-medium text-md'
                                                                 style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
                                                                 ₹{orderItem.price} x {orderItem.quantity}
                                                             </Text>
@@ -780,7 +781,7 @@ export default function LiveOrders() {
                                                                 style={{ width: 20, height: 20, resizeMode: "contain" }}
                                                                 source={Total}
                                                             />
-                                                            <Text className='font-medium text-base'
+                                                            <Text className='font-medium text-md'
                                                                 style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
                                                                 Grand Total
                                                             </Text>
@@ -790,7 +791,7 @@ export default function LiveOrders() {
                                                             (including restaurant charges)
                                                         </Text>
                                                     </VStack>
-                                                    <Text className='font-medium text-base'
+                                                    <Text className='font-medium text-md'
                                                         style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
                                                         ₹{item.orderAmount}
                                                     </Text>
@@ -811,7 +812,7 @@ export default function LiveOrders() {
                                                                 style={{ width: 20, height: 20, resizeMode: "contain" }}
                                                                 source={PenIcon}
                                                             />
-                                                            <Text className='font-medium text-base'
+                                                            <Text className='font-medium text-md'
                                                                 style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
                                                                 "{item.orderInstructions}"
                                                             </Text>
@@ -834,12 +835,12 @@ export default function LiveOrders() {
                                                                 style={{ width: 20, height: 20, resizeMode: "contain" }}
                                                                 source={Clock}
                                                             />
-                                                            <Text className='font-medium text-base'
+                                                            <Text className='font-medium text-md'
                                                                 style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
                                                                 Placed At
                                                             </Text>
                                                         </HStack>
-                                                        <Text className='font-medium text-base'
+                                                        <Text className='font-medium text-md'
                                                             style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
                                                             {item.orderDate.slice(0, 7)}
                                                         </Text>
@@ -859,12 +860,12 @@ export default function LiveOrders() {
                                                                     source={DineIn}
                                                                 />
                                                             }
-                                                            <Text className='font-medium text-base'
+                                                            <Text className='font-medium text-md'
                                                                 style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
                                                                 Order Type
                                                             </Text>
                                                         </HStack>
-                                                        <Text className='font-medium text-base'
+                                                        <Text className='font-medium text-md'
                                                             style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
                                                             {item.orderType}
                                                         </Text>
@@ -898,12 +899,12 @@ export default function LiveOrders() {
                                                                             source={SportsBlock}
                                                                         />
                                                                     }
-                                                                    <Text className='font-medium text-base'
+                                                                    <Text className='font-medium text-md'
                                                                         style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
                                                                         Location
                                                                     </Text>
                                                                 </HStack>
-                                                                <Text className='font-medium text-base'
+                                                                <Text className='font-medium text-md'
                                                                     style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
                                                                     {item.deliveryLocation}
                                                                 </Text>
@@ -925,12 +926,12 @@ export default function LiveOrders() {
                                                                     source={COD}
                                                                 />
                                                             }
-                                                            <Text className='font-medium text-base'
+                                                            <Text className='font-medium text-md'
                                                                 style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
                                                                 Payment
                                                             </Text>
                                                         </HStack>
-                                                        <Text className='font-medium text-base'
+                                                        <Text className='font-medium text-md'
                                                             style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
                                                             {item.payment}
                                                         </Text>

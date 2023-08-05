@@ -219,7 +219,7 @@ export default function CartIcon({ actualUser, store }) {
             {showCartSheet == true &&
                 <View>
 
-                    <Actionsheet hideDragIndicator={true} isOpen={showCartSheet} onClose={() => { setShowCartSheet(!showCartSheet) }} size='full'
+                    <Actionsheet hideDragIndicator={true} isOpen={showCartSheet} onClose={() => { setShowCartSheet(!showCartSheet) }}
                     >
                         <TouchableOpacity className='p-3 rounded-full m-3' style={[colorScheme == 'light' ? Styles.LightBG : Styles.DarkBG]}
                             onPress={() => setShowCartSheet(false)}
@@ -227,7 +227,7 @@ export default function CartIcon({ actualUser, store }) {
                             <XMarkIcon size={20} style={[colorScheme == 'light' ? { color: '#0c0c0f' } : { color: '#f2f2f2' }]} />
                         </TouchableOpacity>
 
-                        <Actionsheet.Content bgColor={colorScheme == 'light' ? "f2f2f2" : "#0c0c0f"} >
+                        <Actionsheet.Content bgColor={colorScheme == 'light' ? "#f2f2f2" : "#0c0c0f"} >
                             <View className='w-full' style={[colorScheme == 'light' ? Styles.LightBG : Styles.DarkBG]}>
                                 <Text className='self-center py-2 pl-2 text-lg font-medium'
                                     style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
@@ -313,7 +313,7 @@ export default function CartIcon({ actualUser, store }) {
 
                                                             {dish.hasOwnProperty('customizations') ?
                                                                 <>
-                                                                    <HStack className='items-center justify-between px-2 w-full py-4 my-3 rounded-lg self-center' style={[colorScheme == 'light' ? Styles.LightBGSec : Styles.DarkBGSec]}>
+                                                                    <HStack className='items-center justify-between px-2 w-full pt-2 pb-2 my-1 rounded-lg self-center' style={[colorScheme == 'light' ? Styles.LightBGSec : Styles.DarkBGSec]}>
                                                                         {/* Dish Details Block */}
                                                                         <VStack className='justify-start w-7/12' style={{}}>
                                                                             {dish.Veg_NonVeg === "Veg" ? (
@@ -353,7 +353,7 @@ export default function CartIcon({ actualUser, store }) {
                                                                                                 <Text className='text-xs font-medium pb-0.5'
                                                                                                     style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
                                                                                                 >
-                                                                                                    {dish.customizations[key].replace(dish.name,'').trim()}
+                                                                                                    {dish.customizations[key].replace(dish.name, '').trim()}
                                                                                                 </Text>
                                                                                             </>
                                                                                         }
@@ -390,7 +390,7 @@ export default function CartIcon({ actualUser, store }) {
                                                                 </>
                                                                 :
                                                                 <>
-                                                                    <HStack className='items-center rounded-lg justify-between w-full pt-2 pb-2 ' style={[colorScheme == 'light' ? Styles.LightBGSec : Styles.DarkBGSec]}>
+                                                                    <HStack className='items-center rounded-lg justify-between w-full pt-2 pb-2 my-1' style={[colorScheme == 'light' ? Styles.LightBGSec : Styles.DarkBGSec]}>
                                                                         {/* Dish Details Block */}
                                                                         <VStack style={{ marginLeft: '2%' }}>
                                                                             {dish.Veg_NonVeg === "Veg" ? (
@@ -453,76 +453,81 @@ export default function CartIcon({ actualUser, store }) {
                                 </ScrollView>
                             }
 
+                            <SafeAreaView className='w-screen' >
+
+                                <HStack className='pt-3 w-10/12 self-center px-2 justify-between' >
+
+                                    <TouchableOpacity
+                                        onPress={() => setShowCartSheet(!showCartSheet)}
+                                        className="py-2.5 flex-row items-center space-x-1"
+                                        style={Styles.ShowCartButton}
+                                    >
+                                        <HStack className='items-center space-x-2'>
+                                            <Image
+                                                style={{ width: 20, height: 20, resizeMode: "contain", }}
+                                                source={Cart}
+                                            />
+                                            {totalItemsInCart == 1 &&
+                                                <Text className='text-md font-semibold text-black'
+                                                    style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                                >
+                                                    {totalItemsInCart} ITEM ADDED
+                                                </Text>
+                                            }
+                                            {totalItemsInCart > 1 &&
+                                                <Text className='text-md font-semibold text-black'
+                                                    style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                                                >
+                                                    {totalItemsInCart} ITEMS ADDED
+                                                </Text>
+                                            }
+                                            {showCartSheet &&
+                                                <Image
+                                                    style={{ width: 12, height: 12, resizeMode: "contain", }}
+                                                    source={Chevrondown}
+                                                />
+                                            }
+                                            {!showCartSheet &&
+                                                <Image
+                                                    style={{ width: 12, height: 12, resizeMode: "contain", }}
+                                                    source={Chevronup}
+                                                />
+                                            }
+                                        </HStack>
+                                    </TouchableOpacity>
+
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            setShowCartSheet(false)
+                                            navigation.navigate('Cart', { actualUser, Basket })
+                                        }
+                                        }
+                                        className="bg-[#3E5896] py-2.5 flex-row items-center space-x-1"
+                                        style={Styles.NextButton}
+                                    >
+                                        <HStack className='items-center space-x-2'>
+                                            <Text className='text-xl font-semibold text-white' >
+                                                Next
+                                            </Text>
+                                            <View style={{ transform: [{ rotate: '90deg' }] }}>
+                                                <Image
+                                                    style={{ width: 12, height: 12, resizeMode: "contain" }}
+                                                    source={Chevronup}
+                                                />
+
+                                            </View>
+                                        </HStack>
+                                    </TouchableOpacity>
+
+                                </HStack >
+                            </SafeAreaView>
+
 
                         </Actionsheet.Content>
 
 
-                        <SafeAreaView className=" bottom-0 w-screen z-20 " style={[colorScheme == 'light' ? Styles.LightCartButton : Styles.DarkCartButton]}>
-                            <HStack className='justify-evenly items-center my-2' >
-
-                                <TouchableOpacity
-                                    onPress={() => setShowCartSheet(!showCartSheet)}
-                                    className="py-2.5 flex-row items-center space-x-1"
-                                    style={Styles.ShowCartButton}
-                                >
-                                    <HStack className='items-center space-x-2'>
-                                        <Image
-                                            style={{ width: 20, height: 20, resizeMode: "contain", }}
-                                            source={Cart}
-                                        />
-                                        {totalItemsInCart == 1 &&
-                                            <Text className='text-md font-semibold text-black'
-                                                style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
-                                            >
-                                                {totalItemsInCart} ITEM ADDED
-                                            </Text>
-                                        }
-                                        {totalItemsInCart > 1 &&
-                                            <Text className='text-md font-semibold text-black'
-                                                style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
-                                            >
-                                                {totalItemsInCart} ITEMS ADDED
-                                            </Text>
-                                        }
-                                        {showCartSheet &&
-                                            <Image
-                                                style={{ width: 12, height: 12, resizeMode: "contain", }}
-                                                source={Chevrondown}
-                                            />
-                                        }
-                                        {!showCartSheet &&
-                                            <Image
-                                                style={{ width: 12, height: 12, resizeMode: "contain", }}
-                                                source={Chevronup}
-                                            />
-                                        }
-                                    </HStack>
-                                </TouchableOpacity>
-
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        setShowCartSheet(false)
-                                        navigation.navigate('Cart', { actualUser, Basket })}
-                                    }
-                                    className="bg-[#3E5896] py-2.5 flex-row items-center space-x-1"
-                                    style={Styles.NextButton}
-                                >
-                                    <HStack className='items-center space-x-2'>
-                                        <Text className='text-xl font-semibold text-white' >
-                                            Next
-                                        </Text>
-                                        <View style={{ transform: [{ rotate: '90deg' }] }}>
-                                            <Image
-                                                style={{ width: 12, height: 12, resizeMode: "contain" }}
-                                                source={Chevronup}
-                                            />
-
-                                        </View>
-                                    </HStack>
-                                </TouchableOpacity>
-
-                            </HStack >
-                        </SafeAreaView>
+                        {/* <SafeAreaView className=" bottom-0 w-screen z-20 " style={[colorScheme == 'light' ? Styles.LightCartButton : Styles.DarkCartButton]}> */}
+                        {/* </SafeAreaView> */}
                     </Actionsheet>
                 </View>
             }
