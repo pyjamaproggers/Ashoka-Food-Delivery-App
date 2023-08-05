@@ -483,7 +483,8 @@ const BasketScreen = () => {
             const orderItems = BasketRestaurant.items.map(item => ({
                 name: item.name,
                 price: item.Price,
-                quantity: item.quantity
+                quantity: item.quantity,
+                customizations:item.hasOwnProperty('customizations')?item.customizations:{}
             }));
 
             const orderInstructions = getInstructions(BasketRestaurant.name)
