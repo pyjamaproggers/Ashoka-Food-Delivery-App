@@ -8,10 +8,10 @@ Ordering from multiple restaurants at once, delivery or dine-in, cash on deliver
 
 ## Technologies
 
-Frontend - React Native, TailwindCSS
-Backend - Nodejs, Expressjs
-Database - MongoDB, Sanity.io
-RESTful APIs - Google Auth 2.0
+Frontend - React Native, TailwindCSS\n
+Backend - Nodejs, Expressjs\n
+Database - MongoDB, Sanity.io\n
+RESTful APIs - Google Auth 2.0\n
 
 ## Screenshots
 
