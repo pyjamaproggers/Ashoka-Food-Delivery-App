@@ -227,6 +227,7 @@ export default function OrderHistory() {
             </View>
 
             <ScrollView
+            showsVerticalScrollIndicator={false}
             >
 
                 <VStack className='w-11/12 space-y-2 self-center '>

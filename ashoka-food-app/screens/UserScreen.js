@@ -53,10 +53,10 @@ export default function UserScreen() {
             paddingVertical: 12,
             marginTop: 10,
             backgroundColor: 'white',
-            borderTopLeftRadius: '20',
-            borderTopRightRadius: '20',
-            borderBottomRightRadius: '10',
-            borderBottomLeftRadius: '10'
+            borderTopLeftRadius: 20,
+            borderTopRightRadius: 20,
+            borderBottomRightRadius: 10,
+            borderBottomLeftRadius: 10
         },
         DarknameEmailPhotoContainer: {
             width: '95%',
@@ -65,10 +65,10 @@ export default function UserScreen() {
             paddingVertical: 12,
             marginTop: 10,
             backgroundColor: '#262626',
-            borderTopLeftRadius: '20',
-            borderTopRightRadius: '20',
-            borderBottomRightRadius: '10',
-            borderBottomLeftRadius: '10'
+            borderTopLeftRadius: 20,
+            borderTopRightRadius: 20,
+            borderBottomRightRadius: 10,
+            borderBottomLeftRadius: 10
         },
         LightnameText: {
             fontWeight: 500,

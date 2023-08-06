@@ -183,11 +183,11 @@ const Restaurants = (props) => {
                                     endColor={colorScheme == 'light' ? 'gray.300' : '#0c0c0f'}
                                     style={{ marginRight: 16 }}
                                 />
-                                <VStack flex="3" space="2">
+                                <VStack flex="3" space={2}>
                                     <Skeleton h='3' rounded='full' w='50%'
                                         startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
                                         endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
-                                    <HStack space="2" alignItems="center">
+                                    <HStack space={2} alignItems="center">
                                         <Skeleton size="4" rounded="full"
                                             startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
                                             endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
@@ -195,7 +195,7 @@ const Restaurants = (props) => {
                                             startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
                                             endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
                                     </HStack>
-                                    <HStack space="1" alignItems="center">
+                                    <HStack space={1} alignItems="center">
                                         <Skeleton size="4" rounded="full"
                                             startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
                                             endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
@@ -203,7 +203,7 @@ const Restaurants = (props) => {
                                             startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
                                             endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
                                     </HStack>
-                                    <HStack space="1" alignItems="center">
+                                    <HStack space={1} alignItems="center">
                                         <Skeleton size="4" rounded="full"
                                             startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
                                             endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
@@ -222,11 +222,11 @@ const Restaurants = (props) => {
                                     endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'}
                                     style={{ marginRight: 16 }}
                                 />
-                                <VStack flex="3" space="2">
+                                <VStack flex="3" space={2}>
                                     <Skeleton h='3' rounded='full' w='50%'
                                         startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
                                         endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
-                                    <HStack space="2" alignItems="center">
+                                    <HStack space={2} alignItems="center">
                                         <Skeleton size="4" rounded="full"
                                             startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
                                             endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
@@ -234,7 +234,7 @@ const Restaurants = (props) => {
                                             startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
                                             endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
                                     </HStack>
-                                    <HStack space="1" alignItems="center">
+                                    <HStack space={1} alignItems="center">
                                         <Skeleton size="4" rounded="full"
                                             startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
                                             endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
@@ -242,7 +242,7 @@ const Restaurants = (props) => {
                                             startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
                                             endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
                                     </HStack>
-                                    <HStack space="1" alignItems="center">
+                                    <HStack space={1} alignItems="center">
                                         <Skeleton size="4" rounded="full"
                                             startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
                                             endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
@@ -261,11 +261,11 @@ const Restaurants = (props) => {
                                     endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'}
                                     style={{ marginRight: 16 }}
                                 />
-                                <VStack flex="3" space="2">
+                                <VStack flex="3" space={2}>
                                     <Skeleton h='3' rounded='full' w='50%'
                                         startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
                                         endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
-                                    <HStack space="2" alignItems="center">
+                                    <HStack space={2} alignItems="center">
                                         <Skeleton size="4" rounded="full"
                                             startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
                                             endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
@@ -273,7 +273,7 @@ const Restaurants = (props) => {
                                             startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
                                             endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
                                     </HStack>
-                                    <HStack space="1" alignItems="center">
+                                    <HStack space={1} alignItems="center">
                                         <Skeleton size="4" rounded="full"
                                             startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
                                             endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
@@ -281,7 +281,7 @@ const Restaurants = (props) => {
                                             startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
                                             endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
                                     </HStack>
-                                    <HStack space="1" alignItems="center">
+                                    <HStack space={1} alignItems="center">
                                         <Skeleton size="4" rounded="full"
                                             startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
                                             endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
@@ -357,11 +357,11 @@ const Restaurants = (props) => {
                                     endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'}
                                     style={{ marginRight: 16 }}
                                 />
-                                <VStack flex="3" space="2">
+                                <VStack flex="3" space={2}>
                                     <Skeleton h='3' rounded='full' w='50%'
                                         startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
                                         endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
-                                    <HStack space="2" alignItems="center">
+                                    <HStack space={2} alignItems="center">
                                         <Skeleton size="4" rounded="full"
                                             startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
                                             endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
@@ -369,7 +369,7 @@ const Restaurants = (props) => {
                                             startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
                                             endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
                                     </HStack>
-                                    <HStack space="1" alignItems="center">
+                                    <HStack space={1} alignItems="center">
                                         <Skeleton size="4" rounded="full"
                                             startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
                                             endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
@@ -377,7 +377,7 @@ const Restaurants = (props) => {
                                             startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
                                             endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
                                     </HStack>
-                                    <HStack space="1" alignItems="center">
+                                    <HStack space={1} alignItems="center">
                                         <Skeleton size="4" rounded="full"
                                             startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
                                             endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
@@ -396,11 +396,11 @@ const Restaurants = (props) => {
                                     endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'}
                                     style={{ marginRight: 16 }}
                                 />
-                                <VStack flex="3" space="2">
+                                <VStack flex="3" space={2}>
                                     <Skeleton h='3' rounded='full' w='50%'
                                         startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
                                         endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
-                                    <HStack space="2" alignItems="center">
+                                    <HStack space={2} alignItems="center">
                                         <Skeleton size="4" rounded="full"
                                             startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
                                             endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
@@ -408,7 +408,7 @@ const Restaurants = (props) => {
                                             startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
                                             endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
                                     </HStack>
-                                    <HStack space="1" alignItems="center">
+                                    <HStack space={1} alignItems="center">
                                         <Skeleton size="4" rounded="full"
                                             startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
                                             endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
@@ -416,7 +416,7 @@ const Restaurants = (props) => {
                                             startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
                                             endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
                                     </HStack>
-                                    <HStack space="1" alignItems="center">
+                                    <HStack space={1} alignItems="center">
                                         <Skeleton size="4" rounded="full"
                                             startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
                                             endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
@@ -435,11 +435,11 @@ const Restaurants = (props) => {
                                     endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'}
                                     style={{ marginRight: 16 }}
                                 />
-                                <VStack flex="3" space="2">
+                                <VStack flex="3" space={2}>
                                     <Skeleton h='3' rounded='full' w='50%'
                                         startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
                                         endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
-                                    <HStack space="2" alignItems="center">
+                                    <HStack space={2} alignItems="center">
                                         <Skeleton size="4" rounded="full"
                                             startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
                                             endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
@@ -447,7 +447,7 @@ const Restaurants = (props) => {
                                             startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
                                             endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
                                     </HStack>
-                                    <HStack space="1" alignItems="center">
+                                    <HStack space={1} alignItems="center">
                                         <Skeleton size="4" rounded="full"
                                             startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
                                             endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
@@ -455,7 +455,7 @@ const Restaurants = (props) => {
                                             startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
                                             endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
                                     </HStack>
-                                    <HStack space="1" alignItems="center">
+                                    <HStack space={1} alignItems="center">
                                         <Skeleton size="4" rounded="full"
                                             startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
                                             endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />

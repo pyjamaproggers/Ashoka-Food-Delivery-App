@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "869682950989",
+    "project_id": "ashoka-food",
+    "storage_bucket": "ashoka-food.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:869682950989:android:0834820d06f4fd4b257d04",
+        "android_client_info": {
+          "package_name": "com.anonymouse.reactnativefoodapppractice"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "869682950989-v2ko62dr7h84hvn813qmlmar7r5av8v3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAOtkT574IyPZS7gXBy4cwsz0p-3pSFvgQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "869682950989-v2ko62dr7h84hvn813qmlmar7r5av8v3.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "869682950989-rei7b6a3ru9h0i1l4i7n4dqnvu3cm82a.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.anonymouse.reactnativefoodapppractice"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

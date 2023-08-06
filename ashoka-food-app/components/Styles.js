@@ -28,8 +28,8 @@ const Styles = StyleSheet.create({
     },
     LightDropdownButton:{
         height: 40,
-        borderRadius: '8px',
-        borderWidth: '1px',
+        borderRadius: 8,
+        borderWidth: 1,
         borderColor: 'rgb(229,231,235)',
         shadowColor: '#000',
         shadowOffset: {width: 0, height: 0},
@@ -46,8 +46,8 @@ const Styles = StyleSheet.create({
     },
     DarkDropdownButton:{
         height: 40,
-        borderRadius: '8px',
-        borderWidth: '1px',
+        borderRadius: 8,
+        borderWidth: 1,
         borderColor: '#262626',
         shadowColor: '#000',
         shadowOffset: {width: 0, height: 0},
@@ -65,8 +65,8 @@ const Styles = StyleSheet.create({
     LightDropdownMenu:{
         width: '100%',
         height: 200,
-        borderRadius: '6px',
-        borderWidth: '1px',
+        borderRadius: 6,
+        borderWidth: 1,
         borderColor: 'rgb(229,231,235)',
         shadowColor: '#000',
         shadowOffset: {width: 0, height: 0},
@@ -79,8 +79,8 @@ const Styles = StyleSheet.create({
     DarkDropdownMenu:{
         width: '100%',
         height: 200,
-        borderRadius: '6px',
-        borderTopWidth: '1px',
+        borderRadius: 6,
+        borderTopWidth: 1,
         borderColor: 'rgb(0,0,0)',
         shadowColor: '#000',
         shadowOffset: {width: 0, height: 0},
@@ -91,12 +91,12 @@ const Styles = StyleSheet.create({
         top: '100%',
     },
     LightDropdownItem:{
-        borderBottomWidth: '1px',
+        borderBottomWidth: 1,
         borderColor: 'rgb(229, 231, 235)',
         paddingLeft: 8,
     },
     DarkDropdownItem:{
-        borderBottomWidth: '1px',
+        borderBottomWidth: 1,
         borderColor: 'rgb(75, 85, 99)',
         paddingLeft: 8,
     },
@@ -112,14 +112,14 @@ const Styles = StyleSheet.create({
     },
     LightSearchBar:{
         backgroundColor: 'white',
-        borderRadius: '10px',
-        borderWidth: '1px',
+        borderRadius: 10,
+        borderWidth: 1,
         borderColor: 'rgb(229,231,235)',
     },
     DarkSearchBar:{
         backgroundColor: '#262626',
-        borderRadius: '10px',
-        borderWidth: '1px',
+        borderRadius: 10,
+        borderWidth: 1,
         borderColor: 'rgb(0,0,0)',
     },
     LightHomeAdlib:{
@@ -280,25 +280,25 @@ const Styles = StyleSheet.create({
 
     LightActiveAccordionButton:{
         backgroundColor: 'white',
-        borderTopRightRadius: '8px',
-        borderTopLeftRadius: '8px',
-        borderBottomLeftRadius: '0px',
-        borderBottomRightRadius: '0px'
+        borderTopRightRadius: 8,
+        borderTopLeftRadius: 8,
+        borderBottomLeftRadius: 0,
+        borderBottomRightRadius: 0
     },
     LightInactiveAccordionButton:{
         backgroundColor: 'white',
-        borderRadius: '8px',
+        borderRadius: 8,
     },
     DarkActiveAccordionButton:{
         backgroundColor: '#262626',
-        borderTopRightRadius: '8px',
-        borderTopLeftRadius: '8px',
-        borderBottomLeftRadius: '0px',
-        borderBottomRightRadius: '0px'
+        borderTopRightRadius: 8,
+        borderTopLeftRadius: 8,
+        borderBottomLeftRadius: 0,
+        borderBottomRightRadius: 0
     },
     DarkInactiveAccordionButton:{
         backgroundColor: '#262626',
-        borderRadius: '8px'
+        borderRadius: 8
     },
 
 
@@ -314,7 +314,7 @@ const Styles = StyleSheet.create({
         marginRight: '5%',
         borderRadius: 8,
         borderColor: '#3E5896',
-        borderWidth: '1px',
+        borderWidth: 1,
         height: 'auto',
         width: 100,
         shadowColor: '#000',
@@ -333,7 +333,7 @@ const Styles = StyleSheet.create({
         marginRight: '5%',
         borderRadius: 8,
         borderColor: '#3E5896',
-        borderWidth: '1px',
+        borderWidth: 1,
         height: 'auto',
         width: 100,
         shadowColor: '#000',
@@ -353,7 +353,7 @@ const Styles = StyleSheet.create({
         marginRight: '5%',
         borderRadius: 8,
         borderColor: '#3E5896',
-        borderWidth: '1px',
+        borderWidth: 1,
         height: 'auto',
         width: 100,
         shadowColor: '#000',
@@ -371,7 +371,7 @@ const Styles = StyleSheet.create({
         marginRight: '5%',
         borderRadius: 8,
         borderColor: '#3E5896',
-        borderWidth: '1px',
+        borderWidth: 1,
         height: 'auto',
         width: 100,
         shadowColor: '#000',
@@ -432,7 +432,7 @@ const Styles = StyleSheet.create({
         marginRight: '5%',
         borderRadius: 8,
         borderColor: '#3E5896',
-        borderWidth: '1px',
+        borderWidth: 1,
         height: 35,
         width: 100,
         shadowColor: '#000',
@@ -450,7 +450,7 @@ const Styles = StyleSheet.create({
         marginRight: '5%',
         borderRadius: 8,
         borderColor: '#3E5896',
-        borderWidth: '1px',
+        borderWidth: 1,
         height: 35,
         width: 100,
         shadowColor: '#000',

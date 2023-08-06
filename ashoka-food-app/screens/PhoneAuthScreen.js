@@ -12,6 +12,7 @@ import Styles from '../components/Styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const PhoneAuthScreen = () => {
+
     const [phoneNumber, setPhoneNumber] = useState('')
     const [phoneNumberFormatted, setPhoneNumberFormatted] = useState('')
     const [validity, setValidity] = useState(false);
@@ -154,8 +155,8 @@ const PhoneAuthScreen = () => {
                             setPhoneNumberFormatted(text);
                         }}
                         withDarkTheme={true}
-                        containerStyle={[colorScheme=='light'? {backgroundColor: '#fff', borderRadius: '7.5'} : {backgroundColor: '#262626', borderRadius: '7.5'}]}
-                        textContainerStyle={[colorScheme=='light'? {backgroundColor: '#fff', borderRadius: '7.5'} : {backgroundColor: '#262626', borderRadius: '7.5'}]}
+                        containerStyle={[colorScheme=='light'? {backgroundColor: '#fff', borderRadius: 7.5} : {backgroundColor: '#262626', borderRadius: 7.5}]}
+                        textContainerStyle={[colorScheme=='light'? {backgroundColor: '#fff', borderRadius: 7.5} : {backgroundColor: '#262626', borderRadius: 7.5}]}
                         codeTextStyle={[colorScheme=='light'? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
                         textInputStyle={[colorScheme=='light'? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
                     />

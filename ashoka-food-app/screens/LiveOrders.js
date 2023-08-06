@@ -788,12 +788,12 @@ export default function LiveOrders() {
                                                 <HStack className='items-start py-1 mt-1 w-11/12 self-center justify-between'
                                                     style={[colorScheme == 'light' ?
                                                         {
-                                                            borderTopWidth: '1px',
+                                                            borderTopWidth: 1,
                                                             borderColor: 'rgb(209, 213, 219)'
                                                         }
                                                         :
                                                         {
-                                                            borderTopWidth: '1px',
+                                                            borderTopWidth: 1,
                                                             borderColor: 'rgb(107, 114, 128)'
                                                         }
                                                     ]}
@@ -1072,10 +1072,10 @@ const styles = StyleSheet.create({
         paddingVertical: 12,
         marginTop: 10,
         backgroundColor: 'white',
-        borderTopLeftRadius: '10',
-        borderTopRightRadius: '10',
-        borderBottomRightRadius: '10',
-        borderBottomLeftRadius: '10'
+        borderTopLeftRadius: 10,
+        borderTopRightRadius: 10,
+        borderBottomRightRadius: 10,
+        borderBottomLeftRadius: 10
     },
     DarknameEmailPhotoContainer: {
         width: '91.666667%',
@@ -1084,10 +1084,10 @@ const styles = StyleSheet.create({
         paddingVertical: 12,
         marginTop: 10,
         backgroundColor: '#262626',
-        borderTopLeftRadius: '10',
-        borderTopRightRadius: '10',
-        borderBottomRightRadius: '10',
-        borderBottomLeftRadius: '10'
+        borderTopLeftRadius: 10,
+        borderTopRightRadius: 10,
+        borderBottomRightRadius: 10,
+        borderBottomLeftRadius: 10
     },
     LightnameText: {
         fontWeight: 500,
@@ -1184,7 +1184,7 @@ const styles = StyleSheet.create({
     LightDropdownMenu: {
         width: '100%',
         borderRadius: '6px',
-        borderWidth: '1px',
+        borderWidth: 1,
         borderColor: 'rgb(229,231,235)',
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 0 },
@@ -1197,7 +1197,7 @@ const styles = StyleSheet.create({
     DarkDropdownMenu: {
         width: '100%',
         borderRadius: '6px',
-        borderTopWidth: '1px',
+        borderTopWidth: 1,
         borderColor: 'rgb(0,0,0)',
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 0 },
@@ -1210,7 +1210,7 @@ const styles = StyleSheet.create({
     LightDropdownMenu2: {
         width: '100%',
         borderRadius: '6px',
-        borderWidth: '1px',
+        borderWidth: 1,
         borderColor: 'rgb(229,231,235)',
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 0 },
@@ -1223,7 +1223,7 @@ const styles = StyleSheet.create({
     DarkDropdownMenu2: {
         width: '100%',
         borderRadius: '6px',
-        borderTopWidth: '1px',
+        borderTopWidth: 1,
         borderColor: 'rgb(0,0,0)',
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 0 },
@@ -1234,25 +1234,25 @@ const styles = StyleSheet.create({
         bottom: '100%',
     },
     LightDropdownItem: {
-        borderBottomWidth: '1px',
+        borderBottomWidth: 1,
         borderColor: 'rgb(229, 231, 235)',
         paddingVertical: 12,
         paddingHorizontal: 8
     },
     DarkDropdownItem: {
-        borderBottomWidth: '1px',
+        borderBottomWidth: 1,
         borderColor: 'rgb(75, 85, 99)',
         paddingVertical: 12,
         paddingHorizontal: 8
     },
     LightDropdownItemEnd: {
-        borderBottomWidth: '1px',
+        borderBottomWidth: 1,
         borderColor: '#ffffff',
         paddingVertical: 12,
         paddingHorizontal: 8
     },
     DarkDropdownItemEnd: {
-        borderBottomWidth: '1px',
+        borderBottomWidth: 1,
         borderColor: '#262626',
         paddingVertical: 12,
         paddingHorizontal: 8

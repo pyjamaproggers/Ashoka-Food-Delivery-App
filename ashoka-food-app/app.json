@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "react-native-food-app-practice",
-    "slug": "react-native-food-app-practice",
+    "name": "AshokaEats",
+    "slug": "AshokaEats",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
