@@ -192,7 +192,7 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
 
     const fetchUnavailableItems = async () => {
         try {
-            const response = await fetch(`http://${IP}:8800/api/items/${Restaurant}`);
+            const response = await fetch(`${IP}/api/items/${Restaurant}`);
             const data = await response.json();
             var TempFetchedUnavailableItems = []
             if (data) {
@@ -202,12 +202,12 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
                 setFetchedUnavailableItems(TempFetchedUnavailableItems)
             }
         } catch (error) {
-            console.error('Error fetching orders:', error);
+            console.error('Error fetching orders on dishrow component:', error);
         }
     }
 
     const connectToSocket = () => {
-        const socket = io(`http://${IP}:8800`, {});
+        const socket = io(`${IP}`, {});
 
         socket.on('connect', () => {
             console.log('Connected to WebSocket');

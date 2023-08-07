@@ -73,7 +73,7 @@ function VendorDashboard() {
     }, []);
 
     const connectToSocket = () => {
-        const socket = io(`http://${IP}:8800`, {
+        const socket = io(`${IP}`, {
         });
 
         socket.on('connect', () => {
@@ -146,7 +146,7 @@ function VendorDashboard() {
     const changeStatus = async (_id, orderStatus) => {
         try {
             if (orderStatus != 'Declined') {
-                const response = await fetch(`http://${IP}:8800/api/orders/${_id}/status`, {
+                const response = await fetch(`${IP}/api/orders/${_id}/status`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -167,7 +167,7 @@ function VendorDashboard() {
 
             if (orderStatus == 'Declined') {
                 if (declineReason == 'Closing Time' || declineReason == 'Student Cancelled') {
-                    const response = await fetch(`http://${IP}:8800/api/orders/${_id}/status`, {
+                    const response = await fetch(`${IP}/api/orders/${_id}/status`, {
                         method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json',
@@ -187,7 +187,7 @@ function VendorDashboard() {
                     }
                 }
                 else {
-                    const response = await fetch(`http://${IP}:8800/api/orders/${_id}/status`, {
+                    const response = await fetch(`${IP}/api/orders/${_id}/status`, {
                         method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json',
@@ -218,7 +218,7 @@ function VendorDashboard() {
     const fetchOrders = async () => {
         setFetching(true)
         try {
-            const response = await fetch(`http://${IP}:8800/api/orders/restaurants/${selectedRestaurant}`);
+            const response = await fetch(`${IP}/api/orders/restaurants/${selectedRestaurant}`);
             const data = await response.json();
             let tempClosedOrders = []
             let tempOpenOrders = []
@@ -256,8 +256,7 @@ function VendorDashboard() {
     const fetchUnavailableItems = async (tempCheckedItems, showAlert) => {
         setFetching(true)
         try {
-            // const response = await fetch(`http://10.77.1.70:8800/api/items/${selectedRestaurant}`);
-            const response = await fetch(`http://${IP}:8800/api/items/${selectedRestaurant}`);
+            const response = await fetch(`${IP}/api/items/${selectedRestaurant}`);
             const data = await response.json();
             var TempFetchedUnavailableItems = []
             if (data) {
@@ -338,7 +337,7 @@ function VendorDashboard() {
         var flag = 0
 
         for (const item of itemsToAdd) {
-            const url = `http://${IP}:8800/api/items`;
+            const url = `${IP}/api/items`;
             try {
                 const response = await fetch(url, {
                     method: "POST",
@@ -357,7 +356,7 @@ function VendorDashboard() {
         }
 
         for (const item of itemsToRemove) {
-            const url = `http://${IP}:8800/api/items`;
+            const url = `${IP}/api/items`;
             try {
                 const response = await fetch(url, {
                     method: "DELETE",

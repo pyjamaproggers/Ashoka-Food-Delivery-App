@@ -183,7 +183,7 @@ const BasketScreen = () => {
     };
 
     const connectToSocket = () => {
-        const socket = io(`http://${IP}:8800`, {});
+        const socket = io(`${IP}`, {});
 
         socket.on('connect', () => {
             console.log('Connected to WebSocket');
@@ -206,7 +206,7 @@ const BasketScreen = () => {
 
         for (const basketRestaurant of Basket) {
             try {
-                const response = await fetch(`http://${IP}:8800/api/items/${basketRestaurant.name}`);
+                const response = await fetch(`${IP}/api/items/${basketRestaurant.name}`);
                 const data = await response.json();
                 const fetchedUnavailableItems = data.map((item) => item.name);
 
@@ -385,7 +385,8 @@ const BasketScreen = () => {
     }, []);
 
     const sendOrderToDatabase = async (orderData) => {
-        const url = `http://${IP}:8800/api/orders`; // Node Server (Our backend, put the IP address as ur local IPV4 address)
+        const url = `${IP}/api/orders`; // Node Server (Our backend, put the IP address as ur local IPV4 address)
+        console.log(url)
         try {
             const response = await fetch(url, {
                 method: "POST",

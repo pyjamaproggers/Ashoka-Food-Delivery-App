@@ -92,7 +92,7 @@ export default function LiveOrders() {
     }
 
     const connectToSocket = () => {
-        const socket = io(`http://${IP}:8800`, {});
+        const socket = io(`${IP}`, {});
 
         socket.on('connect', () => {
             console.log('Connected to WebSocket');
@@ -125,7 +125,7 @@ export default function LiveOrders() {
                 console.error('Actual user is undefined');
                 return;
             }
-            const response = await fetch(`http://${IP}:8800/api/orders/users/${actualUser.email}`);
+            const response = await fetch(`${IP}/api/orders/users/${actualUser.email}`);
             const data = await response.json();
             let liveOrders = [];
             let flag = 1
@@ -141,7 +141,7 @@ export default function LiveOrders() {
             setUsersLiveOrders(liveOrders)
             setFetching(false)
         } catch (error) {
-            console.error('Error fetching orders:', error);
+            console.error('Error fetching orders unfortunately:', error);
             // setRefreshing(false)
             setFetching(false)
         }
