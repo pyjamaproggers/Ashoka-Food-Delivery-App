@@ -65,6 +65,7 @@ const BasketScreen = () => {
 
     const [latestItem, setLatestItem] = useState(null)
     const [socket, setSocket] = useState(null)
+    const [restaurantData, setRestaurantData] = useState(null)
 
     const colors = [
         'amber.400',
@@ -130,7 +131,7 @@ const BasketScreen = () => {
     }
 
     const query = `*[_type == "restaurant"]
-        { name, image }`;
+        { name, image, timing }`;
 
     const addItem = (id, name, Price, image, Restaurant, Veg_NonVeg) => {
         Price = parseFloat(Price)
@@ -239,6 +240,43 @@ const BasketScreen = () => {
         return checkArray;
     };
 
+    const checkRestaurantClosed = async () => {
+        let checkArray = 'The following restaurants are closed:\n';
+        const currentTime = new Date();  // Get the current time
+        
+        for (const basketRestaurant of restaurantData) {
+            const timing = basketRestaurant.timing;
+            const [openTime, closeTime] = timing.split(' To ');
+    
+            const openHour = parseInt(openTime.slice(0, -2)); 
+            const openPeriod = openTime.slice(-2); 
+    
+            const closeHour = parseInt(closeTime.slice(0, -2)); 
+            const closePeriod = closeTime.slice(-2); 
+    
+            if (openPeriod === 'PM' && openHour !== 12) {
+                openHour += 12;
+            }
+            if (closePeriod === 'PM' && closeHour !== 12) {
+                closeHour += 12;
+            }
+    
+            if (closeHour < openHour) {
+                // Handle cases where closing hour is earlier than opening hour (e.g., 6pm to 2am)
+                if (currentTime.getHours() >= openHour || currentTime.getHours() < closeHour) {
+                    checkArray += basketRestaurant.name + ', '; 
+                }
+            } else {
+                if (currentTime.getHours() >= openHour && currentTime.getHours() < closeHour) {
+                    checkArray += basketRestaurant.name + ', '; 
+                }
+            }
+        }
+    
+        return checkArray;
+    }
+    
+
 
     const updateInstructions = (instruction, restaurant) => {
         var TempFinalBasket = FinalBasket
@@ -313,7 +351,8 @@ const BasketScreen = () => {
 
         try {
             const data = await client.fetch(query);
-
+            console.log(data)
+            setRestaurantData(data)
             const tempFinalBasket = [...tempBasket]; // Avoid modifying the same object
 
             let foodVillageInCart = false;
@@ -523,8 +562,11 @@ const BasketScreen = () => {
             return
         }
 
+
         let itemsCheck = await checkUnavailableItems()
-        if (itemsCheck == 'The following items were removed from your cart as they became unavailable:\n') {
+        let timingsCheck = await checkRestaurantClosed()
+
+        if (itemsCheck === 'The following items were removed from your cart as they became unavailable:\n' && timingsCheck === 'The following restaurants are closed:\n') {
             // Now, you have an array of order objects, each representing an order for a different restaurant
             // Call the sendOrderToDatabase function to send the orders to the API
             for (const orderData of orders) {
@@ -535,8 +577,17 @@ const BasketScreen = () => {
             }
             navigation.navigate('LiveOrders', { actualUser });
         }
-        else {
+        else if(itemsCheck !== 'The following items were removed from your cart as they became unavailable:\n' && timingsCheck === 'The following restaurants are closed:\n'){
             Alert.alert(itemsCheck)
+            setShowSpinner(false)
+        }
+        else if(itemsCheck === 'The following items were removed from your cart as they became unavailable:\n' && timingsCheck !== 'The following restaurants are closed:\n'){
+            Alert.alert(timingsCheck)
+            setShowSpinner(false)
+        }
+        else if(itemsCheck !== 'The following items were removed from your cart as they became unavailable:\n' && timingsCheck !== 'The following restaurants are closed:\n'){
+            Alert.alert(itemsCheck)
+            Alert.alert(timingsCheck)
             setShowSpinner(false)
         }
 
