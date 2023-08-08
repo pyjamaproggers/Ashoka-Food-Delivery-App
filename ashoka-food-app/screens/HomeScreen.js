@@ -16,7 +16,7 @@ import { Alert, CloseIcon, HStack, IconButton, Slide, VStack, Skeleton, Avatar }
 import { useNetInfo } from "@react-native-community/netinfo";
 import axios from 'axios';
 import Tracking from '../assets/tracking.png'
-import { IP } from "@dotenv"
+import { IP } from '@dotenv'
 
 const HomeScreen = () => {
     const navigation = useNavigation();
@@ -44,18 +44,18 @@ const HomeScreen = () => {
         { location: 'Sports Block' },
         { location: 'Mess' },
     ]
-    // const colors = [
-    //     'amber.400',
-    //     'lightBlue.400',
-    //     'secondary.400',
-    //     'pink.400',
-    //     'purple.400',
-    //     'violet.400',
-    //     'indigo.400',
-    //     'teal.500',
-    // ]
+    const colors = [
+        'amber.400',
+        'lightBlue.400',
+        'secondary.400',
+        'pink.400',
+        'purple.400',
+        'violet.400',
+        'indigo.400',
+        'teal.500',
+    ]
 
-    // const [userColor, setUserColor] = useState(colors[Math.floor(Math.random() * colors.length)])
+    const [userColor, setUserColor] = useState(colors[Math.floor(Math.random() * colors.length)])
 
     const LoadJoke = (data) => {
         console.log('Reloading')
@@ -100,9 +100,9 @@ const HomeScreen = () => {
             const response = await fetch(`https://api.multiavatar.com/${actualUser.name}.png?apikey=Bvjs0QyHcCxZNe`)
             setUserImage(response.json())
         } catch (error) {
-            console.log('Error in fetching avatar'+error)
+            console.log('Error in fetching avatar' + error)
         }
-    }   
+    }
 
     const {
         params: { actualUser },
@@ -325,7 +325,15 @@ const HomeScreen = () => {
                             navigation.navigate('UserScreen', { actualUser })
                             setIsOpen(false)
                         }}>
-                            <Image style={styles.userPic} source={{ uri: `https://api.multiavatar.com/${actualUser.name}.png?apikey=Bvjs0QyHcCxZNe`}} />
+                            {userColor &&
+                                <Avatar bg={userColor} source={{
+                                    uri: `https://api.multiavatar.com/${actualUser.name}.png?apikey=Bvjs0QyHcCxZNe`
+                                }}>
+                                    <Text className='' style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
+                                        {actualUser.given_name[0]}{actualUser.family_name[0]}
+                                    </Text>
+                                </Avatar>
+                            }
                         </TouchableOpacity>
                     </View>
 

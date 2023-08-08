@@ -8,7 +8,7 @@ import VegIcon from '../assets/vegicon.png';
 import NonVegIcon from '../assets/nonvegicon.png';
 import Styles from "../components/Styles";
 import { HStack, VStack, Actionsheet, Radio, Checkbox, Skeleton } from "native-base";
-import { IP } from '@dotenv'
+import {IP} from '@dotenv'
 import Cart from '../assets/carticon.png';
 import io from 'socket.io-client';
 
@@ -54,7 +54,6 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
             else {
                 items.map((item) => {
                     if (item.name == name) {
-                        console.log('coming here')
                         currentQuantity = item.quantity
                         additemQ = currentQuantity + 1
                         // dispatch(addToCart({ id, name, Price, image, Restaurant, Veg_NonVeg, quantity: additemQ }));
@@ -81,7 +80,6 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
             }
 
             if (item.name === name && item.quantity >= 1) {
-                console.log('coming here');
                 currentQuantity = item.quantity;
                 additemQ = currentQuantity - 1;
                 dispatch(updateCartRemove({ newQuantity: additemQ, dishName: item.name }));
@@ -139,9 +137,7 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
                 let foundSameCustomizations = false
                 items.forEach((item) => {
                     if (item.name === name) {
-                        console.log(objectsAreEqual(item.customizations, userCustomizationsObject))
                         if (objectsAreEqual(item.customizations, userCustomizationsObject)) {
-                            console.log('FOUND EXACT SAME DISH W C ')
                             foundSameCustomizations = true
                             currentQuantity = item.quantity
                             additemQ = currentQuantity + CDishQuantity
@@ -154,7 +150,6 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
                     }
                 })
                 if (!foundSameCustomizations) {
-                    console.log('NOT FOUND')
                     setItemQuantity(itemQuantity + CDishQuantity);
                     dispatch(addToCart({ id, name, Price: CDishPrice, image, Restaurant, Veg_NonVeg, quantity: CDishQuantity, customizations: userCustomizationsObject }));
                     setCDishQuantity(1)
@@ -206,26 +201,24 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
         }
     }
 
-    const connectToSocket = () => {
-        const socket = io(`${IP}`, {});
+    // const connectToSocket = () => {
+    //     const socket = io(`${IP}`, {});
 
-        socket.on('connect', () => {
-            console.log('Connected to WebSocket');
-        });
+    //     socket.on('connect', () => {
+    //         console.log('Connected to WebSocket');
+    //     });
 
-        socket.on('unavailableItemsListUpdated', async (item) => {
-            console.log("Unavailable Item List Updated")
-            setLatestItem(item)
-        });
+    //     socket.on('unavailableItemsListUpdated', async (item) => {
+    //         console.log("Unavailable Item List Updated")
+    //         setLatestItem(item)
+    //     });
 
-        socket.on('disconnect', () => {
-            console.log('WebSocket disconnected');
-        });
+    //     socket.on('disconnect', () => {
+    //         console.log('WebSocket disconnected');
+    //     });
 
-        setSocket(socket);
-    };
-
-    
+    //     setSocket(socket);
+    // };  
 
     const segregateCustomizations = () => {
         setShowCustomizationSheet(true)
@@ -333,7 +326,6 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
     }
 
     const askWhichCustomizationToRemove = () => {
-        console.log('YES IM HERE')
         setShowCRemoveSheet(true)
         setSheetLoading(true)
 
@@ -349,8 +341,6 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
             setSheetLoading(false)
         }, 200)
     }
-
-    console.log(items)
 
     useEffect(() => {
         if (items.length == 0) {
@@ -368,19 +358,32 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
         fetchUnavailableItems()
     }, [items, userCustomizations, latestItem])
 
-    useEffect(() => {
-        const fetchData = async () => {
-            connectToSocket();
-        };
-        fetchData();
-    }, []);
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         connectToSocket();
+    //     };
+    //     fetchData();
+    // }, []);
 
     return (
         <>
 
-            <HStack className='items-center justify-between px-2 w-full py-4' style={[colorScheme == 'light' ? Styles.LightBGSec : Styles.DarkBGSec]}>
+            <HStack className='items-center justify-between px-2 w-full ' style={[colorScheme == 'light' ? Styles.LightBGSec : Styles.DarkBGSec]}>
                 {/* Dish Details Block */}
-                <VStack className='justify-start' style={{}}>
+                <VStack className='justify-start w-8/12  py-4' style={[
+                    colorScheme=='light'?
+                    {
+                        borderStyle: 'solid',
+                        borderColor: 'rgb(229,231,235)',
+                        borderBottomWidth: 1
+                    }
+                    :
+                    {
+                        borderStyle: 'solid',
+                        borderColor: 'rgb(55,65,81)',
+                        borderBottomWidth: 1
+                    }
+                ]}>
                     {Veg_NonVeg === "Veg" ? (
                         <Image
                             style={{ width: 15, height: 15, resizeMode: "contain" }}
@@ -392,7 +395,7 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
                             source={NonVegIcon}
                         />
                     )}
-
+                    
                     <Text className='text-lg font-medium py-1.5'
                         style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
                     >
@@ -858,8 +861,6 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
                                 {CDishVersionsInCart.length > 0 &&
 
                                     <VStack className='w-full space-y-4'>
-
-                                        {console.log('CDISHVERSION HERE NIGGAA ' + CDishVersionsInCart)}
 
 
                                         {CDishVersionsInCart.map((item) => (

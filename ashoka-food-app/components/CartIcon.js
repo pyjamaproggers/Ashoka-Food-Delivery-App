@@ -32,7 +32,6 @@ export default function CartIcon({ actualUser, store }) {
 
     const addItem = (id, name, Price, image, Restaurant, Veg_NonVeg) => {
         Price = parseFloat(Price)
-        console.log('****')
         var currentQuantity
         var additemQ
 
@@ -62,7 +61,6 @@ export default function CartIcon({ actualUser, store }) {
     }
     const removeItem = (id, name, Price, image, Restaurant, Veg_NonVeg) => {
         Price = parseFloat(Price)
-        console.log('****')
         var currentQuantity
         var additemQ
         items.map((item) => {
@@ -257,10 +255,10 @@ export default function CartIcon({ actualUser, store }) {
                                                         {BasketRestaurant.name}
                                                     </Text>
                                                 }
-                                                {BasketRestaurant.name === 'Dhaba' &&
+                                                {BasketRestaurant.name === 'Shuddh Desi Dhaba' &&
                                                     <Text
                                                         allowFontScaling={false}
-                                                        className="text-center font-normal text-md mx-36 mt-3 -top-5 "
+                                                        className="text-center font-normal text-md mx-28 mt-3 -top-5 "
                                                         style={[colorScheme == 'light' ? Styles.LightHomeAdlib : Styles.DarkHomeAdlib]}
                                                     >
                                                         {BasketRestaurant.name}
@@ -392,7 +390,7 @@ export default function CartIcon({ actualUser, store }) {
                                                                 <>
                                                                     <HStack className='items-center rounded-lg justify-between w-full pt-2 pb-2 my-1' style={[colorScheme == 'light' ? Styles.LightBGSec : Styles.DarkBGSec]}>
                                                                         {/* Dish Details Block */}
-                                                                        <VStack style={{ marginLeft: '2%' }}>
+                                                                        <VStack className='w-7/12' style={{ marginLeft: '2%' }}>
                                                                             {dish.Veg_NonVeg === "Veg" ? (
                                                                                 <Image
                                                                                     style={{ width: 15, height: 15, resizeMode: "contain" }}

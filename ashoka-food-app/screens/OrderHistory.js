@@ -87,7 +87,7 @@ export default function OrderHistory() {
                         order['image'] = RotiBoti.image;
                         order['restaurantPhone'] = RotiBoti.phoneNumber;
                         break;
-                    case 'Dhaba':
+                    case 'Shuddh Desi Dhaba':
                         order['image'] = Dhaba.image;
                         order['restaurantPhone'] = Dhaba.phoneNumber;
                         break;

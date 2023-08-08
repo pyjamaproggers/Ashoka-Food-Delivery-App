@@ -20,18 +20,18 @@ export default function UserScreen() {
 
     const colorScheme = useColorScheme();
 
-    // const colors = [
-    //     'amber.400',
-    //     'lightBlue.400',
-    //     'secondary.400',
-    //     'pink.400',
-    //     'purple.400',
-    //     'violet.400',
-    //     'indigo.400',
-    //     'teal.500',
-    // ]
+    const colors = [
+        'amber.400',
+        'lightBlue.400',
+        'secondary.400',
+        'pink.400',
+        'purple.400',
+        'violet.400',
+        'indigo.400',
+        'teal.500',
+    ]
 
-    // const [userColor, setUserColor] = useState(colors[Math.floor(Math.random() * colors.length)])
+    const [userColor, setUserColor] = useState(colors[Math.floor(Math.random() * colors.length)])
 
     const styles = StyleSheet.create({
         container: {
@@ -42,8 +42,8 @@ export default function UserScreen() {
             //   borderWidth: 1,
         },
         userPic: {
-            width: 80,
-            height: 80,
+            width: 70,
+            height: 70,
             borderRadius: 100,
         },
         LightnameEmailPhotoContainer: {
@@ -155,7 +155,7 @@ export default function UserScreen() {
     return (
         <SafeAreaView className="h-screen" style={[colorScheme == 'light' ? { backgroundColor: '#F2F2F2', flex: 1 } : { backgroundColor: '#0c0c0f', flex: 1 }]}>
             {/* Go back Button */}
-            <TouchableOpacity onPress={()=>{navigation.navigate('Home',{actualUser})}} className="p-2 bg-white rounded-full items-center shadow-lg" style={[colorScheme == 'light' ? styles.LightbackButton : styles.DarkbackButton]}>
+            <TouchableOpacity onPress={() => { navigation.navigate('Home', { actualUser }) }} className="p-2 bg-white rounded-full items-center shadow-lg" style={[colorScheme == 'light' ? styles.LightbackButton : styles.DarkbackButton]}>
                 <ArrowLeftIcon size={20} style={[colorScheme == 'light' ? { color: 'black' } : { color: 'white' }]} />
             </TouchableOpacity>
 
@@ -164,7 +164,17 @@ export default function UserScreen() {
                 <View style={colorScheme == 'light' ? styles.LightnameEmailPhotoContainer : styles.DarknameEmailPhotoContainer} className='shadow-sm'>
 
                     <View className='px-3'>
-                        <Image style={styles.userPic} source={{ uri: `https://api.multiavatar.com/${actualUser.name}.png?apikey=Bvjs0QyHcCxZNe` }} />
+                        {userColor &&
+                            <Avatar bg={userColor}
+                                style={styles.userPic}
+                            source={{
+                                uri: `https://api.multiavatar.com/${actualUser.name}.png?apikey=Bvjs0QyHcCxZNe`
+                            }}>
+                                <Text className='' style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
+                                    {actualUser.given_name[0]}{actualUser.family_name[0]}
+                                </Text>
+                            </Avatar>
+                        }
                     </View>
 
                     <View className='flex-col space-y-1 pl-0.5'>

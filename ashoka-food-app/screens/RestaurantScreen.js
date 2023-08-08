@@ -1,7 +1,7 @@
 import React, { useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { useEffect } from 'react';
 import { useRoute, useNavigation } from '@react-navigation/native';
-import { View, Text, Image, TextInput, ScrollView, Animated, useColorScheme, Linking, RefreshControl } from 'react-native'
+import { View, Text, Image, TextInput, ScrollView, Animated, useColorScheme, Linking, RefreshControl, FlatList } from 'react-native'
 import { TouchableOpacity } from 'react-native';
 import { ArrowLeftIcon, ClockIcon, MapPinIcon, BoltIcon, PhoneArrowUpRightIcon, XMarkIcon } from 'react-native-heroicons/solid';
 import { selectRestaurant, setRestaurant } from '../reduxslices/restaurantSlice'
@@ -23,6 +23,7 @@ import { useNetInfo } from "@react-native-community/netinfo";
 import { Alert, CloseIcon, HStack, IconButton, PresenceTransition, Slide, VStack } from 'native-base';
 import Warning from '../assets/warning.png'
 import { addToCart, removeFromCart, selectCartItems, selectCartTotal } from "../reduxslices/cartslice";
+import CategoryAccordion from '../components/Accordion';
 
 const RestaurantScreen = () => {
     const [Transitions, setTransitions] = useState(true)
@@ -187,7 +188,8 @@ const RestaurantScreen = () => {
             }
         });
 
-        const TempCategoriesArray = TempMenuCategories.map((category) => ({
+        const TempCategoriesArray = TempMenuCategories.map((category, index) => ({
+            id: index,
             title: category,
             content: []
         }));
@@ -203,7 +205,8 @@ const RestaurantScreen = () => {
         const UniqueVegMenuCategories = [...new Set(TempVegDishes.map((dish) => dish.Menu_category))];
         const UniqueNonVegMenuCategories = [...new Set(TempNonVegDishes.map((dish) => dish.Menu_category))];
 
-        const TempVegMenu = UniqueVegMenuCategories.map((category) => ({
+        const TempVegMenu = UniqueVegMenuCategories.map((category, index) => ({
+            id: index,
             title: category,
             content: []
         }));
@@ -216,7 +219,8 @@ const RestaurantScreen = () => {
             });
         });
 
-        const TempNonVegMenu = UniqueNonVegMenuCategories.map((category) => ({
+        const TempNonVegMenu = UniqueNonVegMenuCategories.map((category, index) => ({
+            id: index,
             title: category,
             content: []
         }));
@@ -430,7 +434,8 @@ const RestaurantScreen = () => {
             }
         });
 
-        const TempCategoriesArray = TempMenuCategories.map((category) => ({
+        const TempCategoriesArray = TempMenuCategories.map((category, index) => ({
+            id: index,
             title: category,
             content: []
         }));
@@ -446,7 +451,8 @@ const RestaurantScreen = () => {
         const UniqueVegMenuCategories = [...new Set(TempVegMenuCategories)];
         const UniqueNonVegMenuCategories = [...new Set(TempNonVegMenuCategories)];
 
-        const TempVegMenu = UniqueVegMenuCategories.map((category) => ({
+        const TempVegMenu = UniqueVegMenuCategories.map((category, index) => ({
+            id: index,
             title: category,
             content: []
         }));
@@ -459,7 +465,8 @@ const RestaurantScreen = () => {
             });
         });
 
-        const TempNonVegMenu = UniqueNonVegMenuCategories.map((category) => ({
+        const TempNonVegMenu = UniqueNonVegMenuCategories.map((category, index) => ({
+            id: index,
             title: category,
             content: []
         }));
@@ -473,7 +480,8 @@ const RestaurantScreen = () => {
         });
 
         const filterAndSetSearchedMenu = (menu, setMenuFunction) => {
-            const TempSearchedMenu = menu.map((category) => ({
+            const TempSearchedMenu = menu.map((category,index) => ({
+                id: category.id,
                 title: category.title,
                 content: category.content.filter(
                     (dish) =>
@@ -497,7 +505,7 @@ const RestaurantScreen = () => {
             <HStack className='mt-3 shadow-sm items-center justify-between pr-3'
                 style={[colorScheme == 'light' ? [isActive == true ? Styles.LightActiveAccordionButton : Styles.LightInactiveAccordionButton] : [isActive == true ? Styles.DarkActiveAccordionButton : Styles.DarkInactiveAccordionButton]]}
             >
-                <Text className='font-semibold pl-2 text-lg py-3'
+                <Text className='font-semibold pl-2 text-lg py-3 w-10/12'
                     style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
                 >
                     {section.title} ({section.content.length})
@@ -558,9 +566,9 @@ const RestaurantScreen = () => {
     return (
         <>
 
-            <CartIcon actualUser={actualUser}/>
+            <CartIcon actualUser={actualUser} />
 
-            
+
             <Slide in={!netInfo.isConnected} placement="top">
                 <Alert justifyContent="center" status="error" safeAreaTop={10}>
                     <HStack space={3}>
@@ -699,7 +707,7 @@ const RestaurantScreen = () => {
                         }
                         {VegMenu && NonVegMenu && AllDishes &&
                             <View className="flex-row item-center space-x-2 mx-4 ">
-                                <View className="self-center flex-row flex-1 p-3 shadow-sm w-11/12" style={[colorScheme == 'light' ? Styles.LightSearchBar : Styles.DarkSearchBar]}>
+                                <View className="self-center flex-row flex-1 p-3 mb-2 shadow-sm w-11/12" style={[colorScheme == 'light' ? Styles.LightSearchBar : Styles.DarkSearchBar]}>
 
                                     <HStack>
                                         <Image
@@ -791,107 +799,82 @@ const RestaurantScreen = () => {
 
 
                     {Categories && !showVegMenu && !showNonVegMenu && !ShowSearchedMenu && !ShowSearchedVegMenu && !ShowSearchedNonVegMenu && SearchedText.length == 0 &&
-
-                        <Accordion
-                            activeSections={activeSections}
-                            sections={Categories}
-                            touchableComponent={TouchableOpacity}
-                            expandMultiple={multipleSelect}
-                            renderHeader={_renderHeader}
-                            renderContent={_renderContent}
-                            duration={100}
-                            onChange={setSections}
+                        <FlatList
+                            data={Categories}
+                            keyExtractor={item => item.id.toString()}
+                            renderItem={item => (
+                                <CategoryAccordion section={item} delivery={delivery} />
+                            )}
                         />
                     }
 
                     {VegMenu && showVegMenu && !showNonVegMenu && !ShowSearchedMenu && !ShowSearchedVegMenu && !ShowSearchedNonVegMenu &&
-                        <Accordion
-                            activeSections={activeSections}
-                            sections={VegMenu}
-                            touchableComponent={TouchableOpacity}
-                            expandMultiple={multipleSelect}
-                            renderHeader={_renderHeader}
-                            renderContent={_renderContent}
-                            duration={100}
-                            onChange={setSections}
+                        <FlatList
+                            data={VegMenu}
+                            keyExtractor={item => item.id.toString()}
+                            renderItem={item => (
+                                <CategoryAccordion section={item} delivery={delivery} />
+                            )}
                         />
                     }
 
                     {NonVegMenu && !showVegMenu && showNonVegMenu && !ShowSearchedMenu && !ShowSearchedVegMenu && !ShowSearchedNonVegMenu &&
-                        <Accordion
-                            activeSections={activeSections}
-                            sections={NonVegMenu}
-                            touchableComponent={TouchableOpacity}
-                            expandMultiple={multipleSelect}
-                            renderHeader={_renderHeader}
-                            renderContent={_renderContent}
-                            duration={100}
-                            onChange={setSections}
+                        <FlatList
+                            data={NonVegMenu}
+                            keyExtractor={item => item.id.toString()}
+                            renderItem={item => (
+                                <CategoryAccordion section={item} delivery={delivery} />
+                            )}
                         />
                     }
 
                     {Categories && showVegMenu && showNonVegMenu && !ShowSearchedMenu && !ShowSearchedVegMenu && !ShowSearchedNonVegMenu &&
-                        <Accordion
-                            activeSections={activeSections}
-                            sections={Categories}
-                            touchableComponent={TouchableOpacity}
-                            expandMultiple={multipleSelect}
-                            renderHeader={_renderHeader}
-                            renderContent={_renderContent}
-                            duration={100}
-                            onChange={setSections}
+                        <FlatList
+                            data={Categories}
+                            keyExtractor={item => item.id.toString()}
+                            renderItem={item => (
+                                <CategoryAccordion section={item} delivery={delivery} />
+                            )}
                         />
                     }
 
                     {ShowSearchedMenu && !ShowSearchedVegMenu && !ShowSearchedNonVegMenu &&
-                        <Accordion
-                            activeSections={activeSections}
-                            sections={SearchedMenu}
-                            touchableComponent={TouchableOpacity}
-                            expandMultiple={multipleSelect}
-                            renderHeader={_renderHeader}
-                            renderContent={_renderContent}
-                            duration={100}
-                            onChange={setSections}
+                        <FlatList
+                            data={SearchedMenu}
+                            keyExtractor={item => item.id.toString()}
+                            renderItem={item => (
+                                <CategoryAccordion section={item} delivery={delivery} />
+                            )}
                         />
                     }
 
                     {ShowSearchedMenu && ShowSearchedVegMenu && !ShowSearchedNonVegMenu &&
-                        <Accordion
-                            activeSections={activeSections}
-                            sections={SearchedVegMenu}
-                            touchableComponent={TouchableOpacity}
-                            expandMultiple={multipleSelect}
-                            renderHeader={_renderHeader}
-                            renderContent={_renderContent}
-                            duration={100}
-                            onChange={setSections}
+                        <FlatList
+                            data={SearchedVegMenu}
+                            keyExtractor={item => item.id.toString()}
+                            renderItem={item => (
+                                <CategoryAccordion section={item} delivery={delivery} />
+                            )}
                         />
                     }
 
                     {ShowSearchedMenu && !ShowSearchedVegMenu && ShowSearchedNonVegMenu &&
-                        <Accordion
-                            activeSections={activeSections}
-                            sections={SearchedNonVegMenu}
-                            touchableComponent={TouchableOpacity}
-                            expandMultiple={multipleSelect}
-                            renderHeader={_renderHeader}
-                            renderContent={_renderContent}
-                            duration={100}
-                            onChange={setSections}
+                        <FlatList
+                            data={SearchedNonVegMenu}
+                            keyExtractor={item => item.id.toString()}
+                            renderItem={item => (
+                                <CategoryAccordion section={item} delivery={delivery} />
+                            )}
                         />
                     }
 
                     {ShowSearchedMenu && ShowSearchedVegMenu && ShowSearchedNonVegMenu &&
-                        <Accordion
-                            activeSections={activeSections}
-                            sections={SearchedMenu}
-                            touchableComponent={TouchableOpacity}
-                            expandMultiple={multipleSelect}
-                            renderHeader={_renderHeader}
-                            renderContent={_renderContent}
-                            duration={100}
-                            onChange={setSections}
+                        <FlatList
+                            data={SearchedMenu}
+                            keyExtractor={item => item.id.toString()}
+                            renderItem={item => (
+                                <CategoryAccordion section={item} delivery={delivery} />
+                            )}
                         />
                     }
 

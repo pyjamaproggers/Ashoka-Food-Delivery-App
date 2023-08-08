@@ -1,47 +1,59 @@
-import React, { useLayoutEffect, useState, useRef } from 'react';
-import { View, Text, Image, TextInput, ScrollView, TouchableOpacity, StyleSheet, FlatList, Alert, useColorScheme } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useNavigation, useRoute } from '@react-navigation/native';
-import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha'
-import { firebaseConfig } from '../firebaseConfig';
-import firebase from 'firebase/compat/app';
-import PhoneInput from 'react-native-phone-number-input';
-import { ArrowLeftIcon } from 'react-native-heroicons/solid';
-import OTPInputView from '@twotalltotems/react-native-otp-input';
-import Styles from '../components/Styles';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useLayoutEffect, useState, useRef, useEffect } from "react";
+import {
+    View,
+    Text,
+    Image,
+    TextInput,
+    ScrollView,
+    TouchableOpacity,
+    StyleSheet,
+    FlatList,
+    Alert,
+    useColorScheme,
+    ActivityIndicator,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
+import { firebaseConfig } from "../firebaseConfig";
+import firebase from "firebase/compat/app";
+import PhoneInput from "react-native-phone-number-input";
+import { ArrowLeftIcon } from "react-native-heroicons/solid";
+import OTPInputView from "@twotalltotems/react-native-otp-input";
+import Styles from "../components/Styles";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const PhoneAuthScreen = () => {
-
-    const [phoneNumber, setPhoneNumber] = useState('')
-    const [phoneNumberFormatted, setPhoneNumberFormatted] = useState('')
+    const [phoneNumber, setPhoneNumber] = useState("");
+    const [phoneNumberFormatted, setPhoneNumberFormatted] = useState("");
     const [validity, setValidity] = useState(false);
-    const [code, setCode] = useState('')
-    const [verificationID, setVerificationID] = useState(null)
-    const recaptchaVerifier = useRef(null)
+    const [code, setCode] = useState("");
+    const [verificationID, setVerificationID] = useState(null);
+    const recaptchaVerifier = useRef(null);
     const phoneInput = useRef(null);
+    const [showLoader, setShowLoader] = useState(false);
 
     const navigation = useNavigation();
-    const colorScheme=useColorScheme();
+    const colorScheme = useColorScheme();
 
     const {
         params: { actualUser, from },
     } = useRoute();
-    
+
     const styles = StyleSheet.create({
         backButton: {
             width: "10%",
             marginLeft: 20,
-            backgroundColor: 'white'
+            backgroundColor: "white",
         },
         OTPButton: {
             backgroundColor: "#3E5896", // Ashoka University primary color
             padding: 10,
             borderRadius: 5,
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: '50%',
-            marginBottom: 12
+            alignItems: "center",
+            justifyContent: "center",
+            width: "50%",
+            marginBottom: 12,
         },
         OTPButtonText: {
             color: "#fff",
@@ -50,7 +62,7 @@ const PhoneAuthScreen = () => {
         },
         borderStyleBase: {
             width: 30,
-            height: 45
+            height: 45,
         },
 
         borderStyleHighLighted: {
@@ -61,65 +73,68 @@ const PhoneAuthScreen = () => {
             width: 30,
             height: 45,
             borderWidth: 0,
-            borderBottomWidth: 1,
-            color: 'black'
+            borderBottomWidth: 3,
+            color: "black",
         },
         DarkunderlineStyleBase: {
             width: 30,
             height: 45,
             borderWidth: 0,
-            borderBottomWidth: 1,
-            color: 'white'
+            borderBottomWidth: 3,
+            color: "white",
         },
 
         underlineStyleHighLighted: {
             borderColor: "#3E5896",
         },
-    })
+    });
 
     const sendVerification = (validity) => {
         if (validity === true) {
             const phoneProvider = new firebase.auth.PhoneAuthProvider();
-            phoneProvider.verifyPhoneNumber(phoneNumberFormatted, recaptchaVerifier.current).then(setVerificationID)
-            console.log(actualUser)
-            actualUser['phone'] = phoneNumberFormatted
-            setPhoneNumber('')
+            phoneProvider
+                .verifyPhoneNumber(phoneNumberFormatted, recaptchaVerifier.current)
+                .then(setVerificationID);
+            actualUser["phone"] = phoneNumberFormatted;
+            setShowLoader(false)
+        } else if (validity === false) {
+            Alert.alert(
+                "This phone number seems to be incorrect! Please check again, thank you."
+            );
+            setShowLoader(false)
         }
-        else if (validity === false) {
-            alert('This phone number seems to be incorrect! Please check again, thank you.')
-        }
-    }
+    };
 
     const confirmCode = (code) => {
+        setShowLoader(true)
         const credential = new firebase.auth.PhoneAuthProvider.credential(
             verificationID,
             code
-        )
-        firebase.auth().signInWithCredential(credential)
+        );
+        firebase
+            .auth()
+            .signInWithCredential(credential)
             .then(() => {
-                if(from=='Login'){
-                    actualUser['phone'] = phoneNumberFormatted;
-                    AsyncStorage.setItem("@user", JSON.stringify(actualUser))
-                    navigation.navigate('Home', {actualUser})
-                    setCode('');
-                    Alert.alert(
-                        'Welcome to AshokaEats'
-                    )
+                if (from == "Login") {
+                    actualUser["phone"] = phoneNumberFormatted;
+                    AsyncStorage.setItem("@user", JSON.stringify(actualUser));
+                    navigation.navigate("Home", { actualUser });
+                    setCode("");
+                    Alert.alert("Welcome to AshokaEats");
+                } else {
+                    navigation.navigate("UserScreen", { actualUser });
+                    setCode("");
+                    Alert.alert("Phone Number Updated");
                 }
-                else{
-                    navigation.navigate('UserScreen', { actualUser })
-                    setCode('');
-                    Alert.alert(
-                        'Phone Number Updated'
-                    )
-                }
+                setShowLoader(false)
             })
             .catch((error) => {
-                console.log(error)
-                Alert.alert('Incorrect OTP! Please check again, thank you.')
-            })
-
-    }
+                console.log(error);
+                Alert.alert("Incorrect OTP! Please check again, thank you.");
+                setShowLoader(false)
+                
+            });
+    };
 
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -127,23 +142,64 @@ const PhoneAuthScreen = () => {
         });
     }, []);
 
-    return (
-        <SafeAreaView className='h-screen' style={[colorScheme=='light'? {backgroundColor: '#F2F2F2'} : {backgroundColor: '#0c0c0f'}]}>
+    useEffect(()=>{
 
-            <View className='justify-center'>
+    },[showLoader])
+
+    return (
+        <SafeAreaView
+            className="h-screen"
+            style={[
+                colorScheme == "light"
+                    ? { backgroundColor: "#F2F2F2" }
+                    : { backgroundColor: "#0c0c0f" },
+            ]}
+        >
+            <View className="justify-center">
                 <FirebaseRecaptchaVerifierModal
                     ref={recaptchaVerifier}
                     firebaseConfig={firebaseConfig}
                 />
 
                 {/* Go back Button */}
-                <TouchableOpacity onPress={navigation.goBack} className="p-2 mt-2 left-5 bg-gray-100 rounded-full items-center" style={[colorScheme == 'light' ? Styles.LightBackButton : Styles.DarkBackButton]}>
-                    <ArrowLeftIcon size={20} style={[colorScheme == 'light' ? { color: 'black' } : { color: 'white' }]}/>
+                <TouchableOpacity
+                    onPress={navigation.goBack}
+                    className="p-2 mt-2 left-5 bg-gray-100 rounded-full items-center"
+                    style={[
+                        colorScheme == "light"
+                            ? Styles.LightBackButton
+                            : Styles.DarkBackButton,
+                    ]}
+                >
+                    <ArrowLeftIcon
+                        size={20}
+                        style={[
+                            colorScheme == "light" ? { color: "black" } : { color: "white" },
+                        ]}
+                    />
                 </TouchableOpacity>
 
-                <Text className='text-center text-lg font-normal' style={[colorScheme=='light'? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>Hi, {actualUser.given_name}</Text>
-                <Text className='text-center text-lg font-normal' style={[colorScheme=='light'? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>Enter your phone number</Text>
-                <View className='py-5 self-center'>
+                <Text
+                    className="text-center text-lg font-normal"
+                    style={[
+                        colorScheme == "light"
+                            ? Styles.LightTextPrimary
+                            : Styles.DarkTextPrimary,
+                    ]}
+                >
+                    Hi, {actualUser.given_name}
+                </Text>
+                <Text
+                    className="text-center text-lg font-normal"
+                    style={[
+                        colorScheme == "light"
+                            ? Styles.LightTextPrimary
+                            : Styles.DarkTextPrimary,
+                    ]}
+                >
+                    Enter your phone number
+                </Text>
+                <View className="py-5 self-center">
                     <PhoneInput
                         ref={phoneInput}
                         defaultValue={phoneNumber}
@@ -155,43 +211,68 @@ const PhoneAuthScreen = () => {
                             setPhoneNumberFormatted(text);
                         }}
                         withDarkTheme={true}
-                        containerStyle={[colorScheme=='light'? {backgroundColor: '#fff', borderRadius: 7.5} : {backgroundColor: '#262626', borderRadius: 7.5}]}
-                        textContainerStyle={[colorScheme=='light'? {backgroundColor: '#fff', borderRadius: 7.5} : {backgroundColor: '#262626', borderRadius: 7.5}]}
-                        codeTextStyle={[colorScheme=='light'? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
-                        textInputStyle={[colorScheme=='light'? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
+                        containerStyle={[
+                            colorScheme == "light"
+                                ? { backgroundColor: "#fff", borderRadius: 7.5 }
+                                : { backgroundColor: "#262626", borderRadius: 7.5 },
+                        ]}
+                        textContainerStyle={[
+                            colorScheme == "light"
+                                ? { backgroundColor: "#fff", borderRadius: 7.5 }
+                                : { backgroundColor: "#262626", borderRadius: 7.5 },
+                        ]}
+                        codeTextStyle={[
+                            colorScheme == "light"
+                                ? Styles.LightTextPrimary
+                                : Styles.DarkTextPrimary,
+                        ]}
+                        textInputStyle={[
+                            colorScheme == "light"
+                                ? Styles.LightTextPrimary
+                                : Styles.DarkTextPrimary,
+                        ]}
                     />
                 </View>
-
-                <TouchableOpacity
-                    onPress={() => {
-                        const checkValid = phoneInput.current?.isValidNumber(phoneNumber);
-                        setValidity(checkValid ? checkValid : false);
-                        sendVerification(checkValid)
-                    }}
-                    style={styles.OTPButton}
-                    className='self-center'
-                >
-                    <Text className='self-center ' style={styles.OTPButtonText}>
-                        Verify & Send OTP
-                    </Text>
-                </TouchableOpacity>
-                {validity === true &&
-                    <View className='self-center'>
+                {!showLoader && (
+                    <TouchableOpacity
+                        onPress={() => {
+                            const checkValid = phoneInput.current?.isValidNumber(phoneNumber);
+                            setValidity(checkValid ? checkValid : false);
+                            sendVerification(checkValid);
+                        }}
+                        style={styles.OTPButton}
+                        className="self-center"
+                    >
+                        <Text className="self-center " style={styles.OTPButtonText}>
+                            Verify & Send OTP
+                        </Text>
+                    </TouchableOpacity>
+                )}
+                {showLoader &&
+                    <ActivityIndicator size="small" />
+                }
+                {validity === true && (
+                    <View className="self-center">
                         <OTPInputView
-                            style={{ width: '60%', height: 200 }}
+                            style={{ width: "60%", height: 200 }}
                             pinCount={6}
                             autoFocusOnLoad
-                            codeInputFieldStyle={[colorScheme=='light'?styles.LightunderlineStyleBase:styles.DarkunderlineStyleBase]}
+                            codeInputFieldStyle={[
+                                colorScheme == "light"
+                                    ? styles.LightunderlineStyleBase
+                                    : styles.DarkunderlineStyleBase,
+                            ]}
                             codeInputHighlightStyle={styles.underlineStyleHighLighted}
-                            onCodeFilled={(code => {
-                                    confirmCode(code)
-                            })}
+                            onCodeFilled={(code) => {
+                                confirmCode(code);
+                            }}
                         />
+
                     </View>
-                }
+                )}
             </View>
         </SafeAreaView>
-    )
-}
+    );
+};
 
 export default PhoneAuthScreen;

@@ -32,7 +32,7 @@ function VendorLogin() {
         { label: "Subway", value: "Subway" },
         { label: "The Hunger Cycle", value: "The Hunger Cycle" },
         { label: "Roti Boti", value: "Roti Boti" },
-        { label: "Dhaba", value: "Dhaba" },
+        { label: "Shuddh Desi Dhaba", value: "Shuddh Desi Dhaba" },
         { label: "Dosai", value: "Dosai" },
         { label: "Chai Shai", value: "Chai Shai" },
         { label: "Fuelzone", value: "Fuelzone" },

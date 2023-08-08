@@ -71,7 +71,7 @@ const RestaurantCards = ({ id, image, title, genre, timing, delivery, location, 
                         </View>
 
                         <View className="flex-row items-center space-x-1 mb-1">
-                            {title=='Dhaba' &&
+                            {title=='Shuddh Desi Dhaba' &&
                                 <Image
                                     style={{ width: 16, height: 16, resizeMode: "contain" }}
                                     source={Dhaba}

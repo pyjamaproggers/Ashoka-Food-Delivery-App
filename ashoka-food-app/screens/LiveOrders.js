@@ -52,6 +52,19 @@ export default function LiveOrders() {
     const [Fetching, setFetching] = useState(true)
     const toast = useToast();
 
+    const colors = [
+        'amber.400',
+        'lightBlue.400',
+        'secondary.400',
+        'pink.400',
+        'purple.400',
+        'violet.400',
+        'indigo.400',
+        'teal.500',
+    ]
+
+    const [userColor, setUserColor] = useState(colors[Math.floor(Math.random() * colors.length)])
+
     const RotiBoti = {
         phoneNumber: '+919896950018',
         image: Test1
@@ -313,7 +326,7 @@ export default function LiveOrders() {
                                                             </View>
                                                         </TouchableOpacity>
                                                     }
-                                                    {item.Restaurant == 'Dhaba' &&
+                                                    {item.Restaurant == 'Shuddh Desi Dhaba' &&
                                                         <TouchableOpacity
                                                             onPress={() => {
                                                                 Linking.openURL(`tel:${Dhaba.phoneNumber}`)
@@ -534,7 +547,7 @@ export default function LiveOrders() {
                                                         }}
                                                     />
                                                 }
-                                                {item.Restaurant == 'Dhaba' &&
+                                                {item.Restaurant == 'Shuddh Desi Dhaba' &&
                                                     <Animated.Image
                                                         className='shadow-sm'
                                                         source={Dhaba.image}
@@ -751,11 +764,11 @@ export default function LiveOrders() {
                                                                 />
 
                                                                 <VStack className='py-1 w-8/12'>
-                                                                <Text className='font-medium text-md pb-1'
-                                                                    style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
-                                                                    {orderItem.name}
-                                                                </Text>
-                                                                    {orderItem.customizations && Object.keys(orderItem.customizations).length>0 && Object.keys(orderItem.customizations).map(key => (
+                                                                    <Text className='font-medium text-md pb-1'
+                                                                        style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
+                                                                        {orderItem.name}
+                                                                    </Text>
+                                                                    {orderItem.customizations && Object.keys(orderItem.customizations).length > 0 && Object.keys(orderItem.customizations).map(key => (
                                                                         <VStack>
                                                                             {orderItem.customizations[key].length > 0 &&
                                                                                 <>
@@ -972,7 +985,17 @@ export default function LiveOrders() {
                                                     <View style={colorScheme == 'light' ? styles.LightnameEmailPhotoContainer : styles.DarknameEmailPhotoContainer} className='shadow-sm'>
 
                                                         <View className='px-3'>
-                                                            <Image style={styles.userPic} source={{ uri: `https://api.multiavatar.com/${actualUser.name}.png?apikey=Bvjs0QyHcCxZNe` }} />
+                                                            {userColor &&
+                                                                <Avatar bg={userColor}
+                                                                    style={styles.userPic}
+                                                                    source={{
+                                                                        uri: `https://api.multiavatar.com/${actualUser.name}.png?apikey=Bvjs0QyHcCxZNe`
+                                                                    }}>
+                                                                    <Text className='' style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
+                                                                        {actualUser.given_name[0]}{actualUser.family_name[0]}
+                                                                    </Text>
+                                                                </Avatar>
+                                                            }
                                                         </View>
                                                         <View className='flex-col space-y-1 pl-0.5'>
                                                             <Text allowFontScaling={false} style={colorScheme == 'light' ? styles.LightnameText : styles.DarknameText}>

@@ -123,7 +123,7 @@ const BasketScreen = () => {
     const deliveryCharges = {
         'Chicago Pizza': 20.00,
         'Roti Boti': 0.00,
-        'Dhaba': 10.00,
+        'Shuddh Desi Dhaba': 10.00,
         'Subway': 20.00,
         'Chaat Stall': 0.00,
         'The Hunger Cycle': 15.00,
@@ -243,39 +243,39 @@ const BasketScreen = () => {
     const checkRestaurantClosed = async () => {
         let checkArray = 'The following restaurants are closed:\n';
         const currentTime = new Date();  // Get the current time
-        
+
         for (const basketRestaurant of restaurantData) {
             const timing = basketRestaurant.timing;
             const [openTime, closeTime] = timing.split(' To ');
-    
-            const openHour = parseInt(openTime.slice(0, -2)); 
-            const openPeriod = openTime.slice(-2); 
-    
-            const closeHour = parseInt(closeTime.slice(0, -2)); 
-            const closePeriod = closeTime.slice(-2); 
-    
+
+            const openHour = parseInt(openTime.slice(0, -2));
+            const openPeriod = openTime.slice(-2);
+
+            const closeHour = parseInt(closeTime.slice(0, -2));
+            const closePeriod = closeTime.slice(-2);
+
             if (openPeriod === 'PM' && openHour !== 12) {
                 openHour += 12;
             }
             if (closePeriod === 'PM' && closeHour !== 12) {
                 closeHour += 12;
             }
-    
+
             if (closeHour < openHour) {
                 // Handle cases where closing hour is earlier than opening hour (e.g., 6pm to 2am)
                 if (currentTime.getHours() >= openHour || currentTime.getHours() < closeHour) {
-                    checkArray += basketRestaurant.name + ', '; 
+                    checkArray += basketRestaurant.name + ', ';
                 }
             } else {
                 if (currentTime.getHours() >= openHour && currentTime.getHours() < closeHour) {
-                    checkArray += basketRestaurant.name + ', '; 
+                    checkArray += basketRestaurant.name + ', ';
                 }
             }
         }
-    
+
         return checkArray;
     }
-    
+
 
 
     const updateInstructions = (instruction, restaurant) => {
@@ -520,7 +520,7 @@ const BasketScreen = () => {
             // Calculate the total amount with GST and delivery charges
             const totalAmount = (subtotal + gst + deliveryCharges[BasketRestaurant.name]).toFixed(2);
 
-            if(BasketRestaurant.name==='Chaat Stall' && totalAmount<150 && OrderTypeOption === 'Delivery'){
+            if (BasketRestaurant.name === 'Chaat Stall' && totalAmount < 150 && OrderTypeOption === 'Delivery') {
                 Alert.alert(
                     'Unable to place order. Chaat Stall requires an order of more than ₹150 for delivery.'
                 )
@@ -533,7 +533,7 @@ const BasketScreen = () => {
                 name: item.name,
                 price: item.Price,
                 quantity: item.quantity,
-                customizations:item.hasOwnProperty('customizations')?item.customizations:{}
+                customizations: item.hasOwnProperty('customizations') ? item.customizations : {}
             }));
 
             const orderInstructions = getInstructions(BasketRestaurant.name)
@@ -558,7 +558,7 @@ const BasketScreen = () => {
             orders.push(orderData);
         }
 
-        if(canPlaceOrder===false){
+        if (canPlaceOrder === false) {
             return
         }
 
@@ -577,15 +577,15 @@ const BasketScreen = () => {
             }
             navigation.navigate('LiveOrders', { actualUser });
         }
-        else if(itemsCheck !== 'The following items were removed from your cart as they became unavailable:\n' && timingsCheck === 'The following restaurants are closed:\n'){
+        else if (itemsCheck !== 'The following items were removed from your cart as they became unavailable:\n' && timingsCheck === 'The following restaurants are closed:\n') {
             Alert.alert(itemsCheck)
             setShowSpinner(false)
         }
-        else if(itemsCheck === 'The following items were removed from your cart as they became unavailable:\n' && timingsCheck !== 'The following restaurants are closed:\n'){
+        else if (itemsCheck === 'The following items were removed from your cart as they became unavailable:\n' && timingsCheck !== 'The following restaurants are closed:\n') {
             Alert.alert(timingsCheck)
             setShowSpinner(false)
         }
-        else if(itemsCheck !== 'The following items were removed from your cart as they became unavailable:\n' && timingsCheck !== 'The following restaurants are closed:\n'){
+        else if (itemsCheck !== 'The following items were removed from your cart as they became unavailable:\n' && timingsCheck !== 'The following restaurants are closed:\n') {
             Alert.alert(itemsCheck)
             Alert.alert(timingsCheck)
             setShowSpinner(false)
@@ -1147,6 +1147,7 @@ const BasketScreen = () => {
                             <View className='w-11/12 pb-3 space-y-6 ' >
                                 {FinalBasket.map((BasketRestaurant, index) => (
                                     <View className='space-y-2'>
+                                        {console.log(BasketRestaurant)}
                                         <VStack className='w-full items-center space-y-2 pb-3 pt-2'>
                                             <Image source={{ uri: urlFor(BasketRestaurant.image).url() }} style={{ width: 40, height: 40, borderRadius: 5 }} />
                                             <Text allowFontScaling={false} className='text-lg font-medium'
@@ -1172,7 +1173,7 @@ const BasketScreen = () => {
                                                             <>
                                                                 <HStack className='items-center w-11/12 justify-between py-2 rounded-lg' style={[colorScheme == 'light' ? Styles.LightBGSec : Styles.DarkBGSec]}>
 
-                                                                    <VStack style={{ marginLeft: '2%' }} className='w-8/12'>
+                                                                    <VStack style={{ marginLeft: '2%' }} className='w-7/12'>
                                                                         <HStack className='items-center space-x-1'>
                                                                             {dish.Veg_NonVeg === "Veg" ? (
                                                                                 <Image
@@ -1246,7 +1247,7 @@ const BasketScreen = () => {
                                                             <>
                                                                 <HStack className='items-center justify-between py-2 rounded-lg' style={[colorScheme == 'light' ? Styles.LightBGSec : Styles.DarkBGSec]}>
 
-                                                                    <VStack style={{ marginLeft: '2%' }}>
+                                                                    <VStack style={{ marginLeft: '2%' }} className='w-7/12'>
                                                                         <HStack className='items-center space-x-1'>
                                                                             {dish.Veg_NonVeg === "Veg" ? (
                                                                                 <Image
@@ -1383,7 +1384,7 @@ const BasketScreen = () => {
                                                             enterKeyHint='done'
                                                         />
                                                     }
-                                                    {colorScheme == 'light' && BasketRestaurant.name == 'Dhaba' &&
+                                                    {colorScheme == 'light' && BasketRestaurant.name == 'Shuddh Desi Dhaba' &&
                                                         <TextInput placeholder={instructionsPlaceholders[1]} keyboardType="default" className='w-10/12 text-xs'
                                                             placeholderTextColor='#666666'
                                                             style={{ color: '#000', paddingTop: 0 }}
@@ -1587,7 +1588,17 @@ const BasketScreen = () => {
                             <View style={colorScheme == 'light' ? styles.LightnameEmailPhotoContainer : styles.DarknameEmailPhotoContainer} className='shadow-sm'>
 
                                 <View className='px-3'>
-                                    <Image style={styles.userPic} source={{ uri: `https://api.multiavatar.com/${actualUser.name}.png?apikey=Bvjs0QyHcCxZNe` }} />
+                                    {userColor &&
+                                        <Avatar bg={userColor}
+                                            style={styles.userPic}
+                                            source={{
+                                                uri: `https://api.multiavatar.com/${actualUser.name}.png?apikey=Bvjs0QyHcCxZNe`
+                                            }}>
+                                            <Text className='' style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
+                                                {actualUser.given_name[0]}{actualUser.family_name[0]}
+                                            </Text>
+                                        </Avatar>
+                                    }
                                 </View>
                                 <View className='flex-col space-y-1 pl-0.5'>
                                     <Text allowFontScaling={false} style={colorScheme == 'light' ? styles.LightnameText : styles.DarknameText}>
