@@ -128,6 +128,7 @@ const BasketScreen = () => {
         'The Food Village': 0.00,
         'The Hunger Cycle': 15.00,
         'Rasananda': 10.00,
+        'Dosai': 0.00
     }
 
     const query = `*[_type == "restaurant"]
@@ -351,6 +352,7 @@ const BasketScreen = () => {
             const tempFinalBasket = [...tempBasket]; // Avoid modifying the same object
 
             let foodVillageInCart = false;
+            let dhabaInCart = false
 
             data.forEach((restaurant) => {
                 tempFinalBasket.forEach((basketRestaurant) => {
@@ -359,6 +361,9 @@ const BasketScreen = () => {
                     }
                     if (basketRestaurant.name === 'The Food Village') {
                         foodVillageInCart = true;
+                    }
+                    if (basketRestaurant.name === 'Shuddh Desi Dhaba') {
+                        dhabaInCart= true;
                     }
                 });
             });
@@ -384,10 +389,17 @@ const BasketScreen = () => {
                     ]
             );
 
-            setOrderTypeOptions([
+            setOrderTypeOptions(
+                dhabaInCart ?
+                [
+                    { option: 'Dine In', icon: DineIn }
+                ]
+                :
+                [
                 { option: 'Delivery', icon: FoodDelivery },
                 { option: 'Dine In', icon: DineIn }
-            ]);
+                ]
+            );
 
             setPaymentOptions([
                 { option: 'Pay On Delivery', icon: COD },
@@ -591,12 +603,12 @@ const BasketScreen = () => {
         FinalBasket.map((BasketRestaurant) => {
                 if(BasketRestaurant.name == 'Roti Boti')
                 {
-                    console.log(((Math.round(BasketRestaurant.restaurantTotal * (1.18) * 100) / 100) + (Math.round(deliveryCharges[BasketRestaurant.name] * 100) / 100)).toFixed(2))
+                    // console.log(((Math.round(BasketRestaurant.restaurantTotal * (1.18) * 100) / 100) + (Math.round(deliveryCharges[BasketRestaurant.name] * 100) / 100)).toFixed(2))
                     res+=parseFloat(((Math.round(BasketRestaurant.restaurantTotal * (1.18) * 100) / 100) + (Math.round(deliveryCharges[BasketRestaurant.name] * 100) / 100)).toFixed(2))
                 }
                 else
                 {
-                    console.log(((Math.round(BasketRestaurant.restaurantTotal * (1.18) * 100) / 100) + (Math.round(deliveryCharges[BasketRestaurant.name] * 100) / 100)).toFixed(2))
+                    // console.log(((Math.round(BasketRestaurant.restaurantTotal * (1.18) * 100) / 100) + (Math.round(deliveryCharges[BasketRestaurant.name] * 100) / 100)).toFixed(2))
                     res+=parseFloat(((Math.round(BasketRestaurant.restaurantTotal * 100) / 100) + (Math.round(deliveryCharges[BasketRestaurant.name] * 100) / 100)).toFixed(2))
                 }
             }

@@ -1,4 +1,4 @@
-import { View, Text, Image, TouchableOpacity, StyleSheet, useColorScheme, } from 'react-native'
+import { View, Text, Image, TouchableOpacity, StyleSheet, useColorScheme, Alert, } from 'react-native'
 import React from 'react'
 import { StarIcon, ClockIcon, MapPinIcon, BoltIcon } from "react-native-heroicons/solid";
 import { } from "react-native-heroicons/outline";

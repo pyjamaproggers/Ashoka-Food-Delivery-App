@@ -43,6 +43,7 @@ import SubwayImage from '../assets/Subway.jpeg'
 import THCImage from '../assets/THC.jpeg'
 import ChicagoPizzaImage from '../assets/ChicagoPizza.jpeg'
 import RasanandaImage from '../assets/Rasananda.jpeg'
+import DosaiImage from '../assets/Dosai.jpeg'
 
 export default function LiveOrders() {
 
@@ -105,6 +106,11 @@ export default function LiveOrders() {
     const Subway = {
         phoneNumber: '+918199989788',
         image: SubwayImage
+    }
+
+    const Dosai = {
+        phoneNumber: '+91',
+        image: DosaiImage
     }
 
     const updateImageLoader = (value) => {
@@ -399,6 +405,17 @@ export default function LiveOrders() {
                                                             </View>
                                                         </TouchableOpacity>
                                                     }
+                                                    {item.Restaurant == 'Dosai' &&
+                                                        <TouchableOpacity
+                                                            onPress={() => {
+                                                                Linking.openURL(`tel:${Dosai.phoneNumber}`)
+                                                            }}
+                                                        >
+                                                            <View className='m-1.5'>
+                                                                <Image style={{ width: 24, height: 24 }} source={Phone} />
+                                                            </View>
+                                                        </TouchableOpacity>
+                                                    }
                                                 </HStack>
 
 
@@ -558,6 +575,38 @@ export default function LiveOrders() {
                                                     <Animated.Image
                                                         className='shadow-sm'
                                                         source={Dhaba.image}
+                                                        onLoadStart={() => updateImageLoader(true)}
+                                                        onLoadEnd={() => updateImageLoader(false)}
+                                                        style={{
+                                                            width: ITEM_WIDTH,
+                                                            height: ITEM_HEIGHT * 0.4,
+                                                            resizeMode: 'cover',
+                                                            opacity: 1,
+                                                            borderRadius: 15,
+                                                            transform: [
+                                                                {
+                                                                    translateX
+                                                                },
+                                                                // {
+                                                                //     scale: scrollY.interpolate({
+                                                                //         inputRange: [-ITEM_HEIGHT + 1, 0, ITEM_HEIGHT, ITEM_HEIGHT + 1],
+                                                                //         outputRange: [2, 1, 1, 1]
+                                                                //     })
+                                                                // },
+                                                                // {
+                                                                //     translateY: scrollY.interpolate({
+                                                                //         inputRange: [-ITEM_HEIGHT2, 0, ITEM_HEIGHT2, ITEM_HEIGHT2 + 1],
+                                                                //         outputRange: [-ITEM_HEIGHT2 * 1.0, 0, ITEM_HEIGHT2 * 1.0, ITEM_HEIGHT2 * 1.0]
+                                                                //     }),
+                                                                // },
+                                                            ]
+                                                        }}
+                                                    />
+                                                }
+                                                {item.Restaurant == 'Dosai' &&
+                                                    <Animated.Image
+                                                        className='shadow-sm'
+                                                        source={Dosai.image}
                                                         onLoadStart={() => updateImageLoader(true)}
                                                         onLoadEnd={() => updateImageLoader(false)}
                                                         style={{

@@ -27,6 +27,7 @@ import SubwayImage from '../assets/Subway.jpeg'
 import THCImage from '../assets/THC.jpeg'
 import ChicagoPizzaImage from '../assets/ChicagoPizza.jpeg'
 import RasanandaImage from '../assets/Rasananda.jpeg'
+import DosaiImage from '../assets/Dosai.jpeg'
 
 export default function OrderHistory() {
 
@@ -79,6 +80,11 @@ export default function OrderHistory() {
         image: SubwayImage
     }
 
+    const Dosai = {
+        phoneNumber: '+91',
+        image: DosaiImage
+    }
+
     const updateImageLoader = (value) => {
         setLoadingImage(value)
     }
@@ -105,6 +111,10 @@ export default function OrderHistory() {
                     case 'The Food Village':
                         order['image'] = FoodVillage.image;
                         order['restaurantPhone'] = FoodVillage.phoneNumber;
+                        break;
+                    case 'Dosai':
+                        order['image'] = Dosai.image;
+                        order['restaurantPhone'] = Dosai.phoneNumber;
                         break;
                     case 'Chicago Pizza':
                         order['image'] = ChicagoPizza.image;
