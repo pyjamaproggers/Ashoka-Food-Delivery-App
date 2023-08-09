@@ -290,8 +290,6 @@ const BasketScreen = () => {
     const getInstructions = (restaurant) => {
         for (const Outlet of FinalBasket) {
             if (Outlet.name === restaurant) {
-                // console.log(restaurant + " FOUND");
-                // console.log(Outlet.instructions);
                 return Outlet.instructions;
             }
         }
@@ -299,7 +297,6 @@ const BasketScreen = () => {
     };
 
     useMemo(async () => { //ChatGPT Optimised
-        console.log('MEMO RUNNING AGAIN YAY');
         setFetching(true);
 
         const uniqueRestaurantSet = new Set(); // Use Set for efficient uniqueness check
@@ -350,7 +347,6 @@ const BasketScreen = () => {
 
         try {
             const data = await client.fetch(query);
-            console.log(data)
             setRestaurantData(data)
             const tempFinalBasket = [...tempBasket]; // Avoid modifying the same object
 
@@ -424,7 +420,6 @@ const BasketScreen = () => {
 
     const sendOrderToDatabase = async (orderData) => {
         const url = `${IP}/api/orders`; // Node Server (Our backend, put the IP address as ur local IPV4 address)
-        console.log(url)
         try {
             const response = await fetch(url, {
                 method: "POST",
@@ -470,7 +465,6 @@ const BasketScreen = () => {
         var orderDate = ''
         if (day.getHours() >= 12) {
             if (day.getMinutes() < 10) {
-                console.log('coming here')
                 orderDate = day.getHours() + ':' + '0' + day.getMinutes() + 'PM' + ' on ' + day.getDate() + ' ' + m[day.getMonth()] + ' ' + day.getFullYear()
             }
             else {
@@ -511,7 +505,6 @@ const BasketScreen = () => {
         let canPlaceOrder = true
         // Iterate over the FinalBasket array
         for (const BasketRestaurant of FinalBasket) {
-            // console.log(BasketRestaurant.items)
             // Calculate the subtotal and GST for the current restaurant
             const subtotal = BasketRestaurant.restaurantTotal;
             const gst = calculateGST(subtotal, BasketRestaurant.name);
@@ -591,6 +584,25 @@ const BasketScreen = () => {
         }
 
     };
+
+    function calculateBasketTotal()
+    {
+        var res = 0.0
+        FinalBasket.map((BasketRestaurant) => {
+                if(BasketRestaurant.name == 'Roti Boti')
+                {
+                    console.log(((Math.round(BasketRestaurant.restaurantTotal * (1.18) * 100) / 100) + (Math.round(deliveryCharges[BasketRestaurant.name] * 100) / 100)).toFixed(2))
+                    res+=parseFloat(((Math.round(BasketRestaurant.restaurantTotal * (1.18) * 100) / 100) + (Math.round(deliveryCharges[BasketRestaurant.name] * 100) / 100)).toFixed(2))
+                }
+                else
+                {
+                    console.log(((Math.round(BasketRestaurant.restaurantTotal * (1.18) * 100) / 100) + (Math.round(deliveryCharges[BasketRestaurant.name] * 100) / 100)).toFixed(2))
+                    res+=parseFloat(((Math.round(BasketRestaurant.restaurantTotal * 100) / 100) + (Math.round(deliveryCharges[BasketRestaurant.name] * 100) / 100)).toFixed(2))
+                }
+            }
+        )
+        return res;
+}
 
     return (
         <View className="flex-1 pt-14" style={[colorScheme == 'light' ? { backgroundColor: '#F2F2F2' } : { backgroundColor: '#0c0c0f' }]}>
@@ -1099,7 +1111,7 @@ const BasketScreen = () => {
                                                     Place Your Order
                                                 </Text>
                                                 <Text className='text-sm pl-1 font-medium text-white' >
-                                                    (₹{CartTotal})
+                                                    (₹{calculateBasketTotal()})
                                                 </Text>
                                             </VStack>
                                             <View style={{ transform: [{ rotate: '90deg' }] }}>
@@ -1146,7 +1158,6 @@ const BasketScreen = () => {
                             <View className='w-11/12 pb-3 space-y-6 ' >
                                 {FinalBasket.map((BasketRestaurant, index) => (
                                     <View className='space-y-2'>
-                                        {console.log(BasketRestaurant)}
                                         <VStack className='w-full items-center space-y-2 pb-3 pt-2'>
                                             <Image source={{ uri: urlFor(BasketRestaurant.image).url() }} style={{ width: 100, height: 100, borderRadius: 5 }} />
                                             <Text allowFontScaling={false} className='text-lg font-medium'
@@ -1675,7 +1686,7 @@ const BasketScreen = () => {
                                             <Text allowFontScaling={false} className='font-semibold text-md'
                                                 style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
                                             >
-                                                ₹{CartTotal}
+                                                ₹{calculateBasketTotal()}
                                             </Text>
                                         </HStack>
                                     </VStack>
