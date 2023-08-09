@@ -118,9 +118,8 @@ const PhoneAuthScreen = () => {
                 if (from == "Login") {
                     actualUser["phone"] = phoneNumberFormatted;
                     AsyncStorage.setItem("@user", JSON.stringify(actualUser));
-                    navigation.navigate("Home", { actualUser });
+                    navigation.navigate("StudentDisclaimer", { actualUser });
                     setCode("");
-                    Alert.alert("Welcome to AshokaEats");
                 } else {
                     navigation.navigate("UserScreen", { actualUser });
                     setCode("");

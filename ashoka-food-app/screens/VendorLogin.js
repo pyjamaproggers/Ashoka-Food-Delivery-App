@@ -29,7 +29,7 @@ function VendorLogin() {
             const verified = await verifyPassword();
             if (verified) {
                 AsyncStorage.setItem("@vendor", JSON.stringify({selectedRestaurant, selectedPerson}));
-                navigation.navigate('VendorDashboard', {
+                navigation.navigate('VendorDisclaimer', {
                     selectedRestaurant,
                     selectedPerson,
                 });

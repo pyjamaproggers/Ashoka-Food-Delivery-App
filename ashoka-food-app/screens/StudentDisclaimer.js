@@ -1,6 +1,6 @@
 import React, { useEffect, useLayoutEffect, useMemo, useState, useCallback } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { SafeAreaView, useColorScheme, StyleSheet, TouchableOpacity, Text, View, Image, TextInput, ScrollView } from 'react-native';
+import { SafeAreaView, useColorScheme, StyleSheet, TouchableOpacity, Text, View, Image, TextInput, ScrollView, Alert} from 'react-native';
 import { HStack, Skeleton, VStack, Checkbox, Button } from 'native-base';
 import { ArrowLeftIcon, ArrowRightIcon } from 'react-native-heroicons/solid';
 import Styles from '../components/Styles'
@@ -33,6 +33,10 @@ export default function StudentDisclaimer() {
 
     const navigation = useNavigation()
     const colorScheme = useColorScheme()
+
+    const {
+        params: { actualUser },
+    } = useRoute();
 
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -119,6 +123,8 @@ export default function StudentDisclaimer() {
                             }
                             else {
                                 //navigate to home screen
+                                navigation.navigate("Home", { actualUser });
+                                Alert.alert("Welcome to AshokaEats");
                             }
                         }}
                     >

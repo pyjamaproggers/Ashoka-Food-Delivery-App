@@ -56,7 +56,7 @@ function Login() {
             console.log(actualUser);
             AsyncStorage.setItem("@user", JSON.stringify(actualUser));
             console.log("Phone number added now: " + JSON.stringify(actualUser));
-            navigation.navigate('Home', { actualUser });
+            navigation.navigate('StudentDisclaimer', { actualUser });
         };
 
         updateUserPhone(); // Call the async function to update user phone number
@@ -87,7 +87,7 @@ function Login() {
                 console.log("AFTER adding phone" + typeof (actualUser))
                 AsyncStorage.setItem("@user", JSON.stringify(actualUser))
                 console.log("Phone number added noww: " + actualUser)
-                navigation.navigate('Home', { actualUser })
+                navigation.navigate('StudentDisclaimer', { actualUser })
             }
             else if (!actualUser.phone && !phone) {
                 console.log("Time to get Phone")

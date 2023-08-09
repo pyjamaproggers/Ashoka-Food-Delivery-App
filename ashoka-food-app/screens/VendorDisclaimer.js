@@ -35,6 +35,9 @@ export default function VenderDisclaimer() {
     const navigation = useNavigation()
     const colorScheme = useColorScheme()
 
+    const route = useRoute();
+    const { selectedRestaurant, selectedPerson } = route.params;
+
     useLayoutEffect(() => {
         navigation.setOptions({
             headerShown: false,
@@ -108,9 +111,7 @@ export default function VenderDisclaimer() {
                                 setBTNisInvalid(true)
                             }
                             else {
-                                //if manager then navigate to vendor dashboard
-
-                                //else if delivery bhaiya then navigate to his dashboard
+                                navigation.navigate('VendorDashboard', { selectedRestaurant, selectedPerson });
                             }
                         }}
                     >
