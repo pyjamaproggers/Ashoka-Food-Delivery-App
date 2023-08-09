@@ -131,8 +131,8 @@ function Login() {
             } else {
                 ReactNativeAlert.alert("Sorry! You are not authorized for Beta Testing!");
             }
-        } catch (error) {
-            console.log(error);
+        } catch (err) {
+            console.log(err);
         }
     };
     
