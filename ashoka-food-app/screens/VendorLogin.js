@@ -25,7 +25,7 @@ function VendorLogin() {
             return;
         }
         try {
-            const verified = await verifyPassword(password);
+            const verified = await verifyPassword();
             if (verified) {
                 navigation.navigate('VendorDashboard', {
                     selectedRestaurant,
@@ -40,25 +40,30 @@ function VendorLogin() {
     };
     
 
-    async function verifyPassword(password) {
+    async function verifyPassword() {
         try {
             const response = await fetch(`${IP}/api/auth/${selectedRestaurant}`, {
-                method: 'POST', 
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ password }), 
+                body: JSON.stringify({ password }),
             });
     
             if (response.ok) {
-                return true;
+                const data = await response.json();
+                console.log(data.verified)
+                return data.verified;
             } else {
+                console.log('Password verification failed');
                 return false;
             }
         } catch (error) {
             console.log('Error verifying password:', error);
+            return false;
         }
     }
+    
     
 
     // List of restaurant options
