@@ -225,8 +225,6 @@ function VendorDashboard() {
             let tempDeliveryOrders = []
             let flag = 1
             data.map((order, index) => {
-                console.log('EACH ORDER')
-                console.log(order)
                 if (order.orderStatus == 'completed' || order.orderStatus.includes('Declined')) {
                     tempClosedOrders.push(order)
                     flag = 0
@@ -316,8 +314,6 @@ function VendorDashboard() {
     }
 
     const updateMenu = async (unavailableItems) => {
-        // console.log(unavailableItems)
-        // console.log(selectedRestaurant)
         setFetching(true)
 
         var itemsToAdd = []
