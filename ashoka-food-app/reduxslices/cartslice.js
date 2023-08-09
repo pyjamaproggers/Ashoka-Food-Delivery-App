@@ -9,7 +9,7 @@ export const cartSlice = createSlice({
     reducers: {
         updateCartAdd: (state, action) => {
             const stateUpdated = state.items.map((item) => {
-                if (item.name === action.payload.dishName) {
+                if (item.name === action.payload.dishName && item.Restaurant === action.payload.restaurant) {
                     return {
                         ...item,
                         quantity: ++item.quantity,
@@ -35,7 +35,7 @@ export const cartSlice = createSlice({
         },
         updateCartRemove: (state, action) => {
             const stateUpdated = state.items.map((item) => {
-                if (item.name === action.payload.dishName) {
+                if (item.name === action.payload.dishName && item.Restaurant === action.payload.restaurant) {
                     return {
                         ...item,
                         quantity: --item.quantity,

@@ -41,19 +41,19 @@ export default function CartIcon({ actualUser, store }) {
             dispatch(addToCart({ id, name, Price, image, Restaurant, Veg_NonVeg, quantity: additemQ }));
         }
         else {
-            if (items.filter((x) => (x.name == name)).length == 0) {
+            if (items.filter((x) => (x.name == name && x.Restaurant==Restaurant)).length == 0) {
                 currentQuantity = 0
                 additemQ = currentQuantity + 1
                 dispatch(addToCart({ id, name, Price, image, Restaurant, Veg_NonVeg, quantity: additemQ }));
             }
             else {
                 items.map((item) => {
-                    if (item.name == name) {
+                    if (item.name == name && item.Restaurant==Restaurant) {
                         currentQuantity = item.quantity
                         additemQ = currentQuantity + 1
                         // dispatch(addToCart({ id, name, Price, image, Restaurant, Veg_NonVeg, quantity: additemQ }));
                         // dispatch(removeFromCart({ id, name, Price, image, Restaurant, Veg_NonVeg, quantity: currentQuantity }));
-                        dispatch(updateCartAdd({ newQuantity: additemQ, dishName: item.name }))
+                        dispatch(updateCartAdd({ newQuantity: additemQ, dishName: item.name, restaurant: item.Restaurant }))
                     }
                 })
             }
@@ -64,16 +64,16 @@ export default function CartIcon({ actualUser, store }) {
         var currentQuantity
         var additemQ
         items.map((item) => {
-            if (item.name == name && item.quantity == 1) {
+            if (item.name == name && item.Restaurant===Restaurant && item.quantity == 1) {
                 currentQuantity = 1
                 dispatch(removeFromCart({ id, name, Price, image, Restaurant, Veg_NonVeg, quantity: currentQuantity }));
             }
-            if (item.name == name && item.quantity >= 1) {
+            if (item.name == name && item.Restaurant===Restaurant && item.quantity >= 1) {
                 currentQuantity = item.quantity
                 additemQ = currentQuantity - 1
                 // dispatch(addToCart({ id, name, Price, image, Restaurant, Veg_NonVeg, quantity: additemQ }));
                 // dispatch(removeFromCart({ id, name, Price, image, Restaurant, Veg_NonVeg, quantity: currentQuantity }));
-                dispatch(updateCartRemove({ newQuantity: additemQ, dishName: item.name }))
+                dispatch(updateCartRemove({ newQuantity: additemQ, dishName: item.name, restaurant: Restaurant }))
             }
         })
     }
@@ -291,7 +291,7 @@ export default function CartIcon({ actualUser, store }) {
                                                         {BasketRestaurant.name}
                                                     </Text>
                                                 }
-                                                {BasketRestaurant.name === 'Chaat Stall' &&
+                                                {BasketRestaurant.name === 'The Food Village' &&
                                                     <Text
                                                         allowFontScaling={false}
                                                         className="text-center font-normal text-md mx-32 mt-3 -top-5 "

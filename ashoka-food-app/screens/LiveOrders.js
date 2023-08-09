@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity, ScrollView, colorScheme, useColorScheme, TextInput, FlatList, Alert, Dimensions, Animated, Linking } from "react-native";
 import React, { useMemo, useState, useLayoutEffect, useRef, useEffect } from "react";
 import { SafeAreaView, StyleSheet, StatusBar, Image } from "react-native";
-import { CloseIcon, HStack, IconButton, Slide, VStack, Skeleton, Alert as NativeBaseAlert, Button as NativeBaseButton, Progress, useToast } from 'native-base';
+import { CloseIcon, HStack, IconButton, Slide, VStack, Skeleton, Alert as NativeBaseAlert, Button as NativeBaseButton, Progress, useToast, Avatar } from 'native-base';
 import { useNavigation, useRoute } from "@react-navigation/native";
 import Styles from '../components/Styles.js'
 import Test1 from '../assets/testoutlet1.jpg'
@@ -36,6 +36,13 @@ import PayAtRestaurant from '../assets/payatrestaurant.png'
 import Clock from '../assets/clockicon.png'
 import { IP } from '@dotenv'
 import io from 'socket.io-client';
+import RotiBotiImage from '../assets/RotiBotiOrder.jpeg'
+import DhabaImage from '../assets/Dhaba.jpeg'
+import FoodVImage from '../assets/FoodVillage.jpeg'
+import SubwayImage from '../assets/Subway.jpeg'
+import THCImage from '../assets/THC.jpeg'
+import ChicagoPizzaImage from '../assets/ChicagoPizza.jpeg'
+import RasanandaImage from '../assets/Rasananda.jpeg'
 
 export default function LiveOrders() {
 
@@ -67,37 +74,37 @@ export default function LiveOrders() {
 
     const RotiBoti = {
         phoneNumber: '+919896950018',
-        image: Test1
+        image: RotiBotiImage
     }
 
     const Dhaba = {
         phoneNumber: '+918059410499',
-        image: Test2
+        image: DhabaImage
     }
 
     const THC = {
         phoneNumber: '+918199991183',
-        image: Test3
+        image: THCImage
     }
 
     const ChicagoPizza = {
         phoneNumber: '+919873102693',
-        image: Grey
+        image: ChicagoPizzaImage
     }
 
     const Rasananda = {
         phoneNumber: '',
-        image: Grey
+        image: RasanandaImage
     }
 
     const FoodVillage = {
         phoneNumber: '+918053202242',
-        image: Grey
+        image: FoodVImage
     }
 
     const Subway = {
         phoneNumber: '+918199989788',
-        image: Grey
+        image: SubwayImage
     }
 
     const updateImageLoader = (value) => {
@@ -337,7 +344,7 @@ export default function LiveOrders() {
                                                             </View>
                                                         </TouchableOpacity>
                                                     }
-                                                    {item.Restaurant == 'Chaat Stall' &&
+                                                    {item.Restaurant == 'The Food Village' &&
                                                         <TouchableOpacity
                                                             onPress={() => {
                                                                 Linking.openURL(`tel:${FoodVillage.phoneNumber}`)
@@ -579,7 +586,7 @@ export default function LiveOrders() {
                                                         }}
                                                     />
                                                 }
-                                                {item.Restaurant == 'Chaat Stall' &&
+                                                {item.Restaurant == 'The Food Village' &&
                                                     <Animated.Image
                                                         className='shadow-sm'
                                                         source={FoodVillage.image}

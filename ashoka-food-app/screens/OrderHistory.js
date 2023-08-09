@@ -20,6 +20,13 @@ import Tick from '../assets/verified.png';
 import FoodReady from '../assets/foodready.png';
 import Cross from '../assets/cross.png';
 import Placed from '../assets/cloud.png';
+import RotiBotiImage from '../assets/RotiBotiOrder.jpeg'
+import DhabaImage from '../assets/Dhaba.jpeg'
+import FoodVImage from '../assets/FoodVillage.jpeg'
+import SubwayImage from '../assets/Subway.jpeg'
+import THCImage from '../assets/THC.jpeg'
+import ChicagoPizzaImage from '../assets/ChicagoPizza.jpeg'
+import RasanandaImage from '../assets/Rasananda.jpeg'
 
 export default function OrderHistory() {
 
@@ -39,37 +46,37 @@ export default function OrderHistory() {
 
     const RotiBoti = {
         phoneNumber: '+919896950018',
-        image: Test1
+        image: RotiBotiImage
     }
 
     const Dhaba = {
         phoneNumber: '+918059410499',
-        image: Test2
+        image: DhabaImage
     }
 
     const THC = {
         phoneNumber: '+918199991183',
-        image: Test3
+        image: THCImage
     }
 
     const ChicagoPizza = {
         phoneNumber: '+919873102693',
-        image: Grey
+        image: ChicagoPizzaImage
     }
 
     const Rasananda = {
         phoneNumber: '',
-        image: Grey
+        image: RasanandaImage
     }
 
     const FoodVillage = {
         phoneNumber: '+918053202242',
-        image: Grey
+        image: FoodVImage
     }
 
     const Subway = {
         phoneNumber: '+918199989788',
-        image: Grey
+        image: SubwayImage
     }
 
     const updateImageLoader = (value) => {
@@ -95,7 +102,7 @@ export default function OrderHistory() {
                         order['image'] = THC.image;
                         order['restaurantPhone'] = THC.phoneNumber;
                         break;
-                    case 'Chaat Stall':
+                    case 'The Food Village':
                         order['image'] = FoodVillage.image;
                         order['restaurantPhone'] = FoodVillage.phoneNumber;
                         break;
@@ -227,7 +234,7 @@ export default function OrderHistory() {
             </View>
 
             <ScrollView
-            showsVerticalScrollIndicator={false}
+                showsVerticalScrollIndicator={false}
             >
 
                 <VStack className='w-11/12 space-y-2 self-center '>

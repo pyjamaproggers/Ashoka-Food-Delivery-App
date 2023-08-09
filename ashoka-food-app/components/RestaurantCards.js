@@ -95,7 +95,7 @@ const RestaurantCards = ({ id, image, title, genre, timing, delivery, location, 
                                     source={ChicagoPizza}
                                 />
                             }
-                            {title=='Chaat Stall' &&
+                            {title=='The Food Village' &&
                                 <Image
                                     style={{ width: 16, height: 16, resizeMode: "contain" }}
                                     source={Chaat}

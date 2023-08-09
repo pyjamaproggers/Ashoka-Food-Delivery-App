@@ -26,7 +26,7 @@ function VendorLogin() {
 
     // List of restaurant options
     const restaurantOptions = [
-        { label: "Chaat Stall", value: "Chaat Stall" },
+        { label: "The Food Village", value: "The Food Village" },
         { label: "Chicago Pizza", value: "Chicago Pizza" },
         { label: "Rasananda", value: "Rasananda" },
         { label: "Subway", value: "Subway" },

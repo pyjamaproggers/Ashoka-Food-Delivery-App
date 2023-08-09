@@ -125,7 +125,7 @@ const BasketScreen = () => {
         'Roti Boti': 0.00,
         'Shuddh Desi Dhaba': 10.00,
         'Subway': 20.00,
-        'Chaat Stall': 0.00,
+        'The Food Village': 0.00,
         'The Hunger Cycle': 15.00,
         'Rasananda': 10.00,
     }
@@ -144,44 +144,43 @@ const BasketScreen = () => {
             dispatch(addToCart({ id, name, Price, image, Restaurant, Veg_NonVeg, quantity: additemQ }));
         }
         else {
-            if (items.filter((x) => (x.name == name)).length == 0) {
+            if (items.filter((x) => (x.name == name && x.Restaurant == Restaurant)).length == 0) {
                 currentQuantity = 0
                 additemQ = currentQuantity + 1
                 dispatch(addToCart({ id, name, Price, image, Restaurant, Veg_NonVeg, quantity: additemQ }));
             }
             else {
                 items.map((item) => {
-                    if (item.name == name) {
-                        console.log('coming here')
+                    if (item.name == name && item.Restaurant == Restaurant) {
                         currentQuantity = item.quantity
                         additemQ = currentQuantity + 1
                         // dispatch(addToCart({ id, name, Price, image, Restaurant, Veg_NonVeg, quantity: additemQ }));
                         // dispatch(removeFromCart({ id, name, Price, image, Restaurant, Veg_NonVeg, quantity: currentQuantity }));
-                        dispatch(updateCartAdd({ newQuantity: additemQ, dishName: item.name }))
+                        dispatch(updateCartAdd({ newQuantity: additemQ, dishName: item.name, restaurant: item.Restaurant }))
                     }
                 })
             }
         };
-    };
+    }
 
     const removeItem = (id, name, Price, image, Restaurant, Veg_NonVeg) => {
         Price = parseFloat(Price)
         var currentQuantity
         var additemQ
         items.map((item) => {
-            if (item.name == name && item.quantity == 1) {
+            if (item.name == name && item.Restaurant===Restaurant && item.quantity == 1) {
                 currentQuantity = 1
                 dispatch(removeFromCart({ id, name, Price, image, Restaurant, Veg_NonVeg, quantity: currentQuantity }));
             }
-            if (item.name == name && item.quantity >= 1) {
+            if (item.name == name && item.Restaurant===Restaurant && item.quantity >= 1) {
                 currentQuantity = item.quantity
                 additemQ = currentQuantity - 1
                 // dispatch(addToCart({ id, name, Price, image, Restaurant, Veg_NonVeg, quantity: additemQ }));
                 // dispatch(removeFromCart({ id, name, Price, image, Restaurant, Veg_NonVeg, quantity: currentQuantity }));
-                dispatch(updateCartRemove({ newQuantity: additemQ, dishName: item.name }))
+                dispatch(updateCartRemove({ newQuantity: additemQ, dishName: item.name, restaurant: Restaurant }))
             }
         })
-    };
+    }
 
     const connectToSocket = () => {
         const socket = io(`${IP}`, {});
@@ -362,7 +361,7 @@ const BasketScreen = () => {
                     if (restaurant.name === basketRestaurant.name) {
                         basketRestaurant.image = restaurant.image;
                     }
-                    if (basketRestaurant.name === 'Chaat Stall') {
+                    if (basketRestaurant.name === 'The Food Village') {
                         foodVillageInCart = true;
                     }
                 });
@@ -520,9 +519,9 @@ const BasketScreen = () => {
             // Calculate the total amount with GST and delivery charges
             const totalAmount = (subtotal + gst + deliveryCharges[BasketRestaurant.name]).toFixed(2);
 
-            if (BasketRestaurant.name === 'Chaat Stall' && totalAmount < 150 && OrderTypeOption === 'Delivery') {
+            if (BasketRestaurant.name === 'The Food Village' && totalAmount < 150 && OrderTypeOption === 'Delivery') {
                 Alert.alert(
-                    'Unable to place order. Chaat Stall requires an order of more than ₹150 for delivery.'
+                    'Unable to place order. The Food Village requires an order of more than ₹150 for delivery.'
                 )
                 setShowSpinner(false)
                 canPlaceOrder = false
@@ -601,7 +600,7 @@ const BasketScreen = () => {
                     <Skeleton h='2' rounded='full' w='20%'
                         startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
                         endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
-                    <Skeleton h='12' rounded='md' w='12'
+                    <Skeleton h='24' rounded='md' w='24'
                         startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
                         endColor={colorScheme == 'light' ? 'gray.300' : '#ococof'} />
                     <Skeleton h='3' rounded='full' w='20%'
@@ -1149,7 +1148,7 @@ const BasketScreen = () => {
                                     <View className='space-y-2'>
                                         {console.log(BasketRestaurant)}
                                         <VStack className='w-full items-center space-y-2 pb-3 pt-2'>
-                                            <Image source={{ uri: urlFor(BasketRestaurant.image).url() }} style={{ width: 40, height: 40, borderRadius: 5 }} />
+                                            <Image source={{ uri: urlFor(BasketRestaurant.image).url() }} style={{ width: 100, height: 100, borderRadius: 5 }} />
                                             <Text allowFontScaling={false} className='text-lg font-medium'
                                                 style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
                                             >

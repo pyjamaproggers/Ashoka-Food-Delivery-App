@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity, ScrollView, colorScheme, useColorScheme, TextInput, FlatList, Alert, Dimensions, Animated, Linking } from "react-native";
 import React, { useMemo, useState, useLayoutEffect, useRef, useEffect } from "react";
 import { SafeAreaView, StyleSheet, StatusBar, Image } from "react-native";
-import { CloseIcon, HStack, IconButton, Slide, VStack, Skeleton, Alert as NativeBaseAlert, Button as NativeBaseButton, Progress } from 'native-base';
+import { CloseIcon, HStack, IconButton, Slide, VStack, Skeleton, Alert as NativeBaseAlert, Button as NativeBaseButton, Avatar } from 'native-base';
 import { useNavigation, useRoute } from "@react-navigation/native";
 import Styles from '../components/Styles.js'
 import Test1 from '../assets/testoutlet1.jpg'

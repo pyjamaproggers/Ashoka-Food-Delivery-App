@@ -46,19 +46,19 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
             dispatch(addToCart({ id, name, Price, image, Restaurant, Veg_NonVeg, quantity: additemQ }));
         }
         else {
-            if (items.filter((x) => (x.name == name)).length == 0) {
+            if (items.filter((x) => (x.name == name && x.Restaurant==Restaurant)).length == 0) {
                 currentQuantity = 0
                 additemQ = currentQuantity + 1
                 dispatch(addToCart({ id, name, Price, image, Restaurant, Veg_NonVeg, quantity: additemQ }));
             }
             else {
                 items.map((item) => {
-                    if (item.name == name) {
+                    if (item.name == name && item.Restaurant==Restaurant) {
                         currentQuantity = item.quantity
                         additemQ = currentQuantity + 1
                         // dispatch(addToCart({ id, name, Price, image, Restaurant, Veg_NonVeg, quantity: additemQ }));
                         // dispatch(removeFromCart({ id, name, Price, image, Restaurant, Veg_NonVeg, quantity: currentQuantity }));
-                        dispatch(updateCartAdd({ newQuantity: additemQ, dishName: item.name }))
+                        dispatch(updateCartAdd({ newQuantity: additemQ, dishName: item.name, restaurant: item.Restaurant }))
                     }
                 })
             }
@@ -66,6 +66,7 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
     };
 
     const removeItem = () => {
+        console.log('inside removeItem')
         Price = parseFloat(Price)
         var currentQuantity
         var additemQ
@@ -73,16 +74,17 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
             const item = items[i];
             let removedDish = false;
 
-            if (item.name === name && item.quantity === 1) {
+            if (item.name === name && item.Restaurant===Restaurant && item.quantity === 1) {
                 currentQuantity = 1;
                 dispatch(removeFromCart({ id, name, Price, image, Restaurant, Veg_NonVeg, quantity: currentQuantity }));
                 break; // Exit the loop completely
             }
 
-            if (item.name === name && item.quantity >= 1) {
+            if (item.name === name && item.Restaurant===Restaurant && item.quantity >= 1) {
+                console.log('coming here NIAHSGAHSAK')
                 currentQuantity = item.quantity;
                 additemQ = currentQuantity - 1;
-                dispatch(updateCartRemove({ newQuantity: additemQ, dishName: item.name }));
+                dispatch(updateCartRemove({ newQuantity: additemQ, dishName: item.name, restaurant: Restaurant }));
                 removedDish = true;
                 break; // Exit the loop completely
             }
@@ -127,7 +129,7 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
             setShowCustomizationSheet(false);
             setUserCustomizations(new Map())
         } else {
-            if (items.filter((x) => (x.name === name)).length === 0) {
+            if (items.filter((x) => (x.name === name && x.Restaurant===Restaurant)).length === 0) {
                 setItemQuantity(CDishQuantity);
                 dispatch(addToCart({ id, name, Price: CDishPrice, image, Restaurant, Veg_NonVeg, quantity: CDishQuantity, customizations: userCustomizationsObject }));
                 setCDishQuantity(1)
@@ -136,7 +138,7 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
             } else {
                 let foundSameCustomizations = false
                 items.forEach((item) => {
-                    if (item.name === name) {
+                    if (item.name === name && item.Restaurant === Restaurant) {
                         if (objectsAreEqual(item.customizations, userCustomizationsObject)) {
                             foundSameCustomizations = true
                             currentQuantity = item.quantity
@@ -349,7 +351,7 @@ const DishRow = ({ id, name, Veg_NonVeg, Price, image, delivery, Restaurant, Cus
         if (items.length != 0) {
             let itemQ = 0
             for (const item of items) {
-                if (item.name === name) {
+                if (item.name === name && item.Restaurant===Restaurant) {
                     itemQ += item.quantity
                 }
             }
