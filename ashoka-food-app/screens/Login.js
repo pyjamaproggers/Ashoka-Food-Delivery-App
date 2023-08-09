@@ -1,5 +1,5 @@
 import React, { useLayoutEffect, useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Image, useColorScheme } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, Image, useColorScheme, Alert as ReactNativeAlert } from "react-native";
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -105,6 +105,7 @@ function Login() {
 
     const getUserInfo = async (token) => {
         if (!token) return;
+        
         try {
             const response = await fetch(
                 "https://www.googleapis.com/userinfo/v2/me",
@@ -112,18 +113,29 @@ function Login() {
                     headers: { Authorization: `Bearer ${token}` },
                 }
             );
-
+    
             const actualUser = await response.json();
-            setUser(actualUser);
-            setLoggedOut(0);
-            const storageUser = JSON.stringify(actualUser)
-            AsyncStorage.setItem("@user", storageUser);
-            console.log("User set to " + actualUser);
-            navigation.navigate('PhoneAuth', { actualUser, from: 'Login' })
+            
+            const authorisedEmails = [
+                'aryan.yadav_asp24@ashoka.edu.in',
+                'zahaan.shapoorjee_ug24@ashoka.edu.in'
+            ];
+            
+            if (authorisedEmails.includes(actualUser.email)) {
+                setUser(actualUser);
+                setLoggedOut(0);
+                const storageUser = JSON.stringify(actualUser);
+                AsyncStorage.setItem("@user", storageUser);
+                console.log("User set to " + actualUser.email);
+                navigation.navigate('PhoneAuth', { actualUser, from: 'Login' });
+            } else {
+                ReactNativeAlert.alert("Sorry! You are not authorized for Beta Testing!");
+            }
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
     };
+    
 
     useEffect(() => {
         handleSigninWithGoogle();
