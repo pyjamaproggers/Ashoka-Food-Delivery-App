@@ -1153,7 +1153,6 @@ const BasketScreen = () => {
                         contentContainerStyle={{
                             paddingBottom: 200
                         }}
-
                     >
                         <View className="relative">
                             <HStack className='items-center pt-2'>

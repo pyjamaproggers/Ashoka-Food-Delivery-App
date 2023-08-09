@@ -174,7 +174,7 @@ const HomeScreen = () => {
     return (
         <View className="" style={[colorScheme == 'light' ? { backgroundColor: '#F2F2F2' } : { backgroundColor: '#0c0c0f' }]}>
 
-            {userHasLiveOrders &&
+            {/* {userHasLiveOrders &&
 
                 <View className='absolute w-screen bottom-32 z-50 shadow-sm'>
                     <SafeAreaView>
@@ -207,7 +207,9 @@ const HomeScreen = () => {
                             </HStack>
                         </TouchableOpacity>
                     </SafeAreaView>
-                </View>}
+                </View>
+
+            } */}
 
             {/* <SafeAreaView className="absolute bottom-32 w-7/12 self-center z-50 shadow-sm">
                 <TouchableOpacity
@@ -250,7 +252,7 @@ const HomeScreen = () => {
                         <VStack space={1} className='justify-center'>
                             <Text allowFontScaling={false}
                                 className='self-center font-semibold text-xl italic ' style={[colorScheme == 'light' ? Styles.LightHomeAdlib : Styles.DarkHomeAdlib]}>
-                                AshokaEats™
+                                AshokaEats
                             </Text>
                         </VStack>
 
@@ -374,6 +376,37 @@ const HomeScreen = () => {
                         }
                     </View>
                 </View>
+
+                {userHasLiveOrders &&
+                    <TouchableOpacity
+                        onPress={() => {
+                            navigation.navigate('LiveOrders', { actualUser })
+                        }}
+                        className=" w-11/12 self-center h-max py-3 px-3 mb-1.5 flex-row items-center rounded-lg z-20"
+                        style={{ backgroundColor: '#3E5896' }}
+                    >
+                        <HStack className='items-center justify-between w-full'>
+                            <>
+                                <HStack className='items-center' space={2}>
+                                    <Image
+                                        style={{ width: 20, height: 20, resizeMode: "contain" }}
+                                        source={Tracking}
+                                    />
+                                    <Text allowFontScaling={false} className='text-md font-semibold text-white'
+                                    >
+                                        Track My Order
+                                    </Text>
+                                </HStack>
+                                <View >
+                                    <Image
+                                        style={{ width: 12, height: 12, resizeMode: "contain" }}
+                                        source={ChevronUp}
+                                    />
+                                </View>
+                            </>
+                        </HStack>
+                    </TouchableOpacity>
+                }
 
                 <Slide in={!netInfo.isConnected} placement="top">
                     <Alert justifyContent="center" status="error" safeAreaTop={10}>

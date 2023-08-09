@@ -77,7 +77,6 @@ export default function EachOrder() {
     useLayoutEffect(() => {
         navigation.setOptions({
             headerShown: false,
-            gestureEnabled: false,
         });
     }, []);
 

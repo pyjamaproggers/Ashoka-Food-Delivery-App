@@ -19,7 +19,9 @@ import LiveOrders from './screens/LiveOrders';
 import OrderHistory from './screens/OrderHistory';
 import EachOrder from './screens/EachOrder';
 import ManageSpendings from './screens/ManageSpendings';
-import DishRow from './screens/DishRow';
+import StudentDisclaimer from './screens/StudentDisclaimer'
+import VendorDisclaimer from './screens/VendorDisclaimer'
+import Credits from './screens/Credits'
 
 setupURLPolyfill()
 const Stack = createNativeStackNavigator();
@@ -29,20 +31,35 @@ export default function App() {
         <NativeBaseProvider>
             <Provider store={store}>
                 <NavigationContainer>
-                    <Stack.Navigator >
+                    <Stack.Navigator>
+
+                        {/* Student Auth */}
                         <Stack.Screen name="Login" component={Login} initialParams={{ logout: null }} />
+                        <Stack.Screen name="PhoneAuth" component={PhoneAuthScreen} />
+                        <Stack.Screen name="StudentDisclaimer" component={StudentDisclaimer} />
+                        <Stack.Screen name="VendorDisclaimer" component={VendorDisclaimer}/>
+
+                        {/* Vendor Auth */}
                         <Stack.Screen name="VendorLogin" component={VendorLogin} />
                         <Stack.Screen name="VendorDashboard" component={VendorDashboard} />
-                        <Stack.Screen name="PhoneAuth" component={PhoneAuthScreen} />
+
+                        {/* Home/Restaurants */}
                         <Stack.Screen name="Home" component={HomeScreen} />
                         <Stack.Screen name="Restaurant" component={RestaurantScreen} />
-                        <Stack.Screen name="UserScreen" component={UserScreen} />
                         <Stack.Screen name="Cart" component={CartScreen} />
-                        <Stack.Screen name="LiveOrders" component={LiveOrders} />
+                        <Stack.Screen name="LiveOrders" component={LiveOrders} 
+                            options={{
+                                gestureDirection: 'vertical'
+                            }}
+                        />
+
+                        {/* User Functionalities */}
+                        <Stack.Screen name="UserScreen" component={UserScreen} />
                         <Stack.Screen name="OrderHistory" component={OrderHistory} />
                         <Stack.Screen name="EachOrder" component={EachOrder} />
+                        <Stack.Screen name="Credits" component={Credits} />
                         {/* <Stack.Screen name="ManageSpendings" component={ManageSpendings}  /> */}
-                        {/* We'll work on manage spendings after we've got enough data to work with */}
+                        
                     </Stack.Navigator>
                 </NavigationContainer>
             </Provider>

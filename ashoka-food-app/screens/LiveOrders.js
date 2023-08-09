@@ -10,7 +10,7 @@ import Test3 from '../assets/testoutlet3.jpg'
 import Refresh from '../assets/refresh.png'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Phone from '../assets/phoneicon.png'
-import { ArrowLeftIcon, StopCircleIcon } from 'react-native-heroicons/solid';
+import { ArrowLeftIcon, StopCircleIcon, ArrowDownIcon } from 'react-native-heroicons/solid';
 import Grey from '../assets/greysquare.jpeg'
 import Dish from '../assets/dish.png';
 import PenIcon from '../assets/pen.png';
@@ -233,7 +233,7 @@ export default function LiveOrders() {
                             const translateX = scrollX.interpolate({
                                 inputRange,
                                 outputRange: [
-                                    -width * 1, 0, width * 1
+                                    -width * 0.95, 0, width * 0.95
                                 ]
                             })
 
@@ -319,8 +319,9 @@ export default function LiveOrders() {
 
                                                 <HStack className='items-center -mb-4 justify-between w-full'>
                                                     <TouchableOpacity onPress={() => { navigation.navigate('Home', { actualUser }) }} className=" p-2 rounded-full" style={[colorScheme == 'light' ? { backgroundColor: 'white', borderRadius: 20 } : { backgroundColor: '#262626', borderRadius: 20 }]}>
-                                                        <ArrowLeftIcon size={20} style={[colorScheme == 'light' ? { color: 'black' } : { color: 'white' }]} />
+                                                        <ArrowDownIcon size={20} style={[colorScheme == 'light' ? { color: 'black' } : { color: 'white' }]} />
                                                     </TouchableOpacity>
+
 
                                                     <Text className='font-medium text-lg text-center'
                                                         allowFontScaling={false}

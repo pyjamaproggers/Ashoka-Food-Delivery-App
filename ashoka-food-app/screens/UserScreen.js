@@ -148,14 +148,12 @@ export default function UserScreen() {
         });
     }, []);
 
-    console.log(actualUser)
-
     const navigation = useNavigation();
 
     return (
         <SafeAreaView className="h-screen" style={[colorScheme == 'light' ? { backgroundColor: '#F2F2F2', flex: 1 } : { backgroundColor: '#0c0c0f', flex: 1 }]}>
             {/* Go back Button */}
-            <TouchableOpacity onPress={() => { navigation.navigate('Home', { actualUser }) }} className="p-2 bg-white rounded-full items-center shadow-lg" style={[colorScheme == 'light' ? styles.LightbackButton : styles.DarkbackButton]}>
+            <TouchableOpacity onPress={() => { navigation.navigate('Home', { actualUser }) }} className="p-2 bg-white rounded-full items-center shadow-sm" style={[colorScheme == 'light' ? styles.LightbackButton : styles.DarkbackButton]}>
                 <ArrowLeftIcon size={20} style={[colorScheme == 'light' ? { color: 'black' } : { color: 'white' }]} />
             </TouchableOpacity>
 
@@ -228,7 +226,7 @@ export default function UserScreen() {
                             <View className="flex-row gap-2 items-center justify-between">
                                 <HStack className="items-center flex-row" space={2}>
                                     <Image source={Userspending} style={{ width: 20, height: 20 }} />
-                                    <Text style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>Manage Spendings</Text>
+                                    <Text style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>Track Spendings</Text>
                                 </HStack>
                                 <ChevronRightIcon size={16} style={[colorScheme == 'light' ? { color: 'black' } : { color: 'white' }]} />
                             </View>
@@ -252,12 +250,14 @@ export default function UserScreen() {
                     </View>
 
                     <View className="py-4" style={[colorScheme == 'light' ? Styles.LightUserDetailsBorderLast : Styles.DarkUserDetailsBorderLast]}>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={() => {
+                                navigation.navigate('Credits')
+                            }}>
                             <View className="flex-row gap-2 items-center justify-between">
                                 <HStack className="items-center flex-row" space={2}>
                                     <Image source={Credits} style={{ width: 20, height: 20 }} />
                                     <Text style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
-                                        Credits & Disclaimer
+                                        Credits
                                     </Text>
                                 </HStack>
                                 <ChevronRightIcon size={16} style={[colorScheme == 'light' ? { color: 'black' } : { color: 'white' }]} />
