@@ -1,9 +1,10 @@
 import React, { useLayoutEffect, useState } from 'react';
-import { Text, View, TextInput, TouchableOpacity, StyleSheet, useColorScheme } from 'react-native';
+import { Text, View, TextInput, TouchableOpacity, StyleSheet, useColorScheme, Alert } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ArrowLeftIcon } from 'react-native-heroicons/outline'; // Import the go back arrow icon
+import {IP} from "@dotenv"
 
 function VendorLogin() {
     const navigation = useNavigation();
@@ -18,11 +19,47 @@ function VendorLogin() {
         });
     }, []);
 
-    const handleLogin = () => {
-        if(selectedRestaurant.length>0){
-            navigation.navigate('VendorDashboard', {selectedRestaurant, selectedPerson} )
+    const handleLogin = async () => {
+        if (!selectedRestaurant || !selectedPerson || !password) {
+            Alert.alert("Please fill in all input fields!")
+            return;
+        }
+        try {
+            const verified = await verifyPassword(password);
+            if (verified) {
+                navigation.navigate('VendorDashboard', {
+                    selectedRestaurant,
+                    selectedPerson,
+                });
+            } else {
+                Alert.alert('Incorrect password');
+            }
+        } catch (error) {
+            console.log('Error verifying password:', error);
         }
     };
+    
+
+    async function verifyPassword(password) {
+        try {
+            const response = await fetch(`${IP}/api/auth/${selectedRestaurant}`, {
+                method: 'POST', 
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ password }), 
+            });
+    
+            if (response.ok) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (error) {
+            console.log('Error verifying password:', error);
+        }
+    }
+    
 
     // List of restaurant options
     const restaurantOptions = [
