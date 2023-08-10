@@ -38,8 +38,11 @@ elsif podfile_properties.key?('ios.flipper') then
   end
 end
 
-target 'reactnativefoodapppractice' do
-  use_expo_modules!
+target 'AshokaEats' do
+
+    use_modular_headers!
+
+    use_expo_modules!
   config = use_native_modules!
 
   use_frameworks! :linkage => podfile_properties['ios.useFrameworks'].to_sym if podfile_properties['ios.useFrameworks']
@@ -57,10 +60,6 @@ target 'reactnativefoodapppractice' do
     # Note that if you have use_frameworks! enabled, Flipper will not work if enabled
     :flipper_configuration => flipper_config
   )
-
-  use_modular_headers!
-
-  pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec', :modular_headers => false
 
   post_install do |installer|
     react_native_post_install(
@@ -85,11 +84,6 @@ target 'reactnativefoodapppractice' do
   end
 
   post_integrate do |installer|
-    begin
-      expo_patch_react_imports!(installer)
-    rescue => e
-      Pod::UI.warn e
-    end
     begin
       expo_patch_react_imports!(installer)
     rescue => e
