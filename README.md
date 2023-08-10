@@ -14,7 +14,7 @@ Backend - Nodejs, Expressjs
 
 Database - MongoDB, Sanity.io  
 
-RESTful APIs - Google Auth 2.0  
+APIs/Services - Google Auth 2.0, Firebase Phone Auth, Multiavatar, Icons8 
 
 
 ## Screenshots
