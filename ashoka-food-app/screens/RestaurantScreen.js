@@ -20,7 +20,7 @@ import ChevronUp from '../assets/chevronupicon.png'
 import ChevronDown from '../assets/chevrondownicon.png'
 import Search from '../assets/searchicon.png'
 import { useNetInfo } from "@react-native-community/netinfo";
-import { Alert, CloseIcon, HStack, IconButton, PresenceTransition, Slide, VStack } from 'native-base';
+import { Alert, CloseIcon, HStack, IconButton, PresenceTransition, Slide, VStack, Skeleton } from 'native-base';
 import Warning from '../assets/warning.png'
 import { addToCart, removeFromCart, selectCartItems, selectCartTotal } from "../reduxslices/cartslice";
 import CategoryAccordion from '../components/Accordion';
@@ -46,16 +46,7 @@ const RestaurantScreen = () => {
     const [ShowSearchedVegMenu, setShowSearchedVegMenu] = useState(false)
     const [ShowSearchedNonVegMenu, setShowSearchedNonVegMenu] = useState(false)
 
-    const [activeSections, setActiveSection] = useState([]);
-
     const [Categories, setCategories] = useState();
-    const [multipleSelect] = useState(true);
-
-    const setSections = (sections) => {
-        setActiveSection(sections.includes(undefined) ? [] : sections);
-    };
-
-    const [Refreshing, setRefreshing] = useState(false);
 
     const colorScheme = useColorScheme();
     const netInfo = useNetInfo();
@@ -63,6 +54,7 @@ const RestaurantScreen = () => {
     const navigation = useNavigation();
     const dispatch = useDispatch();
     const scrollA = useRef(new Animated.Value(0)).current;
+    const [loadingImage, setLoadingImage] = useState(true)
 
     const {
         params: {
@@ -480,7 +472,7 @@ const RestaurantScreen = () => {
         });
 
         const filterAndSetSearchedMenu = (menu, setMenuFunction) => {
-            const TempSearchedMenu = menu.map((category,index) => ({
+            const TempSearchedMenu = menu.map((category, index) => ({
                 id: category.id,
                 title: category.title,
                 content: category.content.filter(
@@ -499,48 +491,9 @@ const RestaurantScreen = () => {
         filterAndSetSearchedMenu(TempNonVegMenu, setSearchedNonVegMenu);
     };
 
-
-    _renderHeader = (section, _, isActive) => {
-        return (
-            <HStack className='mt-3 shadow-sm items-center justify-between pr-3'
-                style={[colorScheme == 'light' ? [isActive == true ? Styles.LightActiveAccordionButton : Styles.LightInactiveAccordionButton] : [isActive == true ? Styles.DarkActiveAccordionButton : Styles.DarkInactiveAccordionButton]]}
-            >
-                <Text className='font-semibold pl-2 text-lg py-3 w-10/12'
-                    style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
-                >
-                    {section.title} ({section.content.length})
-                </Text>
-                {isActive ?
-                    <Image
-                        style={{ width: 12, height: 12, resizeMode: "contain" }}
-                        source={ChevronUp}
-                    />
-                    :
-                    <Image
-                        style={{ width: 12, height: 12, resizeMode: "contain" }}
-                        source={ChevronDown}
-                    />
-                }
-            </HStack>
-        );
+    const updateImageLoader = (value) => {
+        setLoadingImage(value)
     }
-
-    _renderContent = (section) => {
-        {
-            // section.content.map((dish)=>{
-            //     console.log(dish)
-            // })
-            return (
-                <>
-                    {
-                        section.content.map((dish) => (
-                            <DishRow name={dish.name} Price={dish.Price} Veg_NonVeg={dish.Veg_NonVeg} delivery={delivery} key={dish._id} id={dish._id} Restaurant={dish.Restaurant} Customizations={dish.Customizations} />
-                        ))
-                    }
-                </>
-            )
-        }
-    };
 
 
     useLayoutEffect(() => {
@@ -596,7 +549,22 @@ const RestaurantScreen = () => {
 
 
                 <View className="relative">
-                    <Animated.Image source={{ uri: urlFor(image).url() }} style={Styles.RestaurantImage(scrollA)} />
+                    {/* {loadingImage &&
+                        <Skeleton rounded='lg'
+                            startColor={colorScheme == 'light' ? 'gray.100' : '#262626'}
+                            endColor={colorScheme == 'light' ? 'gray.300' : '#0c0c0f'}
+                            style={{
+                                width: '100%',
+                                height: 200,
+                            }}
+                        />
+                    } */}
+                    <Animated.Image
+                        source={{ uri: urlFor(image).url() }}
+                        style={Styles.RestaurantImage(scrollA)}
+                        onLoadStart={() => updateImageLoader(true)}
+                        onLoadEnd={() => updateImageLoader(false)}
+                    />
                     <TouchableOpacity onPress={navigation.goBack} className="absolute top-14 p-2 rounded-full" style={[colorScheme == 'light' ? Styles.LightBackButton : Styles.DarkBackButton]}>
                         <ArrowLeftIcon size={20} style={[colorScheme == 'light' ? { color: 'black' } : { color: 'white' }]} />
                     </TouchableOpacity>

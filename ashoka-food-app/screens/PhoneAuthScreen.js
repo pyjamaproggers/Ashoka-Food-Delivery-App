@@ -111,46 +111,71 @@ const PhoneAuthScreen = () => {
             verificationID,
             code
         );
-        // const response = await firebase.auth().signInWithCredential(credential)
-        // if(response.user.phoneNumber){
-        //     console.log(response.user.phoneNumber)
-        // }
-        // else{
-        //     console.log(response)
-        // }
-        firebase.auth().signInWithCredential(credential)
-            .then((e) => {
-                console.log('INSIDE THENNNNNN: '+e)
-                if (from == "Login") {
-                    actualUser["phone"] = phoneNumberFormatted;
-                    AsyncStorage.setItem("@user", JSON.stringify(actualUser));
-                    navigation.navigate("StudentDisclaimer", { actualUser });
-                    setCode("");
-                    setShowLoader(false)
-                    return
-                } else {
-                    navigation.navigate("UserScreen", { actualUser });
-                    setCode("");
-                    Alert.alert("Phone Number Updated");
-                    setShowLoader(false)
-                    return
-                }
-            })
-            .catch((error) => {
-                if(error.code=='auth/invalid-verification-code'){
-                    Alert.alert("Incorrect OTP! Please check again, thank you.");
-                    setShowLoader(false)
-                    return
-                }
-                else{
-                    Alert.alert(
-                        'There seems to be an error. If it persists, please try again later, sorry for the inconvenience.'
-                    )
-                    setShowLoader(false)
-                    return
-                }
-            });
-    };
+        const response = await firebase.auth().signInWithCredential(credential)
+        if (response.user) {
+            if (from == "Login") {
+                actualUser["phone"] = phoneNumberFormatted;
+                AsyncStorage.setItem("@user", JSON.stringify(actualUser));
+                navigation.navigate("StudentDisclaimer", { actualUser });
+                setCode("");
+                setShowLoader(false)
+                return
+            }
+            else {
+                navigation.navigate("UserScreen", { actualUser });
+                setCode("");
+                Alert.alert("Phone Number Updated");
+                setShowLoader(false)
+                return
+            }
+        }
+        else if (!response.user) {
+            if (response.code == 'auth/invalid-verification-code') {
+                Alert.alert("Incorrect OTP! Please check again, thank you.");
+                setShowLoader(false)
+                return
+            }
+            else {
+                Alert.alert(
+                    'There seems to be an error. If it persists, please try again later, sorry for the inconvenience.'
+                )
+                setShowLoader(false)
+                return
+            }
+        }
+
+
+        // .then((e) => {
+        //     if (from == "Login") {
+        //         actualUser["phone"] = phoneNumberFormatted;
+        //         AsyncStorage.setItem("@user", JSON.stringify(actualUser));
+        //         navigation.navigate("StudentDisclaimer", { actualUser });
+        //         setCode("");
+        //         setShowLoader(false)
+        //         return
+        //     } else {
+        //         navigation.navigate("UserScreen", { actualUser });
+        //         setCode("");
+        //         Alert.alert("Phone Number Updated");
+        //         setShowLoader(false)
+        //         return
+        //     }
+        // })
+        // .catch((error) => {
+        //     if(error.code=='auth/invalid-verification-code'){
+        //         Alert.alert("Incorrect OTP! Please check again, thank you.");
+        //         setShowLoader(false)
+        //         return
+        //     }
+        //     else{
+        //         Alert.alert(
+        //             'There seems to be an error. If it persists, please try again later, sorry for the inconvenience.'
+        //         )
+        //         setShowLoader(false)
+        //         return
+        //     }
+        // });
+    }
 
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -158,9 +183,9 @@ const PhoneAuthScreen = () => {
         });
     }, []);
 
-    useEffect(()=>{
+    useEffect(() => {
 
-    },[showLoader])
+    }, [showLoader])
 
     return (
         <SafeAreaView
