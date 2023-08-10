@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, ScrollView, colorScheme, useColorScheme, TextInput, FlatList, Alert, Dimensions, Animated, Linking } from "react-native";
-import React, { useMemo, useState, useLayoutEffect, useRef, useEffect } from "react";
+import React, { useMemo, useState, useLayoutEffect, useRef, useEffect, useCallback } from "react";
 import { SafeAreaView, StyleSheet, StatusBar, Image } from "react-native";
 import { CloseIcon, HStack, IconButton, Slide, VStack, Skeleton, Alert as NativeBaseAlert, Button as NativeBaseButton, Progress, useToast, Avatar } from 'native-base';
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -59,6 +59,7 @@ export default function LiveOrders() {
     const [socket, setSocket] = useState(null)
     const [Fetching, setFetching] = useState(true)
     const toast = useToast();
+    const [Index,setIndex] = useState(0)
 
     const colors = [
         'amber.400',
@@ -205,12 +206,79 @@ export default function LiveOrders() {
         }
     }, [latestOrder]);
 
+    const _onViewableItemsChanged = useCallback(({ viewableItems, changed }) => {
+        setIndex(viewableItems[0].index)
+    }, []);
+
     return (
         <>
             {!Fetching &&
-                <View style={[colorScheme == 'light' ? Styles.LightBG : Styles.DarkBG]}>
+                <SafeAreaView style={[colorScheme == 'light' ? Styles.LightBG : Styles.DarkBG]}>
+
+                    <HStack className='items-center self-center' space={1}>
+                        {usersLiveOrders.length > 1 &&
+                            <>
+                                {usersLiveOrders.map((order, progressIndex) => (
+                                    <>
+                                        {Index == progressIndex &&
+                                            <>
+                                                {order.orderStatus == 'placed' &&
+                                                    <StopCircleIcon size={20} style={{ color: '#3b82f6' }} />
+                                                }
+                                                {order.orderStatus == 'accepted' &&
+                                                    <StopCircleIcon size={20} style={{ color: '#22c55e' }} />
+                                                }
+                                                {order.orderStatus == 'preparing' &&
+                                                    <StopCircleIcon size={20} style={{ color: '#eab308' }} />
+                                                }
+                                                {order.orderStatus == 'out for delivery' &&
+                                                    <StopCircleIcon size={20} style={{ color: '#3b82f6' }} />
+                                                }
+                                                {order.orderStatus == 'ready' &&
+                                                    <StopCircleIcon size={20} style={{ color: '#3b82f6' }} />
+                                                }
+                                                {order.orderStatus.slice(0, 8) == 'Declined' &&
+                                                    <StopCircleIcon size={20} style={{ color: '#f43f5e' }} />
+                                                }
+                                            </>
+                                        }
+
+                                        {Index != progressIndex &&
+                                            <>
+                                                {order.orderStatus == 'placed' &&
+                                                    <StopCircleIcon size={12} style={{ color: '#3b82f6' }} />
+                                                }
+                                                {order.orderStatus == 'accepted' &&
+                                                    <StopCircleIcon size={12} style={{ color: '#22c55e' }} />
+                                                }
+                                                {order.orderStatus == 'preparing' &&
+                                                    <StopCircleIcon size={12} style={{ color: '#eab308' }} />
+                                                }
+                                                {order.orderStatus == 'out for delivery' &&
+                                                    <StopCircleIcon size={12} style={{ color: '#3b82f6' }} />
+                                                }
+                                                {order.orderStatus == 'ready' &&
+                                                    <StopCircleIcon size={12} style={{ color: '#3b82f6' }} />
+                                                }
+                                                {order.orderStatus.slice(0, 8) == 'Declined' &&
+                                                    <StopCircleIcon size={12} style={{ color: '#f43f5e' }} />
+                                                }
+                                            </>
+                                        }
+
+
+                                    </>
+                                ))}
+                            </>
+                        }
+                    </HStack>
+
                     <Animated.FlatList
                         data={usersLiveOrders}
+                        onViewableItemsChanged={_onViewableItemsChanged}
+                        viewabilityConfig={{
+                            itemVisiblePercentThreshold: 50
+                          }}
                         horizontal
                         showsHorizontalScrollIndicator={false}
                         pagingEnabled
@@ -258,7 +326,7 @@ export default function LiveOrders() {
                                         <SafeAreaView >
                                             <VStack className='self-center items-center w-11/12 '>
 
-                                                <HStack className='items-center' space={1}>
+                                                {/* <HStack className='items-center' space={1}>
                                                     {usersLiveOrders.length > 1 &&
                                                         <>
                                                             {usersLiveOrders.map((order, progressIndex) => (
@@ -315,11 +383,15 @@ export default function LiveOrders() {
                                                             ))}
                                                         </>
                                                     }
-                                                </HStack>
+                                                </HStack> */}
 
-                                                <HStack className='items-center -mb-4 justify-between w-full'>
-                                                    <TouchableOpacity onPress={() => { navigation.navigate('Home', { actualUser }) }} className=" p-2 rounded-full" style={[colorScheme == 'light' ? { backgroundColor: 'white', borderRadius: 20 } : { backgroundColor: '#262626', borderRadius: 20 }]}>
-                                                        <ArrowDownIcon size={20} style={[colorScheme == 'light' ? { color: 'black' } : { color: 'white' }]} />
+                                                <HStack className='items-center -mb-6 justify-between w-full'>
+                                                    <TouchableOpacity onPress={() => { navigation.navigate('Home', { actualUser }) }} className=" p-2.5 rounded-full" style={[colorScheme == 'light' ? { backgroundColor: '#f2f2f2', borderRadius: 20 } : { backgroundColor: '#0c0c0f', borderRadius: 20 }]}>
+                                                        {/* <ArrowDownIcon size={20} style={[colorScheme == 'light' ? { color: 'black' } : { color: 'white' }]} /> */}
+                                                        <Image
+                                                            style={{ width: 18, height: 18, resizeMode: "contain" }}
+                                                            source={ChevronDown}
+                                                        />
                                                     </TouchableOpacity>
 
 
@@ -1081,7 +1153,7 @@ export default function LiveOrders() {
                             )
                         }}
                     />
-                </View>
+                </SafeAreaView>
 
             }
 

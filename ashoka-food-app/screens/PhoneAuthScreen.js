@@ -105,33 +105,50 @@ const PhoneAuthScreen = () => {
         }
     };
 
-    const confirmCode = (code) => {
+    const confirmCode = async (code) => {
         setShowLoader(true)
         const credential = new firebase.auth.PhoneAuthProvider.credential(
             verificationID,
             code
         );
-        firebase
-            .auth()
-            .signInWithCredential(credential)
-            .then(() => {
+        // const response = await firebase.auth().signInWithCredential(credential)
+        // if(response.user.phoneNumber){
+        //     console.log(response.user.phoneNumber)
+        // }
+        // else{
+        //     console.log(response)
+        // }
+        firebase.auth().signInWithCredential(credential)
+            .then((e) => {
+                console.log('INSIDE THENNNNNN: '+e)
                 if (from == "Login") {
                     actualUser["phone"] = phoneNumberFormatted;
                     AsyncStorage.setItem("@user", JSON.stringify(actualUser));
                     navigation.navigate("StudentDisclaimer", { actualUser });
                     setCode("");
+                    setShowLoader(false)
+                    return
                 } else {
                     navigation.navigate("UserScreen", { actualUser });
                     setCode("");
                     Alert.alert("Phone Number Updated");
+                    setShowLoader(false)
+                    return
                 }
-                setShowLoader(false)
             })
             .catch((error) => {
-                console.log(error);
-                Alert.alert("Incorrect OTP! Please check again, thank you.");
-                setShowLoader(false)
-                
+                if(error.code=='auth/invalid-verification-code'){
+                    Alert.alert("Incorrect OTP! Please check again, thank you.");
+                    setShowLoader(false)
+                    return
+                }
+                else{
+                    Alert.alert(
+                        'There seems to be an error. If it persists, please try again later, sorry for the inconvenience.'
+                    )
+                    setShowLoader(false)
+                    return
+                }
             });
     };
 

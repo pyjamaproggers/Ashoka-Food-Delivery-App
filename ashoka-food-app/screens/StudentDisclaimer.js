@@ -51,7 +51,7 @@ export default function StudentDisclaimer() {
                 <ArrowLeftIcon size={20} style={[colorScheme == 'light' ? { color: 'black' } : { color: 'white' }]} />
             </TouchableOpacity>
 
-            <Text className='text-center font-medium text-md pb-3 -mt-6' allowFontScaling={false} style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
+            <Text className='text-center font-medium text-md pb-3 -mt-2' allowFontScaling={false} style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>
                 STUDENT DISCLAIMER
             </Text>
 

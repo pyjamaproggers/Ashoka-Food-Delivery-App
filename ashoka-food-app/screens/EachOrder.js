@@ -154,8 +154,16 @@ export default function EachOrder() {
                                         <VStack className='self-center items-center w-11/12 '>
 
                                             <HStack className='items-center -mb-4 justify-between w-full'>
-                                                <TouchableOpacity onPress={() => { navigation.goBack() }} className=" p-2 rounded-full" style={[colorScheme == 'light' ? { backgroundColor: 'white', borderRadius: 20 } : { backgroundColor: '#262626', borderRadius: 20 }]}>
-                                                    <ArrowLeftIcon size={20} style={[colorScheme == 'light' ? { color: 'black' } : { color: 'white' }]} />
+                                                <TouchableOpacity onPress={() => { navigation.goBack() }} className=" p-2 rounded-full" style={[colorScheme == 'light' ? { backgroundColor: '#f2f2f2', borderRadius: 20 } : { backgroundColor: '#0c0c0f', borderRadius: 20 }]}>
+                                                    {/* <ArrowLeftIcon size={20} style={[colorScheme == 'light' ? { color: 'black' } : { color: 'white' }]} /> */}
+                                                    <View style={{transform: [{
+                                                        rotate: '90deg'
+                                                    }]}}>
+                                                        <Image
+                                                            style={{ width: 16, height: 16, resizeMode: "contain" }}
+                                                            source={ChevronDown}
+                                                        />
+                                                    </View>
                                                 </TouchableOpacity>
 
                                                 <Text className='font-medium text-lg text-center'
