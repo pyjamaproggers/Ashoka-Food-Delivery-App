@@ -64,6 +64,8 @@ function Login() {
 
     async function handleSigninWithGoogle() {
         const userCheck = await AsyncStorage.getItem("@user");
+        const disclaimerCheck = await AsyncStorage.getItem("@studentdisclaimer")
+        console.log(disclaimerCheck)
         if (!userCheck) {
             console.log("No User...")
             if (response?.type === "success") {
@@ -78,7 +80,15 @@ function Login() {
             setLoggedOut(0);
             if (actualUser.phone) {
                 console.log("There is user and PHONE")
-                navigation.navigate('Home', { actualUser })
+                if(disclaimerCheck)
+                {
+                    navigation.navigate('Home', { actualUser })
+                }
+                else
+                {
+                    navigation.navigate('StudentDisclaimer', { actualUser })
+                }
+                
             }
             else if (!actualUser.phone && phone) {
                 console.log(phone + " received!");

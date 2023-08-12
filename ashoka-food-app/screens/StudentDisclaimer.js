@@ -4,6 +4,7 @@ import { SafeAreaView, useColorScheme, StyleSheet, TouchableOpacity, Text, View,
 import { HStack, Skeleton, VStack, Checkbox, Button } from 'native-base';
 import { ArrowLeftIcon, ArrowRightIcon } from 'react-native-heroicons/solid';
 import Styles from '../components/Styles'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function StudentDisclaimer() {
 
@@ -123,6 +124,7 @@ export default function StudentDisclaimer() {
                             }
                             else {
                                 //navigate to home screen
+                                AsyncStorage.setItem("@studentdisclaimer", JSON.stringify({agreed:"yes"}))
                                 navigation.navigate("Home", { actualUser });
                                 Alert.alert("Welcome to AshokaEats");
                             }
