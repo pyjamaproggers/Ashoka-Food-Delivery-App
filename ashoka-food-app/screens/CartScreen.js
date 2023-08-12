@@ -242,29 +242,32 @@ const BasketScreen = () => {
 
     const checkRestaurantClosed = async () => {
         let checkArray = 'The following restaurants are closed:\n';
-        const currentTime = new Date();  // Get the current time
-
+        const currentTime = new Date();
+    
         for (const basketRestaurant of restaurantData) {
             const timing = basketRestaurant.timing;
-            const [openTime, closeTime] = timing.split(' To ');
-
+            
+            console.log("Timing: " + timing);
+    
+            const [openTime, closeTime] = timing.includes(' To ') ? timing.split(' To ') : timing.split(' - ');
+            console.log("Open Time: " + openTime);
+            console.log("Close Time: " + closeTime);
+    
             const openHour = parseInt(openTime.slice(0, -2));
             const openPeriod = openTime.slice(-2);
-
             const closeHour = parseInt(closeTime.slice(0, -2));
             const closePeriod = closeTime.slice(-2);
-
+    
             if (openPeriod === 'PM' && openHour !== 12) {
                 openHour += 12;
             }
             if (closePeriod === 'PM' && closeHour !== 12) {
                 closeHour += 12;
             }
-
+    
             if (closeHour < openHour) {
-                // Handle cases where closing hour is earlier than opening hour (e.g., 6pm to 2am)
                 if (currentTime.getHours() >= openHour || currentTime.getHours() < closeHour) {
-                    checkArray += basketRestaurant.name + ', ';
+                    checkArray += basketRestaurant.name + ' (' + openTime + ' - ' + closeTime + '), ';
                 }
             } else {
                 if (currentTime.getHours() >= openHour && currentTime.getHours() < closeHour) {
@@ -272,9 +275,10 @@ const BasketScreen = () => {
                 }
             }
         }
-
+    
         return checkArray;
     }
+    
 
 
 
