@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:869682950989:android:0834820d06f4fd4b257d04",
         "android_client_info": {
-          "package_name": "com.anonymouse.reactnativefoodapppractice"
+          "package_name": "com.pyjamaprogrammers.AshokaEats"
         }
       },
       "oauth_client": [
@@ -34,7 +34,7 @@
               "client_id": "869682950989-rei7b6a3ru9h0i1l4i7n4dqnvu3cm82a.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.anonymouse.reactnativefoodapppractice"
+                "bundle_id": "com.pyjamaprogrammers.AshokaEats"
               }
             }
           ]
