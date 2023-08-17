@@ -47,7 +47,7 @@ export default function VenderDisclaimer() {
     return (
         <SafeAreaView className='h-screen' style={[colorScheme == 'light' ? Styles.LightBG : Styles.DarkBG]}>
 
-            <TouchableOpacity onPress={() => { navigation.navigate('Home', { actualUser }) }} className="p-2 bg-white rounded-full items-center shadow-lg" style={[colorScheme == 'light' ? styles.LightbackButton : styles.DarkbackButton]}>
+            <TouchableOpacity onPress={() => { navigation.navigate('VendorLogin') }} className="p-2 bg-white rounded-full items-center shadow-lg" style={[colorScheme == 'light' ? styles.LightbackButton : styles.DarkbackButton]}>
                 <ArrowLeftIcon size={20} style={[colorScheme == 'light' ? { color: 'black' } : { color: 'white' }]} />
             </TouchableOpacity>
 
