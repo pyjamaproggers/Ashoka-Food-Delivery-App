@@ -111,13 +111,14 @@ export default function VenderDisclaimer() {
                                 setBTNisInvalid(true)
                             }
                             else {
+                                
                                 navigation.navigate('VendorDashboard', { selectedRestaurant, selectedPerson });
                             }
                         }}
                     >
                         <HStack className='items-center space-x-2'>
                             <Text className='font-semibold text-base text-white'>
-                                To The Food
+                                View Orders
                             </Text>
                             <ArrowRightIcon size={20} color={'white'} />
                         </HStack>
