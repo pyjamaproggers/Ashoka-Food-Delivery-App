@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, TouchableOpacity, Image, useColorScheme, Alert 
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { IOS, WEB, EXPO } from '@dotenv'
+import { IOS, WEB, EXPO, ANDROID } from '@dotenv'
 import AshokaLogo from '../assets/ashokauniversity.png';
 import { ArrowRightIcon } from 'react-native-heroicons/outline';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -22,7 +22,8 @@ function Login() {
     const [request, response, promptAsync] = Google.useAuthRequest({
         iosClientId: IOS,
         webClientId: WEB,
-        expoClientId: EXPO
+        expoClientId: EXPO,
+        androidClientId: ANDROID
     });
 
     const colorScheme = useColorScheme();
