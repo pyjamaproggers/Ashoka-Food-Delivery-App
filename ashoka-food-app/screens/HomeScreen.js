@@ -97,12 +97,23 @@ const HomeScreen = () => {
 
     const fetchUserAvatar = async () => {
         try {
-            const response = await fetch(`https://api.multiavatar.com/${actualUser.name}.png?apikey=Bvjs0QyHcCxZNe`)
-            setUserImage(response.json())
+            const encodedName = encodeURIComponent(actualUser.name);
+            const url = `https://api.multiavatar.com/${encodedName}.png?apikey=Bvjs0QyHcCxZNe`;
+    
+            const response = await fetch(url);
+            
+            if (response.ok) {
+                const imageBlob = await response.blob(); // Get the image data as a Blob
+                setUserImage(URL.createObjectURL(imageBlob)); // Create a URL for the Blob and set it as the user image
+            } else {
+                console.log('Failed to fetch avatar:', response.status);
+            }
         } catch (error) {
-            console.log('Error in fetching avatar' + error)
+            console.log('Error in fetching avatar:', error);
         }
-    }
+    };
+    
+    
 
     const {
         params: { actualUser },
