@@ -297,7 +297,7 @@ const PhoneAuthScreen = () => {
                         <OTPInputView
                             style={{ width: "60%", height: 200 }}
                             pinCount={6}
-                            autoFocusOnLoad
+                            // autoFocusOnLoad
                             codeInputFieldStyle={[
                                 colorScheme == "light"
                                     ? styles.LightunderlineStyleBase
@@ -307,10 +307,12 @@ const PhoneAuthScreen = () => {
                             onCodeFilled={(code) => {
                                 confirmCode(code);
                             }}
+                            editable={true}
                         />
 
                     </View>
                 )}
+
             </View>
         </SafeAreaView>
     );
