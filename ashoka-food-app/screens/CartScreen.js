@@ -248,7 +248,7 @@ const BasketScreen = () => {
         let checkArray = 'The following restaurants are closed:\n';
         const currentTime = new Date();
         console.log(Basket)
-        for (const basketRestaurant of Basket) {
+        for (const basketRestaurant of FinalBasket) {
             const timing = basketRestaurant.timing;
             
             console.log("Timing: " + timing);
@@ -373,6 +373,7 @@ const BasketScreen = () => {
                 tempFinalBasket.forEach((basketRestaurant) => {
                     if (restaurant.name === basketRestaurant.name) {
                         basketRestaurant.image = restaurant.image;
+                        console.log(restaurant.timing)
                         basketRestaurant.timing = restaurant.timing;
                     }
                     if (basketRestaurant.name === 'The Food Village') {
@@ -425,7 +426,7 @@ const BasketScreen = () => {
                 { option: 'Pay On Delivery', icon: COD },
                 { option: 'Pay At Outlet', icon: PayAtRestaurant }
             ]);
-
+            console.log(tempFinalBasket)
             setFinalBasket(tempFinalBasket);
             setFinalBasketReady(true);
         } catch (error) {
