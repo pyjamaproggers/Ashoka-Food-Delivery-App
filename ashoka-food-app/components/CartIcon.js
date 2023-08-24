@@ -120,7 +120,8 @@ export default function CartIcon({ actualUser, store }) {
             let UniqueRestaurantMiniCart = {
                 name: UniqueRestaurantsInCart[i],
                 items: [],
-                image: []
+                image: [],
+                timing: '',
             }
             TempBasket.push(UniqueRestaurantMiniCart)
         }

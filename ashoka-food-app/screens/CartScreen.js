@@ -240,11 +240,15 @@ const BasketScreen = () => {
         return checkArray;
     };
 
+
     const checkRestaurantClosed = async () => {
+
+
+
         let checkArray = 'The following restaurants are closed:\n';
         const currentTime = new Date();
-    
-        for (const basketRestaurant of restaurantData) {
+        console.log(Basket)
+        for (const basketRestaurant of Basket) {
             const timing = basketRestaurant.timing;
             
             console.log("Timing: " + timing);
@@ -264,14 +268,20 @@ const BasketScreen = () => {
             if (closePeriod === 'PM' && closeHour !== 12) {
                 closeHour += 12;
             }
-    
+            console.log(currentTime.getHours())
+            console.log(openHour)
+            console.log(closeHour)
             if (closeHour < openHour) {
+                console.log('coming first in timing issue')
                 if (currentTime.getHours() >= openHour || currentTime.getHours() < closeHour) {
                     checkArray += basketRestaurant.name + ' (' + openTime + ' - ' + closeTime + '), ';
                 }
-            } else {
-                if (currentTime.getHours() >= openHour && currentTime.getHours() < closeHour) {
+            } 
+            else {
+                console.log('coming second in timing issue')
+                if (!(currentTime.getHours() >= openHour && currentTime.getHours() < closeHour)) {
                     checkArray += basketRestaurant.name + ', ';
+                    console.log(basketRestaurant.name)
                 }
             }
         }
@@ -316,6 +326,7 @@ const BasketScreen = () => {
             name: restaurantName,
             items: [],
             instructions: '',
+            timing: '',
             restaurantTotal: 0
         }));
 
@@ -356,18 +367,23 @@ const BasketScreen = () => {
             const tempFinalBasket = [...tempBasket]; // Avoid modifying the same object
 
             let foodVillageInCart = false;
-            let dhabaInCart = false
+            let dhabaThaliInCart = false
 
             data.forEach((restaurant) => {
                 tempFinalBasket.forEach((basketRestaurant) => {
                     if (restaurant.name === basketRestaurant.name) {
                         basketRestaurant.image = restaurant.image;
+                        basketRestaurant.timing = restaurant.timing;
                     }
                     if (basketRestaurant.name === 'The Food Village') {
                         foodVillageInCart = true;
                     }
                     if (basketRestaurant.name === 'Shuddh Desi Dhaba') {
-                        dhabaInCart= true;
+                        basketRestaurant.items.forEach((dish)=>{
+                            if(dish.name.includes('Thali')){
+                                dhabaThaliInCart = true
+                            }
+                        })
                     }
                 });
             });
@@ -394,7 +410,7 @@ const BasketScreen = () => {
             );
 
             setOrderTypeOptions(
-                dhabaInCart ?
+                dhabaThaliInCart ?
                 [
                     { option: 'Dine In', icon: DineIn }
                 ]
@@ -593,7 +609,7 @@ const BasketScreen = () => {
             Alert.alert(timingsCheck)
             setShowSpinner(false)
         }
-        else if (itemsCheck !== 'The following items were removed from your cart as they became unavailable:\n' && timingsCheck !== 'The following restaurants are closed:\n') {
+        else if (itemsCheck !== 'The following items were removed from your cart as they became unavailable:\n' && timingsCheck !== '\nThe following restaurants are closed:\n') {
             Alert.alert(itemsCheck)
             Alert.alert(timingsCheck)
             setShowSpinner(false)
@@ -732,6 +748,13 @@ const BasketScreen = () => {
                                                             onPress={() => {
                                                                 setOrderTypeOption(item.option)
                                                                 setIsOrderTypeOpen(false)
+                                                                console.log(item.option)
+                                                                if(item.option=='Delivery'){
+                                                                    setPaymentOption('Pay On Delivery')
+                                                                }
+                                                                else{
+                                                                    setPaymentOption('Pay At Outlet')
+                                                                }
                                                             }}
                                                             style={[colorScheme == 'light' ? styles.LightDropdownItemEnd : styles.DarkDropdownItemEnd]}
                                                         >
@@ -759,6 +782,13 @@ const BasketScreen = () => {
                                                         onPress={() => {
                                                             setOrderTypeOption(item.option)
                                                             setIsOrderTypeOpen(false)
+                                                            console.log(item.option)
+                                                            if(item.option=='Delivery'){
+                                                                setPaymentOption('Pay On Delivery')
+                                                            }
+                                                            else{
+                                                                setPaymentOption('Pay At Outlet')
+                                                            }
                                                         }}
                                                         style={[colorScheme == 'light' ? styles.LightDropdownItem : styles.DarkDropdownItem]}
                                                     >
@@ -790,6 +820,12 @@ const BasketScreen = () => {
                                                             onPress={() => {
                                                                 setOrderTypeOption(item.option)
                                                                 setIsOrderTypeOpen(false)
+                                                                if(item.option=='Delivery'){
+                                                                    setPaymentOption('Pay On Delivery')
+                                                                }
+                                                                else{
+                                                                    setPaymentOption('Pay At Outlet')
+                                                                }
                                                             }}
                                                             style={[colorScheme == 'light' ? styles.LightDropdownItemEnd : styles.DarkDropdownItemEnd]}
                                                         >
@@ -817,6 +853,12 @@ const BasketScreen = () => {
                                                         onPress={() => {
                                                             setOrderTypeOption(item.option)
                                                             setIsOrderTypeOpen(false)
+                                                            if(item.option=='Delivery'){
+                                                                setPaymentOption('Pay On Delivery')
+                                                            }
+                                                            else{
+                                                                setPaymentOption('Pay At Outlet')
+                                                            }
                                                         }}
                                                         style={[colorScheme == 'light' ? styles.LightDropdownItem : styles.DarkDropdownItem]}
                                                     >
@@ -1005,13 +1047,13 @@ const BasketScreen = () => {
                                 <TouchableOpacity
                                     className=' self-center'
                                     onPress={() => {
-                                        setIsPaymentOpen(!isPaymentOpen)
-                                        if (isLocationOpen) {
-                                            setIsLocationOpen(false)
-                                        }
-                                        if (isOrderTypeOpen) {
-                                            setIsOrderTypeOpen(false)
-                                        }
+                                        // setIsPaymentOpen(!isPaymentOpen)
+                                        // if (isLocationOpen) {
+                                        //     setIsLocationOpen(false)
+                                        // }
+                                        // if (isOrderTypeOpen) {
+                                        //     setIsOrderTypeOpen(false)
+                                        // }
                                     }}
                                     style={[colorScheme == 'light' ? styles.LightDropdownButtonCart : styles.DarkDropdownButtonCart]}
                                 >
@@ -2011,7 +2053,7 @@ const styles = StyleSheet.create({
     },
     LightDropdownMenu2: {
         width: '100%',
-        borderRadius: '6px',
+        borderRadius: 6,
         borderWidth: 1,
         borderColor: 'rgb(229,231,235)',
         shadowColor: '#000',
@@ -2024,7 +2066,7 @@ const styles = StyleSheet.create({
     },
     DarkDropdownMenu2: {
         width: '100%',
-        borderRadius: '6px',
+        borderRadius: 6,
         borderTopWidth: 1,
         borderColor: 'rgb(0,0,0)',
         shadowColor: '#000',

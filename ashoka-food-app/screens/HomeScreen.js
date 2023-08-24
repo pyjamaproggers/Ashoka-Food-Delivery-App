@@ -147,28 +147,34 @@ const HomeScreen = () => {
                 console.error('Actual user is undefined');
                 return;
             }
-            const response = await fetch(`${IP}/api/orders/users/${actualUser.email}`);
+    
+            const response = await fetch(`${IP}/api/orders/users/${actualUser.email}`, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            
             const data = await response.json();
             let liveOrders = [];
-            let flag = 1
+            let flag = 1;
             data.map((order, index) => {
                 if (!(order.orderStatus == 'completed' || order.orderStatus.includes('Declined'))) {
-                    liveOrders.push(order)
-                    flag = 0
+                    liveOrders.push(order);
+                    flag = 0;
                 }
-            })
-            if (flag == 1) {
-                setUserHasLiveOrders(false)
-            }
-            else {
-                setUserHasLiveOrders(true)
+            });
+    
+            if (flag === 1) {
+                setUserHasLiveOrders(false);
+            } else {
+                setUserHasLiveOrders(true);
             }
         } catch (error) {
-            console.error('Error fetching orders on homescreen:', error);
-            // setRefreshing(false)
-            setFetching(false)
+            console.error(`Error fetching orders on homescreen: ${IP}/api/orders/users/${actualUser.email}`, error);
+            setFetching(false);
         }
-    }
+    };
+    
 
     useEffect(() => {
         const checkLiveOrders = async () => {
@@ -353,7 +359,7 @@ const HomeScreen = () => {
                 </View>
                 {/* search */}
                 <View className="flex-row item-center space-x-2 pb-2 mx-4 ">
-                    <View className="flex-row space-x-2 flex-1 p-3 shadow-sm" style={[colorScheme == 'light' ? Styles.LightSearchBar : Styles.DarkSearchBar]} >
+                    <View className="flex-row items-center space-x-2 flex-1 p-3 shadow-sm" style={[colorScheme == 'light' ? Styles.LightSearchBar : Styles.DarkSearchBar]} >
                         <Image
                             style={{ width: 16, height: 16, resizeMode: "contain" }}
                             source={Search}

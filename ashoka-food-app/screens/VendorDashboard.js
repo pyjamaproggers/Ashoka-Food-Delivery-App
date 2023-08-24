@@ -1051,13 +1051,27 @@ function VendorDashboard() {
 
 
                     <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 16, justifyContent: 'space-between' }}>
-                        <TouchableOpacity onPress={() => {
+                        {/* <TouchableOpacity onPress={() => {
                             navigation.goBack(); if (socket) {
                                 socket.disconnect();
                             }
                         }} style={{ width: 56 }}>
                             <ArrowLeftIcon size={20} style={[colorScheme == 'light' ? { color: 'black' } : { color: 'white' }]} />
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
+                        <NativeBaseButton className='self-center shadow-sm' colorScheme='error' variant='subtle'
+                            onPress={() => {
+                                navigation.navigate('VendorLogin')
+                                if (socket) {
+                                    socket.disconnect();
+                                }
+                            }}
+                        >
+                            <HStack className='items-center space-x-2'>
+                                <Text allowFontScaling={false} className='font-medium' style={{color: 'red'}}>
+                                    Logout
+                                </Text>
+                            </HStack>
+                        </NativeBaseButton>
                         <Text className='text-lg font-medium' style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}>{selectedRestaurant}</Text>
                         <NativeBaseButton className='self-center shadow-sm' style={[(!showOpen && showMenu && !showClosed) ? [colorScheme == 'light' ? Styles.LightActiveGreenBTN : Styles.DarkActiveGreenBTN] : [colorScheme == 'light' ? Styles.LightInactiveBTN : Styles.DarkInactiveBTN]]} variant='subtle'
                             onPress={() => {
@@ -1074,7 +1088,7 @@ function VendorDashboard() {
 
                     </View>
 
-                    <HStack className='w-max justify-between items-center space-x-2'>
+                    <HStack className='w-max justify-between items-center space-x-2 pb-2'>
 
                         <NativeBaseButton className='w-4/12 justify-self-start shadow-sm' style={[(showOpen && !showMenu && !showClosed) ? [colorScheme == 'light' ? Styles.LightActivePurpleBTN : Styles.DarkActivePurpleBTN] : [colorScheme == 'light' ? Styles.LightInactiveBTN : Styles.DarkInactiveBTN]]} variant='subtle'
                             onPress={() => {
@@ -1212,7 +1226,7 @@ function VendorDashboard() {
                                                                     }
                                                                 >
                                                                     <HStack className='w-11/12 justify-between pr-2'>
-                                                                        <HStack className='space-x-2 items-center'>
+                                                                        <HStack className='space-x-2 items-center w-11/12'>
                                                                             <Text className='font-medium text-base'
                                                                                 style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
                                                                             >
@@ -1306,7 +1320,7 @@ function VendorDashboard() {
                                                                                     source={NonVegIcon}
                                                                                 />
                                                                             )}
-                                                                            <Text className='font-medium text-base'
+                                                                            <Text className='font-medium text-base w-9/12'
                                                                                 style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
                                                                             >
                                                                                 {item.name}
@@ -1363,7 +1377,7 @@ function VendorDashboard() {
                                                                                     source={NonVegIcon}
                                                                                 />
                                                                             )}
-                                                                            <Text className='font-medium text-base'
+                                                                            <Text className='font-medium text-base w-9/12'
                                                                                 style={[colorScheme == 'light' ? Styles.LightTextPrimary : Styles.DarkTextPrimary]}
                                                                             >
                                                                                 {item.name}
