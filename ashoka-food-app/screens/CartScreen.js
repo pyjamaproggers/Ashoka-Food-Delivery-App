@@ -80,36 +80,6 @@ const BasketScreen = () => {
 
     const [userColor, setUserColor] = useState(colors[Math.floor(Math.random() * colors.length)])
 
-    // const Locations = [
-    //     { location: 'RH1', icon: RH },
-    //     { location: 'RH2', icon: RH },
-    //     { location: 'RH3', icon: RH },
-    //     { location: 'RH4', icon: RH },
-    //     { location: 'RH5', icon: RH },
-    //     { location: 'Library AC04', icon: AC04 },
-    //     { location: 'Sports Block', icon: SportsBlock },
-    //     { location: 'Mess', icon: Mess },
-    // ]
-
-    // const paymentOptions = [
-    //     { option: 'Pay On Delivery', icon: COD },
-    //     { option: 'Pay via UPI', icon: UPI },
-    // ]
-    // const paymentOptions2 = [
-    //     { option: 'Pay On Delivery', icon: COD },
-    // ]
-    // const paymentOptions3 = [
-    //     { option: 'Pay via UPI', icon: UPI },
-    // ]
-
-    // const orderTypeOptions = [
-    //     { option: 'Delivery', icon: FoodDelivery },
-    //     { option: 'Dine In', icon: DineIn },
-    // ]
-    // const orderTypeOptions2 = [
-    //     { option: 'Delivery', icon: FoodDelivery },
-    // ]
-
     const instructionsPlaceholders = [
         'Bhaiya mirchi thodi kam daalna...',
         'Bhaiya nimbu soda sweet please...',
@@ -155,8 +125,6 @@ const BasketScreen = () => {
                     if (item.name == name && item.Restaurant == Restaurant) {
                         currentQuantity = item.quantity
                         additemQ = currentQuantity + 1
-                        // dispatch(addToCart({ id, name, Price, image, Restaurant, Veg_NonVeg, quantity: additemQ }));
-                        // dispatch(removeFromCart({ id, name, Price, image, Restaurant, Veg_NonVeg, quantity: currentQuantity }));
                         dispatch(updateCartAdd({ newQuantity: additemQ, dishName: item.name, restaurant: item.Restaurant }))
                     }
                 })
@@ -176,8 +144,6 @@ const BasketScreen = () => {
             if (item.name == name && item.Restaurant===Restaurant && item.quantity >= 1) {
                 currentQuantity = item.quantity
                 additemQ = currentQuantity - 1
-                // dispatch(addToCart({ id, name, Price, image, Restaurant, Veg_NonVeg, quantity: additemQ }));
-                // dispatch(removeFromCart({ id, name, Price, image, Restaurant, Veg_NonVeg, quantity: currentQuantity }));
                 dispatch(updateCartRemove({ newQuantity: additemQ, dishName: item.name, restaurant: Restaurant }))
             }
         })
@@ -434,12 +400,6 @@ const BasketScreen = () => {
         }
 
         setFetching(false);
-
-        // Uncomment and modify your checkUnavailableItems logic if needed
-        // let itemsCheck = await checkUnavailableItems();
-        // if (itemsCheck !== 'The following items were removed from your cart as they became unavailable: ') {
-        //     Alert.alert(itemsCheck);
-        // }
     }, [items, latestItem]);
 
 
@@ -1436,102 +1396,6 @@ const BasketScreen = () => {
                                                             }}
                                                         />
                                                     }
-                                                    {/* {colorScheme == 'light' && BasketRestaurant.name == 'Rasananda' &&
-                                                        <TextInput placeholder={instructionsPlaceholders[5]} keyboardType="default" className='w-10/12 text-xs'
-                                                            placeholderTextColor='#666666'
-                                                            style={{ color: '#000', paddingTop: 0 }}
-                                                            onChangeText={(text) => {
-                                                                updateInstructions(text, BasketRestaurant.name)
-                                                            }}
-                                                            autoComplete='off'
-                                                            autoCorrect={false}
-                                                            multiline={true}
-                                                            maxLength={100}
-                                                            numberOfLines={4}
-                                                            allowFontScaling={false}
-                                                            enterKeyHint='done'
-                                                        />
-                                                    }
-                                                    {colorScheme == 'light' && BasketRestaurant.name == 'Shuddh Desi Dhaba' &&
-                                                        <TextInput placeholder={instructionsPlaceholders[1]} keyboardType="default" className='w-10/12 text-xs'
-                                                            placeholderTextColor='#666666'
-                                                            style={{ color: '#000', paddingTop: 0 }}
-                                                            onChangeText={(text) => {
-                                                                updateInstructions(text, BasketRestaurant.name)
-                                                            }}
-                                                            autoComplete='off'
-                                                            autoCorrect={false}
-                                                            multiline={true}
-                                                            maxLength={100}
-                                                            numberOfLines={4}
-                                                            allowFontScaling={false}
-                                                            enterKeyHint='done'
-                                                        />
-                                                    }
-                                                    {colorScheme == 'light' && BasketRestaurant.name == 'Roti Boti' &&
-                                                        <TextInput placeholder={instructionsPlaceholders[0]} keyboardType="default" className='w-10/12 text-xs'
-                                                            placeholderTextColor='#666666'
-                                                            style={{ color: '#000', paddingTop: 0 }}
-                                                            onChangeText={(text) => {
-                                                                updateInstructions(text, BasketRestaurant.name)
-                                                            }}
-                                                            autoComplete='off'
-                                                            autoCorrect={false}
-                                                            multiline={true}
-                                                            maxLength={100}
-                                                            numberOfLines={4}
-                                                            allowFontScaling={false}
-                                                            enterKeyHint='done'
-                                                        />
-                                                    }
-                                                    {colorScheme == 'light' && BasketRestaurant.name == 'Subway' &&
-                                                        <TextInput placeholder={instructionsPlaceholders[2]} keyboardType="default" className='w-10/12 text-xs'
-                                                            placeholderTextColor='#666666'
-                                                            style={{ color: '#000', paddingTop: 0 }}
-                                                            onChangeText={(text) => {
-                                                                updateInstructions(text, BasketRestaurant.name)
-                                                            }}
-                                                            autoComplete='off'
-                                                            autoCorrect={false}
-                                                            multiline={true}
-                                                            maxLength={100}
-                                                            numberOfLines={4}
-                                                            allowFontScaling={false}
-                                                            enterKeyHint='done'
-                                                        />
-                                                    }
-                                                    {colorScheme == 'light' && BasketRestaurant.name == 'Chicago Pizza' &&
-                                                        <TextInput placeholder={instructionsPlaceholders[6]} keyboardType="default" className='w-10/12 text-xs'
-                                                            placeholderTextColor='#666666'
-                                                            style={{ color: '#000', paddingTop: 0 }}
-                                                            onChangeText={(text) => {
-                                                                updateInstructions(text, BasketRestaurant.name)
-                                                            }}
-                                                            autoComplete='off'
-                                                            autoCorrect={false}
-                                                            multiline={true}
-                                                            maxLength={100}
-                                                            numberOfLines={4}
-                                                            allowFontScaling={false}
-                                                            enterKeyHint='done'
-                                                        />
-                                                    }
-                                                    {colorScheme == 'light' && BasketRestaurant.name == 'The Hunger Cycle' &&
-                                                        <TextInput placeholder={instructionsPlaceholders[3]} keyboardType="default" className='w-10/12 text-xs'
-                                                            placeholderTextColor='#666666'
-                                                            style={{ color: '#000', paddingTop: 0 }}
-                                                            onChangeText={(text) => {
-                                                                updateInstructions(text, BasketRestaurant.name)
-                                                            }}
-                                                            autoComplete='off'
-                                                            autoCorrect={false}
-                                                            multiline={true}
-                                                            maxLength={100}
-                                                            numberOfLines={4}
-                                                            allowFontScaling={false}
-                                                            enterKeyHint='done'
-                                                        />
-                                                    } */}
                                                 </HStack>
                                             </View>
                                         </VStack>
