@@ -208,9 +208,6 @@ const BasketScreen = () => {
 
 
     const checkRestaurantClosed = async () => {
-
-
-
         let checkArray = 'The following restaurants are closed:\n';
         const currentTime = new Date();
         console.log(Basket)
@@ -223,20 +220,18 @@ const BasketScreen = () => {
             console.log("Open Time: " + openTime);
             console.log("Close Time: " + closeTime);
     
-            const openHour = parseInt(openTime.slice(0, -2));
+            var openHour = parseInt(openTime.slice(0, -2));
             const openPeriod = openTime.slice(-2);
-            const closeHour = parseInt(closeTime.slice(0, -2));
+            var closeHour = parseInt(closeTime.slice(0, -2));
             const closePeriod = closeTime.slice(-2);
-    
-            if (openPeriod === 'PM' && openHour !== 12) {
+            if ((openPeriod == 'PM' || openPeriod == 'pm') && openHour !== 12) {
+                console.log("Period pm detected")
                 openHour += 12;
             }
-            if (closePeriod === 'PM' && closeHour !== 12) {
+            if ((closePeriod == 'PM' || closePeriod == 'pm') && closeHour !== 12) {
+                console.log("closed period pm detected")
                 closeHour += 12;
             }
-            console.log(currentTime.getHours())
-            console.log(openHour)
-            console.log(closeHour)
             if (closeHour < openHour) {
                 console.log('coming first in timing issue')
                 if (currentTime.getHours() >= openHour || currentTime.getHours() < closeHour) {
@@ -246,6 +241,7 @@ const BasketScreen = () => {
             else {
                 console.log('coming second in timing issue')
                 if (!(currentTime.getHours() >= openHour && currentTime.getHours() < closeHour)) {
+                    console.log(currentTime.getHours())
                     checkArray += basketRestaurant.name + ', ';
                     console.log(basketRestaurant.name)
                 }

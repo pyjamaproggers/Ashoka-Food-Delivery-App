@@ -325,66 +325,6 @@ export default function LiveOrders() {
                                     >
                                         <SafeAreaView >
                                             <VStack className='self-center items-center w-11/12 '>
-
-                                                {/* <HStack className='items-center' space={1}>
-                                                    {usersLiveOrders.length > 1 &&
-                                                        <>
-                                                            {usersLiveOrders.map((order, progressIndex) => (
-                                                                <>
-                                                                    {index == progressIndex &&
-                                                                        <>
-                                                                            {order.orderStatus == 'placed' &&
-                                                                                <StopCircleIcon size={20} style={{ color: '#3b82f6' }} />
-                                                                            }
-                                                                            {order.orderStatus == 'accepted' &&
-                                                                                <StopCircleIcon size={20} style={{ color: '#22c55e' }} />
-                                                                            }
-                                                                            {order.orderStatus == 'preparing' &&
-                                                                                <StopCircleIcon size={20} style={{ color: '#eab308' }} />
-                                                                            }
-                                                                            {order.orderStatus == 'out for delivery' &&
-                                                                                <StopCircleIcon size={20} style={{ color: '#3b82f6' }} />
-                                                                            }
-                                                                            {order.orderStatus == 'ready' &&
-                                                                                <StopCircleIcon size={20} style={{ color: '#3b82f6' }} />
-                                                                            }
-                                                                            {order.orderStatus.slice(0, 8) == 'Declined' &&
-                                                                                <StopCircleIcon size={20} style={{ color: '#f43f5e' }} />
-                                                                            }
-                                                                        </>
-                                                                    }
-
-
-                                                                    {index != progressIndex &&
-                                                                        <>
-                                                                            {order.orderStatus == 'placed' &&
-                                                                                <StopCircleIcon size={12} style={{ color: '#3b82f6' }} />
-                                                                            }
-                                                                            {order.orderStatus == 'accepted' &&
-                                                                                <StopCircleIcon size={12} style={{ color: '#22c55e' }} />
-                                                                            }
-                                                                            {order.orderStatus == 'preparing' &&
-                                                                                <StopCircleIcon size={12} style={{ color: '#eab308' }} />
-                                                                            }
-                                                                            {order.orderStatus == 'out for delivery' &&
-                                                                                <StopCircleIcon size={12} style={{ color: '#3b82f6' }} />
-                                                                            }
-                                                                            {order.orderStatus == 'ready' &&
-                                                                                <StopCircleIcon size={12} style={{ color: '#3b82f6' }} />
-                                                                            }
-                                                                            {order.orderStatus.slice(0, 8) == 'Declined' &&
-                                                                                <StopCircleIcon size={12} style={{ color: '#f43f5e' }} />
-                                                                            }
-                                                                        </>
-                                                                    }
-
-
-                                                                </>
-                                                            ))}
-                                                        </>
-                                                    }
-                                                </HStack> */}
-
                                                 <HStack className='items-center -mb-6 justify-between w-full'>
                                                     <TouchableOpacity onPress={() => { navigation.navigate('Home', { actualUser }) }} className=" p-2.5 rounded-full" style={[colorScheme == 'light' ? { backgroundColor: '#f2f2f2', borderRadius: 20 } : { backgroundColor: '#0c0c0f', borderRadius: 20 }]}>
                                                         {/* <ArrowDownIcon size={20} style={[colorScheme == 'light' ? { color: 'black' } : { color: 'white' }]} /> */}
@@ -628,18 +568,6 @@ export default function LiveOrders() {
                                                                 {
                                                                     translateX
                                                                 },
-                                                                // {
-                                                                //     scale: scrollY.interpolate({
-                                                                //         inputRange: [-ITEM_HEIGHT + 1, 0, ITEM_HEIGHT, ITEM_HEIGHT + 1],
-                                                                //         outputRange: [2, 1, 1, 1]
-                                                                //     })
-                                                                // },
-                                                                // {
-                                                                //     translateY: scrollY.interpolate({
-                                                                //         inputRange: [-ITEM_HEIGHT2, 0, ITEM_HEIGHT2, ITEM_HEIGHT2 + 1],
-                                                                //         outputRange: [-ITEM_HEIGHT2 * 1.0, 0, ITEM_HEIGHT2 * 1.0, ITEM_HEIGHT2 * 1.0]
-                                                                //     }),
-                                                                // },
                                                             ]
                                                         }}
                                                     />
@@ -660,18 +588,6 @@ export default function LiveOrders() {
                                                                 {
                                                                     translateX
                                                                 },
-                                                                // {
-                                                                //     scale: scrollY.interpolate({
-                                                                //         inputRange: [-ITEM_HEIGHT + 1, 0, ITEM_HEIGHT, ITEM_HEIGHT + 1],
-                                                                //         outputRange: [2, 1, 1, 1]
-                                                                //     })
-                                                                // },
-                                                                // {
-                                                                //     translateY: scrollY.interpolate({
-                                                                //         inputRange: [-ITEM_HEIGHT2, 0, ITEM_HEIGHT2, ITEM_HEIGHT2 + 1],
-                                                                //         outputRange: [-ITEM_HEIGHT2 * 1.0, 0, ITEM_HEIGHT2 * 1.0, ITEM_HEIGHT2 * 1.0]
-                                                                //     }),
-                                                                // },
                                                             ]
                                                         }}
                                                     />
@@ -692,18 +608,6 @@ export default function LiveOrders() {
                                                                 {
                                                                     translateX
                                                                 },
-                                                                // {
-                                                                //     scale: scrollY.interpolate({
-                                                                //         inputRange: [-ITEM_HEIGHT + 1, 0, ITEM_HEIGHT, ITEM_HEIGHT + 1],
-                                                                //         outputRange: [2, 1, 1, 1]
-                                                                //     })
-                                                                // },
-                                                                // {
-                                                                //     translateY: scrollY.interpolate({
-                                                                //         inputRange: [-ITEM_HEIGHT2, 0, ITEM_HEIGHT2, ITEM_HEIGHT2 + 1],
-                                                                //         outputRange: [-ITEM_HEIGHT2 * 1.0, 0, ITEM_HEIGHT2 * 1.0, ITEM_HEIGHT2 * 1.0]
-                                                                //     }),
-                                                                // },
                                                             ]
                                                         }}
                                                     />
@@ -724,18 +628,6 @@ export default function LiveOrders() {
                                                                 {
                                                                     translateX
                                                                 },
-                                                                // {
-                                                                //     scale: scrollY.interpolate({
-                                                                //         inputRange: [-ITEM_HEIGHT + 1, 0, ITEM_HEIGHT, ITEM_HEIGHT + 1],
-                                                                //         outputRange: [2, 1, 1, 1]
-                                                                //     })
-                                                                // },
-                                                                // {
-                                                                //     translateY: scrollY.interpolate({
-                                                                //         inputRange: [-ITEM_HEIGHT2, 0, ITEM_HEIGHT2, ITEM_HEIGHT2 + 1],
-                                                                //         outputRange: [-ITEM_HEIGHT2 * 1.0, 0, ITEM_HEIGHT2 * 1.0, ITEM_HEIGHT2 * 1.0]
-                                                                //     }),
-                                                                // },
                                                             ]
                                                         }}
                                                     />
@@ -756,18 +648,6 @@ export default function LiveOrders() {
                                                                 {
                                                                     translateX
                                                                 },
-                                                                // {
-                                                                //     scale: scrollY.interpolate({
-                                                                //         inputRange: [-ITEM_HEIGHT + 1, 0, ITEM_HEIGHT, ITEM_HEIGHT + 1],
-                                                                //         outputRange: [2, 1, 1, 1]
-                                                                //     })
-                                                                // },
-                                                                // {
-                                                                //     translateY: scrollY.interpolate({
-                                                                //         inputRange: [-ITEM_HEIGHT2, 0, ITEM_HEIGHT2, ITEM_HEIGHT2 + 1],
-                                                                //         outputRange: [-ITEM_HEIGHT2 * 1.0, 0, ITEM_HEIGHT2 * 1.0, ITEM_HEIGHT2 * 1.0]
-                                                                //     }),
-                                                                // },
                                                             ]
                                                         }}
                                                     />
@@ -788,18 +668,6 @@ export default function LiveOrders() {
                                                                 {
                                                                     translateX
                                                                 },
-                                                                // {
-                                                                //     scale: scrollY.interpolate({
-                                                                //         inputRange: [-ITEM_HEIGHT + 1, 0, ITEM_HEIGHT, ITEM_HEIGHT + 1],
-                                                                //         outputRange: [2, 1, 1, 1]
-                                                                //     })
-                                                                // },
-                                                                // {
-                                                                //     translateY: scrollY.interpolate({
-                                                                //         inputRange: [-ITEM_HEIGHT2, 0, ITEM_HEIGHT2, ITEM_HEIGHT2 + 1],
-                                                                //         outputRange: [-ITEM_HEIGHT2 * 1.0, 0, ITEM_HEIGHT2 * 1.0, ITEM_HEIGHT2 * 1.0]
-                                                                //     }),
-                                                                // },
                                                             ]
                                                         }}
                                                     />
@@ -820,18 +688,6 @@ export default function LiveOrders() {
                                                                 {
                                                                     translateX
                                                                 },
-                                                                // {
-                                                                //     scale: scrollY.interpolate({
-                                                                //         inputRange: [-ITEM_HEIGHT + 1, 0, ITEM_HEIGHT, ITEM_HEIGHT + 1],
-                                                                //         outputRange: [2, 1, 1, 1]
-                                                                //     })
-                                                                // },
-                                                                // {
-                                                                //     translateY: scrollY.interpolate({
-                                                                //         inputRange: [-ITEM_HEIGHT2, 0, ITEM_HEIGHT2, ITEM_HEIGHT2 + 1],
-                                                                //         outputRange: [-ITEM_HEIGHT2 * 1.0, 0, ITEM_HEIGHT2 * 1.0, ITEM_HEIGHT2 * 1.0]
-                                                                //     }),
-                                                                // },
                                                             ]
                                                         }}
                                                     />
@@ -852,18 +708,6 @@ export default function LiveOrders() {
                                                                 {
                                                                     translateX
                                                                 },
-                                                                // {
-                                                                //     scale: scrollY.interpolate({
-                                                                //         inputRange: [-ITEM_HEIGHT + 1, 0, ITEM_HEIGHT, ITEM_HEIGHT + 1],
-                                                                //         outputRange: [2, 1, 1, 1]
-                                                                //     })
-                                                                // },
-                                                                // {
-                                                                //     translateY: scrollY.interpolate({
-                                                                //         inputRange: [-ITEM_HEIGHT2, 0, ITEM_HEIGHT2, ITEM_HEIGHT2 + 1],
-                                                                //         outputRange: [-ITEM_HEIGHT2 * 1.0, 0, ITEM_HEIGHT2 * 1.0, ITEM_HEIGHT2 * 1.0]
-                                                                //     }),
-                                                                // },
                                                             ]
                                                         }}
                                                     />

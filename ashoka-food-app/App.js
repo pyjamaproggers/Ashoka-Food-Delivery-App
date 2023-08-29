@@ -48,7 +48,7 @@ export default function App() {
                         <Stack.Screen name="Restaurant" component={RestaurantScreen} />
                         <Stack.Screen name="Cart" component={CartScreen} />
                         <Stack.Screen name="LiveOrders" component={LiveOrders} 
-                            options={{
+                            options={{  
                                 gestureDirection: 'vertical'
                             }}
                         />
