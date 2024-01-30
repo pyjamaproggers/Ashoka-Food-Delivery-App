@@ -2,7 +2,7 @@
   "expo": {
     "name": "AshokaEats",
     "slug": "react-native-food-app-practice",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -26,7 +26,8 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.anonymous.reactnativefoodapppractice"
+      "package": "com.anonymous.reactnativefoodapppractice",
+      "versionCode": 3
     },
     "web": {
       "favicon": "./assets/favicon.png"
